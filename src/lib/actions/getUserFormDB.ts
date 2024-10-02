@@ -1,8 +1,8 @@
 
 'use server'
 import { db } from "@/db/db";
-import { usersTable } from "@/db/schema";
-export async function getUserFromDB (){
-    const result = await db.select().from(usersTable);
+import { Users } from "@/db/schema";
+export default async function getUserFromDB (){
+    const result = await db.select().from(Users);
     console.log(result);
 }

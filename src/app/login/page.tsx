@@ -11,6 +11,7 @@ const Login: React.FC = () => {
     // Handle login logic here
     console.log("Username:", username);
     console.log("Password:", password);
+    
   };
 
   return (

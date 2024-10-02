@@ -1,5 +1,9 @@
+'use client'
+
 import Link from "next/link";
 import Image from "next/image";
+import getUserFormDB from '@/lib/actions/getUserFormDB'
+
 
 const dishes = [
   { id: 1, name: "Banh Mi", image: "/images/BanhMi.jpg" },
@@ -10,6 +14,10 @@ const dishes = [
   { id: 6, name: "Pho Special", image: "/images/Pho.jpg" },
 ];
 
+const handleLog = () => {
+  getUserFormDB()
+}
+
 export default function Dashboard() {
   return (
     <div className="min-h-screen bg-gray-100">
@@ -17,7 +25,7 @@ export default function Dashboard() {
         <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-6 sm:px-6 lg:px-8">
           <h1 className="text-3xl font-bold text-gray-900">Food Dashboard</h1>
           <Link href="/login" className="inline-block">
-            <button className="rounded-md bg-green-600 px-4 py-2 font-medium text-white hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2">
+            <button onClick={handleLog}  className="rounded-md bg-green-600 px-4 py-2 font-medium text-white hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2">
               Login
             </button>
           </Link>
