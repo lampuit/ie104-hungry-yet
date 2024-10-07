@@ -2,7 +2,6 @@
 
 import Link from "next/link";
 import Image from "next/image";
-import getUserFormDB from '@/lib/actions/getUserFormDB'
 
 import { LogoSVG, IconSVG, GreenCircle, WhiteCircle } from "@/components/ui/svg";
 
@@ -14,10 +13,6 @@ const dishes = [
   { id: 5, name: "dish5", image: "/images/dish5.jfif" },
   { id: 6, name: "Pho Special", image: "/images/Pho.jpg" },
 ];
-
-const handleLog = () => {
-  getUserFormDB()
-}
 
 export default function Dashboard() {
   return (
@@ -44,23 +39,23 @@ export default function Dashboard() {
           <div className="flex items-center justify-between space-x-[10px]">
             <div className="flex items-center space-x-[24px] border border-[#D9D9D9] drop-shadow-[0px_4px_4px_#00000040] rounded-[28px] py-[var(--sds-size-space-200)] px-[var(--sds-size-space-400)] shadow-[-4px_4px_4px_0px_rgba(0,0,0,0.25)]">
               <Link href="/dashboard">
-                <button onClick={handleLog} className="px-4 py-2 font-semibold text-[#9BCF53] hover:text-gray-900">
+                <button  className="px-4 py-2 font-semibold text-[#9BCF53] hover:text-gray-900">
                   Trang chủ
                 </button>
               </Link>
               <Link href="/shop">
-                <button onClick={handleLog} className="px-4 py-2 font-semibold text-[#B3B3B3] hover:text-gray-900">
+                <button className="px-4 py-2 font-semibold text-[#B3B3B3] hover:text-gray-900">
                   Cửa hàng
                 </button>
               </Link>
               <Link href="/about">
-                <button onClick={handleLog} className="px-4 py-2 font-semibold text-[#B3B3B3] hover:text-gray-900">
+                <button  className="px-4 py-2 font-semibold text-[#B3B3B3] hover:text-gray-900">
                   Về chúng tôi
                 </button>
               </Link>
             </div>
             <Link href="/login">
-              <button onClick={handleLog} className="rounded-[28px] bg-[#BFEA7C] px-[18px] py-[8px] space-x-[10px] font-semibold text-black shadow-[0px_4px_4px_0px_#00000040] hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2">
+              <button className="rounded-[28px] bg-[#BFEA7C] px-[18px] py-[8px] space-x-[10px] font-semibold text-black shadow-[0px_4px_4px_0px_#00000040] hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2">
                 Đăng ký
               </button>
             </Link>
@@ -81,7 +76,7 @@ export default function Dashboard() {
               Aliquam erat volutpat. Quisque sit amet condimentum nulla.
             </p>
             <Link href="/login">
-              <button onClick={handleLog} className="rounded-[28px] bg-[#BFEA7C] px-[18px] py-[8px] space-x-[10px] font-semibold text-black shadow-[0px_4px_4px_0px_#00000040]">
+              <button className="rounded-[28px] bg-[#BFEA7C] px-[18px] py-[8px] space-x-[10px] font-semibold text-black shadow-[0px_4px_4px_0px_#00000040]">
                 Đặt hàng ngay
               </button>
 
