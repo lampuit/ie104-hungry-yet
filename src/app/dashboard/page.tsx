@@ -11,33 +11,32 @@ const dishes = [
   { id: 3, name: "dish3", image: "/images/dish3.jfif" },
   { id: 4, name: "dish4", image: "/images/dish4.jfif" },
   { id: 5, name: "dish5", image: "/images/dish5.jfif" },
-  { id: 6, name: "Pho Special", image: "/images/Pho.jpg" },
 ];
 
 export default function Dashboard() {
   return (
-    <div className="min-h-screen bg-white">
+    <div className="min-h-screen">
 
       <div className="absolute flex items-center space-x-[10px]">
-        <div className="absolute inset-0">
+        <div className="absolute -z-30">
           <GreenCircle />
         </div>
-        <div className="absolute inset-0">
+        <div className="absolute -z-20">
           <WhiteCircle />
         </div>
-        <div className="absolute">
+        <div className="absolute -z-10">
           <IconSVG />
         </div>
       </div>
 
-      <nav className="NavBar bg-white">
+      <nav>
         <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-6 sm:px-6 lg:px-8">
           <div className="flex items-center space-x-[10px] drop-shadow-[-1px_4px_1px_#BFEA7C]">
             <LogoSVG />
             <h1 className="text-3xl font-bold text-gray-900">Hungry Yet?</h1>
           </div>
           <div className="flex items-center justify-between space-x-[10px]">
-            <div className="flex items-center space-x-[24px] border border-[#D9D9D9] drop-shadow-[0px_4px_4px_#00000040] rounded-[28px] py-[var(--sds-size-space-200)] px-[var(--sds-size-space-400)] shadow-[-4px_4px_4px_0px_rgba(0,0,0,0.25)]">
+            <div className="flex items-center space-x-6 border border-[#D9D9D9] drop-shadow-[0px_4px_4px_#00000040] rounded-[28px] py-[var(--sds-size-space-200)] px-[var(--sds-size-space-400)] shadow-[-4px_4px_4px_0px_rgba(0,0,0,0.25)]">
               <Link href="/dashboard">
                 <button  className="px-4 py-2 font-semibold text-[#9BCF53] hover:text-gray-900">
                   Trang chủ
