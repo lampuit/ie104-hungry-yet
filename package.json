@@ -1,5 +1,5 @@
 {
-  "name": "ie104-web-frontend",
+  "name": "ie104-hungry-yet",
   "version": "0.1.0",
   "private": true,
   "scripts": {
@@ -9,7 +9,6 @@
     "lint": "next lint"
   },
   "dependencies": {
-    "@mui/material": "^6.1.1",
     "@neondatabase/serverless": "^0.9.5",
     "@radix-ui/react-accordion": "^1.2.0",
     "@radix-ui/react-avatar": "^1.1.0",
