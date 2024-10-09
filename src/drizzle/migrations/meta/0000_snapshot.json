@@ -1,242 +1,133 @@
 {
-  "id": "21cdd97f-2af5-4f26-9464-35fd28b9bc85",
+  "id": "513c4837-ba72-44d1-9153-0af911423375",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "7",
   "dialect": "postgresql",
   "tables": {
-    "public.Categories": {
-      "name": "Categories",
+    "public.account": {
+      "name": "account",
       "schema": "",
       "columns": {
-        "ProductId": {
-          "name": "ProductId",
-          "type": "serial",
+        "id": {
+          "name": "id",
+          "type": "text",
           "primaryKey": true,
           "notNull": true
         },
-        "Name": {
-          "name": "Name",
+        "accountId": {
+          "name": "accountId",
           "type": "text",
           "primaryKey": false,
           "notNull": true
         },
-        "ImageUrl": {
-          "name": "ImageUrl",
+        "providerId": {
+          "name": "providerId",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "userId": {
+          "name": "userId",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "accessToken": {
+          "name": "accessToken",
           "type": "text",
           "primaryKey": false,
           "notNull": false
         },
-        "CreatedDate": {
-          "name": "CreatedDate",
+        "refreshToken": {
+          "name": "refreshToken",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "idToken": {
+          "name": "idToken",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "expiresAt": {
+          "name": "expiresAt",
           "type": "timestamp",
           "primaryKey": false,
-          "notNull": true,
-          "default": "now()"
-        }
-      },
-      "indexes": {},
-      "foreignKeys": {},
-      "compositePrimaryKeys": {},
-      "uniqueConstraints": {}
-    },
-    "public.FoodStall": {
-      "name": "FoodStall",
-      "schema": "",
-      "columns": {
-        "Id": {
-          "name": "Id",
-          "type": "serial",
-          "primaryKey": true,
-          "notNull": true
+          "notNull": false
         },
-        "UserId": {
-          "name": "UserId",
-          "type": "integer",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "ProductId": {
-          "name": "ProductId",
-          "type": "integer",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "Address": {
-          "name": "Address",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": true
-        }
-      },
-      "indexes": {},
-      "foreignKeys": {
-        "FoodStall_UserId_Users_UserId_fk": {
-          "name": "FoodStall_UserId_Users_UserId_fk",
-          "tableFrom": "FoodStall",
-          "tableTo": "Users",
-          "columnsFrom": [
-            "UserId"
-          ],
-          "columnsTo": [
-            "UserId"
-          ],
-          "onDelete": "no action",
-          "onUpdate": "no action"
-        },
-        "FoodStall_ProductId_Products_ProductId_fk": {
-          "name": "FoodStall_ProductId_Products_ProductId_fk",
-          "tableFrom": "FoodStall",
-          "tableTo": "Products",
-          "columnsFrom": [
-            "ProductId"
-          ],
-          "columnsTo": [
-            "ProductId"
-          ],
-          "onDelete": "no action",
-          "onUpdate": "no action"
-        }
-      },
-      "compositePrimaryKeys": {},
-      "uniqueConstraints": {}
-    },
-    "public.OrderDetail": {
-      "name": "OrderDetail",
-      "schema": "",
-      "columns": {
-        "OrderId": {
-          "name": "OrderId",
-          "type": "integer",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "UserId": {
-          "name": "UserId",
-          "type": "integer",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "ProductId": {
-          "name": "ProductId",
-          "type": "integer",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "Quantity": {
-          "name": "Quantity",
-          "type": "integer",
-          "primaryKey": false,
-          "notNull": true
-        }
-      },
-      "indexes": {},
-      "foreignKeys": {
-        "OrderDetail_UserId_Users_UserId_fk": {
-          "name": "OrderDetail_UserId_Users_UserId_fk",
-          "tableFrom": "OrderDetail",
-          "tableTo": "Users",
-          "columnsFrom": [
-            "UserId"
-          ],
-          "columnsTo": [
-            "UserId"
-          ],
-          "onDelete": "no action",
-          "onUpdate": "no action"
-        },
-        "OrderDetail_ProductId_Products_ProductId_fk": {
-          "name": "OrderDetail_ProductId_Products_ProductId_fk",
-          "tableFrom": "OrderDetail",
-          "tableTo": "Products",
-          "columnsFrom": [
-            "ProductId"
-          ],
-          "columnsTo": [
-            "ProductId"
-          ],
-          "onDelete": "no action",
-          "onUpdate": "no action"
-        }
-      },
-      "compositePrimaryKeys": {},
-      "uniqueConstraints": {}
-    },
-    "public.Orders": {
-      "name": "Orders",
-      "schema": "",
-      "columns": {
-        "OrderId": {
-          "name": "OrderId",
-          "type": "serial",
-          "primaryKey": true,
-          "notNull": true
-        },
-        "UserId": {
-          "name": "UserId",
-          "type": "integer",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "TotalAmount": {
-          "name": "TotalAmount",
-          "type": "integer",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "Status": {
-          "name": "Status",
+        "password": {
+          "name": "password",
           "type": "text",
           "primaryKey": false,
           "notNull": false
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "account_userId_user_id_fk": {
+          "name": "account_userId_user_id_fk",
+          "tableFrom": "account",
+          "tableTo": "user",
+          "columnsFrom": [
+            "userId"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {}
+    },
+    "public.session": {
+      "name": "session",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "text",
+          "primaryKey": true,
+          "notNull": true
         },
-        "OrderDate": {
-          "name": "OrderDate",
+        "expiresAt": {
+          "name": "expiresAt",
           "type": "timestamp",
           "primaryKey": false,
           "notNull": true
         },
-        "DeliveryAddress": {
-          "name": "DeliveryAddress",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "DeliveryTime": {
-          "name": "DeliveryTime",
-          "type": "timestamp",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "Distance": {
-          "name": "Distance",
-          "type": "real",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "Rating": {
-          "name": "Rating",
-          "type": "integer",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "Review": {
-          "name": "Review",
+        "ipAddress": {
+          "name": "ipAddress",
           "type": "text",
           "primaryKey": false,
           "notNull": false
+        },
+        "userAgent": {
+          "name": "userAgent",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "userId": {
+          "name": "userId",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
         }
       },
       "indexes": {},
       "foreignKeys": {
-        "Orders_UserId_Users_UserId_fk": {
-          "name": "Orders_UserId_Users_UserId_fk",
-          "tableFrom": "Orders",
-          "tableTo": "Users",
+        "session_userId_user_id_fk": {
+          "name": "session_userId_user_id_fk",
+          "tableFrom": "session",
+          "tableTo": "user",
           "columnsFrom": [
-            "UserId"
+            "userId"
           ],
           "columnsTo": [
-            "UserId"
+            "id"
           ],
           "onDelete": "no action",
           "onUpdate": "no action"
@@ -245,163 +136,99 @@
       "compositePrimaryKeys": {},
       "uniqueConstraints": {}
     },
-    "public.Products": {
-      "name": "Products",
+    "public.user": {
+      "name": "user",
       "schema": "",
       "columns": {
-        "ProductId": {
-          "name": "ProductId",
-          "type": "serial",
+        "id": {
+          "name": "id",
+          "type": "text",
           "primaryKey": true,
           "notNull": true
         },
-        "Name": {
-          "name": "Name",
+        "name": {
+          "name": "name",
           "type": "text",
           "primaryKey": false,
           "notNull": true
         },
-        "Description": {
-          "name": "Description",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "Price": {
-          "name": "Price",
-          "type": "real",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "Quantity": {
-          "name": "Quantity",
-          "type": "integer",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "ImageUrl": {
-          "name": "ImageUrl",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "CategoryId": {
-          "name": "CategoryId",
-          "type": "integer",
-          "primaryKey": false,
-          "notNull": true
-        }
-      },
-      "indexes": {},
-      "foreignKeys": {
-        "Products_CategoryId_Categories_ProductId_fk": {
-          "name": "Products_CategoryId_Categories_ProductId_fk",
-          "tableFrom": "Products",
-          "tableTo": "Categories",
-          "columnsFrom": [
-            "CategoryId"
-          ],
-          "columnsTo": [
-            "ProductId"
-          ],
-          "onDelete": "no action",
-          "onUpdate": "no action"
-        }
-      },
-      "compositePrimaryKeys": {},
-      "uniqueConstraints": {}
-    },
-    "public.Users": {
-      "name": "Users",
-      "schema": "",
-      "columns": {
-        "UserId": {
-          "name": "UserId",
-          "type": "serial",
-          "primaryKey": true,
-          "notNull": true
-        },
-        "Name": {
-          "name": "Name",
+        "email": {
+          "name": "email",
           "type": "text",
           "primaryKey": false,
           "notNull": true
         },
-        "Age": {
-          "name": "Age",
-          "type": "integer",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "UserName": {
-          "name": "UserName",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "Password": {
-          "name": "Password",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "Phone": {
-          "name": "Phone",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "Email": {
-          "name": "Email",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "Address": {
-          "name": "Address",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "ImageUrl": {
-          "name": "ImageUrl",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "IsCustomer": {
-          "name": "IsCustomer",
+        "emailVerified": {
+          "name": "emailVerified",
           "type": "boolean",
           "primaryKey": false,
+          "notNull": true
+        },
+        "image": {
+          "name": "image",
+          "type": "text",
+          "primaryKey": false,
           "notNull": false
         },
-        "CreatedDate": {
-          "name": "CreatedDate",
+        "createdAt": {
+          "name": "createdAt",
           "type": "timestamp",
           "primaryKey": false,
-          "notNull": true,
-          "default": "now()"
+          "notNull": true
+        },
+        "updatedAt": {
+          "name": "updatedAt",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true
         }
       },
       "indexes": {},
       "foreignKeys": {},
       "compositePrimaryKeys": {},
       "uniqueConstraints": {
-        "Users_Phone_unique": {
-          "name": "Users_Phone_unique",
+        "user_email_unique": {
+          "name": "user_email_unique",
           "nullsNotDistinct": false,
           "columns": [
-            "Phone"
-          ]
-        },
-        "Users_Email_unique": {
-          "name": "Users_Email_unique",
-          "nullsNotDistinct": false,
-          "columns": [
-            "Email"
+            "email"
           ]
         }
       }
+    },
+    "public.verification": {
+      "name": "verification",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "text",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "identifier": {
+          "name": "identifier",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "value": {
+          "name": "value",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "expiresAt": {
+          "name": "expiresAt",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {}
     }
   },
   "enums": {},
