@@ -3,7 +3,7 @@
 import Link from "next/link";
 import Image from "next/image";
 
-import { LogoSVG, IconSVG, GreenCircle, WhiteCircle } from "@/components/ui/svg";
+import { LogoSVG, IconSVG, GreenCircle, WhiteCircle } from "@/components/svg";
 
 const dishes = [
   { id: 1, name: "dish1", image: "/images/dish1.jfif" },
