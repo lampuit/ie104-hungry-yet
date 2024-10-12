@@ -1,5 +1,10 @@
 import type { Metadata } from "next";
+import { Montserrat } from "next/font/google";
 import "@/styles/globals.css";
+
+export const montserrat = Montserrat({
+  subsets: ["vietnamese"],
+});
 
 export const metadata: Metadata = {
   title: "Hungry Yet ?",
@@ -13,7 +18,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body>{children}</body>
+      <body className={montserrat.className}>{children}</body>
     </html>
   );
 }
