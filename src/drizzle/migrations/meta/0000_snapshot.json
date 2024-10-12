@@ -1,5 +1,5 @@
 {
-  "id": "513c4837-ba72-44d1-9153-0af911423375",
+  "id": "3f3ba0fa-12eb-4ef4-afc4-70fa533c13af",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "7",
   "dialect": "postgresql",
@@ -158,18 +158,6 @@
           "primaryKey": false,
           "notNull": true
         },
-        "emailVerified": {
-          "name": "emailVerified",
-          "type": "boolean",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "image": {
-          "name": "image",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": false
-        },
         "createdAt": {
           "name": "createdAt",
           "type": "timestamp",
@@ -195,40 +183,6 @@
           ]
         }
       }
-    },
-    "public.verification": {
-      "name": "verification",
-      "schema": "",
-      "columns": {
-        "id": {
-          "name": "id",
-          "type": "text",
-          "primaryKey": true,
-          "notNull": true
-        },
-        "identifier": {
-          "name": "identifier",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "value": {
-          "name": "value",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "expiresAt": {
-          "name": "expiresAt",
-          "type": "timestamp",
-          "primaryKey": false,
-          "notNull": true
-        }
-      },
-      "indexes": {},
-      "foreignKeys": {},
-      "compositePrimaryKeys": {},
-      "uniqueConstraints": {}
     }
   },
   "enums": {},
