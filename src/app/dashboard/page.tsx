@@ -52,7 +52,7 @@ export default function Dashboard() {
                 </button>
               </Link>
             </div>
-            <Link href="/login">
+            <Link href="/signup">
               <button className="rounded-[28px] bg-[#BFEA7C] px-4 py-2 space-x-2.5 font-semibold text-black shadow-[0px_4px_4px_0px_#00000040] hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2">
                 Đăng ký
               </button>
@@ -78,7 +78,7 @@ export default function Dashboard() {
               aliquet purus in, pellentesque odio. Aliquam erat<br/>
               volutpat. Quisque sit amet condimentum nulla.
             </p>
-            <Link href="/login">
+            <Link href="/">
               <button className="rounded-[28px] bg-[#BFEA7C] px-4 py-2 space-x-2.5 font-semibold text-black shadow-[0px_4px_4px_0px_#00000040]">
                 Đặt hàng ngay
               </button>
