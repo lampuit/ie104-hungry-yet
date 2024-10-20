@@ -1,7 +1,7 @@
 "use client";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { signUp } from "@/lib/auth-client";
+import { signIn } from "@/lib/auth-client";
 import { Button } from "@/components/ui/button";
 import { Loader2 } from "lucide-react";
 import { Card, CardHeader, CardContent } from "@/components/ui/card";
@@ -22,16 +22,14 @@ import {
 const formSchema = z.object({
   email: z.string().email("Email không hợp lệ"),
   password: z.string().min(8, "Mật khẩu phải có ít nhất 8 ký tự"),
-  name: z.string().min(1, "Tên người dùng không hợp lệ!"),
 });
 
-export default function Sign() {
+export default function Signin() {
   const router = useRouter();
   const [isPending, setIsPending] = useState(false);
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      name: "",
       email: "",
       password: "",
     },
@@ -40,7 +38,7 @@ export default function Sign() {
   async function onSubmit(values: z.infer<typeof formSchema>) {
     try {
       setIsPending(true);
-      await signUp.email({
+      await signIn.email({
         ...values,
         fetchOptions: {
           onError(ctx) {
@@ -48,10 +46,8 @@ export default function Sign() {
           },
         },
       });
-      router.push("/login");
+      router.push("/");
     } catch (error) {
-      setIsPending(false);
-
       toast.error(`${error}.`);
     } finally {
       setIsPending(false);
@@ -64,7 +60,7 @@ export default function Sign() {
     >
       <Card className="w-full max-w-md">
         <CardHeader>
-          <h2 className="text-center text-2xl font-bold">Đăng ký</h2>
+          <h2 className="text-center text-2xl font-bold">Đăng nhập</h2>
         </CardHeader>
         <CardContent>
           <Form {...form}>
@@ -72,20 +68,6 @@ export default function Sign() {
               onSubmit={form.handleSubmit(onSubmit)}
               className="flex flex-col justify-center space-y-8"
             >
-              <FormField
-                control={form.control}
-                name="name"
-                render={({ field }) => (
-                  <FormItem>
-                    <div className="font-medium">Họ và Tên</div>
-                    <FormControl>
-                      <Input placeholder="Nhập họ và tên" {...field} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-
               <FormField
                 control={form.control}
                 name="email"
@@ -122,7 +104,7 @@ export default function Sign() {
                 {isPending ? (
                   <>
                     <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                    Đăng ký...
+                    Đang đăng nhập...
                   </>
                 ) : (
                   "Đăng nhập"
@@ -130,6 +112,16 @@ export default function Sign() {
               </Button>
             </form>
           </Form>
+          <div className="mt-4 text-center text-sm">
+            Bạn có tài tài khoản chưa nhỉ?{" "}
+            <Button
+              variant="link"
+              className="p-0 text-blue-500 hover:underline"
+              onClick={() => router.push("/signup")}
+            >
+              Đăng ký
+            </Button>
+          </div>
         </CardContent>
       </Card>
       <ToastContainer

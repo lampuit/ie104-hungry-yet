@@ -15,7 +15,7 @@ export function Navbar() {
         <Link href={"#"}>Liên hệ</Link>
         <Link href={"#"}>Chúng tôi</Link>
         <Button asChild>
-          <Link href={"#"}>Đăng ký</Link>
+          <Link href={"/login"}>Đăng ký</Link>
         </Button>
       </div>
     </nav>
