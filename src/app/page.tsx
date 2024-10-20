@@ -1,4 +1,4 @@
-'use client'
+"use client";
 
 import Link from "next/link";
 import { Navbar } from "@/components/home/nav-bar";
@@ -11,9 +11,7 @@ import {
   CarouselItem,
   CarouselNext,
   CarouselPrevious,
-} from "@/components/ui/carousel"
-import { Card, CardContent } from "@/components/ui/card";
-
+} from "@/components/ui/carousel";
 
 export default function Homepage() {
   return (
@@ -49,10 +47,10 @@ export default function Homepage() {
           </div>
         </section>
 
-        <section className="flex flex-col justify-center items-center">
+        <section className="flex flex-col items-center justify-center">
           <div className="text-center">
             <p>Hmmmm</p>
-            <h1 className="font-semibold text-2xl">Trending Food</h1>
+            <h1 className="text-2xl font-semibold">Trending Food</h1>
             <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
           </div>
           <div className="flex">
@@ -65,9 +63,12 @@ export default function Homepage() {
               >
                 <CarouselContent>
                   {Array.from({ length: 5 }).map((_, index) => (
-                    <CarouselItem key={index} className="flex lg:basis-1/3 justify-center items-center">
+                    <CarouselItem
+                      key={index}
+                      className="flex items-center justify-center lg:basis-1/3"
+                    >
                       <div className="p-1">
-                        <div className="relative text-center bg-lime-100 border-4 border-lime-500 rounded-lg py-24 px-2 max-w-64 my-48">
+                        <div className="relative my-48 max-w-64 rounded-lg border-4 border-lime-500 bg-lime-100 px-2 py-24 text-center">
                           <Image
                             alt="bla bla 1"
                             width={154}
@@ -83,13 +84,11 @@ export default function Homepage() {
                   ))}
                 </CarouselContent>
                 <CarouselPrevious className="bg-green-500" />
-                <CarouselNext className="bg-green-500"/>
+                <CarouselNext className="bg-green-500" />
               </Carousel>
-
             </div>
           </div>
         </section>
-
       </header>
     </main>
   );
