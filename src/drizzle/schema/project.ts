@@ -71,7 +71,14 @@ export const shifts = pgTable("shifts", {
   shiftName: text("shiftName").notNull(),
   startTime: timestamp("startTime"),
   endTime: timestamp("endTime"),
-  userWorkShift: uuid("userWorkShift").references(() => users.userId), // Khóa ngoại
+});
+
+// Bảng userWorkSHifts
+export const userWorkShifts = pgTable("userWorkShifts", {
+  Id: uuid("Id").defaultRandom().primaryKey(),
+  userId: uuid("userId").notNull().references(() => users.userId), // Khóa ngoại
+  shiftId: uuid("shiftId").references(() => shifts.shiftId), // Khóa ngoại
+  workDate: timestamp("workDate").notNull()
 });
 
 // Bảng Users
