@@ -16,7 +16,38 @@ import {
 export default function Homepage() {
   return (
     <main>
-      <header className="p-10">
+      <section>
+        <div className="relative">
+          <div className="absolute"></div>
+        </div>
+        <header className="flex flex-col h-screen justify-between items-center">
+          <div className="bg-black">
+            <Navbar />
+          </div>
+
+          <div className="flex flex-col justify-between items-center min-h-52 max-h-64">
+            <h1 className="text-8xl text-center">Hungry Yet?</h1>
+            <p className="text-2xl text-center">Lorem ipsum dolor sit amet consectetur adipisicing elit. Maxime assumenda natus</p>
+            <div className="flex flex-row justify-around min-w-64">
+              <Button asChild>
+                <Link href={"#"}>Order Now</Link>
+              </Button>
+              <Button asChild>
+                <Link href={"#"}>View Menu</Link>
+              </Button>
+            </div>
+          </div>
+
+          <div className="flex flex-col justify-around items-center text-center">
+            <p>Monday - Sunday <br></br> 8:00 AM - 10:00 PM</p>
+            <p>ABC Street, HCM city</p>
+          </div>
+
+        </header>
+      </section>
+
+
+      {/* <header className="p-10">
         <Navbar />
 
         <section className="relative mt-40 flex flex-row justify-between px-40">
@@ -89,7 +120,7 @@ export default function Homepage() {
             </div>
           </div>
         </section>
-      </header>
+      </header> */}
     </main>
   );
 }
