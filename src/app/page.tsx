@@ -12,17 +12,19 @@ import {
   CarouselNext,
   CarouselPrevious,
 } from "@/components/ui/carousel";
+import { TimeAndAddress } from "@/components/home/time-address";
+import { ImgBg } from "@/components/home/img-bg";
 
 export default function Homepage() {
   return (
     <main>
       <section>
-        <div className="relative">
-          <div className="absolute"></div>
-        </div>
         <header className="flex flex-col h-screen justify-between items-center">
           <div className="bg-black">
             <Navbar />
+          </div>
+          <div className="relative">
+            {/* Cái này cho 3 hàng ảnh */}
           </div>
 
           <div className="flex flex-col justify-between items-center min-h-52 max-h-64">
@@ -38,14 +40,20 @@ export default function Homepage() {
             </div>
           </div>
 
-          <div className="flex flex-col justify-around items-center text-center">
-            <p>Monday - Sunday <br></br> 8:00 AM - 10:00 PM</p>
-            <p>ABC Street, HCM city</p>
+          <div className="relative end-1/3">
+            <TimeAndAddress />
           </div>
 
         </header>
       </section>
 
+      <section>
+        {/* Cái này cho thanh ảnh chạy */}
+      </section>
+
+      <section>
+        
+      </section>
 
       {/* <header className="p-10">
         <Navbar />
