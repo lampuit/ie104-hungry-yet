@@ -15,7 +15,7 @@ export function AppSidebar({
   items,
   pathname,
 }: {
-  items: { title: string; url: string; icon: any }[]; // eslint-disable-line @typescript-eslint/no-explicit-any
+  items: { title: string; url: string; icon: any }[];
   pathname: string;
 }) {
   return (

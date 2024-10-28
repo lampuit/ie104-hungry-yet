@@ -19,6 +19,7 @@ import { usePathname } from "next/navigation";
 import { ReactNode } from "react";
 import { Home, Package2 } from "lucide-react";
 import React from "react";
+import Link from "next/link";
 
 const items = [
   {
@@ -61,8 +62,11 @@ export default function Layout({ children }: { children: ReactNode }) {
                     ) : (
                       <>
                         <BreadcrumbItem>
-                          <BreadcrumbLink href={href}>
-                            {segment.charAt(0).toUpperCase() + segment.slice(1)}
+                          <BreadcrumbLink asChild>
+                            <Link href={href}>
+                              {segment.charAt(0).toUpperCase() +
+                                segment.slice(1)}
+                            </Link>
                           </BreadcrumbLink>
                         </BreadcrumbItem>
                         <BreadcrumbSeparator />
@@ -74,7 +78,7 @@ export default function Layout({ children }: { children: ReactNode }) {
             </BreadcrumbList>
           </Breadcrumb>
         </header>
-        <div className="flex flex-1 flex-col gap-4 p-4">{children}</div>
+        {children}
       </SidebarInset>
     </SidebarProvider>
   );

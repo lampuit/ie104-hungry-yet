@@ -1,5 +1,7 @@
 "use client";
 
+import Image from "next/image";
+
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
@@ -10,17 +12,18 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { ColumnDef } from "@tanstack/react-table";
 import { MoreHorizontal } from "lucide-react";
-import Image from "next/image";
+
+import { ColumnDef } from "@tanstack/react-table";
 
 export type Product = {
   id: string;
+  name: string;
   imageURL: string;
   price: number;
-  quantity: number;
   category: string;
   createdAt: string;
+  updatedAt: string;
 };
 
 export const columns: ColumnDef<Product>[] = [
@@ -29,16 +32,25 @@ export const columns: ColumnDef<Product>[] = [
     cell: ({ row }) => {
       const product = row.original;
       return (
-        <div className="flex justify-center">
-          <Image
-            alt="Product image"
-            className="aspect-square rounded-md object-cover"
-            width="120"
-            height="120"
-            src={product.imageURL}
-          />
-        </div>
+        <Image
+          alt="Product image"
+          className="aspect-square rounded-md object-cover"
+          width="120"
+          height="120"
+          src={product.imageURL}
+        />
       );
+    },
+    meta: {
+      headerClassName: "hidden w-[120px] sm:table-cell",
+      cellClassName: "hidden sm:table-cell",
+    },
+  },
+  {
+    accessorKey: "name",
+    header: () => <div>Tên sản phẩm</div>,
+    meta: {
+      cellClassName: "font-medium",
     },
   },
   {
@@ -51,24 +63,29 @@ export const columns: ColumnDef<Product>[] = [
         currency: "VND",
       }).format(price);
 
-      return <div className="font-medium text-green-600">{formatted}</div>;
+      return <div>{formatted}</div>;
     },
   },
-  {
-    accessorKey: "quantity",
-    header: () => <div>Số lượng</div>,
-  },
+
   {
     accessorKey: "category",
     header: () => <div>Thể loại</div>,
     cell: ({ row }) => {
       const category = String(row.getValue("category"));
-      return <Badge className="text-lg">{category}</Badge>;
+      return <Badge variant="outline">{category}</Badge>;
+    },
+    meta: {
+      headerClassName: "hidden lg:table-cell",
+      cellClassName: "hidden lg:table-cell",
     },
   },
   {
     accessorKey: "createdAt",
     header: () => <div>Ngày tạo</div>,
+    meta: {
+      headerClassName: "hidden md:table-cell",
+      cellClassName: "hidden md:table-cell",
+    },
   },
   {
     id: "actions",
