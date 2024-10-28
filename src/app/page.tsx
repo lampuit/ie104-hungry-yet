@@ -20,6 +20,9 @@ import { Intro } from "@/components/home/intro";
 import { Menu } from "@/components/home/menu";
 import { OrderOnline } from "@/components/home/order-online";
 import { Exhibition } from "@/components/home/exhibition";
+import { Testimonials } from "@/components/home/testimonials";
+import { HorizontalLine } from "@/components/home/intro";
+import { FAQ } from "@/components/home/faq";
 
 export default function Homepage() {
   return (
@@ -76,10 +79,33 @@ export default function Homepage() {
         <Exhibition />
       </section>
 
-      <section>
-        
+      <section className="">
+        <div className="flex flex-col justify-between items-start gap-4">
+          <h2 className="italic text-5xl px-12">Testimonials</h2>
+          <div className="px-12"><HorizontalLine /></div>
+          <div className="mt-4 grid grid-cols-4 overflow-hidden w-screen gap-8">
+            <Testimonials />
+            <Testimonials />
+            <Testimonials />
+            <Testimonials />
+          </div>
+        </div>
       </section>
 
+      <section>
+        <div className="flex flex-row justify-center items-start gap-24 w-2/3 mt-16 mx-12">
+          <div className="flex flex-col justify-center items-start gap-4">
+            <h2 className="italic text-5xl">FAQ</h2>
+            <div>
+              <HorizontalLine />
+            </div>
+          </div>
+          <FAQ />
+        </div>
+      </section>
+
+      <footer className="mt-10 h-80 w-screen bg-black">
+      </footer>
     </main>
   );
 }

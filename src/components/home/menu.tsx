@@ -14,7 +14,7 @@ export function Menu() {
     return (
         <div className="flex flex-col justify-between items-center gap-6">
             <div className="flex flex-row justify-between items-center w-2/3">
-                <div className="flex flex-col justify-start items-center">
+                <div className="flex flex-col justify-start items-center gap-4">
                     <h2 className='italic text-5xl'>Our Menu</h2>
                     <HorizontalLine />
                 </div>
