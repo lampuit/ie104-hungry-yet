@@ -13,23 +13,26 @@ import {
   CarouselPrevious,
 } from "@/components/ui/carousel";
 import { TimeAndAddress } from "@/components/home/time-address";
+import { Categories } from "@/components/home/categories";
 import { ImgBg } from "@/components/home/img-bg";
 import { Benefit } from "@/components/home/benefit";
 import { Intro } from "@/components/home/intro";
+import { Menu } from "@/components/home/menu";
+import { OrderOnline } from "@/components/home/order-online";
+import { Exhibition } from "@/components/home/exhibition";
 
 export default function Homepage() {
   return (
-    <main className="w-screen">
-      <section>
-        <header className="flex flex-col justify-between items-center h-screen bg-black">
-          <Navbar />
-
-          <div className="relative">
-            {/* Cái này cho 3 hàng ảnh */}
-            
+    <main className="overflow-hidden">
+      <section className="bg-black z-0">
+        <header className="flex flex-col justify-between items-center h-screen overflow-hidden z-10">
+          <div className="bg-black opacity z-20">
+            <Navbar />
           </div>
-
-          <div className="flex flex-col justify-between items-center min-h-52 max-h-64 text-white">
+          <div className="absolute right-full top-20 h-4/5">
+            <ImgBg />
+          </div>
+          <div className="flex flex-col justify-between items-center min-h-52 max-h-64 text-white z-10">
             <h1 className="text-8xl text-center">Hungry Yet?</h1>
             <p className="text-2xl text-center">Lorem ipsum dolor sit amet consectetur adipisicing elit. Maxime assumenda natus</p>
             <div className="flex flex-row justify-around min-w-64">
@@ -41,7 +44,6 @@ export default function Homepage() {
               </Button>
             </div>
           </div>
-
           <div className="relative end-1/3">
             <TimeAndAddress />
           </div>
@@ -49,7 +51,7 @@ export default function Homepage() {
       </section>
 
       <section>
-        {/* Cái này cho thanh ảnh chạy */}
+        <Categories />
       </section>
 
       <section>
@@ -58,8 +60,24 @@ export default function Homepage() {
         </div>
       </section>
 
-      <section>
+      <section className="mb-16">
         <Intro />
+      </section>
+
+      <section className="my-24">
+        <Menu />
+      </section>
+
+      <section className="">
+        <OrderOnline />
+      </section>
+
+      <section className="my-16">
+        <Exhibition />
+      </section>
+
+      <section>
+        
       </section>
 
     </main>
