@@ -4,6 +4,7 @@ import "@/styles/globals.css";
 
 export const montserrat = Montserrat({
   subsets: ["vietnamese"],
+  weight: ["400", "500", "600", "700"],
 });
 
 export const metadata: Metadata = {
