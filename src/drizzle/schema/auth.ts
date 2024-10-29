@@ -1,7 +1,7 @@
 import { pgTable, text, timestamp } from "drizzle-orm/pg-core";
 
 export const user = pgTable("user", {
-  id: text("userId").primaryKey(),
+  id: text("id").primaryKey(),
   userName: text("userName"),
   password: text("password"),
   phone: text("phone"),
@@ -9,7 +9,7 @@ export const user = pgTable("user", {
   address: text("address"),
   imageUrl: text("imageUrl"),
   role: text("role"),
-  createdDate: timestamp("createdDate"),
+  createdAt: timestamp("createdAt"),
 });
 
 export const session = pgTable("session", {

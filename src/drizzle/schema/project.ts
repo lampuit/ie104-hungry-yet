@@ -10,14 +10,14 @@ import { user } from "./auth";
 
 // Bảng Categories
 export const categories = pgTable("categories", {
-  categoryId: text("categoryId").primaryKey(),
+  categoryId: text("id").primaryKey(),
   categoryName: text("categoryName").notNull(),
   imageUrl: text("imageUrl"),
 });
 
 // Bảng Products
 export const products = pgTable("products", {
-  productId: text("productId").primaryKey(),
+  productId: text("id").primaryKey(),
   productName: text("productName").notNull(),
   description: text("description"),
   price: real("price").notNull(),
@@ -48,7 +48,7 @@ export const statusEnum = pgEnum("status", [
 
 // Bảng Orders
 export const orders = pgTable("orders", {
-  orderId: text("orderId").primaryKey(),
+  orderId: text("id").primaryKey(),
   userId: text("userId")
     .notNull()
     .references(() => user.id), // Khóa ngoại
@@ -76,7 +76,7 @@ export const orderProducts = pgTable("orderProducts", {
 
 // Bảng Payments
 export const payments = pgTable("payments", {
-  paymentId: text("paymentId").primaryKey(),
+  paymentId: text("id").primaryKey(),
   paymentName: text("paymentName").notNull(),
 });
 
@@ -90,7 +90,7 @@ export const discounts = pgTable("discounts", {
 
 // Bảng Shifts
 export const shifts = pgTable("shifts", {
-  shiftId: text("shiftId").primaryKey(),
+  shiftId: text("id").primaryKey(),
   shiftName: text("shiftName").notNull(),
   startTime: timestamp("startTime"),
   endTime: timestamp("endTime"),
@@ -98,7 +98,7 @@ export const shifts = pgTable("shifts", {
 
 // Bảng userWorkSHifts
 export const userWorkShifts = pgTable("userWorkShifts", {
-  Id: text("Id").primaryKey(),
+  Id: text("id").primaryKey(),
   userId: text("userId")
     .notNull()
     .references(() => user.id), // Khóa ngoại
@@ -121,7 +121,7 @@ export const userWorkShifts = pgTable("userWorkShifts", {
 
 // Bảng ShoppingCart
 export const shoppingCart = pgTable("shoppingCart", {
-  shoppingCartId: text("shoppingCartId").primaryKey(),
+  shoppingCartId: text("id").primaryKey(),
   userId: text("userId")
     .notNull()
     .references(() => user.id), // Khóa ngoại
