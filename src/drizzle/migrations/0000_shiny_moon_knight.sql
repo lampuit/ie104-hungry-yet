@@ -25,16 +25,19 @@ CREATE TABLE IF NOT EXISTS "session" (
 );
 --> statement-breakpoint
 CREATE TABLE IF NOT EXISTS "user" (
-	"id" text PRIMARY KEY NOT NULL,
-	"name" text NOT NULL,
-	"email" text NOT NULL,
-	"createdAt" timestamp NOT NULL,
-	"updatedAt" timestamp NOT NULL,
-	CONSTRAINT "user_email_unique" UNIQUE("email")
+	"userId" text PRIMARY KEY NOT NULL,
+	"userName" text,
+	"password" text,
+	"phone" text,
+	"email" text,
+	"address" text,
+	"imageUrl" text,
+	"role" text,
+	"createdDate" timestamp
 );
 --> statement-breakpoint
 CREATE TABLE IF NOT EXISTS "categories" (
-	"categoryId" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
+	"categoryId" text PRIMARY KEY NOT NULL,
 	"categoryName" text NOT NULL,
 	"imageUrl" text
 );
@@ -47,22 +50,22 @@ CREATE TABLE IF NOT EXISTS "discounts" (
 );
 --> statement-breakpoint
 CREATE TABLE IF NOT EXISTS "favorite" (
-	"userId" uuid NOT NULL,
-	"productId" uuid NOT NULL
+	"userId" text NOT NULL,
+	"productId" text NOT NULL
 );
 --> statement-breakpoint
 CREATE TABLE IF NOT EXISTS "orderProducts" (
-	"orderId" uuid NOT NULL,
-	"productId" uuid NOT NULL,
+	"orderId" text NOT NULL,
+	"productId" text NOT NULL,
 	"quantity" integer NOT NULL
 );
 --> statement-breakpoint
 CREATE TABLE IF NOT EXISTS "orders" (
-	"orderId" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
-	"userId" uuid NOT NULL,
-	"userShipId" uuid,
-	"userCookId" uuid,
-	"paymentId" uuid,
+	"orderId" text PRIMARY KEY NOT NULL,
+	"userId" text NOT NULL,
+	"userShipId" text,
+	"userCookId" text,
+	"paymentId" text,
 	"totalAmount" real,
 	"status" "status",
 	"orderDate" timestamp NOT NULL,
@@ -72,68 +75,62 @@ CREATE TABLE IF NOT EXISTS "orders" (
 );
 --> statement-breakpoint
 CREATE TABLE IF NOT EXISTS "payments" (
-	"paymentId" uuid PRIMARY KEY NOT NULL,
+	"paymentId" text PRIMARY KEY NOT NULL,
 	"paymentName" text NOT NULL
 );
 --> statement-breakpoint
 CREATE TABLE IF NOT EXISTS "products" (
-	"productId" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
+	"productId" text PRIMARY KEY NOT NULL,
 	"productName" text NOT NULL,
 	"description" text,
 	"price" real NOT NULL,
 	"quantity" integer NOT NULL,
 	"imageUrl" text,
-	"categoryId" uuid
+	"categoryId" text
 );
 --> statement-breakpoint
 CREATE TABLE IF NOT EXISTS "ratings" (
-	"productId" uuid NOT NULL,
-	"userId" uuid NOT NULL,
+	"productId" text NOT NULL,
+	"userId" text NOT NULL,
 	"star" integer NOT NULL,
 	"review" text
 );
 --> statement-breakpoint
 CREATE TABLE IF NOT EXISTS "shifts" (
-	"shiftId" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
+	"shiftId" text PRIMARY KEY NOT NULL,
 	"shiftName" text NOT NULL,
 	"startTime" timestamp,
-	"endTime" timestamp,
-	"userWorkShift" uuid
+	"endTime" timestamp
 );
 --> statement-breakpoint
 CREATE TABLE IF NOT EXISTS "shoppingCart" (
-	"shoppingCartId" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
-	"userId" uuid NOT NULL,
-	"productId" uuid NOT NULL,
+	"shoppingCartId" text PRIMARY KEY NOT NULL,
+	"userId" text NOT NULL,
+	"productId" text NOT NULL,
 	"quantity" integer NOT NULL
 );
 --> statement-breakpoint
-CREATE TABLE IF NOT EXISTS "users" (
-	"userId" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
-	"userName" text,
-	"password" text,
-	"phone" text,
-	"email" text,
-	"address" text,
-	"imageUrl" text,
-	"role" text,
-	"createdDate" timestamp
+CREATE TABLE IF NOT EXISTS "userWorkShifts" (
+	"Id" text PRIMARY KEY NOT NULL,
+	"userId" text NOT NULL,
+	"shiftId" text,
+	"workDate" timestamp NOT NULL
 );
 --> statement-breakpoint
 DO $$ BEGIN
- ALTER TABLE "account" ADD CONSTRAINT "account_userId_user_id_fk" FOREIGN KEY ("userId") REFERENCES "public"."user"("id") ON DELETE no action ON UPDATE no action;
+ ALTER TABLE "account" ADD CONSTRAINT "account_userId_user_userId_fk" FOREIGN KEY ("userId") REFERENCES "public"."user"("userId") ON DELETE no action ON UPDATE no action;
 EXCEPTION
  WHEN duplicate_object THEN null;
 END $$;
 --> statement-breakpoint
 DO $$ BEGIN
- ALTER TABLE "session" ADD CONSTRAINT "session_userId_user_id_fk" FOREIGN KEY ("userId") REFERENCES "public"."user"("id") ON DELETE no action ON UPDATE no action;
+ ALTER TABLE "session" ADD CONSTRAINT "session_userId_user_userId_fk" FOREIGN KEY ("userId") REFERENCES "public"."user"("userId") ON DELETE no action ON UPDATE no action;
 EXCEPTION
  WHEN duplicate_object THEN null;
 END $$;
 --> statement-breakpoint
 DO $$ BEGIN
- ALTER TABLE "favorite" ADD CONSTRAINT "favorite_userId_users_userId_fk" FOREIGN KEY ("userId") REFERENCES "public"."users"("userId") ON DELETE no action ON UPDATE no action;
+ ALTER TABLE "favorite" ADD CONSTRAINT "favorite_userId_user_userId_fk" FOREIGN KEY ("userId") REFERENCES "public"."user"("userId") ON DELETE no action ON UPDATE no action;
 EXCEPTION
  WHEN duplicate_object THEN null;
 END $$;
@@ -157,19 +154,19 @@ EXCEPTION
 END $$;
 --> statement-breakpoint
 DO $$ BEGIN
- ALTER TABLE "orders" ADD CONSTRAINT "orders_userId_users_userId_fk" FOREIGN KEY ("userId") REFERENCES "public"."users"("userId") ON DELETE no action ON UPDATE no action;
+ ALTER TABLE "orders" ADD CONSTRAINT "orders_userId_user_userId_fk" FOREIGN KEY ("userId") REFERENCES "public"."user"("userId") ON DELETE no action ON UPDATE no action;
 EXCEPTION
  WHEN duplicate_object THEN null;
 END $$;
 --> statement-breakpoint
 DO $$ BEGIN
- ALTER TABLE "orders" ADD CONSTRAINT "orders_userShipId_users_userId_fk" FOREIGN KEY ("userShipId") REFERENCES "public"."users"("userId") ON DELETE no action ON UPDATE no action;
+ ALTER TABLE "orders" ADD CONSTRAINT "orders_userShipId_user_userId_fk" FOREIGN KEY ("userShipId") REFERENCES "public"."user"("userId") ON DELETE no action ON UPDATE no action;
 EXCEPTION
  WHEN duplicate_object THEN null;
 END $$;
 --> statement-breakpoint
 DO $$ BEGIN
- ALTER TABLE "orders" ADD CONSTRAINT "orders_userCookId_users_userId_fk" FOREIGN KEY ("userCookId") REFERENCES "public"."users"("userId") ON DELETE no action ON UPDATE no action;
+ ALTER TABLE "orders" ADD CONSTRAINT "orders_userCookId_user_userId_fk" FOREIGN KEY ("userCookId") REFERENCES "public"."user"("userId") ON DELETE no action ON UPDATE no action;
 EXCEPTION
  WHEN duplicate_object THEN null;
 END $$;
@@ -199,25 +196,31 @@ EXCEPTION
 END $$;
 --> statement-breakpoint
 DO $$ BEGIN
- ALTER TABLE "ratings" ADD CONSTRAINT "ratings_userId_users_userId_fk" FOREIGN KEY ("userId") REFERENCES "public"."users"("userId") ON DELETE no action ON UPDATE no action;
+ ALTER TABLE "ratings" ADD CONSTRAINT "ratings_userId_user_userId_fk" FOREIGN KEY ("userId") REFERENCES "public"."user"("userId") ON DELETE no action ON UPDATE no action;
 EXCEPTION
  WHEN duplicate_object THEN null;
 END $$;
 --> statement-breakpoint
 DO $$ BEGIN
- ALTER TABLE "shifts" ADD CONSTRAINT "shifts_userWorkShift_users_userId_fk" FOREIGN KEY ("userWorkShift") REFERENCES "public"."users"("userId") ON DELETE no action ON UPDATE no action;
-EXCEPTION
- WHEN duplicate_object THEN null;
-END $$;
---> statement-breakpoint
-DO $$ BEGIN
- ALTER TABLE "shoppingCart" ADD CONSTRAINT "shoppingCart_userId_users_userId_fk" FOREIGN KEY ("userId") REFERENCES "public"."users"("userId") ON DELETE no action ON UPDATE no action;
+ ALTER TABLE "shoppingCart" ADD CONSTRAINT "shoppingCart_userId_user_userId_fk" FOREIGN KEY ("userId") REFERENCES "public"."user"("userId") ON DELETE no action ON UPDATE no action;
 EXCEPTION
  WHEN duplicate_object THEN null;
 END $$;
 --> statement-breakpoint
 DO $$ BEGIN
  ALTER TABLE "shoppingCart" ADD CONSTRAINT "shoppingCart_productId_products_productId_fk" FOREIGN KEY ("productId") REFERENCES "public"."products"("productId") ON DELETE no action ON UPDATE no action;
+EXCEPTION
+ WHEN duplicate_object THEN null;
+END $$;
+--> statement-breakpoint
+DO $$ BEGIN
+ ALTER TABLE "userWorkShifts" ADD CONSTRAINT "userWorkShifts_userId_user_userId_fk" FOREIGN KEY ("userId") REFERENCES "public"."user"("userId") ON DELETE no action ON UPDATE no action;
+EXCEPTION
+ WHEN duplicate_object THEN null;
+END $$;
+--> statement-breakpoint
+DO $$ BEGIN
+ ALTER TABLE "userWorkShifts" ADD CONSTRAINT "userWorkShifts_shiftId_shifts_shiftId_fk" FOREIGN KEY ("shiftId") REFERENCES "public"."shifts"("shiftId") ON DELETE no action ON UPDATE no action;
 EXCEPTION
  WHEN duplicate_object THEN null;
 END $$;

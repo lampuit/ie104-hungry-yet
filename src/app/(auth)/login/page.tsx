@@ -86,10 +86,10 @@ export default function Signin() {
                 name="password"
                 render={({ field }) => (
                   <FormItem>
-                    <div className="font-medium">Password</div>
+                    <div className="font-medium">Mật khẩu</div>
                     <FormControl>
                       <Input
-                        placeholder="Nhập email"
+                        placeholder="Nhập mật khẩu"
                         type="password"
                         {...field}
                       />

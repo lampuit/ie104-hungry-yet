@@ -9,7 +9,7 @@ export const montserrat = Montserrat({
 
 export const metadata: Metadata = {
   title: "Hungry Yet ?",
-  description: "Created by Team 7",
+  description: "Created by Team 8",
 };
 
 export default function RootLayout({
