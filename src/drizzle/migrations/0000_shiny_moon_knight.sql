@@ -8,7 +8,7 @@ CREATE TABLE IF NOT EXISTS "account" (
 	"id" text PRIMARY KEY NOT NULL,
 	"accountId" text NOT NULL,
 	"providerId" text NOT NULL,
-	"userId" uuid NOT NULL,
+	"userId" text NOT NULL,
 	"accessToken" text,
 	"refreshToken" text,
 	"idToken" text,
@@ -21,11 +21,11 @@ CREATE TABLE IF NOT EXISTS "session" (
 	"expiresAt" timestamp NOT NULL,
 	"ipAddress" text,
 	"userAgent" text,
-	"userId" uuid NOT NULL
+	"userId" text NOT NULL
 );
 --> statement-breakpoint
 CREATE TABLE IF NOT EXISTS "user" (
-	"userId" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
+	"userId" text PRIMARY KEY NOT NULL,
 	"userName" text,
 	"password" text,
 	"phone" text,
@@ -37,7 +37,7 @@ CREATE TABLE IF NOT EXISTS "user" (
 );
 --> statement-breakpoint
 CREATE TABLE IF NOT EXISTS "categories" (
-	"categoryId" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
+	"categoryId" text PRIMARY KEY NOT NULL,
 	"categoryName" text NOT NULL,
 	"imageUrl" text
 );
@@ -50,22 +50,22 @@ CREATE TABLE IF NOT EXISTS "discounts" (
 );
 --> statement-breakpoint
 CREATE TABLE IF NOT EXISTS "favorite" (
-	"userId" uuid NOT NULL,
-	"productId" uuid NOT NULL
+	"userId" text NOT NULL,
+	"productId" text NOT NULL
 );
 --> statement-breakpoint
 CREATE TABLE IF NOT EXISTS "orderProducts" (
-	"orderId" uuid NOT NULL,
-	"productId" uuid NOT NULL,
+	"orderId" text NOT NULL,
+	"productId" text NOT NULL,
 	"quantity" integer NOT NULL
 );
 --> statement-breakpoint
 CREATE TABLE IF NOT EXISTS "orders" (
-	"orderId" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
-	"userId" uuid NOT NULL,
-	"userShipId" uuid,
-	"userCookId" uuid,
-	"paymentId" uuid,
+	"orderId" text PRIMARY KEY NOT NULL,
+	"userId" text NOT NULL,
+	"userShipId" text,
+	"userCookId" text,
+	"paymentId" text,
 	"totalAmount" real,
 	"status" "status",
 	"orderDate" timestamp NOT NULL,
@@ -75,45 +75,45 @@ CREATE TABLE IF NOT EXISTS "orders" (
 );
 --> statement-breakpoint
 CREATE TABLE IF NOT EXISTS "payments" (
-	"paymentId" uuid PRIMARY KEY NOT NULL,
+	"paymentId" text PRIMARY KEY NOT NULL,
 	"paymentName" text NOT NULL
 );
 --> statement-breakpoint
 CREATE TABLE IF NOT EXISTS "products" (
-	"productId" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
+	"productId" text PRIMARY KEY NOT NULL,
 	"productName" text NOT NULL,
 	"description" text,
 	"price" real NOT NULL,
 	"quantity" integer NOT NULL,
 	"imageUrl" text,
-	"categoryId" uuid
+	"categoryId" text
 );
 --> statement-breakpoint
 CREATE TABLE IF NOT EXISTS "ratings" (
-	"productId" uuid NOT NULL,
-	"userId" uuid NOT NULL,
+	"productId" text NOT NULL,
+	"userId" text NOT NULL,
 	"star" integer NOT NULL,
 	"review" text
 );
 --> statement-breakpoint
 CREATE TABLE IF NOT EXISTS "shifts" (
-	"shiftId" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
+	"shiftId" text PRIMARY KEY NOT NULL,
 	"shiftName" text NOT NULL,
 	"startTime" timestamp,
 	"endTime" timestamp
 );
 --> statement-breakpoint
 CREATE TABLE IF NOT EXISTS "shoppingCart" (
-	"shoppingCartId" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
-	"userId" uuid NOT NULL,
-	"productId" uuid NOT NULL,
+	"shoppingCartId" text PRIMARY KEY NOT NULL,
+	"userId" text NOT NULL,
+	"productId" text NOT NULL,
 	"quantity" integer NOT NULL
 );
 --> statement-breakpoint
 CREATE TABLE IF NOT EXISTS "userWorkShifts" (
-	"Id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
-	"userId" uuid NOT NULL,
-	"shiftId" uuid,
+	"Id" text PRIMARY KEY NOT NULL,
+	"userId" text NOT NULL,
+	"shiftId" text,
 	"workDate" timestamp NOT NULL
 );
 --> statement-breakpoint

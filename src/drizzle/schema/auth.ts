@@ -1,7 +1,7 @@
-import { pgTable, text, timestamp, uuid } from "drizzle-orm/pg-core";
+import { pgTable, text, timestamp } from "drizzle-orm/pg-core";
 
 export const user = pgTable("user", {
-  id: uuid("userId").defaultRandom().primaryKey(),
+  id: text("userId").primaryKey(),
   userName: text("userName"),
   password: text("password"),
   phone: text("phone"),
@@ -17,7 +17,7 @@ export const session = pgTable("session", {
   expiresAt: timestamp("expiresAt").notNull(),
   ipAddress: text("ipAddress"),
   userAgent: text("userAgent"),
-  userId: uuid("userId")
+  userId: text("userId")
     .notNull()
     .references(() => user.id),
 });
@@ -26,7 +26,7 @@ export const account = pgTable("account", {
   id: text("id").primaryKey(),
   accountId: text("accountId").notNull(),
   providerId: text("providerId").notNull(),
-  userId: uuid("userId")
+  userId: text("userId")
     .notNull()
     .references(() => user.id),
   accessToken: text("accessToken"),

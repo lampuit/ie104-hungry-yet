@@ -1,7 +1,6 @@
 import {
   pgTable,
   pgEnum,
-  uuid,
   text,
   real,
   integer,
@@ -11,28 +10,28 @@ import { user } from "./auth";
 
 // Bảng Categories
 export const categories = pgTable("categories", {
-  categoryId: uuid("categoryId").defaultRandom().primaryKey(),
+  categoryId: text("categoryId").primaryKey(),
   categoryName: text("categoryName").notNull(),
   imageUrl: text("imageUrl"),
 });
 
 // Bảng Products
 export const products = pgTable("products", {
-  productId: uuid("productId").defaultRandom().primaryKey(),
+  productId: text("productId").primaryKey(),
   productName: text("productName").notNull(),
   description: text("description"),
   price: real("price").notNull(),
   quantity: integer("quantity").notNull(),
   imageUrl: text("imageUrl"),
-  categoryId: uuid("categoryId").references(() => categories.categoryId), // Khóa ngoại
+  categoryId: text("categoryId").references(() => categories.categoryId), // Khóa ngoại
 });
 
 // Bảng Ratings
 export const ratings = pgTable("ratings", {
-  productId: uuid("productId")
+  productId: text("productId")
     .notNull()
     .references(() => products.productId), // Khóa ngoại
-  userId: uuid("userId")
+  userId: text("userId")
     .notNull()
     .references(() => user.id), // Khóa ngoại
   star: integer("star").notNull(),
@@ -49,13 +48,13 @@ export const statusEnum = pgEnum("status", [
 
 // Bảng Orders
 export const orders = pgTable("orders", {
-  orderId: uuid("orderId").defaultRandom().primaryKey(),
-  userId: uuid("userId")
+  orderId: text("orderId").primaryKey(),
+  userId: text("userId")
     .notNull()
     .references(() => user.id), // Khóa ngoại
-  userShipId: uuid("userShipId").references(() => user.id), // Khóa ngoại
-  userCookId: uuid("userCookId").references(() => user.id), // Khóa ngoại
-  paymentId: uuid("paymentId").references(() => payments.paymentId), // Khóa ngoại
+  userShipId: text("userShipId").references(() => user.id), // Khóa ngoại
+  userCookId: text("userCookId").references(() => user.id), // Khóa ngoại
+  paymentId: text("paymentId").references(() => payments.paymentId), // Khóa ngoại
   totalAmount: real("totalAmount"),
   status: statusEnum("status"),
   orderDate: timestamp("orderDate").notNull(),
@@ -66,10 +65,10 @@ export const orders = pgTable("orders", {
 
 // Bảng OrderProducts
 export const orderProducts = pgTable("orderProducts", {
-  orderId: uuid("orderId")
+  orderId: text("orderId")
     .notNull()
     .references(() => orders.orderId), // Khóa ngoại
-  productId: uuid("productId")
+  productId: text("productId")
     .notNull()
     .references(() => products.productId), // Khóa ngoại
   quantity: integer("quantity").notNull(),
@@ -77,7 +76,7 @@ export const orderProducts = pgTable("orderProducts", {
 
 // Bảng Payments
 export const payments = pgTable("payments", {
-  paymentId: uuid("paymentId").primaryKey(),
+  paymentId: text("paymentId").primaryKey(),
   paymentName: text("paymentName").notNull(),
 });
 
@@ -91,7 +90,7 @@ export const discounts = pgTable("discounts", {
 
 // Bảng Shifts
 export const shifts = pgTable("shifts", {
-  shiftId: uuid("shiftId").defaultRandom().primaryKey(),
+  shiftId: text("shiftId").primaryKey(),
   shiftName: text("shiftName").notNull(),
   startTime: timestamp("startTime"),
   endTime: timestamp("endTime"),
@@ -99,17 +98,17 @@ export const shifts = pgTable("shifts", {
 
 // Bảng userWorkSHifts
 export const userWorkShifts = pgTable("userWorkShifts", {
-  Id: uuid("Id").defaultRandom().primaryKey(),
-  userId: uuid("userId")
+  Id: text("Id").primaryKey(),
+  userId: text("userId")
     .notNull()
     .references(() => user.id), // Khóa ngoại
-  shiftId: uuid("shiftId").references(() => shifts.shiftId), // Khóa ngoại
+  shiftId: text("shiftId").references(() => shifts.shiftId), // Khóa ngoại
   workDate: timestamp("workDate").notNull(),
 });
 
 // Bảng user
 // export const user = pgTable("user", {
-//   userId: uuid("userId").defaultRandom().primaryKey(),
+//   userId: text("userId")..primaryKey(),
 //   userName: text("userName"),
 //   password: text("password"),
 //   phone: text("phone"),
@@ -122,11 +121,11 @@ export const userWorkShifts = pgTable("userWorkShifts", {
 
 // Bảng ShoppingCart
 export const shoppingCart = pgTable("shoppingCart", {
-  shoppingCartId: uuid("shoppingCartId").defaultRandom().primaryKey(),
-  userId: uuid("userId")
+  shoppingCartId: text("shoppingCartId").primaryKey(),
+  userId: text("userId")
     .notNull()
     .references(() => user.id), // Khóa ngoại
-  productId: uuid("productId")
+  productId: text("productId")
     .notNull()
     .references(() => products.productId), // Khóa ngoại
   quantity: integer("quantity").notNull(),
@@ -134,10 +133,10 @@ export const shoppingCart = pgTable("shoppingCart", {
 
 // Bảng Favorite
 export const favorite = pgTable("favorite", {
-  userId: uuid("userId")
+  userId: text("userId")
     .notNull()
     .references(() => user.id), // Khóa ngoại
-  productId: uuid("productId")
+  productId: text("productId")
     .notNull()
     .references(() => products.productId), // Khóa ngoại
 });
