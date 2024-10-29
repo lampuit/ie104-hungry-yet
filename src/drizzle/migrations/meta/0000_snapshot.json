@@ -1,5 +1,5 @@
 {
-  "id": "aa820467-e318-45e0-82aa-e1e0c009df7a",
+  "id": "216d8c78-1564-4c8a-8811-7e85ac47c654",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "7",
   "dialect": "postgresql",
@@ -28,7 +28,7 @@
         },
         "userId": {
           "name": "userId",
-          "type": "text",
+          "type": "uuid",
           "primaryKey": false,
           "notNull": true
         },
@@ -65,15 +65,15 @@
       },
       "indexes": {},
       "foreignKeys": {
-        "account_userId_user_id_fk": {
-          "name": "account_userId_user_id_fk",
+        "account_userId_user_userId_fk": {
+          "name": "account_userId_user_userId_fk",
           "tableFrom": "account",
           "tableTo": "user",
           "columnsFrom": [
             "userId"
           ],
           "columnsTo": [
-            "id"
+            "userId"
           ],
           "onDelete": "no action",
           "onUpdate": "no action"
@@ -112,22 +112,22 @@
         },
         "userId": {
           "name": "userId",
-          "type": "text",
+          "type": "uuid",
           "primaryKey": false,
           "notNull": true
         }
       },
       "indexes": {},
       "foreignKeys": {
-        "session_userId_user_id_fk": {
-          "name": "session_userId_user_id_fk",
+        "session_userId_user_userId_fk": {
+          "name": "session_userId_user_userId_fk",
           "tableFrom": "session",
           "tableTo": "user",
           "columnsFrom": [
             "userId"
           ],
           "columnsTo": [
-            "id"
+            "userId"
           ],
           "onDelete": "no action",
           "onUpdate": "no action"
@@ -140,49 +140,66 @@
       "name": "user",
       "schema": "",
       "columns": {
-        "id": {
-          "name": "id",
-          "type": "text",
+        "userId": {
+          "name": "userId",
+          "type": "uuid",
           "primaryKey": true,
-          "notNull": true
+          "notNull": true,
+          "default": "gen_random_uuid()"
         },
-        "name": {
-          "name": "name",
+        "userName": {
+          "name": "userName",
           "type": "text",
           "primaryKey": false,
-          "notNull": true
+          "notNull": false
+        },
+        "password": {
+          "name": "password",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "phone": {
+          "name": "phone",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
         },
         "email": {
           "name": "email",
           "type": "text",
           "primaryKey": false,
-          "notNull": true
+          "notNull": false
         },
-        "createdAt": {
-          "name": "createdAt",
+        "address": {
+          "name": "address",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "imageUrl": {
+          "name": "imageUrl",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "role": {
+          "name": "role",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "createdDate": {
+          "name": "createdDate",
           "type": "timestamp",
           "primaryKey": false,
-          "notNull": true
-        },
-        "updatedAt": {
-          "name": "updatedAt",
-          "type": "timestamp",
-          "primaryKey": false,
-          "notNull": true
+          "notNull": false
         }
       },
       "indexes": {},
       "foreignKeys": {},
       "compositePrimaryKeys": {},
-      "uniqueConstraints": {
-        "user_email_unique": {
-          "name": "user_email_unique",
-          "nullsNotDistinct": false,
-          "columns": [
-            "email"
-          ]
-        }
-      }
+      "uniqueConstraints": {}
     },
     "public.categories": {
       "name": "categories",
@@ -266,10 +283,10 @@
       },
       "indexes": {},
       "foreignKeys": {
-        "favorite_userId_users_userId_fk": {
-          "name": "favorite_userId_users_userId_fk",
+        "favorite_userId_user_userId_fk": {
+          "name": "favorite_userId_user_userId_fk",
           "tableFrom": "favorite",
-          "tableTo": "users",
+          "tableTo": "user",
           "columnsFrom": [
             "userId"
           ],
@@ -426,10 +443,10 @@
       },
       "indexes": {},
       "foreignKeys": {
-        "orders_userId_users_userId_fk": {
-          "name": "orders_userId_users_userId_fk",
+        "orders_userId_user_userId_fk": {
+          "name": "orders_userId_user_userId_fk",
           "tableFrom": "orders",
-          "tableTo": "users",
+          "tableTo": "user",
           "columnsFrom": [
             "userId"
           ],
@@ -439,10 +456,10 @@
           "onDelete": "no action",
           "onUpdate": "no action"
         },
-        "orders_userShipId_users_userId_fk": {
-          "name": "orders_userShipId_users_userId_fk",
+        "orders_userShipId_user_userId_fk": {
+          "name": "orders_userShipId_user_userId_fk",
           "tableFrom": "orders",
-          "tableTo": "users",
+          "tableTo": "user",
           "columnsFrom": [
             "userShipId"
           ],
@@ -452,10 +469,10 @@
           "onDelete": "no action",
           "onUpdate": "no action"
         },
-        "orders_userCookId_users_userId_fk": {
-          "name": "orders_userCookId_users_userId_fk",
+        "orders_userCookId_user_userId_fk": {
+          "name": "orders_userCookId_user_userId_fk",
           "tableFrom": "orders",
-          "tableTo": "users",
+          "tableTo": "user",
           "columnsFrom": [
             "userCookId"
           ],
@@ -628,10 +645,10 @@
           "onDelete": "no action",
           "onUpdate": "no action"
         },
-        "ratings_userId_users_userId_fk": {
-          "name": "ratings_userId_users_userId_fk",
+        "ratings_userId_user_userId_fk": {
+          "name": "ratings_userId_user_userId_fk",
           "tableFrom": "ratings",
-          "tableTo": "users",
+          "tableTo": "user",
           "columnsFrom": [
             "userId"
           ],
@@ -712,10 +729,10 @@
       },
       "indexes": {},
       "foreignKeys": {
-        "shoppingCart_userId_users_userId_fk": {
-          "name": "shoppingCart_userId_users_userId_fk",
+        "shoppingCart_userId_user_userId_fk": {
+          "name": "shoppingCart_userId_user_userId_fk",
           "tableFrom": "shoppingCart",
-          "tableTo": "users",
+          "tableTo": "user",
           "columnsFrom": [
             "userId"
           ],
@@ -774,10 +791,10 @@
       },
       "indexes": {},
       "foreignKeys": {
-        "userWorkShifts_userId_users_userId_fk": {
-          "name": "userWorkShifts_userId_users_userId_fk",
+        "userWorkShifts_userId_user_userId_fk": {
+          "name": "userWorkShifts_userId_user_userId_fk",
           "tableFrom": "userWorkShifts",
-          "tableTo": "users",
+          "tableTo": "user",
           "columnsFrom": [
             "userId"
           ],
@@ -801,71 +818,6 @@
           "onUpdate": "no action"
         }
       },
-      "compositePrimaryKeys": {},
-      "uniqueConstraints": {}
-    },
-    "public.users": {
-      "name": "users",
-      "schema": "",
-      "columns": {
-        "userId": {
-          "name": "userId",
-          "type": "uuid",
-          "primaryKey": true,
-          "notNull": true,
-          "default": "gen_random_uuid()"
-        },
-        "userName": {
-          "name": "userName",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "password": {
-          "name": "password",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "phone": {
-          "name": "phone",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "email": {
-          "name": "email",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "address": {
-          "name": "address",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "imageUrl": {
-          "name": "imageUrl",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "role": {
-          "name": "role",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "createdDate": {
-          "name": "createdDate",
-          "type": "timestamp",
-          "primaryKey": false,
-          "notNull": false
-        }
-      },
-      "indexes": {},
-      "foreignKeys": {},
       "compositePrimaryKeys": {},
       "uniqueConstraints": {}
     }
