@@ -7,30 +7,41 @@ import {
   timestamp,
 } from "drizzle-orm/pg-core";
 import { user } from "./auth";
+import { relations } from "drizzle-orm";
 
 // Bảng Categories
 export const categories = pgTable("categories", {
-  categoryId: text("id").primaryKey(),
-  categoryName: text("categoryName").notNull(),
+  id: text("id").primaryKey(),
+  name: text("name").notNull(),
   imageUrl: text("imageUrl"),
 });
 
+// Relation: 1 category -> n products
+export const usersRelations = relations(categories, ({ many }) => ({
+  products: many(products),
+}));
+
 // Bảng Products
 export const products = pgTable("products", {
-  productId: text("id").primaryKey(),
-  productName: text("productName").notNull(),
+  id: text("id").primaryKey(),
+  name: text("name").notNull(),
   description: text("description"),
   price: real("price").notNull(),
   quantity: integer("quantity").notNull(),
   imageUrl: text("imageUrl"),
-  categoryId: text("categoryId").references(() => categories.categoryId), // Khóa ngoại
+  categoryId: text("categoryId").references(() => categories.id), // Khóa ngoại
 });
+
+//Relation: 1 product -> 1 category
+export const productRalation = relations(products, ({ one }) => ({
+  categoieries: one(categories),
+}));
 
 // Bảng Ratings
 export const ratings = pgTable("ratings", {
   productId: text("productId")
     .notNull()
-    .references(() => products.productId), // Khóa ngoại
+    .references(() => products.id), // Khóa ngoại
   userId: text("userId")
     .notNull()
     .references(() => user.id), // Khóa ngoại
@@ -48,7 +59,7 @@ export const statusEnum = pgEnum("status", [
 
 // Bảng Orders
 export const orders = pgTable("orders", {
-  orderId: text("id").primaryKey(),
+  id: text("id").primaryKey(),
   userId: text("userId")
     .notNull()
     .references(() => user.id), // Khóa ngoại
@@ -67,10 +78,10 @@ export const orders = pgTable("orders", {
 export const orderProducts = pgTable("orderProducts", {
   orderId: text("orderId")
     .notNull()
-    .references(() => orders.orderId), // Khóa ngoại
+    .references(() => orders.id), // Khóa ngoại
   productId: text("productId")
     .notNull()
-    .references(() => products.productId), // Khóa ngoại
+    .references(() => products.id), // Khóa ngoại
   quantity: integer("quantity").notNull(),
 });
 
@@ -90,7 +101,7 @@ export const discounts = pgTable("discounts", {
 
 // Bảng Shifts
 export const shifts = pgTable("shifts", {
-  shiftId: text("id").primaryKey(),
+  id: text("id").primaryKey(),
   shiftName: text("shiftName").notNull(),
   startTime: timestamp("startTime"),
   endTime: timestamp("endTime"),
@@ -98,11 +109,11 @@ export const shifts = pgTable("shifts", {
 
 // Bảng userWorkSHifts
 export const userWorkShifts = pgTable("userWorkShifts", {
-  Id: text("id").primaryKey(),
+  id: text("id").primaryKey(),
   userId: text("userId")
     .notNull()
     .references(() => user.id), // Khóa ngoại
-  shiftId: text("shiftId").references(() => shifts.shiftId), // Khóa ngoại
+  shiftId: text("shiftId").references(() => shifts.id), // Khóa ngoại
   workDate: timestamp("workDate").notNull(),
 });
 
@@ -121,13 +132,13 @@ export const userWorkShifts = pgTable("userWorkShifts", {
 
 // Bảng ShoppingCart
 export const shoppingCart = pgTable("shoppingCart", {
-  shoppingCartId: text("id").primaryKey(),
+  id: text("id").primaryKey(),
   userId: text("userId")
     .notNull()
     .references(() => user.id), // Khóa ngoại
   productId: text("productId")
     .notNull()
-    .references(() => products.productId), // Khóa ngoại
+    .references(() => products.id), // Khóa ngoại
   quantity: integer("quantity").notNull(),
 });
 
@@ -138,5 +149,5 @@ export const favorite = pgTable("favorite", {
     .references(() => user.id), // Khóa ngoại
   productId: text("productId")
     .notNull()
-    .references(() => products.productId), // Khóa ngoại
+    .references(() => products.id), // Khóa ngoại
 });
