@@ -97,8 +97,7 @@ CREATE TABLE IF NOT EXISTS "shifts" (
 	"shiftId" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
 	"shiftName" text NOT NULL,
 	"startTime" timestamp,
-	"endTime" timestamp,
-	"userWorkShift" uuid
+	"endTime" timestamp
 );
 --> statement-breakpoint
 CREATE TABLE IF NOT EXISTS "shoppingCart" (
@@ -106,6 +105,13 @@ CREATE TABLE IF NOT EXISTS "shoppingCart" (
 	"userId" uuid NOT NULL,
 	"productId" uuid NOT NULL,
 	"quantity" integer NOT NULL
+);
+--> statement-breakpoint
+CREATE TABLE IF NOT EXISTS "userWorkShifts" (
+	"Id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
+	"userId" uuid NOT NULL,
+	"shiftId" uuid,
+	"workDate" timestamp NOT NULL
 );
 --> statement-breakpoint
 CREATE TABLE IF NOT EXISTS "users" (
@@ -205,12 +211,6 @@ EXCEPTION
 END $$;
 --> statement-breakpoint
 DO $$ BEGIN
- ALTER TABLE "shifts" ADD CONSTRAINT "shifts_userWorkShift_users_userId_fk" FOREIGN KEY ("userWorkShift") REFERENCES "public"."users"("userId") ON DELETE no action ON UPDATE no action;
-EXCEPTION
- WHEN duplicate_object THEN null;
-END $$;
---> statement-breakpoint
-DO $$ BEGIN
  ALTER TABLE "shoppingCart" ADD CONSTRAINT "shoppingCart_userId_users_userId_fk" FOREIGN KEY ("userId") REFERENCES "public"."users"("userId") ON DELETE no action ON UPDATE no action;
 EXCEPTION
  WHEN duplicate_object THEN null;
@@ -218,6 +218,18 @@ END $$;
 --> statement-breakpoint
 DO $$ BEGIN
  ALTER TABLE "shoppingCart" ADD CONSTRAINT "shoppingCart_productId_products_productId_fk" FOREIGN KEY ("productId") REFERENCES "public"."products"("productId") ON DELETE no action ON UPDATE no action;
+EXCEPTION
+ WHEN duplicate_object THEN null;
+END $$;
+--> statement-breakpoint
+DO $$ BEGIN
+ ALTER TABLE "userWorkShifts" ADD CONSTRAINT "userWorkShifts_userId_users_userId_fk" FOREIGN KEY ("userId") REFERENCES "public"."users"("userId") ON DELETE no action ON UPDATE no action;
+EXCEPTION
+ WHEN duplicate_object THEN null;
+END $$;
+--> statement-breakpoint
+DO $$ BEGIN
+ ALTER TABLE "userWorkShifts" ADD CONSTRAINT "userWorkShifts_shiftId_shifts_shiftId_fk" FOREIGN KEY ("shiftId") REFERENCES "public"."shifts"("shiftId") ON DELETE no action ON UPDATE no action;
 EXCEPTION
  WHEN duplicate_object THEN null;
 END $$;

@@ -1,5 +1,5 @@
 {
-  "id": "94def3f0-1761-4aba-b54f-1d3cbe69cbda",
+  "id": "aa820467-e318-45e0-82aa-e1e0c009df7a",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "7",
   "dialect": "postgresql",
@@ -673,30 +673,10 @@
           "type": "timestamp",
           "primaryKey": false,
           "notNull": false
-        },
-        "userWorkShift": {
-          "name": "userWorkShift",
-          "type": "uuid",
-          "primaryKey": false,
-          "notNull": false
         }
       },
       "indexes": {},
-      "foreignKeys": {
-        "shifts_userWorkShift_users_userId_fk": {
-          "name": "shifts_userWorkShift_users_userId_fk",
-          "tableFrom": "shifts",
-          "tableTo": "users",
-          "columnsFrom": [
-            "userWorkShift"
-          ],
-          "columnsTo": [
-            "userId"
-          ],
-          "onDelete": "no action",
-          "onUpdate": "no action"
-        }
-      },
+      "foreignKeys": {},
       "compositePrimaryKeys": {},
       "uniqueConstraints": {}
     },
@@ -754,6 +734,68 @@
           ],
           "columnsTo": [
             "productId"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {}
+    },
+    "public.userWorkShifts": {
+      "name": "userWorkShifts",
+      "schema": "",
+      "columns": {
+        "Id": {
+          "name": "Id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
+        "userId": {
+          "name": "userId",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "shiftId": {
+          "name": "shiftId",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "workDate": {
+          "name": "workDate",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "userWorkShifts_userId_users_userId_fk": {
+          "name": "userWorkShifts_userId_users_userId_fk",
+          "tableFrom": "userWorkShifts",
+          "tableTo": "users",
+          "columnsFrom": [
+            "userId"
+          ],
+          "columnsTo": [
+            "userId"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "userWorkShifts_shiftId_shifts_shiftId_fk": {
+          "name": "userWorkShifts_shiftId_shifts_shiftId_fk",
+          "tableFrom": "userWorkShifts",
+          "tableTo": "shifts",
+          "columnsFrom": [
+            "shiftId"
+          ],
+          "columnsTo": [
+            "shiftId"
           ],
           "onDelete": "no action",
           "onUpdate": "no action"
