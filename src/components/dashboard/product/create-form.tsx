@@ -21,7 +21,6 @@ import {
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import z from "zod";
-import { type PutBlobResult } from "@vercel/blob";
 import { upload } from "@vercel/blob/client";
 import { DollarSign, Percent, PlusCircle } from "lucide-react";
 import Image from "next/image";
@@ -30,11 +29,12 @@ import { useRef, useState } from "react";
 import { cn } from "@/lib/utils";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
+import { useToast } from "@/hooks/use-toast";
+import { ToastAction } from "@/components/ui/toast";
+import { createProduct } from "@/lib/actions/product";
 
-const FormSchema = z.object({
-  imageURL: z.string({ required_error: "Vui lòng tải hình ảnh lên." }).url({
-    message: "URL hình ảnh không hợp lệ. Vui lòng nhập đúng định dạng URL.",
-  }),
+const formSchema = z.object({
+  imageUrl: z.string({ required_error: "Vui lòng tải hình ảnh lên." }),
   name: z.string().min(2, {
     message: "Tên sản phẩm phải chứa ít nhất 2 ký tự.",
   }),
@@ -44,7 +44,7 @@ const FormSchema = z.object({
   category: z.string().nonempty({
     message: "Vui lòng chọn một danh mục cho sản phẩm.",
   }),
-  price: z
+  price: z.coerce
     .number({
       required_error:
         "Giá sản phẩm phải là một số dương và không được để trống.",
@@ -52,39 +52,70 @@ const FormSchema = z.object({
     .positive({
       message: "Giá sản phẩm phải là một số dương.",
     }),
-  discount: z
-    .number({
-      required_error:
-        "Giảm giá phải là số từ 0% trở lên và không được để trống.",
-    })
-    .min(0, {
-      message: "Giảm giá phải là số từ 0% trở lên.",
-    })
-    .max(100, {
-      message: "Giảm giá không thể vượt quá 100%.",
-    }),
+  // discount: z
+  //   .number({
+  //     required_error:
+  //       "Giảm giá phải là số từ 0% trở lên và không được để trống.",
+  //   })
+  //   .min(0, {
+  //     message: "Giảm giá phải là số từ 0% trở lên.",
+  //   })
+  //   .max(100, {
+  //     message: "Giảm giá không thể vượt quá 100%.",
+  //   }),
 });
 
 export function CreateForm() {
-  const [image, setImage] = useState<File | null>();
-  const [blob, setBlob] = useState<PutBlobResult | null>(null);
+  const { toast } = useToast();
 
-  const form = useForm<z.infer<typeof FormSchema>>({
-    resolver: zodResolver(FormSchema),
+  const [image, setImage] = useState<File | null>();
+
+  const form = useForm<z.infer<typeof formSchema>>({
+    resolver: zodResolver(formSchema),
     defaultValues: {
       name: "",
       description: "",
       category: "",
-      price: undefined,
-      discount: undefined,
+      price: 0,
     },
   });
+
+  const onSubmit = async (values: z.infer<typeof formSchema>) => {
+    try {
+      if (!image) {
+        throw new Error("Vui lòng chọn file");
+      }
+
+      const newUrl = await upload(image.name, image, {
+        access: "public",
+        handleUploadUrl: "/api/upload",
+      });
+
+      const formData = new FormData();
+      formData.append("imageUrl", newUrl.url);
+      formData.append("name", values.name);
+      formData.append("description", values.description);
+      formData.append("category", values.category);
+      formData.append("price", values.price.toString());
+
+      await createProduct(formData);
+    } catch (error) {
+      if (error instanceof Error) {
+        toast({
+          variant: "destructive",
+          title: "Uh oh! Có gì đó sai.",
+          description: error.message,
+          action: <ToastAction altText="Thử lại">Thử lại</ToastAction>,
+        });
+      }
+    }
+  };
 
   return (
     <Form {...form}>
       <form
         className="flex flex-col gap-2"
-        onSubmit={form.handleSubmit(() => {})}
+        onSubmit={form.handleSubmit(onSubmit)}
       >
         <div className="flex h-10 items-center justify-end">
           <Button size="sm" className="h-8 gap-1">
@@ -123,7 +154,7 @@ export function CreateForm() {
                 </div>
                 <FormField
                   control={form.control}
-                  name="imageURL"
+                  name="imageUrl"
                   render={({ field }) => (
                     <FormItem>
                       <Button
@@ -140,11 +171,7 @@ export function CreateForm() {
                           onChange={(e) => {
                             if (e.target.files && e.target.files.length > 0) {
                               setImage(e.target.files[0]);
-
-                              form.setValue(
-                                "imageURL",
-                                URL.createObjectURL(e.target.files[0]) || "",
-                              );
+                              form.setValue("imageUrl", e.target.files[0].name);
                             }
                           }}
                           accept="image/*"
@@ -193,32 +220,6 @@ export function CreateForm() {
                                 className="w-full bg-background pl-8"
                                 type="number"
                                 placeholder="0.000"
-                                {...field}
-                              />
-                            </div>
-                          </FormControl>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
-                    <FormField
-                      control={form.control}
-                      name="discount"
-                      render={({ field }) => (
-                        <FormItem>
-                          <Label>
-                            Giảm Giá{" "}
-                            <span className="text-muted-foreground">
-                              (tùy chọn)
-                            </span>
-                          </Label>
-                          <FormControl>
-                            <div className="relative">
-                              <Percent className="absolute left-2.5 top-3 h-4 w-4 text-muted-foreground" />
-                              <Input
-                                className="w-full bg-background pl-8"
-                                type="number"
-                                placeholder="0"
                                 {...field}
                               />
                             </div>

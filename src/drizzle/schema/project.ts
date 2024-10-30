@@ -5,9 +5,11 @@ import {
   real,
   integer,
   timestamp,
+  uuid,
 } from "drizzle-orm/pg-core";
 import { user } from "./auth";
 import { relations } from "drizzle-orm";
+import { createInsertSchema, createSelectSchema } from "drizzle-zod";
 
 // Bảng Categories
 export const categories = pgTable("categories", {
@@ -23,13 +25,16 @@ export const usersRelations = relations(categories, ({ many }) => ({
 
 // Bảng Products
 export const products = pgTable("products", {
-  id: text("id").primaryKey(),
+  id: uuid("id").notNull().primaryKey().defaultRandom(),
   name: text("name").notNull(),
-  description: text("description"),
+  description: text("description").notNull(),
   price: real("price").notNull(),
-  quantity: integer("quantity").notNull(),
-  imageUrl: text("imageUrl"),
+  imageUrl: text("imageUrl").notNull(),
   categoryId: text("categoryId").references(() => categories.id), // Khóa ngoại
+  createdAt: timestamp("createdAt").notNull().defaultNow(),
+  updatedAt: timestamp("updatedAt")
+    .notNull()
+    .$onUpdate(() => new Date()),
 });
 
 //Relation: 1 product -> 1 category
@@ -39,7 +44,7 @@ export const productRalation = relations(products, ({ one }) => ({
 
 // Bảng Ratings
 export const ratings = pgTable("ratings", {
-  productId: text("productId")
+  productId: uuid("productId")
     .notNull()
     .references(() => products.id), // Khóa ngoại
   userId: text("userId")
@@ -79,7 +84,7 @@ export const orderProducts = pgTable("orderProducts", {
   orderId: text("orderId")
     .notNull()
     .references(() => orders.id), // Khóa ngoại
-  productId: text("productId")
+  productId: uuid("productId")
     .notNull()
     .references(() => products.id), // Khóa ngoại
   quantity: integer("quantity").notNull(),
@@ -136,7 +141,7 @@ export const shoppingCart = pgTable("shoppingCart", {
   userId: text("userId")
     .notNull()
     .references(() => user.id), // Khóa ngoại
-  productId: text("productId")
+  productId: uuid("productId")
     .notNull()
     .references(() => products.id), // Khóa ngoại
   quantity: integer("quantity").notNull(),
@@ -147,7 +152,9 @@ export const favorite = pgTable("favorite", {
   userId: text("userId")
     .notNull()
     .references(() => user.id), // Khóa ngoại
-  productId: text("productId")
+  productId: uuid("productId")
     .notNull()
     .references(() => products.id), // Khóa ngoại
 });
+
+export const insertProductSchema = createInsertSchema(products);
