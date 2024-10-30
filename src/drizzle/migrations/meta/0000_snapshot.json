@@ -1,5 +1,5 @@
 {
-  "id": "a6e9a28e-e530-47ee-88ae-19bd1cfed093",
+  "id": "4098154d-feb5-42b3-a745-459184d9814f",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "7",
   "dialect": "postgresql",
@@ -65,15 +65,15 @@
       },
       "indexes": {},
       "foreignKeys": {
-        "account_userId_user_userId_fk": {
-          "name": "account_userId_user_userId_fk",
+        "account_userId_user_id_fk": {
+          "name": "account_userId_user_id_fk",
           "tableFrom": "account",
           "tableTo": "user",
           "columnsFrom": [
             "userId"
           ],
           "columnsTo": [
-            "userId"
+            "id"
           ],
           "onDelete": "no action",
           "onUpdate": "no action"
@@ -119,15 +119,15 @@
       },
       "indexes": {},
       "foreignKeys": {
-        "session_userId_user_userId_fk": {
-          "name": "session_userId_user_userId_fk",
+        "session_userId_user_id_fk": {
+          "name": "session_userId_user_id_fk",
           "tableFrom": "session",
           "tableTo": "user",
           "columnsFrom": [
             "userId"
           ],
           "columnsTo": [
-            "userId"
+            "id"
           ],
           "onDelete": "no action",
           "onUpdate": "no action"
@@ -140,8 +140,8 @@
       "name": "user",
       "schema": "",
       "columns": {
-        "userId": {
-          "name": "userId",
+        "id": {
+          "name": "id",
           "type": "text",
           "primaryKey": true,
           "notNull": true
@@ -188,8 +188,8 @@
           "primaryKey": false,
           "notNull": false
         },
-        "createdDate": {
-          "name": "createdDate",
+        "createdAt": {
+          "name": "createdAt",
           "type": "timestamp",
           "primaryKey": false,
           "notNull": false
@@ -204,14 +204,14 @@
       "name": "categories",
       "schema": "",
       "columns": {
-        "categoryId": {
-          "name": "categoryId",
+        "id": {
+          "name": "id",
           "type": "text",
           "primaryKey": true,
           "notNull": true
         },
-        "categoryName": {
-          "name": "categoryName",
+        "name": {
+          "name": "name",
           "type": "text",
           "primaryKey": false,
           "notNull": true
@@ -274,35 +274,35 @@
         },
         "productId": {
           "name": "productId",
-          "type": "text",
+          "type": "uuid",
           "primaryKey": false,
           "notNull": true
         }
       },
       "indexes": {},
       "foreignKeys": {
-        "favorite_userId_user_userId_fk": {
-          "name": "favorite_userId_user_userId_fk",
+        "favorite_userId_user_id_fk": {
+          "name": "favorite_userId_user_id_fk",
           "tableFrom": "favorite",
           "tableTo": "user",
           "columnsFrom": [
             "userId"
           ],
           "columnsTo": [
-            "userId"
+            "id"
           ],
           "onDelete": "no action",
           "onUpdate": "no action"
         },
-        "favorite_productId_products_productId_fk": {
-          "name": "favorite_productId_products_productId_fk",
+        "favorite_productId_products_id_fk": {
+          "name": "favorite_productId_products_id_fk",
           "tableFrom": "favorite",
           "tableTo": "products",
           "columnsFrom": [
             "productId"
           ],
           "columnsTo": [
-            "productId"
+            "id"
           ],
           "onDelete": "no action",
           "onUpdate": "no action"
@@ -323,7 +323,7 @@
         },
         "productId": {
           "name": "productId",
-          "type": "text",
+          "type": "uuid",
           "primaryKey": false,
           "notNull": true
         },
@@ -336,28 +336,28 @@
       },
       "indexes": {},
       "foreignKeys": {
-        "orderProducts_orderId_orders_orderId_fk": {
-          "name": "orderProducts_orderId_orders_orderId_fk",
+        "orderProducts_orderId_orders_id_fk": {
+          "name": "orderProducts_orderId_orders_id_fk",
           "tableFrom": "orderProducts",
           "tableTo": "orders",
           "columnsFrom": [
             "orderId"
           ],
           "columnsTo": [
-            "orderId"
+            "id"
           ],
           "onDelete": "no action",
           "onUpdate": "no action"
         },
-        "orderProducts_productId_products_productId_fk": {
-          "name": "orderProducts_productId_products_productId_fk",
+        "orderProducts_productId_products_id_fk": {
+          "name": "orderProducts_productId_products_id_fk",
           "tableFrom": "orderProducts",
           "tableTo": "products",
           "columnsFrom": [
             "productId"
           ],
           "columnsTo": [
-            "productId"
+            "id"
           ],
           "onDelete": "no action",
           "onUpdate": "no action"
@@ -370,8 +370,8 @@
       "name": "orders",
       "schema": "",
       "columns": {
-        "orderId": {
-          "name": "orderId",
+        "id": {
+          "name": "id",
           "type": "text",
           "primaryKey": true,
           "notNull": true
@@ -440,54 +440,54 @@
       },
       "indexes": {},
       "foreignKeys": {
-        "orders_userId_user_userId_fk": {
-          "name": "orders_userId_user_userId_fk",
+        "orders_userId_user_id_fk": {
+          "name": "orders_userId_user_id_fk",
           "tableFrom": "orders",
           "tableTo": "user",
           "columnsFrom": [
             "userId"
           ],
           "columnsTo": [
-            "userId"
+            "id"
           ],
           "onDelete": "no action",
           "onUpdate": "no action"
         },
-        "orders_userShipId_user_userId_fk": {
-          "name": "orders_userShipId_user_userId_fk",
+        "orders_userShipId_user_id_fk": {
+          "name": "orders_userShipId_user_id_fk",
           "tableFrom": "orders",
           "tableTo": "user",
           "columnsFrom": [
             "userShipId"
           ],
           "columnsTo": [
-            "userId"
+            "id"
           ],
           "onDelete": "no action",
           "onUpdate": "no action"
         },
-        "orders_userCookId_user_userId_fk": {
-          "name": "orders_userCookId_user_userId_fk",
+        "orders_userCookId_user_id_fk": {
+          "name": "orders_userCookId_user_id_fk",
           "tableFrom": "orders",
           "tableTo": "user",
           "columnsFrom": [
             "userCookId"
           ],
           "columnsTo": [
-            "userId"
+            "id"
           ],
           "onDelete": "no action",
           "onUpdate": "no action"
         },
-        "orders_paymentId_payments_paymentId_fk": {
-          "name": "orders_paymentId_payments_paymentId_fk",
+        "orders_paymentId_payments_id_fk": {
+          "name": "orders_paymentId_payments_id_fk",
           "tableFrom": "orders",
           "tableTo": "payments",
           "columnsFrom": [
             "paymentId"
           ],
           "columnsTo": [
-            "paymentId"
+            "id"
           ],
           "onDelete": "no action",
           "onUpdate": "no action"
@@ -513,8 +513,8 @@
       "name": "payments",
       "schema": "",
       "columns": {
-        "paymentId": {
-          "name": "paymentId",
+        "id": {
+          "name": "id",
           "type": "text",
           "primaryKey": true,
           "notNull": true
@@ -535,14 +535,15 @@
       "name": "products",
       "schema": "",
       "columns": {
-        "productId": {
-          "name": "productId",
-          "type": "text",
+        "id": {
+          "name": "id",
+          "type": "uuid",
           "primaryKey": true,
-          "notNull": true
+          "notNull": true,
+          "default": "gen_random_uuid()"
         },
-        "productName": {
-          "name": "productName",
+        "name": {
+          "name": "name",
           "type": "text",
           "primaryKey": false,
           "notNull": true
@@ -551,7 +552,7 @@
           "name": "description",
           "type": "text",
           "primaryKey": false,
-          "notNull": false
+          "notNull": true
         },
         "price": {
           "name": "price",
@@ -559,36 +560,43 @@
           "primaryKey": false,
           "notNull": true
         },
-        "quantity": {
-          "name": "quantity",
-          "type": "integer",
-          "primaryKey": false,
-          "notNull": true
-        },
         "imageUrl": {
           "name": "imageUrl",
           "type": "text",
           "primaryKey": false,
-          "notNull": false
+          "notNull": true
         },
         "categoryId": {
           "name": "categoryId",
           "type": "text",
           "primaryKey": false,
           "notNull": false
+        },
+        "createdAt": {
+          "name": "createdAt",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "updatedAt": {
+          "name": "updatedAt",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true
         }
       },
       "indexes": {},
       "foreignKeys": {
-        "products_categoryId_categories_categoryId_fk": {
-          "name": "products_categoryId_categories_categoryId_fk",
+        "products_categoryId_categories_id_fk": {
+          "name": "products_categoryId_categories_id_fk",
           "tableFrom": "products",
           "tableTo": "categories",
           "columnsFrom": [
             "categoryId"
           ],
           "columnsTo": [
-            "categoryId"
+            "id"
           ],
           "onDelete": "no action",
           "onUpdate": "no action"
@@ -603,7 +611,7 @@
       "columns": {
         "productId": {
           "name": "productId",
-          "type": "text",
+          "type": "uuid",
           "primaryKey": false,
           "notNull": true
         },
@@ -628,28 +636,28 @@
       },
       "indexes": {},
       "foreignKeys": {
-        "ratings_productId_products_productId_fk": {
-          "name": "ratings_productId_products_productId_fk",
+        "ratings_productId_products_id_fk": {
+          "name": "ratings_productId_products_id_fk",
           "tableFrom": "ratings",
           "tableTo": "products",
           "columnsFrom": [
             "productId"
           ],
           "columnsTo": [
-            "productId"
+            "id"
           ],
           "onDelete": "no action",
           "onUpdate": "no action"
         },
-        "ratings_userId_user_userId_fk": {
-          "name": "ratings_userId_user_userId_fk",
+        "ratings_userId_user_id_fk": {
+          "name": "ratings_userId_user_id_fk",
           "tableFrom": "ratings",
           "tableTo": "user",
           "columnsFrom": [
             "userId"
           ],
           "columnsTo": [
-            "userId"
+            "id"
           ],
           "onDelete": "no action",
           "onUpdate": "no action"
@@ -662,8 +670,8 @@
       "name": "shifts",
       "schema": "",
       "columns": {
-        "shiftId": {
-          "name": "shiftId",
+        "id": {
+          "name": "id",
           "type": "text",
           "primaryKey": true,
           "notNull": true
@@ -696,8 +704,8 @@
       "name": "shoppingCart",
       "schema": "",
       "columns": {
-        "shoppingCartId": {
-          "name": "shoppingCartId",
+        "id": {
+          "name": "id",
           "type": "text",
           "primaryKey": true,
           "notNull": true
@@ -710,7 +718,7 @@
         },
         "productId": {
           "name": "productId",
-          "type": "text",
+          "type": "uuid",
           "primaryKey": false,
           "notNull": true
         },
@@ -723,28 +731,28 @@
       },
       "indexes": {},
       "foreignKeys": {
-        "shoppingCart_userId_user_userId_fk": {
-          "name": "shoppingCart_userId_user_userId_fk",
+        "shoppingCart_userId_user_id_fk": {
+          "name": "shoppingCart_userId_user_id_fk",
           "tableFrom": "shoppingCart",
           "tableTo": "user",
           "columnsFrom": [
             "userId"
           ],
           "columnsTo": [
-            "userId"
+            "id"
           ],
           "onDelete": "no action",
           "onUpdate": "no action"
         },
-        "shoppingCart_productId_products_productId_fk": {
-          "name": "shoppingCart_productId_products_productId_fk",
+        "shoppingCart_productId_products_id_fk": {
+          "name": "shoppingCart_productId_products_id_fk",
           "tableFrom": "shoppingCart",
           "tableTo": "products",
           "columnsFrom": [
             "productId"
           ],
           "columnsTo": [
-            "productId"
+            "id"
           ],
           "onDelete": "no action",
           "onUpdate": "no action"
@@ -757,8 +765,8 @@
       "name": "userWorkShifts",
       "schema": "",
       "columns": {
-        "Id": {
-          "name": "Id",
+        "id": {
+          "name": "id",
           "type": "text",
           "primaryKey": true,
           "notNull": true
@@ -784,28 +792,28 @@
       },
       "indexes": {},
       "foreignKeys": {
-        "userWorkShifts_userId_user_userId_fk": {
-          "name": "userWorkShifts_userId_user_userId_fk",
+        "userWorkShifts_userId_user_id_fk": {
+          "name": "userWorkShifts_userId_user_id_fk",
           "tableFrom": "userWorkShifts",
           "tableTo": "user",
           "columnsFrom": [
             "userId"
           ],
           "columnsTo": [
-            "userId"
+            "id"
           ],
           "onDelete": "no action",
           "onUpdate": "no action"
         },
-        "userWorkShifts_shiftId_shifts_shiftId_fk": {
-          "name": "userWorkShifts_shiftId_shifts_shiftId_fk",
+        "userWorkShifts_shiftId_shifts_id_fk": {
+          "name": "userWorkShifts_shiftId_shifts_id_fk",
           "tableFrom": "userWorkShifts",
           "tableTo": "shifts",
           "columnsFrom": [
             "shiftId"
           ],
           "columnsTo": [
-            "shiftId"
+            "id"
           ],
           "onDelete": "no action",
           "onUpdate": "no action"
