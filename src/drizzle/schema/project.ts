@@ -64,19 +64,23 @@ export const statusEnum = pgEnum("status", [
 
 // Bảng Orders
 export const orders = pgTable("orders", {
-  id: text("id").primaryKey(),
+  id: uuid("id").primaryKey().notNull().defaultRandom(),
   userId: text("userId")
     .notNull()
     .references(() => user.id), // Khóa ngoại
   userShipId: text("userShipId").references(() => user.id), // Khóa ngoại
   userCookId: text("userCookId").references(() => user.id), // Khóa ngoại
-  paymentId: text("paymentId").references(() => payments.paymentId), // Khóa ngoại
+  paymentId: text("paymentId").references(() => payments.id), // Khóa ngoại
   totalAmount: real("totalAmount"),
   status: statusEnum("status"),
   orderDate: timestamp("orderDate").notNull(),
   deliveryAddress: text("deliveryAddress"),
   deliveryTime: timestamp("deliveryTime"),
   discountCode: text("discountCode").references(() => discounts.discountCode), // Khóa ngoại
+  createdAt: timestamp("createdAt").notNull().defaultNow(),
+  updatedAt: timestamp("updatedAt")
+    .notNull()
+    .$onUpdate(() => new Date()),
 });
 
 // Bảng OrderProducts
@@ -88,11 +92,15 @@ export const orderProducts = pgTable("orderProducts", {
     .notNull()
     .references(() => products.id), // Khóa ngoại
   quantity: integer("quantity").notNull(),
+  createdAt: timestamp("createdAt").notNull().defaultNow(),
+  updatedAt: timestamp("updatedAt")
+    .notNull()
+    .$onUpdate(() => new Date()),
 });
 
 // Bảng Payments
 export const payments = pgTable("payments", {
-  paymentId: text("id").primaryKey(),
+  id: text("id").primaryKey(),
   paymentName: text("paymentName").notNull(),
 });
 
@@ -137,7 +145,7 @@ export const userWorkShifts = pgTable("userWorkShifts", {
 
 // Bảng ShoppingCart
 export const shoppingCart = pgTable("shoppingCart", {
-  id: text("id").primaryKey(),
+  id: uuid("id").notNull().primaryKey().defaultRandom(),
   userId: text("userId")
     .notNull()
     .references(() => user.id), // Khóa ngoại
@@ -145,7 +153,20 @@ export const shoppingCart = pgTable("shoppingCart", {
     .notNull()
     .references(() => products.id), // Khóa ngoại
   quantity: integer("quantity").notNull(),
+  createdAt: timestamp("createdAt").notNull().defaultNow(),
+  updatedAt: timestamp("updatedAt")
+    .notNull()
+    .$onUpdate(() => new Date()),
 });
+
+// Relation: 1 shoppingcart -> n products
+export const shoppingCartRelations = relations(shoppingCart, ({ many }) => ({
+  products: many(products),
+}));
+
+export const productShoppingCartRelation = relations(products, ({ many }) => ({
+  shoppingCart: many(shoppingCart),
+}));
 
 // Bảng Favorite
 export const favorite = pgTable("favorite", {
@@ -158,3 +179,7 @@ export const favorite = pgTable("favorite", {
 });
 
 export const insertProductSchema = createInsertSchema(products);
+
+export const insertOrderProductSchema = createInsertSchema(orderProducts);
+
+export const inserShoppingCartSchema = createInsertSchema(shoppingCart);
