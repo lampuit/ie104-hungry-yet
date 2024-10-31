@@ -5,7 +5,7 @@ import {
   inserShoppingCartSchema,
   shoppingCart,
 } from "@/drizzle/schema/project";
-import { eq } from "drizzle-orm";
+import { eq, and } from "drizzle-orm";
 
 const CreateShoppingCart = inserShoppingCartSchema.omit({
   id: true,
@@ -33,9 +33,14 @@ export async function updateShoppingCart(formData: FormData) {
   await db
     .update(shoppingCart)
     .set({ quantity: Number(formData.get("quantity")) })
-    .where(eq(shoppingCart.id, formData.get("id") as string));
+    .where(
+      and(
+        eq(shoppingCart.userId, formData.get("userId") as string),
+        eq(shoppingCart.productId, formData.get("productId") as string)
+      )
+    );
 }
 
-export async function deleteOrderProduct(id: string) {
+export async function deleteShoppingCart(id: string) {
   await db.delete(shoppingCart).where(eq(shoppingCart.id, id));
 }

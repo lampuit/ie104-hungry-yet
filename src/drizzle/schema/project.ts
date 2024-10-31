@@ -130,18 +130,6 @@ export const userWorkShifts = pgTable("userWorkShifts", {
   workDate: timestamp("workDate").notNull(),
 });
 
-// Bảng user
-// export const user = pgTable("user", {
-//   userId: text("userId")..primaryKey(),
-//   userName: text("userName"),
-//   password: text("password"),
-//   phone: text("phone"),
-//   email: text("email"),
-//   address: text("address"),
-//   imageUrl: text("imageUrl"),
-//   role: text("role"),
-//   createdDate: timestamp("createdDate"),
-// });
 
 // Bảng ShoppingCart
 export const shoppingCart = pgTable("shoppingCart", {
@@ -164,6 +152,7 @@ export const shoppingCartRelations = relations(shoppingCart, ({ many }) => ({
   products: many(products),
 }));
 
+// Relation: 1 product -> n shoppingcart
 export const productShoppingCartRelation = relations(products, ({ many }) => ({
   shoppingCart: many(shoppingCart),
 }));
