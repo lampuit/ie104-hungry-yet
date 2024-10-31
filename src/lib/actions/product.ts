@@ -2,6 +2,8 @@
 
 import { db } from "@/drizzle/db";
 import { insertProductSchema, products } from "@/drizzle/schema/project";
+import { revalidatePath } from "next/cache";
+import { redirect } from "next/dist/server/api-utils";
 
 const CreateProduct = insertProductSchema.omit({
   id: true,
@@ -10,15 +12,15 @@ const CreateProduct = insertProductSchema.omit({
 });
 
 export async function createProduct(formData: FormData) {
-  const data = CreateProduct.parse({
-    imageUrl: formData.get("imageUrl"),
-    name: formData.get("name"),
-    description: formData.get("description"),
-    price: Number(formData.get("price")),
-    category: formData.get("category"),
-  });
+  try {
+    const data = CreateProduct.parse({
+      imageUrl: formData.get("imageUrl"),
+      name: formData.get("name"),
+      description: formData.get("description"),
+      price: Number(formData.get("price")),
+      categoryId: formData.get("category"),
+    });
 
-  console.log(data);
-
-  await db.insert(products).values(data);
+    await db.insert(products).values(data);
+  } catch (error) {}
 }

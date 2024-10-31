@@ -5,22 +5,8 @@
     {
       "idx": 0,
       "version": "7",
-      "when": 1730284389722,
-      "tag": "0000_flat_selene",
-      "breakpoints": true
-    },
-    {
-      "idx": 1,
-      "version": "7",
-      "when": 1730357226161,
-      "tag": "0001_mature_captain_universe",
-      "breakpoints": true
-    },
-    {
-      "idx": 2,
-      "version": "7",
-      "when": 1730357347411,
-      "tag": "0002_petite_joseph",
+      "when": 1730360301449,
+      "tag": "0000_bright_bullseye",
       "breakpoints": true
     }
   ]

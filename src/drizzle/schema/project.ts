@@ -13,7 +13,7 @@ import { createInsertSchema, createSelectSchema } from "drizzle-zod";
 
 // Bảng Categories
 export const categories = pgTable("categories", {
-  id: text("id").primaryKey(),
+  id: uuid("id").primaryKey().defaultRandom(),
   name: text("name").notNull(),
   imageUrl: text("imageUrl"),
 });
@@ -30,7 +30,7 @@ export const products = pgTable("products", {
   description: text("description").notNull(),
   price: real("price").notNull(),
   imageUrl: text("imageUrl").notNull(),
-  categoryId: text("categoryId").references(() => categories.id), // Khóa ngoại
+  categoryId: uuid("categoryId").references(() => categories.id), // Khóa ngoại
   createdAt: timestamp("createdAt").notNull().defaultNow(),
   updatedAt: timestamp("updatedAt")
     .notNull()
@@ -85,7 +85,7 @@ export const orders = pgTable("orders", {
 
 // Bảng OrderProducts
 export const orderProducts = pgTable("orderProducts", {
-  orderId: text("orderId")
+  orderId: uuid("orderId")
     .notNull()
     .references(() => orders.id), // Khóa ngoại
   productId: uuid("productId")

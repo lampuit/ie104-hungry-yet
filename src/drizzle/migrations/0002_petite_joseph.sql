@@ -1,1 +1,0 @@
-ALTER TABLE "orderProducts" ALTER COLUMN "orderId" SET DATA TYPE text;

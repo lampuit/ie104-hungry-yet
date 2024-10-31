@@ -65,7 +65,7 @@ const formSchema = z.object({
   //   }),
 });
 
-export function CreateForm() {
+export function CreateForm({ categories }: { categories: any }) {
   const { toast } = useToast();
 
   const [image, setImage] = useState<File | null>();
@@ -73,6 +73,7 @@ export function CreateForm() {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
+      imageUrl: "",
       name: "",
       description: "",
       category: "",
@@ -97,6 +98,8 @@ export function CreateForm() {
       formData.append("description", values.description);
       formData.append("category", values.category);
       formData.append("price", values.price.toString());
+
+      console.log(formData);
 
       await createProduct(formData);
     } catch (error) {
@@ -263,15 +266,14 @@ export function CreateForm() {
                               </SelectTrigger>
                             </FormControl>
                             <SelectContent>
-                              <SelectItem value="m@example.com">
-                                m@example.com
-                              </SelectItem>
-                              <SelectItem value="m@google.com">
-                                m@google.com
-                              </SelectItem>
-                              <SelectItem value="m@support.com">
-                                m@support.com
-                              </SelectItem>
+                              {categories.map((category: any) => (
+                                <SelectItem
+                                  key={category.id}
+                                  value={category.id}
+                                >
+                                  {category.name}
+                                </SelectItem>
+                              ))}
                             </SelectContent>
                           </Select>
                           <FormMessage />
