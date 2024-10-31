@@ -13,7 +13,7 @@ import { createInsertSchema, createSelectSchema } from "drizzle-zod";
 
 // Bảng Categories
 export const categories = pgTable("categories", {
-  id: text("id").primaryKey(),
+  id: uuid("id").primaryKey().defaultRandom(),
   name: text("name").notNull(),
   imageUrl: text("imageUrl"),
 });
@@ -30,7 +30,7 @@ export const products = pgTable("products", {
   description: text("description").notNull(),
   price: real("price").notNull(),
   imageUrl: text("imageUrl").notNull(),
-  categoryId: text("categoryId").references(() => categories.id), // Khóa ngoại
+  categoryId: uuid("categoryId").references(() => categories.id), // Khóa ngoại
   createdAt: timestamp("createdAt").notNull().defaultNow(),
   updatedAt: timestamp("updatedAt")
     .notNull()
@@ -64,35 +64,43 @@ export const statusEnum = pgEnum("status", [
 
 // Bảng Orders
 export const orders = pgTable("orders", {
-  id: text("id").primaryKey(),
+  id: uuid("id").primaryKey().notNull().defaultRandom(),
   userId: text("userId")
     .notNull()
     .references(() => user.id), // Khóa ngoại
   userShipId: text("userShipId").references(() => user.id), // Khóa ngoại
   userCookId: text("userCookId").references(() => user.id), // Khóa ngoại
-  paymentId: text("paymentId").references(() => payments.paymentId), // Khóa ngoại
+  paymentId: text("paymentId").references(() => payments.id), // Khóa ngoại
   totalAmount: real("totalAmount"),
   status: statusEnum("status"),
   orderDate: timestamp("orderDate").notNull(),
   deliveryAddress: text("deliveryAddress"),
   deliveryTime: timestamp("deliveryTime"),
   discountCode: text("discountCode").references(() => discounts.discountCode), // Khóa ngoại
+  createdAt: timestamp("createdAt").notNull().defaultNow(),
+  updatedAt: timestamp("updatedAt")
+    .notNull()
+    .$onUpdate(() => new Date()),
 });
 
 // Bảng OrderProducts
 export const orderProducts = pgTable("orderProducts", {
-  orderId: text("orderId")
+  orderId: uuid("orderId")
     .notNull()
     .references(() => orders.id), // Khóa ngoại
   productId: uuid("productId")
     .notNull()
     .references(() => products.id), // Khóa ngoại
   quantity: integer("quantity").notNull(),
+  createdAt: timestamp("createdAt").notNull().defaultNow(),
+  updatedAt: timestamp("updatedAt")
+    .notNull()
+    .$onUpdate(() => new Date()),
 });
 
 // Bảng Payments
 export const payments = pgTable("payments", {
-  paymentId: text("id").primaryKey(),
+  id: text("id").primaryKey(),
   paymentName: text("paymentName").notNull(),
 });
 
@@ -122,22 +130,10 @@ export const userWorkShifts = pgTable("userWorkShifts", {
   workDate: timestamp("workDate").notNull(),
 });
 
-// Bảng user
-// export const user = pgTable("user", {
-//   userId: text("userId")..primaryKey(),
-//   userName: text("userName"),
-//   password: text("password"),
-//   phone: text("phone"),
-//   email: text("email"),
-//   address: text("address"),
-//   imageUrl: text("imageUrl"),
-//   role: text("role"),
-//   createdDate: timestamp("createdDate"),
-// });
 
 // Bảng ShoppingCart
 export const shoppingCart = pgTable("shoppingCart", {
-  id: text("id").primaryKey(),
+  id: uuid("id").notNull().primaryKey().defaultRandom(),
   userId: text("userId")
     .notNull()
     .references(() => user.id), // Khóa ngoại
@@ -145,7 +141,21 @@ export const shoppingCart = pgTable("shoppingCart", {
     .notNull()
     .references(() => products.id), // Khóa ngoại
   quantity: integer("quantity").notNull(),
+  createdAt: timestamp("createdAt").notNull().defaultNow(),
+  updatedAt: timestamp("updatedAt")
+    .notNull()
+    .$onUpdate(() => new Date()),
 });
+
+// Relation: 1 shoppingcart -> n products
+export const shoppingCartRelations = relations(shoppingCart, ({ many }) => ({
+  products: many(products),
+}));
+
+// Relation: 1 product -> n shoppingcart
+export const productShoppingCartRelation = relations(products, ({ many }) => ({
+  shoppingCart: many(shoppingCart),
+}));
 
 // Bảng Favorite
 export const favorite = pgTable("favorite", {
@@ -158,3 +168,7 @@ export const favorite = pgTable("favorite", {
 });
 
 export const insertProductSchema = createInsertSchema(products);
+
+export const insertOrderProductSchema = createInsertSchema(orderProducts);
+
+export const inserShoppingCartSchema = createInsertSchema(shoppingCart);
