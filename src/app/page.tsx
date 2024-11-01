@@ -5,13 +5,6 @@ import { Navbar } from "@/components/home/nav-bar";
 import { Button } from "@/components/ui/button";
 import Image from "next/image";
 
-import {
-  Carousel,
-  CarouselContent,
-  CarouselItem,
-  CarouselNext,
-  CarouselPrevious,
-} from "@/components/ui/carousel";
 import { TimeAndAddress } from "@/components/home/time-address";
 import { Categories } from "@/components/home/categories";
 import { ImgBg } from "@/components/home/img-bg";
@@ -23,16 +16,17 @@ import { Exhibition } from "@/components/home/exhibition";
 import { Testimonials } from "@/components/home/testimonials";
 import { HorizontalLine } from "@/components/home/intro";
 import { FAQ } from "@/components/home/faq";
+import { Children } from "react";
 
 export default function Homepage() {
   return (
-    <main className="overflow-hidden w-screen">
-      <section className="h-screen w-screen">
-        <header className="flex flex-col justify-between items-center h-3/4 overflow-hidden z-0 bg-black">
-          <div className="bg-black opacity z-10">
+    <main className="overflow-hidden">
+      <section className="flex flex-col justify-center items-center h-screen w-screen">
+        <header className="flex flex-col justify-between items-center h-[85%] w-screen overflow-hidden z-0 bg-black">
+          <div className="bg-black z-10">
             <Navbar />
           </div>
-          <div className="absolute right-full top-24 h-3/5">
+          <div className="absolute right-full top-16 h-4/6">
             <ImgBg />
           </div>
           <div className="flex flex-col justify-between items-center min-h-52 max-h-64 text-white z-10">
@@ -51,19 +45,18 @@ export default function Homepage() {
             <TimeAndAddress />
           </div>
         </header>
-
-        <div>
+        <div className="h-[15%]">
           <Categories />
         </div>
       </section>
 
-      <section>
-        <div className="bg-neutral-100 mt-2 mb-32 py-12">
+      <section className="flex flex-col justify-center items-center">
+        <div className="bg-neutral-100 mt-16 mb-32 py-12">
           <Benefit />
         </div>
       </section>
 
-      <section className="mt-16">
+      <section>
         <Intro />
       </section>
 
@@ -104,7 +97,7 @@ export default function Homepage() {
         </div>
       </section>
 
-      <footer className="mt-10 h-80 w-screen bg-black">
+      <footer className="mt-10 h-80 bg-black">
       </footer>
     </main>
   );

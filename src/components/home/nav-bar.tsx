@@ -11,7 +11,7 @@ export function Navbar() {
         </Link>
       </div>
       <div className="grow sm:text-xs sm:gap-1 md:text-base min-w-sm max-w-2xl flex flex-row justify-around items-center">
-        <Link href={""} className="hover:text-amber-500">Trang chủ</Link>
+        <Link href={"/"} className="hover:text-amber-500">Trang chủ</Link>
         <Link href={"/menu"} className="hover:text-amber-500">Thực đơn</Link>
         <Link href={"#"} className="hover:text-amber-500">Công việc</Link>
         <Link href={"/about"} className="hover:text-amber-500">Về chúng tôi</Link>

@@ -49,7 +49,7 @@ const imgList = [
 
 export function ImgBg() {
   return (
-    <div className="absolute grid grid-rows-3 grid-cols-6 w-screen h-full overflow-hidden gap-1 opacity-30 z-0">
+    <div className="absolute grid grid-rows-3 grid-cols-6 w-screen h-full opacity-30 z-0">
       {imgList.map((img) => (
         <div key={img.name} className="rounded-lg h-52">
           <Image 

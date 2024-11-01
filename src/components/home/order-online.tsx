@@ -4,7 +4,7 @@ import Image from "next/image"
 export function OrderOnline() {
     return (
         <div className="relative flex flex-col justify-center items-center py-16 bg-black">
-            <div className="absolute inset-0 w-full h-full opacity-40">
+            <div className="absolute inset-0 w-full h-full opacity-40 z-0">
                 <Image
                     src={"/images/small-bg.jpg"}
                     alt={"small-bg"}
@@ -12,21 +12,18 @@ export function OrderOnline() {
                     objectFit="cover">
                 </Image>
             </div>
-            <div className="hidden lg:block">
-                <div className="flex flex-col justify-between items-center gap-4 w-60 py-4 px-4 bg-white rounded-3xl text-center z-10">
-                    <div className="flex flex-col justify-center items-center">
-                        <h2 className='italic text-3xl text-black'>Order Online</h2>
-                        <ShortHorizontalLine />
-                    </div>
-                    <p className="px-4">Bạn muốn hương vị tươi mới? Đặt ngay để thưởng thức ẩm thực Việt Nam tại nhà - giao tận nơi, ngon tuyệt vời!</p>
-                    <div>
-                        <Button asChild className="bg-amber-500 hover:bg-red-500 rounded-3xl">
-                            <a href={"/menu"}>Đặt ngay</a>
-                        </Button>
-                    </div>
+            <div className="flex flex-col justify-between items-center gap-4 w-60 py-4 px-4 bg-white rounded-3xl text-center z-10">
+                <div className="flex flex-col justify-center items-center">
+                    <h2 className='italic text-3xl text-black'>Order Online</h2>
+                    <ShortHorizontalLine />
+                </div>
+                <p className="px-4">Bạn muốn hương vị tươi mới? Đặt ngay để thưởng thức ẩm thực Việt Nam tại nhà - giao tận nơi, ngon tuyệt vời!</p>
+                <div>
+                    <Button asChild className="bg-amber-500 hover:bg-red-500 rounded-3xl">
+                        <a href={"/menu"}>Đặt ngay</a>
+                    </Button>
                 </div>
             </div>
-
         </div>
     )
 }
