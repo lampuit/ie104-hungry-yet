@@ -26,13 +26,13 @@ import { FAQ } from "@/components/home/faq";
 
 export default function Homepage() {
   return (
-    <main className="overflow-hidden">
+    <main className="overflow-hidden w-screen">
       <section className="bg-black z-0">
         <header className="flex flex-col justify-between items-center h-screen overflow-hidden z-10">
           <div className="bg-black opacity z-20">
             <Navbar />
           </div>
-          <div className="absolute right-full top-20 h-4/5">
+          <div className="absolute right-full top-24 h-4/5">
             <ImgBg />
           </div>
           <div className="flex flex-col justify-between items-center min-h-52 max-h-64 text-white z-10">

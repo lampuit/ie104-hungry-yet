@@ -2,22 +2,24 @@ import Image from 'next/image';
 import React from 'react';
 
 const category = [
-    { name: 'img50', src: '/images/food/img50.jpg', alt: 'food img50' },
-    { name: 'img52', src: '/images/food/img52.jpg', alt: 'food img52' },
-    { name: 'img54', src: '/images/food/img54.jpg', alt: 'food img54' },
-    { name: 'img55', src: '/images/food/img55.jpg', alt: 'food img55' },
-    { name: 'img56', src: '/images/food/img56.jpg', alt: 'food img56' },
-    { name: 'img57', src: '/images/food/img57.jpg', alt: 'food img57' },
-    { name: 'img58', src: '/images/food/img58.jpg', alt: 'food img58' },
-    { name: 'img59', src: '/images/food/img59.jpg', alt: 'food img59' },
-    { name: 'img60', src: '/images/food/img60.jpg', alt: 'food img60' },
-    { name: 'img63', src: '/images/food/img63.jpg', alt: 'food img63' },
+  { name: 'img30', src: '/images/food/img30.jpg', alt: 'food img30' },
+  { name: 'img31', src: '/images/food/img31.jpg', alt: 'food img31' },
+  { name: 'img32', src: '/images/food/img32.jpg', alt: 'food img32' },
+  { name: 'img33', src: '/images/food/img33.jpg', alt: 'food img33' },
+  { name: 'img34', src: '/images/food/img34.jpg', alt: 'food img34' },
+  { name: 'img35', src: '/images/food/img35.jpg', alt: 'food img35' },
+  { name: 'img36', src: '/images/food/img36.jpg', alt: 'food img36' },
+  { name: 'img38', src: '/images/food/img38.jpg', alt: 'food img38' },
+  { name: 'img39', src: '/images/food/img39.jpg', alt: 'food img39' },
+  { name: 'img40', src: '/images/food/img40.jpg', alt: 'food img40' },
+  { name: 'img41', src: '/images/food/img41.jpg', alt: 'food img41' },
+  { name: 'img42', src: '/images/food/img42.jpg', alt: 'food img42' },
 ];
 
 
 export function Categories() {
     return (
-        <div className="mt-16 grid grid-rows-1 grid-cols-10 gap-1 w-screen overflow-hidden z-0">
+        <div className="mt-16 grid grid-rows-1 grid-cols-12 gap-1 w-screen overflow-hidden z-0">
             {category.map((cate) => (
                 <div className='flex flex-col justify-between items-start'>
                     <div key={cate.name} className="overflow-hidden rounded-lg">
