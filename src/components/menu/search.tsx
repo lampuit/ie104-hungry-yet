@@ -1,10 +1,9 @@
 import { Input } from "../ui/input";
 import React, { useRef } from 'react';
-// import { useNavigate } from 'react-router-dom';
+import Link from 'next/link';
 
 export function Search() {
     const inputRef = useRef<HTMLInputElement>(null);
-    // const navigate = useNavigate();
     const handleSearchIconClick = () => {
         if (inputRef.current) {
             inputRef.current.focus();
@@ -13,14 +12,11 @@ export function Search() {
     const handleFilterIconClick = () => {
         console.log('Filter icon clicked');
     };
-    // const handleCartIconClick = () => {
-    //     navigate('/cart');
-    // };
-        
+
     return (
         <div className="flex flex-row justify-between items-center px-10 mx-10">
             <div className="flex flex-col justify-center items-center gap-1">
-                <h2 className="italic font-semibold text-5xl">Thực đơn</h2>
+                <h2 className="italic font-semibold md:text-5xl sm:text-4xl">Thực đơn</h2>
                 <Line />
             </div>
             <div className="flex flex-row justify-between items-center gap-2">
@@ -32,8 +28,10 @@ export function Search() {
                         type="text"
                     />
                 </div>
-                <FilterIcon onClick={handleFilterIconClick}/>
-                <CartIcon />
+                <FilterIcon onClick={handleFilterIconClick} />
+                <Link href={"/menu/cart"}>
+                    <CartIcon />
+                </Link>
             </div>
         </div>
     );

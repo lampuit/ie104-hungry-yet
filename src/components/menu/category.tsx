@@ -13,6 +13,18 @@ export const dishes = {
     'Khai vị': [
         { name: 'Appetizer 1', image: '/images/appetizers.jpg' },
         { name: 'Appetizer 2', image: '/images/appetizers.jpg' },
+        { name: 'Appetizer 3', image: '/images/appetizers.jpg' },
+        { name: 'Appetizer 1', image: '/images/appetizers.jpg' },
+        { name: 'Appetizer 2', image: '/images/appetizers.jpg' },
+        { name: 'Appetizer 3', image: '/images/appetizers.jpg' },
+        { name: 'Appetizer 1', image: '/images/appetizers.jpg' },
+        { name: 'Appetizer 2', image: '/images/appetizers.jpg' },
+        { name: 'Appetizer 3', image: '/images/appetizers.jpg' },
+        { name: 'Appetizer 1', image: '/images/appetizers.jpg' },
+        { name: 'Appetizer 2', image: '/images/appetizers.jpg' },
+        { name: 'Appetizer 3', image: '/images/appetizers.jpg' },
+        { name: 'Appetizer 1', image: '/images/appetizers.jpg' },
+        { name: 'Appetizer 2', image: '/images/appetizers.jpg' },
         { name: 'Appetizer 3', image: '/images/appetizers.jpg' }
     ],
     'Món chính': [
@@ -49,11 +61,11 @@ interface CategoryProps {
 
 export function Category({ clickedIndex, setClickedIndex }: CategoryProps) {
     return (
-        <div className="flex flex-row justify-center items-center gap-4">
+        <div className="flex flex-row justify-center items-center gap-4 mx-2">
             {listCategory.map((category, i) => (
                 <div key={i} className="flex flex-col justify-end items-center gap-2 w-32">
                     <p
-                        className={`text-base font-semibold cursor-pointer ${clickedIndex === i ? 'text-amber-500' : 'text-black'} hover:text-amber-500`}
+                        className={`md:text-base sm:text-sm font-semibold cursor-pointer ${clickedIndex === i ? 'text-amber-500' : 'text-black'} hover:text-amber-500`}
                         onClick={() => setClickedIndex(i)}
                     >
                         {category}

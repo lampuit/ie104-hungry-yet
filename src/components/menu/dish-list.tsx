@@ -12,19 +12,19 @@ interface DishListProps {
 
 export const DishList: React.FC<DishListProps> = ({ category, dishes }) => {
     return (
-        <div className="grid grid-cols-3 gap-4 mt-4 mx-20">
+        <div className="grid lg:grid-cols-3 md:grid-cols-2 sm:grid-cols-1 gap-4 mt-4 px-4 max-w-7xl">
             {dishes[category].map((dish, index) => (
                 <div key={index} className="p-4 border rounded flex flex-col items-center">
                     <img src={dish.image} alt={dish.name} className="w-80 h-72 object-cover mb-2" />
-                    <div className='flex flex-col justify-center items-center gap-4'>
+                    <div className='flex flex-col justify-center items-center gap-4 w-72'>
                         <div className='flex flex-col justify-between items-start gap-1'>
-                            <div className='flex flex-row justify-between items-center w-80'>
+                            <div className='flex flex-row justify-between items-center w-60'>
                                 <p className='font-semibold text-xl'>{dish.name}</p>
                                 <FavoriteIcon />
                             </div>
                             <p className='font-normal text-base'>Phân loại</p>
                         </div>
-                        <div className='flex flex-row justify-between items-center w-80'>
+                        <div className='flex flex-row justify-between items-center w-60'>
                             <div className='flex flex-row justify-start items-center gap-1'>
                                 <StarIcon />
                                 <p className='font-normal text-base'>4.8</p>

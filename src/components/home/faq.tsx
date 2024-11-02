@@ -35,6 +35,20 @@ import {
             Lorem ipsum dolor sit amet consectetur adipisicing elit. Harum ratione illum veritatis quae corrupti laudantium.
           </AccordionContent>
         </AccordionItem>
+
+        <AccordionItem value="item-5">
+          <AccordionTrigger>What is Hungry Yet?</AccordionTrigger>
+          <AccordionContent>
+            Lorem ipsum dolor sit amet consectetur adipisicing elit. Harum ratione illum veritatis quae corrupti laudantium.
+          </AccordionContent>
+        </AccordionItem>
+
+        <AccordionItem value="item-6">
+          <AccordionTrigger>What is Hungry Yet?</AccordionTrigger>
+          <AccordionContent>
+            Lorem ipsum dolor sit amet consectetur adipisicing elit. Harum ratione illum veritatis quae corrupti laudantium.
+          </AccordionContent>
+        </AccordionItem>
         
       </Accordion>
     )

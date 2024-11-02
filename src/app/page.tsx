@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { Navbar } from "@/components/home/nav-bar";
 import { Button } from "@/components/ui/button";
+import { ScrollArea } from "@/components/ui/scroll-area";
 
 import { TimeAndAddress } from "@/components/home/time-address";
 import { Categories } from "@/components/home/categories";
@@ -89,9 +90,9 @@ export default function Homepage() {
               <HorizontalLine />
             </div>
           </div>
-          <div className="">
+          <ScrollArea className="h-[240px] rounded-md p-4">
             <FAQ />
-          </div>
+          </ScrollArea>
         </div>
       </section>
 
