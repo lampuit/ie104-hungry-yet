@@ -1,7 +1,21 @@
-"use client";
+import { db } from "@/drizzle/db";
+import { EditForm } from "@/components/dashboard/product/edit-form";
+import { products } from "@/drizzle/schema/project";
+import { eq } from "drizzle-orm";
 
-import { CreateForm } from "@/components/dashboard/product/create-form";
+export default async function Edit({ params }: { params: { id: string } }) {
+  const categories = db.query.categories.findMany();
+  const product = db.query.products.findFirst({
+    where: eq(products.id, params.id),
+  });
 
-export default function Create() {
-  return <div className="flex-1 p-4">{/* <CreateForm /> */}</div>;
+  const data = await Promise.all([categories, product]);
+
+  console.log(data);
+
+  return (
+    <div className="flex-1 p-4">
+      <EditForm categories={data[0]} products={data[1]} />
+    </div>
+  );
 }
