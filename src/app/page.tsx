@@ -3,7 +3,6 @@
 import Link from "next/link";
 import { Navbar } from "@/components/home/nav-bar";
 import { Button } from "@/components/ui/button";
-import Image from "next/image";
 
 import { TimeAndAddress } from "@/components/home/time-address";
 import { Categories } from "@/components/home/categories";
@@ -16,7 +15,6 @@ import { Exhibition } from "@/components/home/exhibition";
 import { Testimonials } from "@/components/home/testimonials";
 import { HorizontalLine } from "@/components/home/intro";
 import { FAQ } from "@/components/home/faq";
-import { Children } from "react";
 
 export default function Homepage() {
   return (
@@ -37,7 +35,7 @@ export default function Homepage() {
                 <Link href={"#"}>Đặt hàng ngay</Link>
               </Button>
               <Button asChild className="bg-black rounded-3xl hover:bg-red-500">
-                <Link href={"#"}>Xem thực đơn</Link>
+                <Link href={"/menu"}>Xem thực đơn</Link>
               </Button>
             </div>
           </div>
@@ -102,3 +100,5 @@ export default function Homepage() {
     </main>
   );
 }
+
+

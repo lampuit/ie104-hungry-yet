@@ -60,7 +60,7 @@ export function Intro() {
                         </p>
                     </div>
                     <Button asChild className='bg-amber-500 hover:bg-red-500 rounded-3xl'>
-                        <Link href={"/menu"}>Đặt hàng ngay</Link>
+                        <Link href={"#"}>Đặt hàng ngay</Link>
                     </Button>
                 </div>
             </div>

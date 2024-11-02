@@ -20,7 +20,7 @@ export function OrderOnline() {
                 <p className="px-4">Bạn muốn hương vị tươi mới? Đặt ngay để thưởng thức ẩm thực Việt Nam tại nhà - giao tận nơi, ngon tuyệt vời!</p>
                 <div>
                     <Button asChild className="bg-amber-500 hover:bg-red-500 rounded-3xl">
-                        <a href={"/menu"}>Đặt ngay</a>
+                        <a href={"#"}>Đặt ngay</a>
                     </Button>
                 </div>
             </div>

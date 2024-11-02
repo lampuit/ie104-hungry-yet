@@ -19,7 +19,7 @@ export function Menu() {
                     <HorizontalLine />
                 </div>
                 <Button asChild className="bg-black hover:bg-red-500 rounded-3xl">
-                    <Link href={"#"}>Xem thực đơn</Link>
+                    <Link href={"/menu"}>Xem thực đơn</Link>
                 </Button>
             </div>
             <div className="grid grid-cols-4 gap-3">

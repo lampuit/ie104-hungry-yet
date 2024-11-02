@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 
-const listCategory = [
+export const listCategory = [
     'Khai vị',
     'Món chính',
     'Tráng miệng',
@@ -9,18 +9,54 @@ const listCategory = [
     'Combo nhóm'
 ]
 
-export function Category() {
-    const [clickedIndex, setClickedIndex] = useState<number | null>(null);
+export const dishes = {
+    'Khai vị': [
+        { name: 'Appetizer 1', image: '/images/appetizers.jpg' },
+        { name: 'Appetizer 2', image: '/images/appetizers.jpg' },
+        { name: 'Appetizer 3', image: '/images/appetizers.jpg' }
+    ],
+    'Món chính': [
+        { name: 'Main Dish 1', image: '/images/main-dishes.jpg' },
+        { name: 'Main Dish 2', image: '/images/main-dishes.jpg' },
+        { name: 'Main Dish 3', image: '/images/main-dishes.jpg' }
+    ],
+    'Tráng miệng': [
+        { name: 'Dessert 1', image: '/images/desserts.jpg' },
+        { name: 'Dessert 2', image: '/images/desserts.jpg' },
+        { name: 'Dessert 3', image: '/images/desserts.jpg' }
+    ],
+    'Đồ uống': [
+        { name: 'Drink 1', image: '/images/drinks.jpg' },
+        { name: 'Drink 2', image: '/images/drinks.jpg' },
+        { name: 'Drink 3', image: '/images/drinks.jpg' }
+    ],
+    'Combo 1 người': [
+        { name: 'Combo 1', image: '/images/intro-dish.jpg' },
+        { name: 'Combo 2', image: '/images/intro-dish.jpg' },
+        { name: 'Combo 3', image: '/images/intro-dish.jpg' }
+    ],
+    'Combo nhóm': [
+        { name: 'Group Combo 1', image: '/images/intro-dish.jpg' },
+        { name: 'Group Combo 2', image: '/images/intro-dish.jpg' },
+        { name: 'Group Combo 3', image: '/images/intro-dish.jpg' }
+    ]
+};
 
+interface CategoryProps {
+    clickedIndex: number;
+    setClickedIndex: (index: number) => void;
+}
+
+export function Category({ clickedIndex, setClickedIndex }: CategoryProps) {
     return (
         <div className="flex flex-row justify-center items-center gap-4">
-            {listCategory.map((index, i) => (
+            {listCategory.map((category, i) => (
                 <div key={i} className="flex flex-col justify-end items-center gap-2 w-32">
                     <p
                         className={`text-base font-semibold cursor-pointer ${clickedIndex === i ? 'text-amber-500' : 'text-black'} hover:text-amber-500`}
                         onClick={() => setClickedIndex(i)}
                     >
-                        {index}
+                        {category}
                     </p>
                     {clickedIndex === i && <Underline />}
                 </div>
