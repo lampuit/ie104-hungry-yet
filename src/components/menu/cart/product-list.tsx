@@ -88,7 +88,7 @@ export function ProductList() {
                 des: item.description || '',
                 cost: item.price,
                 amount: item.quantity,
-                favorited: item.favorited || false
+                favorited: item.isFavorite || false
             }));
             setDishes(formattedData);
             console.log("realData", data);
