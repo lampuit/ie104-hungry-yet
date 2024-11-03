@@ -3,15 +3,8 @@
 import Link from "next/link";
 import { Navbar } from "@/components/home/nav-bar";
 import { Button } from "@/components/ui/button";
-import Image from "next/image";
+import { ScrollArea } from "@/components/ui/scroll-area";
 
-import {
-  Carousel,
-  CarouselContent,
-  CarouselItem,
-  CarouselNext,
-  CarouselPrevious,
-} from "@/components/ui/carousel";
 import { TimeAndAddress } from "@/components/home/time-address";
 import { Categories } from "@/components/home/categories";
 import { ImgBg } from "@/components/home/img-bg";
@@ -27,23 +20,23 @@ import { FAQ } from "@/components/home/faq";
 export default function Homepage() {
   return (
     <main className="overflow-hidden">
-      <section className="bg-black z-0">
-        <header className="flex flex-col justify-between items-center h-screen overflow-hidden z-10">
-          <div className="bg-black opacity z-20">
+      <section className="flex flex-col justify-center items-center h-screen w-screen">
+        <header className="flex flex-col justify-between items-center h-screen w-screen overflow-hidden z-0 bg-black">
+          <div className="bg-black z-10">
             <Navbar />
           </div>
-          <div className="absolute right-full top-20 h-4/5">
+          <div className="absolute right-full top-24 h-4/6">
             <ImgBg />
           </div>
           <div className="flex flex-col justify-between items-center min-h-52 max-h-64 text-white z-10">
-            <h1 className="text-8xl text-center">Hungry Yet?</h1>
-            <p className="text-2xl text-center">Lorem ipsum dolor sit amet consectetur adipisicing elit. Maxime assumenda natus</p>
-            <div className="flex flex-row justify-around min-w-64">
-              <Button asChild>
-                <Link href={"#"}>Order Now</Link>
+            <h1 className="sm:text-7xl md:text-8xl text-center">Hungry Yet?</h1>
+            <p className="sm:text-xl md:text-2xl text-center">Chọn hương vị, nhận yêu thương - chỉ từ một cú CLICK!</p>
+            <div className="flex flex-row justify-around min-w-72">
+              <Button asChild className="bg-amber-500 rounded-3xl hover:bg-red-500">
+                <Link href={"#"}>Đặt hàng ngay</Link>
               </Button>
-              <Button asChild>
-                <Link href={"#"}>View Menu</Link>
+              <Button asChild className="bg-black rounded-3xl hover:bg-red-500">
+                <Link href={"/menu"}>Xem thực đơn</Link>
               </Button>
             </div>
           </div>
@@ -54,24 +47,24 @@ export default function Homepage() {
       </section>
 
       <section>
-        <Categories />
+          <Categories />
       </section>
 
-      <section>
-        <div className="bg-neutral-100 my-16 py-12">
+      <section className="flex flex-col justify-center items-center">
+        <div className="bg-neutral-100 mt-16 mb-32 py-12">
           <Benefit />
         </div>
       </section>
 
-      <section className="mb-16">
+      <section>
         <Intro />
       </section>
 
-      <section className="my-24">
+      <section className="mt-24 flex flex-row justify-center items-center">
         <Menu />
       </section>
 
-      <section className="">
+      <section className="my-16">
         <OrderOnline />
       </section>
 
@@ -80,32 +73,34 @@ export default function Homepage() {
       </section>
 
       <section className="">
-        <div className="flex flex-col justify-between items-start gap-4">
-          <h2 className="italic text-5xl px-12">Testimonials</h2>
-          <div className="px-12"><HorizontalLine /></div>
-          <div className="mt-4 grid grid-cols-4 overflow-hidden w-screen gap-8">
-            <Testimonials />
-            <Testimonials />
-            <Testimonials />
-            <Testimonials />
-          </div>
+        <div className="flex flex-col justify-between items-start gap-4 px-32">
+          <h2 className="italic font-semibold text-5xl">Nhận xét & đánh giá</h2>
+          <div className=""><HorizontalLine /></div>
         </div>
+        <div className="mt-4 flex flex-row justify-center item-center">
+          <Testimonials />
+        </div>
+
       </section>
 
       <section>
-        <div className="flex flex-row justify-center items-start gap-24 w-2/3 mt-16 mx-12">
+        <div className="flex flex-row justify-center items-start gap-24 mt-16 mx-12">
           <div className="flex flex-col justify-center items-start gap-4">
             <h2 className="italic text-5xl">FAQ</h2>
             <div>
               <HorizontalLine />
             </div>
           </div>
-          <FAQ />
+          <ScrollArea className="h-[240px] rounded-md p-4">
+            <FAQ />
+          </ScrollArea>
         </div>
       </section>
 
-      <footer className="mt-10 h-80 w-screen bg-black">
+      <footer className="mt-10 h-80 bg-black">
       </footer>
     </main>
   );
 }
+
+

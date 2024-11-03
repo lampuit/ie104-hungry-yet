@@ -3,24 +3,24 @@ import Link from "next/link";
 
 export function Navbar() {
   return (
-    <nav className="flex flex-row w-screen px-10 py-5 justify-between items-center text-white">
-      <div className="grow min-w-52 flex flex-row justify-start items-center">
-        <div>
+    <nav className="flex flex-row w-screen px-10 py-5 justify-between items-center text-white max-w-screen-2xl">
+      <div className="grow min-w-52">
+        <Link href={"/"} className="flex flex-row justify-start w-52 items-center">
           <Logo />
-        </div>
-        <p className="text-2xl font-bold px-2">Hungry Yet?</p>
+          <p className="sm:text-xl md:text-2xl font-bold px-2">Hungry Yet?</p>
+        </Link>
       </div>
-      <div className="grow min-w-sm max-w-2xl flex flex-row justify-around items-center">
-        <Link href={""}>Home</Link>
-        <Link href={"#"}>Menu</Link>
-        <Link href={"#"}>Contact</Link>
-        <Link href={"#"}>About Us</Link>
+      <div className="grow sm:text-xs sm:gap-1 md:text-base min-w-sm max-w-2xl flex flex-row justify-around items-center">
+        <Link href={"/"} className="hover:text-amber-500">Trang chủ</Link>
+        <Link href={"/menu"} className="hover:text-amber-500">Thực đơn</Link>
+        <Link href={"#"} className="hover:text-amber-500">Công việc</Link>
+        <Link href={"/about"} className="hover:text-amber-500">Về chúng tôi</Link>
       </div>
-      <div className="grow max-w-20">
-          <Button asChild>
-            <Link href={"/login"}>Sign in</Link>
-          </Button>
-        </div>
+      <div className="grow max-w-24">
+        <Button asChild className="bg-amber-500 rounded-3xl hover:bg-red-500">
+          <Link href={"/login"}>Đăng nhập</Link>
+        </Button>
+      </div>
     </nav>
   );
 }

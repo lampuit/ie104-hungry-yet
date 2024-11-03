@@ -7,7 +7,7 @@ import {
 
   export function FAQ() {
     return (
-      <Accordion type="single" collapsible className="w-96">
+      <Accordion type="single" collapsible className="xl:w-96 md:w-64 sm:w-48">
         <AccordionItem value="item-1">
           <AccordionTrigger>What is Hungry Yet?</AccordionTrigger>
           <AccordionContent>
@@ -30,6 +30,20 @@ import {
         </AccordionItem>
 
         <AccordionItem value="item-4">
+          <AccordionTrigger>What is Hungry Yet?</AccordionTrigger>
+          <AccordionContent>
+            Lorem ipsum dolor sit amet consectetur adipisicing elit. Harum ratione illum veritatis quae corrupti laudantium.
+          </AccordionContent>
+        </AccordionItem>
+
+        <AccordionItem value="item-5">
+          <AccordionTrigger>What is Hungry Yet?</AccordionTrigger>
+          <AccordionContent>
+            Lorem ipsum dolor sit amet consectetur adipisicing elit. Harum ratione illum veritatis quae corrupti laudantium.
+          </AccordionContent>
+        </AccordionItem>
+
+        <AccordionItem value="item-6">
           <AccordionTrigger>What is Hungry Yet?</AccordionTrigger>
           <AccordionContent>
             Lorem ipsum dolor sit amet consectetur adipisicing elit. Harum ratione illum veritatis quae corrupti laudantium.

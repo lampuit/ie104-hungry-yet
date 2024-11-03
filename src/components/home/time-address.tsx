@@ -1,14 +1,14 @@
 
 export function TimeAndAddress() {
     return (
-        <div className="flex flex-col justify-around items-center text-start text-white text-xs font-normal bg-black bg-opacity-70 w-44 px-1 py-3 gap-3">
+        <div className="flex flex-col justify-around items-center text-start text-white text-xs font-normal bg-black bg-opacity-70 w-48 px-1 py-3 gap-3">
             <div className="flex flex-row justify-start items-center w-11/12 gap-3">
                 <Clock />
-                <p>Monday - Sunday<br />8:00 AM - 10:00 PM</p>
+                <p>Thứ hai - Chủ nhật<br />8:00 AM - 10:00 PM</p>
             </div>
             <div className="flex flex-row justify-start items-center w-11/12 gap-3">
                 <Location />
-                <p>ABC Street,<br />HCM city</p>
+                <p>Đường ABC, Quận 1,<br />TP Hồ Chí Minh</p>
             </div>
         </div>
     );

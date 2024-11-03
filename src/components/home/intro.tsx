@@ -9,19 +9,17 @@ export function Intro() {
             <div className="relative flex flex-row justify-center items-center gap-36">
                 <div className="flex flex-col justify-center items-start gap-3">
                     <div className='flex flex-col justify-center items-start gap-3'>
-                        <h2 className='italic text-5xl'>Welcome</h2>
+                        <h2 className='italic font-semibold text-5xl'>Chào mừng</h2>
                         <HorizontalLine />
-                        <p>
-                            Welcome to our family-owned Filipino cuisine restaurant, where we<br />
-                            invite you to savor the heartwarming flavors of the Philippines. Our<br />
-                            commitment to quality and tradition means that every meal is crafted<br />
-                            with care, using time-honored recipes and the freshest ingredients<br />
-                            available. We invite you to join us in celebrating the warmth of family,<br />
-                            the richness of culture, and the delight of Filipino cuisine!
+                        <p className='max-w-xl'>
+                        Chào mừng bạn đến với HungryYet – nơi mang đến những món ăn ngon và chất lượng, 
+                        sẵn sàng phục vụ bạn mọi lúc, mọi nơi! Hãy cùng khám phá thế giới ẩm thực đa dạng, 
+                        tiện lợi đặt hàng và giao tận nơi, để mỗi bữa ăn đều trở thành niềm vui trọn vẹn. 
+                        Chọn món yêu thích và để chúng tôi chăm sóc bữa ăn của bạn!
                         </p>
                     </div>
-                    <Button asChild>
-                        <Link href={"#"}>About us</Link>
+                    <Button asChild className='bg-black hover:bg-red-500 rounded-3xl'>
+                        <Link href={"/about"}>Về chúng tôi</Link>
                     </Button>
                 </div>
                 <div className='relative'>
@@ -51,19 +49,18 @@ export function Intro() {
                 </div>
                 <div className="flex flex-col justify-center items-start gap-3">
                     <div className='flex flex-col justify-center items-start gap-3'>
-                        <h2 className='italic text-5xl'>Vietnam Flavors</h2>
+                        <h2 className='italic font-semibold text-5xl'>Hương vị Việt Nam</h2>
                         <HorizontalLine />
-                        <p>
-                            Welcome to our family-owned Filipino cuisine restaurant, where we<br />
-                            invite you to savor the heartwarming flavors of the Philippines. Our<br />
-                            commitment to quality and tradition means that every meal is crafted<br />
-                            with care, using time-honored recipes and the freshest ingredients<br />
-                            available. We invite you to join us in celebrating the warmth of family,<br />
-                            the richness of culture, and the delight of Filipino cuisine!
+                        <p className='max-w-xl'>
+                        Hương vị ẩm thực Việt Nam là sự kết hợp tinh tế giữa các nguyên liệu tự nhiên và gia vị đặc trưng, 
+                        mang đến những món ăn vừa ngon mắt vừa đậm đà. Từ vị thanh mát của phở, cái ngọt bùi của bún chả, 
+                        đến độ giòn rụm của nem rán, mỗi món ăn đều phản ánh một phần của nền văn hóa và tình yêu dành cho 
+                        ẩm thực quê nhà. Với sự cân bằng hoàn hảo giữa ngọt, mặn, chua, cay, ẩm thực Việt Nam không chỉ là 
+                        trải nghiệm vị giác mà còn là hành trình khám phá văn hóa, gắn kết người với người qua từng món ăn.
                         </p>
                     </div>
-                    <Button asChild>
-                        <Link href={"#"}>About us</Link>
+                    <Button asChild className='bg-amber-500 hover:bg-red-500 rounded-3xl'>
+                        <Link href={"#"}>Đặt hàng ngay</Link>
                     </Button>
                 </div>
             </div>
