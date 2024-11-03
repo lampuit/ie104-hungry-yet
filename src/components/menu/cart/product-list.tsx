@@ -82,8 +82,8 @@ export function ProductList() {
           try {
             const data = await getShoppingCartByUserId('PqEEV28ZywjNXbhRsZ-r_');
             const formattedData = data.map((item: any) => ({
-                id: item.id || undefined,
-                img: item.imageUrl || "/images/fallback.jpg",  
+                id: item.cartId || undefined,
+                img: item.image || "/images/fallback.jpg",  
                 name: item.name,
                 des: item.description || '',
                 cost: item.price,
@@ -91,7 +91,7 @@ export function ProductList() {
                 favorited: item.isFavorite || false
             }));
             setDishes(formattedData);
-            console.log("realData", data);
+            console.log("realData", formattedData);
           } catch (error) {
             console.error("Error fetching shopping cart data:", error);
           }

@@ -5,6 +5,8 @@ import {
   updateShoppingCart,
 } from "./shopping-cart";
 
+import * as favorite from "./favorite";
+
 //sucessfull
 async function testCreate() {
   const formData = new FormData();

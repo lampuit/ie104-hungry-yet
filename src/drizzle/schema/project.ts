@@ -172,3 +172,5 @@ export const insertProductSchema = createInsertSchema(products);
 export const insertOrderProductSchema = createInsertSchema(orderProducts);
 
 export const inserShoppingCartSchema = createInsertSchema(shoppingCart);
+
+export const insertFavouriteSchema = createInsertSchema(favorite);
