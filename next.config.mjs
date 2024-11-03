@@ -1,7 +1,13 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   images: {
-    domains: ["images.unsplash.com"],
+    remotePatterns: [
+      {
+        protocol: "https",
+        hostname: "4dexrf4t9f6tdt6j.public.blob.vercel-storage.com",
+        port: "",
+      },
+    ],
   },
 };
 

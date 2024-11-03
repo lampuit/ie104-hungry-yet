@@ -4,7 +4,9 @@ import { db } from "@/drizzle/db";
 import {
   inserShoppingCartSchema,
   shoppingCart,
-} from "@/drizzle/schema/project";
+  products,
+  favorite
+ } from "@/drizzle/schema/project";
 import { eq, and } from "drizzle-orm";
 
 const CreateShoppingCart = inserShoppingCartSchema.omit({
@@ -14,8 +16,34 @@ const CreateShoppingCart = inserShoppingCartSchema.omit({
 });
 
 export async function getShoppingCartByUserId(userId: string) {
-  return await db.select().from(shoppingCart).where(eq(shoppingCart.userId, userId));
+  const response = await db
+    .select({
+      cartId: shoppingCart.id,
+      userId: shoppingCart.userId,
+      productId: shoppingCart.productId,
+      quantity: shoppingCart.quantity,
+      name: products.name,
+      image: products.imageUrl,
+      price: products.price,
+      favoriteProductId: favorite.productId, // Temporarily select favorite product ID to check later
+    })
+    .from(shoppingCart)
+    .innerJoin(products, eq(shoppingCart.productId, products.id))
+    .leftJoin(favorite, and(
+      eq(shoppingCart.productId, favorite.productId),
+      eq(shoppingCart.userId, favorite.userId)
+    ))
+    .where(eq(shoppingCart.userId, userId));
+
+  // Map the result to add `isFavorite` based on the presence of `favoriteProductId`
+  const updatedResponse = response.map((item) => ({
+    ...item,
+    isFavorite: item.favoriteProductId != null,
+  }));
+
+  return updatedResponse;
 }
+
 
 export async function createShoppingCart(formData: FormData) {
   const data = CreateShoppingCart.parse({
