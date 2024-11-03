@@ -5,11 +5,12 @@ import "@/styles/globals.css";
 
 export const montserrat = Montserrat({
   subsets: ["vietnamese"],
+  weight: ["400", "500", "600", "700"],
 });
 
 export const metadata: Metadata = {
   title: "Hungry Yet ?",
-  description: "Created by Team 7",
+  description: "Created by Team 8",
 };
 
 export default function RootLayout({
