@@ -43,6 +43,6 @@ export const Circle3 = () => (
 
 export const Line = () => (
     <svg width="3" height="220" viewBox="0 0 3 220" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <line x1="1.5" x2="1.5" y2="220.002" stroke="#D5D5D5" stroke-width="2" />
+        <line x1="1.5" x2="1.5" y2="220.002" stroke="#D5D5D5" strokeWidth="2" />
     </svg>
 )
