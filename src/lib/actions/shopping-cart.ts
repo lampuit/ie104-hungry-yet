@@ -4,7 +4,8 @@ import { db } from "@/drizzle/db";
 import {
   inserShoppingCartSchema,
   shoppingCart,
-} from "@/drizzle/schema/project";
+  products
+ } from "@/drizzle/schema/project";
 import { eq, and } from "drizzle-orm";
 
 const CreateShoppingCart = inserShoppingCartSchema.omit({
@@ -14,7 +15,20 @@ const CreateShoppingCart = inserShoppingCartSchema.omit({
 });
 
 export async function getShoppingCartByUserId(userId: string) {
-  return await db.select().from(shoppingCart).where(eq(shoppingCart.userId, userId));
+  const response = await db
+  .select({
+    cartId: shoppingCart.id,
+    userId: shoppingCart.userId,
+    productId: shoppingCart.productId,
+    quantity: shoppingCart.quantity,
+    name: products.name,
+    image: products.imageUrl,
+    price: products.price,
+  })
+  .from(shoppingCart)
+  .innerJoin(products, eq(shoppingCart.productId, products.id))
+  .where(eq(shoppingCart.userId, userId));
+  return response
 }
 
 export async function createShoppingCart(formData: FormData) {
