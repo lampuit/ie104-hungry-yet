@@ -5,7 +5,12 @@ import {
   updateShoppingCart,
 } from "./shopping-cart";
 
-import * as favorite from "./favorite";
+// import {
+//   getFavoriteByUserId,
+//   addFavorite,
+//   removeFavorite,
+//   updateFavorite,
+// } from "./favorite";
 
 //sucessfull
 async function testCreate() {
