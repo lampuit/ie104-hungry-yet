@@ -21,11 +21,11 @@ export default function Homepage() {
   return (
     <main className="overflow-hidden">
       <section className="flex flex-col justify-center items-center h-screen w-screen">
-        <header className="flex flex-col justify-between items-center h-[85%] w-screen overflow-hidden z-0 bg-black">
+        <header className="flex flex-col justify-between items-center h-screen w-screen overflow-hidden z-0 bg-black">
           <div className="bg-black z-10">
             <Navbar />
           </div>
-          <div className="absolute right-full top-16 h-4/6">
+          <div className="absolute right-full top-24 h-4/6">
             <ImgBg />
           </div>
           <div className="flex flex-col justify-between items-center min-h-52 max-h-64 text-white z-10">
@@ -44,9 +44,10 @@ export default function Homepage() {
             <TimeAndAddress />
           </div>
         </header>
-        <div className="h-[15%]">
+      </section>
+
+      <section>
           <Categories />
-        </div>
       </section>
 
       <section className="flex flex-col justify-center items-center">
@@ -59,7 +60,7 @@ export default function Homepage() {
         <Intro />
       </section>
 
-      <section className="mt-24">
+      <section className="mt-24 flex flex-row justify-center items-center">
         <Menu />
       </section>
 
