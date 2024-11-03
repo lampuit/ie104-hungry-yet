@@ -19,52 +19,46 @@ import { FAQ } from "@/components/home/faq";
 
 export default function Homepage() {
   return (
-    <main className="overflow-hidden">
-      <section className="flex flex-col justify-center items-center h-screen w-screen">
-        <header className="flex flex-col justify-between items-center h-screen w-screen overflow-hidden z-0 bg-black">
-          <div className="bg-black z-10">
-            <Navbar />
-          </div>
-          <div className="absolute right-full top-24 h-4/6">
-            <ImgBg />
-          </div>
-          <div className="flex flex-col justify-between items-center min-h-52 max-h-64 text-white z-10">
-            <h1 className="sm:text-7xl md:text-8xl text-center">Hungry Yet?</h1>
-            <p className="sm:text-xl md:text-2xl text-center">Chọn hương vị, nhận yêu thương - chỉ từ một cú CLICK!</p>
-            <div className="flex flex-row justify-around min-w-72">
-              <Button asChild className="bg-amber-500 rounded-3xl hover:bg-red-500">
-                <Link href={"#"}>Đặt hàng ngay</Link>
-              </Button>
-              <Button asChild className="bg-black rounded-3xl hover:bg-red-500">
-                <Link href={"/menu"}>Xem thực đơn</Link>
-              </Button>
-            </div>
-          </div>
-          <div className="relative end-1/3">
-            <TimeAndAddress />
-          </div>
-        </header>
-      </section>
-
-      <section>
-          <Categories />
-      </section>
-
-      <section className="flex flex-col justify-center items-center">
-        <div className="bg-neutral-100 mt-16 mb-32 py-12">
-          <Benefit />
+    <main>
+      <header className="flex flex-col justify-between items-center h-screen w-screen overflow-hidden z-0 bg-black">
+        <Navbar />
+        <div className="absolute right-full top-20 h-4/6">
+          <ImgBg />
         </div>
+        <div className="flex flex-col justify-between items-center min-h-52 max-h-64 text-white z-10">
+          <h1 className="sm:text-7xl md:text-8xl text-center">Hungry Yet?</h1>
+          <p className="sm:text-xl md:text-2xl text-center">Chọn hương vị, nhận yêu thương - chỉ từ một cú CLICK!</p>
+          <div className="flex flex-row justify-around min-w-72 gap-x-3">
+            <Button asChild className="bg-amber-500 rounded-3xl hover:bg-red-500">
+              <Link href={"#"}>Đặt hàng ngay</Link>
+            </Button>
+            <Button asChild className="bg-black rounded-3xl hover:bg-red-500">
+              <Link href={"/menu"}>Xem thực đơn</Link>
+            </Button>
+          </div>
+        </div>
+        <div className="relative end-1/3">
+          <TimeAndAddress />
+        </div>
+      </header>
+
+      <section className="my-16">
+        <Categories />
       </section>
 
-      <section>
+      <section className="mb-20">
+          <Benefit />
+      </section>
+
+      <section className="mb-20">
         <Intro />
       </section>
 
-      <section className="mt-24 flex flex-row justify-center items-center">
+      <section className="mb-16">
         <Menu />
       </section>
 
-      <section className="my-16">
+      <section className="">
         <OrderOnline />
       </section>
 
