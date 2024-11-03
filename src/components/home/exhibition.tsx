@@ -13,11 +13,11 @@ export function Exhibition() {
         <div className="flex flex-col justify-between items-center gap-6">
             <div className="flex flex-row justify-between items-center w-2/3">
                 <div className="flex flex-col justify-start items-start gap-4">
-                    <h2 className='italic text-5xl'>Exhibition Dishes</h2>
+                    <h2 className='italic font-semibold text-5xl'>Món ăn trưng bày</h2>
                     <HorizontalLine />
                 </div>
-                <Button asChild>
-                    <Link href={"#"}>View Exhibition</Link>
+                <Button asChild className="bg-black hover:bg-red-500 rounded-3xl">
+                    <Link href={"#"}>Xem triển lãm</Link>
                 </Button>
             </div>
             <div className="grid grid-cols-3 gap-3">

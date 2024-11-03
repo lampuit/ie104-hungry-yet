@@ -19,7 +19,8 @@ const imgList = [
   { name: 'img15', src: '/images/food/img15.jpg', alt: 'food img15' },
   { name: 'img16', src: '/images/food/img16.jpg', alt: 'food img16' },
   { name: 'img17', src: '/images/food/img17.jpg', alt: 'food img17' },
-  { name: 'img19', src: '/images/food/img19.jpg', alt: 'food img19' },
+  { name: 'img18', src: '/images/food/img17.jpg', alt: 'food img18' },
+  // { name: 'img19', src: '/images/food/img19.jpg', alt: 'food img19' },
   // { name: 'img20', src: '/images/food/img20.jpg', alt: 'food img20' },
   // { name: 'img21', src: '/images/food/img21.jpg', alt: 'food img21' },
   // { name: 'img22', src: '/images/food/img22.jpg', alt: 'food img22' },
@@ -43,40 +44,19 @@ const imgList = [
   // { name: 'img40', src: '/images/food/img40.jpg', alt: 'food img40' },
   // { name: 'img41', src: '/images/food/img41.jpg', alt: 'food img41' },
   // { name: 'img42', src: '/images/food/img42.jpg', alt: 'food img42' },
-  // { name: 'img43', src: '/images/food/img43.jpg', alt: 'food img43' },
-  // { name: 'img44', src: '/images/food/img44.jpg', alt: 'food img44' },
-  // { name: 'img45', src: '/images/food/img45.jpg', alt: 'food img45' },
-  // { name: 'img46', src: '/images/food/img46.jpg', alt: 'food img46' },
-  // { name: 'img47', src: '/images/food/img47.jpg', alt: 'food img47' },
-  // { name: 'img48', src: '/images/food/img48.jpg', alt: 'food img48' },
-  // { name: 'img49', src: '/images/food/img49.jpg', alt: 'food img49' },
-  // { name: 'img50', src: '/images/food/img50.jpg', alt: 'food img50' },
-  // { name: 'img51', src: '/images/food/img51.jpg', alt: 'food img51' },
-  // { name: 'img52', src: '/images/food/img52.jpg', alt: 'food img52' },
-  // { name: 'img53', src: '/images/food/img53.jpg', alt: 'food img53' },
-  // { name: 'img54', src: '/images/food/img54.jpg', alt: 'food img54' },
-  // { name: 'img55', src: '/images/food/img55.jpg', alt: 'food img55' },
-  // { name: 'img56', src: '/images/food/img56.jpg', alt: 'food img56' },
-  // { name: 'img57', src: '/images/food/img57.jpg', alt: 'food img57' },
-  // { name: 'img58', src: '/images/food/img58.jpg', alt: 'food img58' },
-  // { name: 'img59', src: '/images/food/img59.jpg', alt: 'food img59' },
-  // { name: 'img60', src: '/images/food/img60.jpg', alt: 'food img60' },
-  // { name: 'img61', src: '/images/food/img61.jpg', alt: 'food img61' },
-  // { name: 'img62', src: '/images/food/img62.jpg', alt: 'food img62' },
-  // { name: 'img63', src: '/images/food/img63.jpg', alt: 'food img63' },
 ];
 
 
 export function ImgBg() {
   return (
-    <div className="absolute grid grid-rows-3 grid-cols-6 gap-1 w-screen h-screen overflow-hidden opacity-30 z-0">
+    <div className="absolute grid grid-rows-3 grid-cols-6 w-screen h-full opacity-30 z-0">
       {imgList.map((img) => (
-        <div key={img.name} className="overflow-hidden rounded-lg">
+        <div key={img.name} className="rounded-lg h-52">
           <Image 
             src={img.src}
             alt={img.alt}
             width={300}
-            height={180}
+            height={200}
             className="object-cover rounded-lg"
           />
         </div>

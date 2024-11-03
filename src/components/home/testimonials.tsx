@@ -1,35 +1,67 @@
 import Image from 'next/image';
+import * as React from "react"
+
+import { Card, CardContent } from "@/components/ui/card"
+import {
+    Carousel,
+    CarouselContent,
+    CarouselItem,
+    CarouselNext,
+    CarouselPrevious,
+} from "@/components/ui/carousel"
 
 export function Testimonials() {
     return (
-        <div className="flex flex-col justify-between items-center gap-6 drop-shadow-md h-80 py-2 px-1 bg-white rounded-3xl border-2">
-            <div className="flex flex-row justify-center items-centergap-1">
-                <Star />
-                <Star />
-                <Star />
-                <Star />
-                <Star />
-            </div>
-            <div className="text-center">
-                <p>"Food here is absolutely outstanding! Every dish bursts with so much flavor and authenticity.
-                    Friendly staff, great food, and exceptional service makes dining here an unforgettable experience.
-                    Highly recommend!"</p>
-            </div>
-            <ThinLine />
-            <div className="flex flex-row justity-start items-center gap-4">
-                <Image
-                    src={"/images/avatar.png"}
-                    alt={"Avatar"}
-                    width={40}
-                    height={40}
-                    className='rounded-full'>
-                </Image>
-                <div className='flex flex-col justify-between items-start'>
-                    <p className='font-semibold'>Title</p>
-                    <p>Description</p>
-                </div>               
-            </div>
-        </div>
+        <Carousel
+            opts={{
+                align: "start",
+            }}
+            className="w-full xl:max-w-screen-xl lg:max-w-screen-lg md:max-w-screen-md mx-auto mt-8"
+        >
+            <CarouselContent>
+                {Array.from({ length: 10 }).map((_, index) => (
+                    <CarouselItem key={index} className="md:basis-full lg:basis-1/2 xl:basis-1/3">
+                        <div className="p-1">
+                            <Card>
+                                <CardContent className="flex items-center justify-center py-2">
+                                    <div className="flex flex-col justify-between items-center gap-6 h-80 py-2 px-1 bg-white">
+                                        <div className="flex flex-row justify-center items-center gap-1">
+                                            <Star />
+                                            <Star />
+                                            <Star />
+                                            <Star />
+                                            <Star />
+                                        </div>
+                                        <div className="text-center">
+                                            <p>"Food here is absolutely outstanding! Every dish bursts with so much flavor and authenticity.
+                                                Friendly staff, great food, and exceptional service makes dining here an unforgettable experience.
+                                                Highly recommend!"</p>
+                                        </div>
+                                        <ThinLine />
+                                        <div className="flex flex-row justity-start items-center gap-4">
+                                            <Image
+                                                src={"/images/main-dishes.jpg"}
+                                                alt={"Phở Bò"}
+                                                width={40}
+                                                height={40}
+                                                className='rounded-full'>
+                                            </Image>
+                                            <div className='flex flex-col justify-between items-start'>
+                                                <p className='font-semibold'>Phở bò</p>
+                                                <p>Món ăn</p>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                </CardContent>
+                            </Card>
+                        </div>
+                    </CarouselItem>
+                ))}
+            </CarouselContent>
+            <CarouselPrevious />
+            <CarouselNext />
+        </Carousel>
     );
 }
 
