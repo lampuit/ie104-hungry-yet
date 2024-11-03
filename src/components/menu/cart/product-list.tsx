@@ -88,7 +88,7 @@ export function ProductList() {
                 des: item.description || '',
                 cost: item.price,
                 amount: item.quantity,
-                favorited: item.isFavorite || false
+                isFavorite: item.isFavorite || false
             }));
             setDishes(formattedData);
             console.log("realData", formattedData);
@@ -146,7 +146,7 @@ export function ProductList() {
                                     </TableCell>
                                     <TableCell className="w-36 text-center">{dish.amount * dish.cost}</TableCell>
                                     <TableCell className="w-32 text-center">
-                                        {dish.favorited ? (
+                                        {dish.isFavorite ? (
                                             <FilledHeartIcon onClick={() => handleFavoriteClick(dish.id)} />
                                         ) : (
                                             <HeartIcon onClick={() => handleFavoriteClick(dish.id)} />

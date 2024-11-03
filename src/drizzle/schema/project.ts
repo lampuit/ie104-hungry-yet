@@ -52,6 +52,7 @@ export const ratings = pgTable("ratings", {
     .references(() => user.id), // Khóa ngoại
   star: integer("star").notNull(),
   review: text("review"),
+  imageURL: text("imageURL")
 });
 
 // Enum cho trạng thái đơn hàng
@@ -166,6 +167,15 @@ export const favorite = pgTable("favorite", {
     .notNull()
     .references(() => products.id), // Khóa ngoại
 });
+
+//Relation: 1 user -> n favorites
+export const favoriteRelations = relations(user, ({many}) => ({
+  favorite: many(favorite)
+}))
+
+export const userfavoriteRelations = relations(favorite, ({many}) => ({
+  user: many(user)
+}))
 
 export const insertProductSchema = createInsertSchema(products);
 
