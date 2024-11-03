@@ -18,14 +18,9 @@ export const categories = pgTable("categories", {
   imageUrl: text("imageUrl"),
 });
 
-// Relation: 1 category -> n products
-export const usersRelations = relations(categories, ({ many }) => ({
-  products: many(products),
-}));
-
 // Bảng Products
 export const products = pgTable("products", {
-  id: uuid("id").notNull().primaryKey().defaultRandom(),
+  id: uuid("id").primaryKey().defaultRandom(),
   name: text("name").notNull(),
   description: text("description").notNull(),
   price: real("price").notNull(),
@@ -37,9 +32,17 @@ export const products = pgTable("products", {
     .$onUpdate(() => new Date()),
 });
 
+// Relation: 1 category -> n products
+export const categoryRelations = relations(categories, ({ many }) => ({
+  products: many(products),
+}));
+
 //Relation: 1 product -> 1 category
-export const productRalation = relations(products, ({ one }) => ({
-  categoieries: one(categories),
+export const productRelations = relations(products, ({ one }) => ({
+  category: one(categories, {
+    fields: [products.categoryId],
+    references: [categories.id],
+  }),
 }));
 
 // Bảng Ratings
@@ -168,9 +171,8 @@ export const favorite = pgTable("favorite", {
 });
 
 export const insertProductSchema = createInsertSchema(products);
-
+export const insertCategorySchema = createInsertSchema(products);
 export const insertOrderProductSchema = createInsertSchema(orderProducts);
-
 export const inserShoppingCartSchema = createInsertSchema(shoppingCart);
 
 export const insertFavouriteSchema = createInsertSchema(favorite);
