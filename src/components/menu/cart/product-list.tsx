@@ -7,78 +7,106 @@ import {
     TableFooter,
     TableRow,
 } from "@/components/ui/table";
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { ScrollArea } from "@/components/ui/scroll-area";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { init } from "next/dist/compiled/webpack/webpack";
+import {getShoppingCartByUserId} from '@/lib/actions/shopping-cart'
 
-const initialDishes = [
-    {
-        id: 1,
-        img: "/images/square.jpg",
-        name: "Cơm chiên",
-        des: "Cơm chiên thập cẩm",
-        cost: 35000,
-        amount: 1,
-        favorited: false,
-    },
-    {
-        id: 2,
-        img: "/images/square.jpg",
-        name: "Cơm chiên",
-        des: "Cơm chiên thập cẩm",
-        cost: 35000,
-        amount: 2,
-        favorited: false,
-    },
-    {
-        id: 3,
-        img: "/images/square.jpg",
-        name: "Cơm chiên",
-        des: "Cơm chiên thập cẩm",
-        cost: 35000,
-        amount: 5,
-        favorited: false,
-    },
-    {
-        id: 4,
-        img: "/images/square.jpg",
-        name: "Cơm chiên",
-        des: "Cơm chiên thập cẩm",
-        cost: 35000,
-        amount: 1,
-        favorited: false,
-    },
-    {
-        id: 5,
-        img: "/images/square.jpg",
-        name: "Cơm chiên",
-        des: "Cơm chiên thập cẩm",
-        cost: 35000,
-        amount: 1,
-        favorited: false,
-    },
-    {
-        id: 6,
-        img: "/images/square.jpg",
-        name: "Cơm chiên",
-        des: "Cơm chiên thập cẩm",
-        cost: 35000,
-        amount: 1,
-        favorited: false,
-    },
-];
+// const initialDishes = [
+//     {
+//         id: 1,
+//         img: "/images/square.jpg",
+//         name: "Cơm chiên",
+//         des: "Cơm chiên thập cẩm",
+//         cost: 35000,
+//         amount: 1,
+//         favorited: false,
+//     },
+//     {
+//         id: 2,
+//         img: "/images/square.jpg",
+//         name: "Cơm chiên",
+//         des: "Cơm chiên thập cẩm",
+//         cost: 35000,
+//         amount: 2,
+//         favorited: false,
+//     },
+//     {
+//         id: 3,
+//         img: "/images/square.jpg",
+//         name: "Cơm chiên",
+//         des: "Cơm chiên thập cẩm",
+//         cost: 35000,
+//         amount: 5,
+//         favorited: false,
+//     },
+//     {
+//         id: 4,
+//         img: "/images/square.jpg",
+//         name: "Cơm chiên",
+//         des: "Cơm chiên thập cẩm",
+//         cost: 35000,
+//         amount: 1,
+//         favorited: false,
+//     },
+//     {
+//         id: 5,
+//         img: "/images/square.jpg",
+//         name: "Cơm chiên",
+//         des: "Cơm chiên thập cẩm",
+//         cost: 35000,
+//         amount: 1,
+//         favorited: false,
+//     },
+//     {
+//         id: 6,
+//         img: "/images/square.jpg",
+//         name: "Cơm chiên",
+//         des: "Cơm chiên thập cẩm",
+//         cost: 35000,
+//         amount: 1,
+//         favorited: false,
+//     },
+// ];
 
-export const total = initialDishes.reduce((sum, dish) => sum + (dish.amount * dish.cost), 0);
+
+// export const total = initialDishes.reduce((sum, dish) => sum + (dish.amount * dish.cost), 0);
 
 export function ProductList() {
-    const [dishes, setDishes] = useState(initialDishes);
+    const [dishes, setDishes] = useState<any[]>([]);
+
+    useEffect(() => {
+        async function fetchData() {
+          try {
+            const data = await getShoppingCartByUserId('PqEEV28ZywjNXbhRsZ-r_');
+            const formattedData = data.map((item: any) => ({
+                id: item.cartId || undefined,
+                img: item.image || "/images/fallback.jpg",  
+                name: item.name,
+                des: item.description || '',
+                cost: item.price,
+                amount: item.quantity,
+                favorited: item.isFavorite || false
+            }));
+            setDishes(formattedData);
+            console.log("realData", formattedData);
+          } catch (error) {
+            console.error("Error fetching shopping cart data:", error);
+          }
+        }
+    
+        fetchData();
+      }, []);
+    
+    
     const handleFavoriteClick = (id: number) => {
-        setDishes(dishes.map(dish =>
+        setDishes(dishes.map((dish: any) =>
             dish.id === id ? { ...dish, favorited: !dish.favorited } : dish
         ));
     };
+
 
     return (
         <div className="flex flex-col justify-center items-center">

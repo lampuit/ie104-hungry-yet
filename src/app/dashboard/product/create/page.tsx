@@ -7,8 +7,6 @@ import { PlusCircle } from "lucide-react";
 export default async function Create() {
   const categories = await db.query.categories.findMany();
 
-  console.log(categories);
-
   return (
     <div className="flex-1 p-4">
       <CreateForm categories={categories} />

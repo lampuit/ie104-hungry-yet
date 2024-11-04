@@ -22,16 +22,17 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import z, { set } from "zod";
 import { upload } from "@vercel/blob/client";
-import { DollarSign, Percent, PlusCircle } from "lucide-react";
+import { ArrowDownToLine, DollarSign, Percent, PlusCircle } from "lucide-react";
 import Image from "next/image";
 
-import { useRef, useState } from "react";
+import React, { useRef, useState } from "react";
 import { cn } from "@/lib/utils";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
 import { ToastAction } from "@/components/ui/toast";
-import { createProduct } from "@/lib/actions/product";
+import { editProduct } from "@/lib/actions/product";
+import { del, head } from "@vercel/blob";
 
 const formSchema = z.object({
   imageUrl: z.string({ required_error: "Vui lòng tải hình ảnh lên." }),
@@ -65,7 +66,13 @@ const formSchema = z.object({
   //   }),
 });
 
-export function CreateForm({ categories }: { categories: any }) {
+export function EditForm({
+  categories,
+  products,
+}: {
+  categories: any;
+  products: any;
+}) {
   const { toast } = useToast();
 
   const [file, setFile] = useState<File | null>();
@@ -73,11 +80,11 @@ export function CreateForm({ categories }: { categories: any }) {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      imageUrl: "",
-      name: "",
-      description: "",
-      category: "",
-      price: undefined,
+      imageUrl: products.imageUrl,
+      name: products.name,
+      description: products.description,
+      category: products.categoryId,
+      price: products.price,
     },
   });
 
@@ -87,13 +94,19 @@ export function CreateForm({ categories }: { categories: any }) {
         throw new Error("Vui lòng chọn file");
       }
 
-      const blob = await upload(file.name, file, {
-        access: "public",
-        handleUploadUrl: "/api/upload",
-      });
-
       const formData = new FormData();
-      formData.append("imageUrl", blob.url);
+
+      let imageUrl = values.imageUrl;
+
+      if (imageUrl != products.imageUrl) {
+        await del(products.imageUrl);
+
+        await upload(file.name, file, {
+          access: "public",
+          handleUploadUrl: "/api/upload",
+        }).then((blob) => (imageUrl = blob.url));
+      }
+      formData.append("imageUrl", imageUrl);
       formData.append("name", values.name);
       formData.append("description", values.description);
       formData.append("category", values.category);
@@ -101,10 +114,10 @@ export function CreateForm({ categories }: { categories: any }) {
 
       console.log(formData);
 
-      await createProduct(formData);
+      await editProduct(products.id, formData);
 
       toast({
-        title: "Tạo sản phẩm thành công.",
+        title: "Chỉnh sửa sản phẩm thành công.",
         description: `Tên sản phẩm: ${values.name}`,
       });
     } catch (error) {
@@ -127,9 +140,9 @@ export function CreateForm({ categories }: { categories: any }) {
       >
         <div className="flex items-center justify-end">
           <Button className="gap-2">
-            <PlusCircle className="h-3.5 w-3.5" />
+            <ArrowDownToLine className="h-3.5 w-3.5" />
             <span className="sr-only sm:not-sr-only sm:whitespace-nowrap">
-              Tạo sản phẩm
+              Lưu sản phẩm
             </span>
           </Button>
         </div>

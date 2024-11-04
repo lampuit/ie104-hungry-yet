@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Montserrat } from "next/font/google";
 import { Charm } from "next/font/google";
 import "@/styles/globals.css";
+import { Toaster } from "@/components/ui/toaster";
 
 export const montserrat = Montserrat({
   subsets: ["vietnamese"],
@@ -20,7 +21,10 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className="overflow-x-hidden">
-      <body className={montserrat.className}>{children}</body>
+      <body className={montserrat.className}>
+        {children}
+        <Toaster />
+      </body>
     </html>
   );
 }

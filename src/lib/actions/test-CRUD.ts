@@ -5,11 +5,18 @@ import {
   updateShoppingCart,
 } from "./shopping-cart";
 
+// import {
+//   getFavoriteByUserId,
+//   addFavorite,
+//   removeFavorite,
+//   updateFavorite,
+// } from "./favorite";
+
 //sucessfull
 async function testCreate() {
   const formData = new FormData();
   formData.append("userId", "PqEEV28ZywjNXbhRsZ-r_");
-  formData.append("productId", "69822ad5-aa2d-4a3d-8419-6331b0453876");
+  formData.append("productId", "1bbb39b5-99f5-4826-a5fd-0747d3c0ad5c");
   formData.append("quantity", "10");
 
   console.log(formData);
@@ -22,13 +29,13 @@ async function testGetShoppingCartByUserId() {
   const result = await getShoppingCartByUserId("PqEEV28ZywjNXbhRsZ-r_");
   console.log("Shopping Cart Data:", result);
 }
-// testGetShoppingCartByUserId();
+testGetShoppingCartByUserId();
 
 //successfull
 async function testUpdate() {
   const formData = new FormData();
   formData.append("userId", "PqEEV28ZywjNXbhRsZ-r_");
-  formData.append("productId", "3cc5fcea-4349-4efc-b3f7-5e50e395b90a");
+  formData.append("productId", "07cb15c6-92c6-48ae-b963-7fa28fcf8004");
   formData.append("quantity", "5");
 
   console.log(formData);
