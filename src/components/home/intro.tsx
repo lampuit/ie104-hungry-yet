@@ -6,7 +6,7 @@ import Image from "next/image";
 export function Intro() {
     return (
         <div className="flex flex-col justify-between items-center w-screen mx-10 py-10 gap-y-52">
-            <div className="relative flex flex-row justify-center items-center gap-x-36 px-32">
+            <div className="relative flex justify-center items-center gap-x-36 px-32">
                 <div className="flex flex-col justify-center items-start gap-10">
                     <div className='flex flex-col justify-center items-start gap-y-4'>
                         <h2 className='italic font-semibold text-5xl'>Chào mừng</h2>
@@ -33,7 +33,7 @@ export function Intro() {
                 </div>
             </div>
 
-            <div className="relative flex flex-row justify-center items-center gap-x-36 px-32">
+            <div className="relative flex justify-center items-center gap-x-36 px-32">
                 <Image
                     src="/images/intro-dish.jpg"
                     width={400}

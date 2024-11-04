@@ -1,7 +1,7 @@
 
 export function Benefit() {
     return (
-        <div className="flex flex-row justify-center w-screen align-center gap-8 bg-neutral-100 py-6">
+        <div className="flex justify-center w-screen align-center gap-8 bg-neutral-100 py-6">
             <div className="flex flex-col justify-around items-center text-center h-56 lg:w-60 md:w-36 sm:w-24">
                 <Circle1 />
                 <h2 className="font-semibold text-2xl">AI chatbot</h2>

@@ -1,31 +1,42 @@
 import { Input } from "../ui/input";
 import React, { useRef } from 'react';
 import Link from 'next/link';
+import { useState } from 'react';
 
 export function Search() {
     const inputRef = useRef<HTMLInputElement>(null);
+    const [inputWidth, setInputWidth] = useState("w-1/4");
     const handleSearchIconClick = () => {
         if (inputRef.current) {
             inputRef.current.focus();
         }
+        setInputWidth("w-2/3");
+    };
+    const handleInputFocus = () => {
+        setInputWidth("w-2/3");
+    };
+
+    const handleInputBlur = () => {
+        setInputWidth("w-1/3");
     };
     const handleFilterIconClick = () => {
         console.log('Filter icon clicked');
     };
-
     return (
-        <div className="flex flex-row justify-between items-center px-10 mx-10">
-            <div className="flex flex-col justify-center items-center gap-1">
+        <div className="flex justify-between items-center px-10 py-5 mx-10">
+            <div className="flex flex-col justify-center items-center gap-4">
                 <h2 className="italic font-semibold md:text-5xl sm:text-4xl">Thực đơn</h2>
                 <Line />
             </div>
-            <div className="flex flex-row justify-between items-center gap-2">
-                <SearchIcon onClick={handleSearchIconClick} />
-                <div>
+            <div className={`flex justify-betwenn items-center ${inputWidth} gap-2 focus:stroke-none`}>
+                <div className="relative flex justify-end items-center w-full bg-gray-100 rounded-full">
+                    <div className="absolute left-2"><SearchIcon onClick={handleSearchIconClick} /></div>
                     <Input
                         ref={inputRef}
-                        className="w-52 h-8 bg-white rounded-3xl text-xs text-black px-4"
+                        className="h-8 bg-gray-100 border-none rounded-3xl text-xs text-black pl-10 hover:h-8 focus-visible:ring-0 focus-visible:ring-offset-0"
                         type="text"
+                        onFocus={handleInputFocus}
+                        onBlur={handleInputBlur}
                     />
                 </div>
                 <FilterIcon onClick={handleFilterIconClick} />
