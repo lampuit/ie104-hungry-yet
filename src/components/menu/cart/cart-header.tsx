@@ -4,7 +4,7 @@ import { Logo } from "@/components/home/nav-bar";
 
 export function CartHeader() {
     return (
-        <div className="flex flex-row w-screen px-10 py-5 justify-between items-center text-white max-w-screen-2xl">
+        <div className="flex flex-row w-screen px-10 py-5 justify-between items-center text-white max-w-screen-2xl bg-black">
             <div className="flex flex-row justify-start w-96 items-center grow min-w-52">
                 <Link href={"/"} className="flex flex-row justify-start items-center">
                     <Logo />
