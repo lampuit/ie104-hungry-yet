@@ -44,6 +44,7 @@ export const columns: ColumnDef<Product>[] = [
       const product = row.original;
       return (
         <Image
+          priority
           alt="Product image"
           className="aspect-square rounded-md object-cover"
           width="120"

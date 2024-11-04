@@ -52,23 +52,12 @@ const formSchema = z.object({
     .positive({
       message: "Giá sản phẩm phải là một số dương.",
     }),
-  // discount: z
-  //   .number({
-  //     required_error:
-  //       "Giảm giá phải là số từ 0% trở lên và không được để trống.",
-  //   })
-  //   .min(0, {
-  //     message: "Giảm giá phải là số từ 0% trở lên.",
-  //   })
-  //   .max(100, {
-  //     message: "Giảm giá không thể vượt quá 100%.",
-  //   }),
 });
 
 export function CreateForm({ categories }: { categories: any }) {
   const { toast } = useToast();
 
-  const [file, setFile] = useState<File | null>();
+  const imageRef = useRef<File | null>(null);
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -83,23 +72,17 @@ export function CreateForm({ categories }: { categories: any }) {
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     try {
-      if (!file) {
-        throw new Error("Vui lòng chọn file");
-      }
-
-      const blob = await upload(file.name, file, {
-        access: "public",
-        handleUploadUrl: "/api/upload",
-      });
-
       const formData = new FormData();
-      formData.append("imageUrl", blob.url);
+
+      formData.append(
+        "imageUrl",
+        imageRef.current!,
+        `${imageRef.current?.name}`,
+      );
       formData.append("name", values.name);
       formData.append("description", values.description);
       formData.append("category", values.category);
       formData.append("price", values.price.toString());
-
-      console.log(formData);
 
       await createProduct(formData);
 
@@ -179,7 +162,7 @@ export function CreateForm({ categories }: { categories: any }) {
                         <Input
                           onChange={(e) => {
                             if (e.target.files && e.target.files.length > 0) {
-                              setFile(e.target.files[0]);
+                              imageRef.current = e.target.files[0];
                               form.setValue(
                                 "imageUrl",
                                 URL.createObjectURL(e.target.files[0]),
@@ -231,7 +214,15 @@ export function CreateForm({ categories }: { categories: any }) {
                               <Input
                                 className="w-full bg-background pl-8"
                                 placeholder="0.000"
-                                {...field}
+                                value={
+                                  field.value !== undefined
+                                    ? String(field.value)
+                                    : ""
+                                }
+                                onChange={(e) => {
+                                  const value = e.target.value;
+                                  field.onChange(value ? Number(value) : null);
+                                }}
                               />
                             </div>
                           </FormControl>
