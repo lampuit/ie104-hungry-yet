@@ -12,26 +12,26 @@ interface DishListProps {
 
 export const DishList: React.FC<DishListProps> = ({ category, dishes }) => {
     return (
-        <div className="grid lg:grid-cols-3 md:grid-cols-2 sm:grid-cols-1 gap-4 mt-4 px-4 max-w-7xl">
+        <div className="grid lg:grid-cols-3 md:grid-cols-2 sm:grid-cols-1 gap-y-10 gap-x-8 mx-10 px-10">
             {dishes[category].map((dish, index) => (
-                <div key={index} className="p-4 border rounded flex flex-col items-center">
-                    <img src={dish.image} alt={dish.name} className="w-80 h-72 object-cover mb-2" />
-                    <div className='flex flex-col justify-center items-center gap-4 w-72'>
-                        <div className='flex flex-col justify-between items-start gap-1'>
-                            <div className='flex flex-row justify-between items-center w-60'>
+                <div key={index} className="shadow-md rounded-3xl flex flex-col items-center">
+                    <img src={dish.image} alt={dish.name} className="w-full h-80 rounded-3xl object-cover" />
+                    <div className='flex flex-col justify-center items-center gap-3 py-4 w-full px-3'>
+                        <div className='flex flex-col justify-between items-start gap-1 w-full'>
+                            <div className='flex justify-between items-center w-full'>
                                 <p className='font-semibold text-xl'>{dish.name}</p>
                                 <FavoriteIcon />
                             </div>
-                            <p className='font-normal text-base'>Phân loại</p>
+                            <p className='font-normal'>Phân loại</p>
                         </div>
-                        <div className='flex flex-row justify-between items-center w-60'>
-                            <div className='flex flex-row justify-start items-center gap-1'>
+                        <div className='flex justify-between items-center w-full'>
+                            <div className='flex items-center gap-1'>
                                 <StarIcon />
-                                <p className='font-normal text-base'>4.8</p>
+                                <p className='font-normal'>4.8</p>
                             </div>
-                            <div className='flex flex-row justify-end items-center gap-2'>
+                            <div className='flex justify-end items-center gap-2'>
                                 <MoneyIcon />
-                                <p className='font-semibold text-base'>45000 <span className='font-normal'>vnd</span></p>
+                                <p className='font-semibold'>45000 <span className='font-normal'>vnd</span></p>
                             </div>
                         </div>
                     </div>

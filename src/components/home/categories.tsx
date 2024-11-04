@@ -2,8 +2,6 @@ import Image from 'next/image';
 import React from 'react';
 
 const category = [
-    { name: 'img30', src: '/images/food/img30.jpg', alt: 'food img30' },
-    { name: 'img31', src: '/images/food/img31.jpg', alt: 'food img31' },
     { name: 'img32', src: '/images/food/img32.jpg', alt: 'food img32' },
     { name: 'img33', src: '/images/food/img33.jpg', alt: 'food img33' },
     { name: 'img34', src: '/images/food/img34.jpg', alt: 'food img34' },
@@ -19,10 +17,10 @@ const category = [
 
 export function Categories() {
     return (
-        <div className="mt-16 grid grid-rows-1 grid-cols-12 gap-1 w-screen overflow-hidden z-0">
+        <div className="grid grid-rows-1 grid-cols-10 gap-x-8 w-screen z-0">
             {category.map((cate) => (
-                <div className='flex flex-col justify-between items-start'>
-                    <div key={cate.name} className="overflow-hidden rounded-lg">
+                <div className='flex flex-col items-start'>
+                    <div key={cate.name} className="rounded-lg">
                         <Image
                             src={cate.src}
                             alt={cate.alt}
