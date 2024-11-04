@@ -12,9 +12,9 @@ const categories = [
 
 export function Menu() {
     return (
-        <div className="flex flex-col justify-between items-center gap-6 max-w-5xl">
-            <div className="flex flex-row justify-between items-center w-2/3">
-                <div className="flex flex-col justify-start items-center gap-4">
+        <div className="mx-10 px-10 flex flex-col justify-center items-center gap-y-8">
+            <div className="flex flex-row justify-between items-center w-full">
+                <div className="flex flex-col justify-start gap-y-4">
                     <h2 className='italic font-semibold text-5xl'>Thực đơn</h2>
                     <HorizontalLine />
                 </div>
@@ -22,7 +22,7 @@ export function Menu() {
                     <Link href={"/menu"}>Xem thực đơn</Link>
                 </Button>
             </div>
-            <div className="grid grid-cols-4 gap-3">
+            <div className="grid grid-cols-4 gap-x-6">
                 {categories.map((category) => (
                     <div key={category.name} className="text-start">
                         <div className="overflow-hidden rounded-lg">

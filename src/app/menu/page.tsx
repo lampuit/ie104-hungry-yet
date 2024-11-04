@@ -22,21 +22,14 @@ export default function MenuPage() {
     const [clickedIndex, setClickedIndex] = useState<number>(0);
     return (
         <main className="w-screen">
-            <header className="flex flex-col justify-center items-center w-screen bg-black z-10">
+            <header className="mb-8">
                 <Navbar />
             </header>
-            <section className="my-8">
-                <Search />
-            </section>
-            <section>
-                <Category clickedIndex={clickedIndex} setClickedIndex={setClickedIndex} />
-            </section>
-
-            <section className="flex justify-center items-center">
-                <ScrollArea className="w-5/6 h-[500px] rounded-md border p-4 max-w-7xl">
-                    <DishList category={listCategory[clickedIndex]} dishes={dishes} />
-                </ScrollArea>
-            </section>
+            <Search />
+            <Category clickedIndex={clickedIndex} setClickedIndex={setClickedIndex} />
+            <ScrollArea className="h-[950px]">
+                <DishList category={listCategory[clickedIndex]} dishes={dishes} />
+            </ScrollArea>
             <Pagination className="mt-8">
                 <PaginationContent>
                     <PaginationItem>
