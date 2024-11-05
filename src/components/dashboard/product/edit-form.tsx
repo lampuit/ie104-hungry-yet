@@ -68,10 +68,10 @@ const formSchema = z.object({
 
 export function EditForm({
   categories,
-  products,
+  product,
 }: {
   categories: any;
-  products: any;
+  product: any;
 }) {
   const { toast } = useToast();
 
@@ -80,41 +80,33 @@ export function EditForm({
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      imageUrl: products.imageUrl,
-      name: products.name,
-      description: products.description,
-      category: products.categoryId,
-      price: products.price,
+      imageUrl: product.imageUrl,
+      name: product.name,
+      description: product.description,
+      category: product.categoryId,
+      price: product.price,
     },
   });
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     try {
-      if (!file) {
-        throw new Error("Vui lòng chọn file");
-      }
-
       const formData = new FormData();
 
       let imageUrl = values.imageUrl;
 
-      if (imageUrl != products.imageUrl) {
-        await del(products.imageUrl);
+      console.log(imageUrl);
 
-        await upload(file.name, file, {
-          access: "public",
-          handleUploadUrl: "/api/upload",
-        }).then((blob) => (imageUrl = blob.url));
+      if (imageUrl != product.imageUrl && file) {
+        await del(product.imageUrl);
       }
+      console.log(imageUrl);
       formData.append("imageUrl", imageUrl);
       formData.append("name", values.name);
       formData.append("description", values.description);
       formData.append("category", values.category);
       formData.append("price", values.price.toString());
 
-      console.log(formData);
-
-      await editProduct(products.id, formData);
+      await editProduct(product.id, formData);
 
       toast({
         title: "Chỉnh sửa sản phẩm thành công.",
@@ -165,10 +157,13 @@ export function EditForm({
                 >
                   {form.getValues("imageUrl") ? (
                     <Image
+                      priority
                       src={form.getValues("imageUrl")}
                       alt="image"
-                      fill={true}
-                      className="object-cover"
+                      width={0}
+                      height={0}
+                      sizes="100vw"
+                      style={{ width: "100%", height: "auto" }}
                     />
                   ) : (
                     "Hãy tải hình ảnh lên"
