@@ -1,7 +1,6 @@
 "use client";
 
 import Link from "next/link";
-import { Navbar } from "@/components/home/nav-bar";
 import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
 
@@ -25,12 +24,11 @@ export const charm = Charm({
 export default function Homepage() {
   return (
     <main>
-      <header className="flex flex-col justify-between items-center h-screen w-screen overflow-hidden z-0 bg-black">
-        <Navbar />
-        <div className="absolute right-full top-20 h-4/6">
+      <header className="relative flex flex-col justify-between items-center h-[calc(100vh-80px)] w-screen overflow-hidden z-0 bg-black">
+        <div className="absolute right-full h-5/6">
           <ImgBg />
         </div>
-        <div className="flex flex-col justify-between items-center min-h-52 max-h-64 text-white z-10">
+        <div className="relative top-1/3 flex flex-col justify-between items-center min-h-52 max-h-64 text-white z-10">
           <h1 className={`${charm.className} sm:text-7xl md:text-8xl text-center`}>Hungry Yet?</h1>
           <p className="sm:text-xl md:text-2xl text-center">Chọn hương vị, nhận yêu thương - chỉ từ một cú CLICK!</p>
           <div className="flex justify-around min-w-72 gap-x-3">
@@ -67,8 +65,8 @@ export default function Homepage() {
         <OrderOnline />
       </section>
 
-      <section className="mx-10 mb-16 px-10 space-y-8">
-        <div className="flex justify-between items-center w-full">
+      <section className="flex flex-col items-center mx-10 mb-16 px-10 space-y-8">
+        <div className="flex justify-between items-center w-full max-w-screen-2xl">
           <div className="flex flex-col gap-y-4">
             <h2 className='italic font-semibold text-5xl'>Món ăn trưng bày</h2>
             <HorizontalLine />
@@ -82,8 +80,8 @@ export default function Homepage() {
         </div>
       </section>
 
-      <section className="mx-10 mb-16 space-y-8">
-        <div className="flex flex-col justify-between px-10 gap-4 w-full">
+      <section className="flex flex-col items-center mx-10 mb-16 space-y-8">
+        <div className="flex flex-col justify-between px-10 gap-4 w-full max-w-screen-2xl">
           <h2 className="italic font-semibold text-5xl">Nhận xét & đánh giá</h2>
           <HorizontalLine />
         </div>
@@ -100,7 +98,7 @@ export default function Homepage() {
           </ScrollArea>
       </section>
 
-      <footer className="mt-10 h-80 bg-black">
+      <footer className="mt-10 h-80 w-screen bg-black">
       </footer>
     </main>
   );

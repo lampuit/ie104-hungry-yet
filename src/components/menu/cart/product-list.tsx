@@ -13,6 +13,7 @@ import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { init } from "next/dist/compiled/webpack/webpack";
 import {getShoppingCartByUserId} from '@/lib/actions/shopping-cart'
+import { Heart, Trash } from "lucide-react";
 
 // const initialDishes = [
 //     {
@@ -147,13 +148,13 @@ export function ProductList() {
                                     <TableCell className="w-36 text-center">{dish.amount * dish.cost}</TableCell>
                                     <TableCell className="w-32 text-center">
                                         {dish.favorited ? (
-                                            <FilledHeartIcon onClick={() => handleFavoriteClick(dish.id)} />
+                                            <Heart className="fill-amber-500 stroke-amber-500" onClick={() => handleFavoriteClick(dish.id)} />
                                         ) : (
-                                            <HeartIcon onClick={() => handleFavoriteClick(dish.id)} />
+                                            <Heart className="stroke-amber-500" onClick={() => handleFavoriteClick(dish.id)} />
                                         )}
                                     </TableCell>
                                     <TableCell className="w-32 text-center">
-                                        <TrashIcon />
+                                        <Trash />
                                     </TableCell>
                                 </TableRow>
                             ))}
@@ -164,26 +165,6 @@ export function ProductList() {
         </div>
     );
 }
-
-interface HeartIconProps {
-    onClick: () => void;
-}
-
-interface FilledHeartIconProps {
-    onClick: () => void;
-}
-
-export const HeartIcon: React.FC<HeartIconProps> = ({ onClick }) => (
-    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" onClick={onClick}>
-        <path d="M22 8.86222C22 10.4087 21.4062 11.8941 20.3458 12.9929C17.9049 15.523 15.5374 18.1613 13.0053 20.5997C12.4249 21.1505 11.5042 21.1304 10.9488 20.5547L3.65376 12.9929C1.44875 10.7072 1.44875 7.01723 3.65376 4.73157C5.88044 2.42345 9.50794 2.42345 11.7346 4.73157L11.9998 5.00642L12.2648 4.73173C13.3324 3.6245 14.7864 3 16.3053 3C17.8242 3 19.2781 3.62444 20.3458 4.73157C21.4063 5.83045 22 7.31577 22 8.86222Z" stroke="#E99B3F" stroke-width="1.5" stroke-linejoin="round" />
-    </svg>
-);
-
-export const FilledHeartIcon: React.FC<FilledHeartIconProps> = ({ onClick }) => (
-    <svg width="24" height="24" viewBox="0 0 24 24" fill="#f59e0b" xmlns="http://www.w3.org/2000/svg" onClick={onClick}>
-        <path d="M22 8.86222C22 10.4087 21.4062 11.8941 20.3458 12.9929C17.9049 15.523 15.5374 18.1613 13.0053 20.5997C12.4249 21.1505 11.5042 21.1304 10.9488 20.5547L3.65376 12.9929C1.44875 10.7072 1.44875 7.01723 3.65376 4.73157C5.88044 2.42345 9.50794 2.42345 11.7346 4.73157L11.9998 5.00642L12.2648 4.73173C13.3324 3.6245 14.7864 3 16.3053 3C17.8242 3 19.2781 3.62444 20.3458 4.73157C21.4063 5.83045 22 7.31577 22 8.86222Z" fill="#E99B3F" stroke="#E99B3F" stroke-width="1.5" stroke-linejoin="round" />
-    </svg>
-);
 
 export const TrashIcon = () => (
     <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">

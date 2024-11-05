@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import { Montserrat } from "next/font/google";
 import "@/styles/globals.css";
 import { Toaster } from "@/components/ui/toaster";
+import { UnauthorizedNavbar } from "@/components/navbar/unauthorized-nav";
+import { AuthorizedNavbar } from "@/components/navbar/authorized-nav";
 
 export const montserrat = Montserrat({
   subsets: ["vietnamese"],
@@ -20,7 +22,10 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={`${montserrat.className} overflow-x-hidden`}>{children}
+      <body className={`${montserrat.className} overflow-x-hidden`}>
+        <div className="flex justify-center w-screen bg-black z-10">
+          <AuthorizedNavbar />
+        </div>
         {children}
         <Toaster />
       </body>

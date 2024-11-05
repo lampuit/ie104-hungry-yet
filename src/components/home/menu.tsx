@@ -12,8 +12,8 @@ const categories = [
 
 export function Menu() {
     return (
-        <div className="mx-10 px-10 flex flex-col justify-center items-center gap-y-8">
-            <div className="flex flex-row justify-between items-center w-full">
+        <div className="mx-10 px-10 flex flex-col justify-center items-center gap-y-8 ">
+            <div className="flex flex-row justify-between items-center w-full max-w-screen-2xl">
                 <div className="flex flex-col justify-start gap-y-4">
                     <h2 className='italic font-semibold text-5xl'>Thực đơn</h2>
                     <HorizontalLine />
