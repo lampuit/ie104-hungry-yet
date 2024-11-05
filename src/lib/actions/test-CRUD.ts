@@ -5,12 +5,11 @@ import {
   updateShoppingCart,
 } from "./shopping-cart";
 
-// import {
-//   getFavoriteByUserId,
-//   addFavorite,
-//   removeFavorite,
-//   updateFavorite,
-// } from "./favorite";
+import {
+  getFavoriteByUserId,
+  createFavorite,
+  deleteFavorite,
+} from "./favorite";
 
 //sucessfull
 async function testCreate() {
@@ -29,7 +28,7 @@ async function testGetShoppingCartByUserId() {
   const result = await getShoppingCartByUserId("PqEEV28ZywjNXbhRsZ-r_");
   console.log("Shopping Cart Data:", result);
 }
-testGetShoppingCartByUserId();
+// testGetShoppingCartByUserId();
 
 //successfull
 async function testUpdate() {
@@ -43,10 +42,26 @@ async function testUpdate() {
 }
 // testUpdate()
 
-
 //successfull
 async function testDelete() {
-  const response = await deleteShoppingCart("3b17329e-6285-47c7-9f3e-11986e03d7dd");
+  const response = await deleteShoppingCart(
+    "3b17329e-6285-47c7-9f3e-11986e03d7dd",
+  );
   console.log("Response:", response);
 }
 // testDelete();
+
+async function testCreateFavorite() {
+  const formData = new FormData();
+  formData.append("userId", "PqEEV28ZywjNXbhRsZ-r_");
+  formData.append("productId", "07cb15c6-92c6-48ae-b963-7fa28fcf8004");
+  console.log(formData);
+  await createFavorite(formData);
+}
+
+// testCreateFavorite();
+
+import { useSession, getSession } from "@/lib/auth-client"
+
+
+
