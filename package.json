@@ -36,6 +36,7 @@
     "drizzle-orm": "^0.34.1",
     "drizzle-zod": "^0.5.1",
     "embla-carousel-react": "^8.3.1",
+    "framer-motion": "11",
     "ie104-hungry-yet": "link:",
     "lucide-react": "^0.446.0",
     "next": "14.2.9",
@@ -43,9 +44,8 @@
     "react-dom": "^18.3.1",
     "react-hook-form": "^7.53.1",
     "react-router-dom": "^6.27.0",
-    "react-toastify": "^10.0.5",
-    "tailwind-merge": "^2.5.3",
     "react-toastify": "^10.0.6",
+    "remeda": "2",
     "tailwind-merge": "^2.5.4",
     "tailwindcss-animate": "^1.0.7",
     "zod": "^3.23.8"
