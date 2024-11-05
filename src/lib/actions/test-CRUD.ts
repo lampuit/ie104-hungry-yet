@@ -59,4 +59,9 @@ async function testCreateFavorite() {
   await createFavorite(formData);
 }
 
-testCreateFavorite();
+// testCreateFavorite();
+
+import { useSession, getSession } from "@/lib/auth-client"
+
+
+
