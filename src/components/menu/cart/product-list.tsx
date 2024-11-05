@@ -13,6 +13,7 @@ import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { init } from "next/dist/compiled/webpack/webpack";
 import {getShoppingCartByUserId} from '@/lib/actions/shopping-cart'
+import { getSession } from "@/lib/auth-client";
 
 // const initialDishes = [
 //     {
@@ -79,8 +80,10 @@ export function ProductList() {
 
     useEffect(() => {
         async function fetchData() {
+        const accessToken = await getSession();
+        const userId = accessToken?.data?.user?.id as string;
           try {
-            const data = await getShoppingCartByUserId('PqEEV28ZywjNXbhRsZ-r_');
+            const data = await getShoppingCartByUserId(userId);
             const formattedData = data.map((item: any) => ({
                 id: item.cartId || undefined,
                 img: item.image || "/images/fallback.jpg",  
