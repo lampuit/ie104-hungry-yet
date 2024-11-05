@@ -5,58 +5,54 @@ import Image from "next/image";
 
 export function Intro() {
     return (
-        <div className="flex flex-col justify-between items-center gap-32">
-            <div className="relative flex flex-row justify-center items-center gap-36">
-                <div className="flex flex-col justify-center items-start gap-3">
-                    <div className='flex flex-col justify-center items-start gap-3'>
+        <div className="flex flex-col justify-between items-center w-screen mx-10 py-10 gap-y-52">
+            <div className="relative flex justify-center items-center gap-x-36 px-32">
+                <div className="flex flex-col justify-center items-start gap-10">
+                    <div className='flex flex-col justify-center items-start gap-y-4'>
                         <h2 className='italic font-semibold text-5xl'>Chào mừng</h2>
                         <HorizontalLine />
                         <p className='max-w-xl'>
-                        Chào mừng bạn đến với HungryYet – nơi mang đến những món ăn ngon và chất lượng, 
-                        sẵn sàng phục vụ bạn mọi lúc, mọi nơi! Hãy cùng khám phá thế giới ẩm thực đa dạng, 
-                        tiện lợi đặt hàng và giao tận nơi, để mỗi bữa ăn đều trở thành niềm vui trọn vẹn. 
-                        Chọn món yêu thích và để chúng tôi chăm sóc bữa ăn của bạn!
+                            Chào mừng bạn đến với HungryYet – nơi mang đến những món ăn ngon và chất lượng,
+                            sẵn sàng phục vụ bạn mọi lúc, mọi nơi! Hãy cùng khám phá thế giới ẩm thực đa dạng,
+                            tiện lợi đặt hàng và giao tận nơi, để mỗi bữa ăn đều trở thành niềm vui trọn vẹn.
+                            Chọn món yêu thích và để chúng tôi chăm sóc bữa ăn của bạn!
                         </p>
                     </div>
                     <Button asChild className='bg-black hover:bg-red-500 rounded-3xl'>
                         <Link href={"/about"}>Về chúng tôi</Link>
                     </Button>
                 </div>
-                <div className='relative'>
-                    <Image
-                        src="/images/intro-dish.jpg"
-                        width={400}
-                        height={280}
-                        alt="Intro dish">
-                    </Image>
-                </div>
+                <Image
+                    src="/images/intro-dish.jpg"
+                    width={400}
+                    height={280}
+                    alt="Intro dish">
+                </Image>
                 <div className='absolute -z-10 start-2/3'>
                     <Bg1 />
                 </div>
             </div>
 
-            <div className="relative flex flex-row justify-center items-center gap-36">
-                <div className='relative'>
-                    <Image
-                        src="/images/intro-dish.jpg"
-                        width={400}
-                        height={280}
-                        alt="Intro dish">
-                    </Image>
-                </div>
+            <div className="relative flex justify-center items-center gap-x-36 px-32">
+                <Image
+                    src="/images/intro-dish.jpg"
+                    width={400}
+                    height={280}
+                    alt="Intro dish">
+                </Image>
                 <div className='absolute -z-10 end-2/3'>
                     <Bg2 />
                 </div>
-                <div className="flex flex-col justify-center items-start gap-3">
-                    <div className='flex flex-col justify-center items-start gap-3'>
+                <div className="flex flex-col justify-center items-start gap-10">
+                    <div className='flex flex-col justify-center items-start gap-y-4'>
                         <h2 className='italic font-semibold text-5xl'>Hương vị Việt Nam</h2>
                         <HorizontalLine />
                         <p className='max-w-xl'>
-                        Hương vị ẩm thực Việt Nam là sự kết hợp tinh tế giữa các nguyên liệu tự nhiên và gia vị đặc trưng, 
-                        mang đến những món ăn vừa ngon mắt vừa đậm đà. Từ vị thanh mát của phở, cái ngọt bùi của bún chả, 
-                        đến độ giòn rụm của nem rán, mỗi món ăn đều phản ánh một phần của nền văn hóa và tình yêu dành cho 
-                        ẩm thực quê nhà. Với sự cân bằng hoàn hảo giữa ngọt, mặn, chua, cay, ẩm thực Việt Nam không chỉ là 
-                        trải nghiệm vị giác mà còn là hành trình khám phá văn hóa, gắn kết người với người qua từng món ăn.
+                            Hương vị ẩm thực Việt Nam là sự kết hợp tinh tế giữa các nguyên liệu tự nhiên và gia vị đặc trưng,
+                            mang đến những món ăn vừa ngon mắt vừa đậm đà. Từ vị thanh mát của phở, cái ngọt bùi của bún chả,
+                            đến độ giòn rụm của nem rán, mỗi món ăn đều phản ánh một phần của nền văn hóa và tình yêu dành cho
+                            ẩm thực quê nhà. Với sự cân bằng hoàn hảo giữa ngọt, mặn, chua, cay, ẩm thực Việt Nam không chỉ là
+                            trải nghiệm vị giác mà còn là hành trình khám phá văn hóa, gắn kết người với người qua từng món ăn.
                         </p>
                     </div>
                     <Button asChild className='bg-amber-500 hover:bg-red-500 rounded-3xl'>

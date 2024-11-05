@@ -19,81 +19,80 @@ import { FAQ } from "@/components/home/faq";
 
 export default function Homepage() {
   return (
-    <main className="overflow-hidden">
-      <section className="flex flex-col justify-center items-center h-screen w-screen">
-        <header className="flex flex-col justify-between items-center h-[85%] w-screen overflow-hidden z-0 bg-black">
-          <div className="bg-black z-10">
-            <Navbar />
-          </div>
-          <div className="absolute right-full top-16 h-4/6">
-            <ImgBg />
-          </div>
-          <div className="flex flex-col justify-between items-center min-h-52 max-h-64 text-white z-10">
-            <h1 className="sm:text-7xl md:text-8xl text-center">Hungry Yet?</h1>
-            <p className="sm:text-xl md:text-2xl text-center">Chọn hương vị, nhận yêu thương - chỉ từ một cú CLICK!</p>
-            <div className="flex flex-row justify-around min-w-72">
-              <Button asChild className="bg-amber-500 rounded-3xl hover:bg-red-500">
-                <Link href={"#"}>Đặt hàng ngay</Link>
-              </Button>
-              <Button asChild className="bg-black rounded-3xl hover:bg-red-500">
-                <Link href={"/menu"}>Xem thực đơn</Link>
-              </Button>
-            </div>
-          </div>
-          <div className="relative end-1/3">
-            <TimeAndAddress />
-          </div>
-        </header>
-        <div className="h-[15%]">
-          <Categories />
+    <main>
+      <header className="flex flex-col justify-between items-center h-screen w-screen overflow-hidden z-0 bg-black">
+        <Navbar />
+        <div className="absolute right-full top-20 h-4/6">
+          <ImgBg />
         </div>
+        <div className="flex flex-col justify-between items-center min-h-52 max-h-64 text-white z-10">
+          <h1 className="sm:text-7xl md:text-8xl text-center">Hungry Yet?</h1>
+          <p className="sm:text-xl md:text-2xl text-center">Chọn hương vị, nhận yêu thương - chỉ từ một cú CLICK!</p>
+          <div className="flex justify-around min-w-72 gap-x-3">
+            <Button asChild className="bg-amber-500 rounded-3xl hover:bg-red-500">
+              <Link href={"#"}>Đặt hàng ngay</Link>
+            </Button>
+            <Button asChild className="bg-black rounded-3xl hover:bg-red-500">
+              <Link href={"/menu"}>Xem thực đơn</Link>
+            </Button>
+          </div>
+        </div>
+        <div className="relative end-1/3">
+          <TimeAndAddress />
+        </div>
+      </header>
+
+      <section className="my-16">
+        <Categories />
       </section>
 
-      <section className="flex flex-col justify-center items-center">
-        <div className="bg-neutral-100 mt-16 mb-32 py-12">
-          <Benefit />
-        </div>
+      <section className="mb-20">
+        <Benefit />
       </section>
 
-      <section>
+      <section className="mb-20">
         <Intro />
       </section>
 
-      <section className="mt-24">
+      <section className="mb-16">
         <Menu />
       </section>
 
-      <section className="my-16">
+      <section className="mb-16">
         <OrderOnline />
       </section>
 
-      <section className="my-16">
-        <Exhibition />
-      </section>
-
-      <section className="">
-        <div className="flex flex-col justify-between items-start gap-4 px-32">
-          <h2 className="italic font-semibold text-5xl">Nhận xét & đánh giá</h2>
-          <div className=""><HorizontalLine /></div>
-        </div>
-        <div className="mt-4 flex flex-row justify-center item-center">
-          <Testimonials />
-        </div>
-
-      </section>
-
-      <section>
-        <div className="flex flex-row justify-center items-start gap-24 mt-16 mx-12">
-          <div className="flex flex-col justify-center items-start gap-4">
-            <h2 className="italic text-5xl">FAQ</h2>
-            <div>
-              <HorizontalLine />
-            </div>
+      <section className="mx-10 mb-16 px-10 space-y-8">
+        <div className="flex justify-between items-center w-full">
+          <div className="flex flex-col gap-y-4">
+            <h2 className='italic font-semibold text-5xl'>Món ăn trưng bày</h2>
+            <HorizontalLine />
           </div>
-          <ScrollArea className="h-[240px] rounded-md p-4">
+          <Button asChild className="bg-black hover:bg-red-500 rounded-3xl">
+            <Link href={"#"}>Xem triển lãm</Link>
+          </Button>
+        </div>
+        <div className="flex justify-center">
+          <Exhibition />
+        </div>
+      </section>
+
+      <section className="mx-10 mb-16 space-y-8">
+        <div className="flex flex-col justify-between px-10 gap-4 w-full">
+          <h2 className="italic font-semibold text-5xl">Nhận xét & đánh giá</h2>
+          <HorizontalLine />
+        </div>
+        <Testimonials />
+      </section>
+
+      <section className="mx-10 px-10 mb-16 flex justify-center items-start gap-40">
+          <div className="flex flex-col justify-center gap-4">
+            <h2 className="italic font-semibold text-5xl">FAQ</h2>
+            <HorizontalLine />
+          </div>
+          <ScrollArea className="h-[400px]">
             <FAQ />
           </ScrollArea>
-        </div>
       </section>
 
       <footer className="mt-10 h-80 bg-black">
