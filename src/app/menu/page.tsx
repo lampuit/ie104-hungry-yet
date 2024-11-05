@@ -26,11 +26,12 @@ export default function MenuPage() {
                 <Navbar />
             </header>
             <Search />
+            <section className="flex flex-col items-center">
             <Category clickedIndex={clickedIndex} setClickedIndex={setClickedIndex} />
-            <ScrollArea className="h-[950px]">
+            <ScrollArea className="h-[950px] mb-10 max-w-screen-xl">
                 <DishList category={listCategory[clickedIndex]} dishes={dishes} />
             </ScrollArea>
-            <Pagination className="mt-8">
+            <Pagination className="mb-20">
                 <PaginationContent>
                     <PaginationItem>
                         <PaginationPrevious href="#" />
@@ -52,7 +53,8 @@ export default function MenuPage() {
                     </PaginationItem>
                 </PaginationContent>
             </Pagination>
-            <footer className="mt-10 h-80 bg-black">
+            </section>
+            <footer className="h-80 bg-black">
             </footer>
         </main>
     );

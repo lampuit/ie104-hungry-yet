@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
 import { Montserrat } from "next/font/google";
-import { Charm } from "next/font/google";
 import "@/styles/globals.css";
 
 export const montserrat = Montserrat({
@@ -19,8 +18,9 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className="overflow-x-hidden">
-      <body className={montserrat.className}>{children}</body>
+    <html lang="en">
+      <body className={`${montserrat.className} overflow-x-hidden`}>{children}</body>
     </html>
   );
 }
+

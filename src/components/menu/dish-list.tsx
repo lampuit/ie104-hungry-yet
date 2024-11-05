@@ -1,4 +1,5 @@
 import React from 'react';
+import { Button } from '../ui/button';
 
 interface Dish {
     name: string;
@@ -14,7 +15,7 @@ export const DishList: React.FC<DishListProps> = ({ category, dishes }) => {
     return (
         <div className="grid lg:grid-cols-3 md:grid-cols-2 sm:grid-cols-1 gap-y-10 gap-x-8 mx-10 px-10">
             {dishes[category].map((dish, index) => (
-                <div key={index} className="shadow-md rounded-3xl flex flex-col items-center">
+                <div key={index} className="shadow-md rounded-3xl flex flex-col items-center group">
                     <img src={dish.image} alt={dish.name} className="w-full h-80 rounded-3xl object-cover" />
                     <div className='flex flex-col justify-center items-center gap-3 py-4 w-full px-3'>
                         <div className='flex flex-col justify-between items-start gap-1 w-full'>
@@ -33,6 +34,10 @@ export const DishList: React.FC<DishListProps> = ({ category, dishes }) => {
                                 <MoneyIcon />
                                 <p className='font-semibold'>45000 <span className='font-normal'>vnd</span></p>
                             </div>
+                        </div>
+                        <div className='flex justify-between items-center w-full'>
+                            <Button className='rounded-3xl bg-black hover:bg-red-500 hidden group-hover:flex transition-all duration-300 ease-in-out'>Xem chi tiết</Button>
+                            <Button className='rounded-3xl bg-amber-500 hover:bg-red-500 hidden group-hover:flex transition-all duration-300 ease-in-out'><AddToCartIcon /> <span>Thêm giỏ hàng</span></Button>
                         </div>
                     </div>
 
@@ -57,5 +62,14 @@ export const StarIcon = () => (
 export const MoneyIcon = () => (
     <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
         <path d="M16.1534 7.15382C15.2049 6.20538 13.5346 5.54568 11.9995 5.50437M7.8457 16.1538C8.73806 17.3436 10.3972 18.0222 11.9995 18.0798M11.9995 5.50437C10.1731 5.45522 8.53801 6.2815 8.53801 8.53845C8.53801 12.6923 16.1534 10.6154 16.1534 14.7692C16.1534 17.1383 14.1265 18.1562 11.9995 18.0798M11.9995 5.50437V3M11.9995 18.0798V20.9999" stroke="#99BD76" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+    </svg>
+)
+
+export const AddToCartIcon = () => (
+    <svg width="25" height="24" viewBox="0 0 25 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M3.5 6H22.5L19.5 16H6.5L3.5 6ZM3.5 6L2.75 3.5" stroke="#FEFEFE" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+        <path d="M10.4922 11H12.4922M14.4922 11H12.4922M12.4922 11V9M12.4922 11V13" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+        <path d="M11.5 19.5C11.5 20.3284 10.8284 21 10 21C9.17157 21 8.5 20.3284 8.5 19.5" stroke="#FEFEFE" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+        <path d="M17.5 19.5C17.5 20.3284 16.8284 21 16 21C15.1716 21 14.5 20.3284 14.5 19.5" stroke="#FEFEFE" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
     </svg>
 )

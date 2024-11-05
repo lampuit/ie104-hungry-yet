@@ -16,6 +16,11 @@ import { Exhibition } from "@/components/home/exhibition";
 import { Testimonials } from "@/components/home/testimonials";
 import { HorizontalLine } from "@/components/home/intro";
 import { FAQ } from "@/components/home/faq";
+import { Charm } from "next/font/google";
+export const charm = Charm({
+  subsets: ["vietnamese"],
+  weight: ["400", "700"],
+});
 
 export default function Homepage() {
   return (
@@ -26,7 +31,7 @@ export default function Homepage() {
           <ImgBg />
         </div>
         <div className="flex flex-col justify-between items-center min-h-52 max-h-64 text-white z-10">
-          <h1 className="sm:text-7xl md:text-8xl text-center">Hungry Yet?</h1>
+          <h1 className={`${charm.className} sm:text-7xl md:text-8xl text-center`}>Hungry Yet?</h1>
           <p className="sm:text-xl md:text-2xl text-center">Chọn hương vị, nhận yêu thương - chỉ từ một cú CLICK!</p>
           <div className="flex justify-around min-w-72 gap-x-3">
             <Button asChild className="bg-amber-500 rounded-3xl hover:bg-red-500">
