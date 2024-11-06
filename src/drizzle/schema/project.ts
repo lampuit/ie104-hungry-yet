@@ -10,6 +10,7 @@ import {
 import { user } from "./auth";
 import { relations } from "drizzle-orm";
 import { createInsertSchema, createSelectSchema } from "drizzle-zod";
+import { primaryKey } from "drizzle-orm/mysql-core";
 
 // Bảng Categories
 export const categories = pgTable("categories", {
@@ -18,14 +19,9 @@ export const categories = pgTable("categories", {
   imageUrl: text("imageUrl"),
 });
 
-// Relation: 1 category -> n products
-export const usersRelations = relations(categories, ({ many }) => ({
-  products: many(products),
-}));
-
 // Bảng Products
 export const products = pgTable("products", {
-  id: uuid("id").notNull().primaryKey().defaultRandom(),
+  id: uuid("id").primaryKey().defaultRandom(),
   name: text("name").notNull(),
   description: text("description").notNull(),
   price: real("price").notNull(),
@@ -37,9 +33,17 @@ export const products = pgTable("products", {
     .$onUpdate(() => new Date()),
 });
 
+// Relation: 1 category -> n products
+export const categoryRelations = relations(categories, ({ many }) => ({
+  products: many(products),
+}));
+
 //Relation: 1 product -> 1 category
-export const productRalation = relations(products, ({ one }) => ({
-  categoieries: one(categories),
+export const productRelations = relations(products, ({ one }) => ({
+  category: one(categories, {
+    fields: [products.categoryId],
+    references: [categories.id],
+  }),
 }));
 
 // Bảng Ratings
@@ -52,6 +56,7 @@ export const ratings = pgTable("ratings", {
     .references(() => user.id), // Khóa ngoại
   star: integer("star").notNull(),
   review: text("review"),
+  imageURL: text("imageURL")
 });
 
 // Enum cho trạng thái đơn hàng
@@ -167,8 +172,18 @@ export const favorite = pgTable("favorite", {
     .references(() => products.id), // Khóa ngoại
 });
 
+//Relation: 1 user -> n favorites
+export const favoriteRelations = relations(user, ({many}) => ({
+  favorite: many(favorite)
+}))
+
+export const userfavoriteRelations = relations(favorite, ({many}) => ({
+  user: many(user)
+}))
+
 export const insertProductSchema = createInsertSchema(products);
-
+export const insertCategorySchema = createInsertSchema(products);
 export const insertOrderProductSchema = createInsertSchema(orderProducts);
-
 export const inserShoppingCartSchema = createInsertSchema(shoppingCart);
+
+export const insertFavouriteSchema = createInsertSchema(favorite);

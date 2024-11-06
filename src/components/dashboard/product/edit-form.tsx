@@ -22,16 +22,17 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import z, { set } from "zod";
 import { upload } from "@vercel/blob/client";
-import { DollarSign, Percent, PlusCircle } from "lucide-react";
+import { ArrowDownToLine, DollarSign, Percent, PlusCircle } from "lucide-react";
 import Image from "next/image";
 
-import { useRef, useState } from "react";
+import React, { useRef, useState } from "react";
 import { cn } from "@/lib/utils";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
 import { ToastAction } from "@/components/ui/toast";
-import { createProduct } from "@/lib/actions/product";
+import { editProduct } from "@/lib/actions/product";
+import { del, head } from "@vercel/blob";
 
 const formSchema = z.object({
   imageUrl: z.string({ required_error: "Vui lòng tải hình ảnh lên." }),
@@ -52,21 +53,38 @@ const formSchema = z.object({
     .positive({
       message: "Giá sản phẩm phải là một số dương.",
     }),
+  // discount: z
+  //   .number({
+  //     required_error:
+  //       "Giảm giá phải là số từ 0% trở lên và không được để trống.",
+  //   })
+  //   .min(0, {
+  //     message: "Giảm giá phải là số từ 0% trở lên.",
+  //   })
+  //   .max(100, {
+  //     message: "Giảm giá không thể vượt quá 100%.",
+  //   }),
 });
 
-export function CreateForm({ categories }: { categories: any }) {
+export function EditForm({
+  categories,
+  product,
+}: {
+  categories: any;
+  product: any;
+}) {
   const { toast } = useToast();
 
-  const imageRef = useRef<File | null>(null);
+  const [file, setFile] = useState<File | null>();
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      imageUrl: "",
-      name: "",
-      description: "",
-      category: "",
-      price: undefined,
+      imageUrl: product.imageUrl,
+      name: product.name,
+      description: product.description,
+      category: product.categoryId,
+      price: product.price,
     },
   });
 
@@ -74,20 +92,24 @@ export function CreateForm({ categories }: { categories: any }) {
     try {
       const formData = new FormData();
 
-      formData.append(
-        "imageUrl",
-        imageRef.current!,
-        `${imageRef.current?.name}`,
-      );
+      let imageUrl = values.imageUrl;
+
+      console.log(imageUrl);
+
+      if (imageUrl != product.imageUrl && file) {
+        await del(product.imageUrl);
+      }
+      console.log(imageUrl);
+      formData.append("imageUrl", imageUrl);
       formData.append("name", values.name);
       formData.append("description", values.description);
       formData.append("category", values.category);
       formData.append("price", values.price.toString());
 
-      await createProduct(formData);
+      await editProduct(product.id, formData);
 
       toast({
-        title: "Tạo sản phẩm thành công.",
+        title: "Chỉnh sửa sản phẩm thành công.",
         description: `Tên sản phẩm: ${values.name}`,
       });
     } catch (error) {
@@ -110,9 +132,9 @@ export function CreateForm({ categories }: { categories: any }) {
       >
         <div className="flex items-center justify-end">
           <Button className="gap-2">
-            <PlusCircle className="h-3.5 w-3.5" />
+            <ArrowDownToLine className="h-3.5 w-3.5" />
             <span className="sr-only sm:not-sr-only sm:whitespace-nowrap">
-              Tạo sản phẩm
+              Lưu sản phẩm
             </span>
           </Button>
         </div>
@@ -135,10 +157,13 @@ export function CreateForm({ categories }: { categories: any }) {
                 >
                   {form.getValues("imageUrl") ? (
                     <Image
+                      priority
                       src={form.getValues("imageUrl")}
                       alt="image"
-                      fill={true}
-                      className="object-cover"
+                      width={0}
+                      height={0}
+                      sizes="100vw"
+                      style={{ width: "100%", height: "auto" }}
                     />
                   ) : (
                     "Hãy tải hình ảnh lên"
@@ -162,7 +187,7 @@ export function CreateForm({ categories }: { categories: any }) {
                         <Input
                           onChange={(e) => {
                             if (e.target.files && e.target.files.length > 0) {
-                              imageRef.current = e.target.files[0];
+                              setFile(e.target.files[0]);
                               form.setValue(
                                 "imageUrl",
                                 URL.createObjectURL(e.target.files[0]),
@@ -214,15 +239,7 @@ export function CreateForm({ categories }: { categories: any }) {
                               <Input
                                 className="w-full bg-background pl-8"
                                 placeholder="0.000"
-                                value={
-                                  field.value !== undefined
-                                    ? String(field.value)
-                                    : ""
-                                }
-                                onChange={(e) => {
-                                  const value = e.target.value;
-                                  field.onChange(value ? Number(value) : null);
-                                }}
+                                {...field}
                               />
                             </div>
                           </FormControl>

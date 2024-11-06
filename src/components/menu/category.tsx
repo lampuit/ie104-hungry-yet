@@ -5,8 +5,8 @@ export const listCategory = [
     'Món chính',
     'Tráng miệng',
     'Đồ uống',
-    'Combo 1 người',
-    'Combo nhóm'
+    'Combo',
+    'Best Seller'
 ]
 
 export const dishes = {
@@ -42,15 +42,15 @@ export const dishes = {
         { name: 'Drink 2', image: '/images/drinks.jpg' },
         { name: 'Drink 3', image: '/images/drinks.jpg' }
     ],
-    'Combo 1 người': [
+    'Combo': [
         { name: 'Combo 1', image: '/images/intro-dish.jpg' },
         { name: 'Combo 2', image: '/images/intro-dish.jpg' },
         { name: 'Combo 3', image: '/images/intro-dish.jpg' }
     ],
-    'Combo nhóm': [
-        { name: 'Group Combo 1', image: '/images/intro-dish.jpg' },
-        { name: 'Group Combo 2', image: '/images/intro-dish.jpg' },
-        { name: 'Group Combo 3', image: '/images/intro-dish.jpg' }
+    'Best Seller': [
+        { name: 'Best Seller 1', image: '/images/intro-dish.jpg' },
+        { name: 'Best Seller 2', image: '/images/intro-dish.jpg' },
+        { name: 'Best Seller 3', image: '/images/intro-dish.jpg' }
     ]
 };
 
@@ -61,7 +61,7 @@ interface CategoryProps {
 
 export function Category({ clickedIndex, setClickedIndex }: CategoryProps) {
     return (
-        <div className="flex flex-row justify-center items-center gap-4 mx-2">
+        <div className="flex flex-row justify-center items-center gap-4 py-5">
             {listCategory.map((category, i) => (
                 <div key={i} className="flex flex-col justify-end items-center gap-2 w-32">
                     <p
