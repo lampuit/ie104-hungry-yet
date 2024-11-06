@@ -26,10 +26,13 @@ export default function MenuPage() {
             </header>
 
             <section className="flex flex-col items-center">
-                <Category clickedIndex={clickedIndex} setClickedIndex={setClickedIndex} />
-                <ScrollArea className="h-[950px] mb-10 max-w-screen-xl">
+                <section className="sticky">
+                    <Category clickedIndex={clickedIndex} setClickedIndex={setClickedIndex} />
+                </section>
+
+                <section className="mb-10 max-w-screen-xl">
                     <DishList category={listCategory[clickedIndex]} dishes={dishes} />
-                </ScrollArea>
+                </section>
                 <Pagination className="mb-20">
                     <PaginationContent>
                         <PaginationItem>

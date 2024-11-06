@@ -154,7 +154,7 @@ export function ProductList() {
                                         )}
                                     </TableCell>
                                     <TableCell className="w-32 text-center">
-                                        <Trash />
+                                        <Trash className="stroke-amber-500"/>
                                     </TableCell>
                                 </TableRow>
                             ))}
