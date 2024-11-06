@@ -1,27 +1,8 @@
 "use server";
 
 import { db } from "@/drizzle/db";
-import {
-  insertFavouriteSchema,
-  favorite,
-  products,
-} from "@/drizzle/schema/project";
+import { insertFavouriteSchema, favorite } from "@/drizzle/schema/project";
 import { eq, and } from "drizzle-orm";
-
-export async function getFavoriteByUserId(userId: string) {
-  const response = await db
-    .select({
-      userId: favorite.userId,
-      productId: favorite.productId,
-      productName: products.name,
-      productPrice: products.price,
-      productImageUrl: products.imageUrl,
-    })
-    .from(favorite)
-    .innerJoin(products, eq(favorite.productId, products.id))
-    .where(eq(favorite.userId, userId));
-  return response;
-}
 
 export async function createFavorite(formData: FormData) {
   const data = insertFavouriteSchema.parse({

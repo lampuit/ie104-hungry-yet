@@ -10,6 +10,7 @@ import {
 import { user } from "./auth";
 import { relations } from "drizzle-orm";
 import { createInsertSchema, createSelectSchema } from "drizzle-zod";
+import { primaryKey } from "drizzle-orm/mysql-core";
 
 // Bảng Categories
 export const categories = pgTable("categories", {
@@ -55,6 +56,7 @@ export const ratings = pgTable("ratings", {
     .references(() => user.id), // Khóa ngoại
   star: integer("star").notNull(),
   review: text("review"),
+  imageURL: text("imageURL")
 });
 
 // Enum cho trạng thái đơn hàng
@@ -169,6 +171,15 @@ export const favorite = pgTable("favorite", {
     .notNull()
     .references(() => products.id), // Khóa ngoại
 });
+
+//Relation: 1 user -> n favorites
+export const favoriteRelations = relations(user, ({many}) => ({
+  favorite: many(favorite)
+}))
+
+export const userfavoriteRelations = relations(favorite, ({many}) => ({
+  user: many(user)
+}))
 
 export const insertProductSchema = createInsertSchema(products);
 export const insertCategorySchema = createInsertSchema(products);
