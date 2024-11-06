@@ -1,27 +1,26 @@
 import {
   createShoppingCart,
   deleteShoppingCart,
-  getShoppingCartByUserId,
   updateShoppingCart,
 } from "./shopping-cart";
 
 import {
-  getFavoriteByUserId,
   createFavorite,
   deleteFavorite,
 } from "./favorite";
+import { getFavoriteByUserId, getShoppingCartByUserId }from "@/lib/data"
 
 //sucessfull SHOPPING CART
 async function testCreateShoppingCart() {
   const formData = new FormData();
   formData.append("userId", "PqEEV28ZywjNXbhRsZ-r_");
-  formData.append("productId", "1bbb39b5-99f5-4826-a5fd-0747d3c0ad5c");
-  formData.append("quantity", "10");
+  formData.append("productId", "88a7b29b-2b3b-4d42-acca-a6f4460c36f9");
+  formData.append("quantity", "2");
 
   console.log(formData);
   await createShoppingCart(formData);
 }
-// testCreateShoppingCart()
+testCreateShoppingCart()
 
 //successfull
 async function testGetShoppingCartByUserId() {

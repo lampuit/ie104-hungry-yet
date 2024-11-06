@@ -1,5 +1,4 @@
 "use client";
-
 import {
   Table,
   TableBody,
@@ -12,9 +11,10 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { init } from "next/dist/compiled/webpack/webpack";
-import { getShoppingCartByUserId } from "@/lib/actions/shopping-cart";
+import { getShoppingCartByUserId } from "@/lib/data";
 import { getSession } from "@/lib/auth-client";
 import useSWR from "swr";
+import LoadingSpinner from "@/components/ui/loading-spinner";
 
 // Fetch function dùng cho SWR
 const fetcher = async () => {
@@ -24,7 +24,11 @@ const fetcher = async () => {
 };
 
 export function ProductList() {
-  const { data, error } = useSWR("shoppingCartData", fetcher);
+  const { data, error } = useSWR("shoppingCartData", fetcher, {
+    revalidateIfStale: true,
+    revalidateOnFocus: false,
+    revalidateOnReconnect: false,
+  });
   const [dishes, setDishes] = useState<any[]>([]);
 
   useEffect(() => {
@@ -44,35 +48,7 @@ export function ProductList() {
 
   if (error) return <div>Error loading data.</div>;
   if (!data) {
-    return (
-      <div className="flex h-96 flex-col items-center justify-center">
-        <div className="flex items-center space-x-2">
-          <svg
-            className="h-8 w-8 animate-spin text-amber-500"
-            xmlns="http://www.w3.org/2000/svg"
-            fill="none"
-            viewBox="0 0 24 24"
-          >
-            <circle
-              className="opacity-25"
-              cx="12"
-              cy="12"
-              r="10"
-              stroke="currentColor"
-              strokeWidth="4"
-            ></circle>
-            <path
-              className="opacity-75"
-              fill="currentColor"
-              d="M4 12a8 8 0 018-8v8H4z"
-            ></path>
-          </svg>
-          <span className="text-lg font-semibold text-amber-500">
-            Loading...
-          </span>
-        </div>
-      </div>
-    );
+    return <LoadingSpinner />;
   }
 
   // Function handle when favorite btn is clicked
