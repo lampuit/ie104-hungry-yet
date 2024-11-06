@@ -1,5 +1,4 @@
 "use client";
-
 import {
   Table,
   TableBody,
@@ -12,105 +11,54 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { init } from "next/dist/compiled/webpack/webpack";
-import { getShoppingCartByUserId } from "@/lib/actions/shopping-cart";
+import { getShoppingCartByUserId } from "@/lib/data";
 import { getSession } from "@/lib/auth-client";
+import useSWR from "swr";
+import LoadingSpinner from "@/components/ui/loading-spinner";
 
-// const initialDishes = [
-//     {
-//         id: 1,
-//         img: "/images/square.jpg",
-//         name: "Cơm chiên",
-//         des: "Cơm chiên thập cẩm",
-//         cost: 35000,
-//         amount: 1,
-//         favorited: false,
-//     },
-//     {
-//         id: 2,
-//         img: "/images/square.jpg",
-//         name: "Cơm chiên",
-//         des: "Cơm chiên thập cẩm",
-//         cost: 35000,
-//         amount: 2,
-//         favorited: false,
-//     },
-//     {
-//         id: 3,
-//         img: "/images/square.jpg",
-//         name: "Cơm chiên",
-//         des: "Cơm chiên thập cẩm",
-//         cost: 35000,
-//         amount: 5,
-//         favorited: false,
-//     },
-//     {
-//         id: 4,
-//         img: "/images/square.jpg",
-//         name: "Cơm chiên",
-//         des: "Cơm chiên thập cẩm",
-//         cost: 35000,
-//         amount: 1,
-//         favorited: false,
-//     },
-//     {
-//         id: 5,
-//         img: "/images/square.jpg",
-//         name: "Cơm chiên",
-//         des: "Cơm chiên thập cẩm",
-//         cost: 35000,
-//         amount: 1,
-//         favorited: false,
-//     },
-//     {
-//         id: 6,
-//         img: "/images/square.jpg",
-//         name: "Cơm chiên",
-//         des: "Cơm chiên thập cẩm",
-//         cost: 35000,
-//         amount: 1,
-//         favorited: false,
-//     },
-// ];
-
-// export const total = initialDishes.reduce((sum, dish) => sum + (dish.amount * dish.cost), 0);
+// Fetch function dùng cho SWR
+const fetcher = async () => {
+  const response = await getSession();
+  const userId = response?.data?.user?.id as string;
+  return getShoppingCartByUserId(userId);
+};
 
 export function ProductList() {
+  const { data, error } = useSWR("shoppingCartData", fetcher, {
+    revalidateIfStale: true,
+    revalidateOnFocus: false,
+    revalidateOnReconnect: false,
+  });
   const [dishes, setDishes] = useState<any[]>([]);
 
   useEffect(() => {
-    async function fetchData() {
-      //get userid from session
-      const response = await getSession();
-      const userId = response?.data?.user?.id as string;
-      try {
-        const data = await getShoppingCartByUserId(userId);
-        const formattedData = data.map((item: any) => ({
-          id: item.cartId || undefined,
-          img: item.image || "/images/fallback.jpg",
-          name: item.name,
-          des: item.description || "",
-          cost: item.price,
-          amount: item.quantity,
-          isFavorite: item.isFavorite || false,
-        }));
-
-        setDishes(formattedData);
-      } catch (error) {
-        console.error("Error fetching shopping cart data:", error);
-      }
+    if (data) {
+      const formattedData = data.map((item: any) => ({
+        id: item.cartId || undefined,
+        img: item.image || "/images/fallback.jpg",
+        name: item.name,
+        des: item.description || "",
+        cost: item.price,
+        amount: item.quantity,
+        isFavorite: item.isFavorite || false,
+      }));
+      setDishes(formattedData);
     }
+  }, [data]);
 
-    fetchData();
-  }, []);
+  if (error) return <div>Error loading data.</div>;
+  if (!data) {
+    return <LoadingSpinner />;
+  }
 
+  // Function handle when favorite btn is clicked
   const handleFavoriteClick = (id: number) => {
     setDishes(
-      dishes.map((dish: any) =>
+      dishes.map((dish) =>
         dish.id === id ? { ...dish, favorited: !dish.favorited } : dish,
       ),
     );
   };
-
   return (
     <div className="flex flex-col items-center justify-center">
       <div className="my-2 flex max-w-6xl flex-row items-center justify-start">

@@ -1,27 +1,26 @@
 import {
   createShoppingCart,
   deleteShoppingCart,
-  getShoppingCartByUserId,
   updateShoppingCart,
 } from "./shopping-cart";
 
 import {
-  getFavoriteByUserId,
   createFavorite,
   deleteFavorite,
 } from "./favorite";
+import { getFavoriteByUserId, getShoppingCartByUserId }from "@/lib/data"
 
-//sucessfull
-async function testCreate() {
+//sucessfull SHOPPING CART
+async function testCreateShoppingCart() {
   const formData = new FormData();
   formData.append("userId", "PqEEV28ZywjNXbhRsZ-r_");
-  formData.append("productId", "1bbb39b5-99f5-4826-a5fd-0747d3c0ad5c");
-  formData.append("quantity", "10");
+  formData.append("productId", "88a7b29b-2b3b-4d42-acca-a6f4460c36f9");
+  formData.append("quantity", "2");
 
   console.log(formData);
   await createShoppingCart(formData);
 }
-// testCreate()
+testCreateShoppingCart()
 
 //successfull
 async function testGetShoppingCartByUserId() {
@@ -31,7 +30,7 @@ async function testGetShoppingCartByUserId() {
 // testGetShoppingCartByUserId();
 
 //successfull
-async function testUpdate() {
+async function testUpdateShppingCart() {
   const formData = new FormData();
   formData.append("userId", "PqEEV28ZywjNXbhRsZ-r_");
   formData.append("productId", "07cb15c6-92c6-48ae-b963-7fa28fcf8004");
@@ -40,17 +39,19 @@ async function testUpdate() {
   console.log(formData);
   await updateShoppingCart(formData);
 }
-// testUpdate()
+// testUpdateShppingCart()
 
 //successfull
-async function testDelete() {
+async function testDeleteShoppingCart() {
   const response = await deleteShoppingCart(
-    "3b17329e-6285-47c7-9f3e-11986e03d7dd",
+    "07cb15c6-92c6-48ae-b963-7fa28fcf8004",
   );
   console.log("Response:", response);
 }
-// testDelete();
+// testDeleteShoppingCart();
 
+
+//sucessfull FAVORITE
 async function testCreateFavorite() {
   const formData = new FormData();
   formData.append("userId", "PqEEV28ZywjNXbhRsZ-r_");
@@ -61,7 +62,19 @@ async function testCreateFavorite() {
 
 // testCreateFavorite();
 
-import { useSession, getSession } from "@/lib/auth-client"
+async function testGetFavoriteByUserId() {
+  const result = await getFavoriteByUserId("PqEEV28ZywjNXbhRsZ-r_");
+  console.log("Favorite Data:", result);
+}
+
+// testGetFavoriteByUserId()
+
+async function testDeleteFavorite() {
+  await deleteFavorite('PqEEV28ZywjNXbhRsZ-r_', '07cb15c6-92c6-48ae-b963-7fa28fcf8004')
+}
+
+// testDeleteFavorite()
+
 
 
 

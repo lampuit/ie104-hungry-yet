@@ -10,6 +10,7 @@ import {
 import { user } from "./auth";
 import { relations } from "drizzle-orm";
 import { createInsertSchema, createSelectSchema } from "drizzle-zod";
+import { primaryKey } from "drizzle-orm/mysql-core";
 
 // Bảng Categories
 export const categories = pgTable("categories", {
