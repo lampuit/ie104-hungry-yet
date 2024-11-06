@@ -25,7 +25,46 @@ import {
     PaginationNext,
     PaginationPrevious,
 } from "@/components/ui/pagination"
+import {getProductById} from "@/lib/data"
+import useSWR from "swr";
+import { useEffect, useState } from "react";
+import LoadingSpinner from "@/components/ui/loading-spinner"
+
+const fetcher = () => {
+    return getProductById('07cb15c6-92c6-48ae-b963-7fa28fcf8004');
+}
+
 export default function Detail() {
+    const { data, error } = useSWR("get product by ID", fetcher);
+  
+    const [dish, setDish] = useState<any[]>([]);
+
+    useEffect(() => {
+        if (data) {
+          const formattedData = data.map((item: any) => ({
+            categoryId: item.categoryId || undefined,
+            categoryName: item.categoryName || "/images/fallback.jpg",
+            createdAt: item.createdAt || undefined,
+            des: item.description || "",
+            id: item.id,
+            imageUrl: item.imageUrl,
+            price: item.price,
+            name: item.name,
+          }));
+          setDish(formattedData);
+        }
+      }, [data]);
+
+      console.log(dish)
+    
+      if (error) return <div>Error loading data.</div>;
+      if (!data) {
+        return <LoadingSpinner />;
+      }
+
+      const handleClick = () => {
+            alert('hello')
+      }
     return (
         <main>
             <DetailHeader />
@@ -54,8 +93,8 @@ export default function Detail() {
                             <div className="space-y-2">
                                 <div className="flex gap-52 items-center">
                                     <div className="flex gap-7 items-center">
-                                        <h1 className="font-semibold text-4xl">Nem nướng</h1>
-                                        <Badge variant="outline" className="rounded-md bg-amber-400">Món ăn</Badge>
+                                        <h1 className="font-semibold text-4xl">{dish[0]?.name}</h1>
+                                        <Badge variant="outline" className="rounded-md bg-amber-400">{dish[0]?.categoryName}</Badge>
                                     </div>
                                     <Bookmark size={28} />
                                 </div>
@@ -69,7 +108,7 @@ export default function Detail() {
                                         <span>50</span>
                                     </div>
                                 </div>
-                                <h1 className="font-bold text-4xl text-red-500">45.000 <span className="font-normal">đ</span></h1>
+                                <h1 className="font-bold text-4xl text-red-500">{dish[0]?.price}<span className="font-normal">đ</span></h1>
                             </div>
                             <div className="flex items-center gap-8">
                                 <Button variant={"outline"}
@@ -77,7 +116,7 @@ export default function Detail() {
                                     hover:bg-amber-500 hover:bg-opacity-20 hover:text-amber-500 gap-2">
                                     <ShoppingCart /> <span>Thêm giỏ hàng</span>
                                 </Button>
-                                <Button className="font-semibold border-red-500 bg-red-500 border-2
+                                <Button onClick={handleClick} className="font-semibold border-red-500 bg-red-500 border-2
                                     hover:bg-red-500 hover:shadow-md hover:text-white">Mua ngay</Button>
                             </div>
                         </div>
@@ -87,9 +126,7 @@ export default function Detail() {
             <section className="flex justify-center my-10">
                 <div className="p-5 gap-3 max-w-5xl">
                     <h1 className="font-semibold text-2xl">Mô tả món ăn</h1>
-                    <p className="max-w-5xl">Nem nướng là một món ăn truyền thống nổi tiếng của Việt Nam, đặc biệt phổ biến ở các tỉnh miền Trung và miền Nam.
-                        Thành phần chính là thịt heo xay nhuyễn, ướp gia vị và sau đó được nướng trên than hồng, tạo nên hương vị thơm lừng, hấp dẫn. Thịt heo dùng làm nem nướng thường được pha trộn với một ít mỡ để tạo độ mềm, giữ nước và có vị béo vừa phải. Gia vị ướp nem thường bao gồm hành, tỏi, tiêu, nước mắm, đường và một ít bột ngọt để tăng thêm vị đậm đà.
-                        Khi ăn, nem nướng thường được cuốn với bánh tráng, kèm theo các loại rau sống như xà lách, rau thơm, dưa leo, chuối xanh, khế chua và bún tươi. Món ăn không thể thiếu phần nước chấm đậm đà – thường là mắm nêm hoặc mắm chua ngọt, đôi khi còn có thêm tương đậu phộng.</p>
+                    <p className="max-w-5xl">{dish[0]?.des}</p>
                 </div>
             </section>
             <section className="space-y-10 mx-10 px-5">
