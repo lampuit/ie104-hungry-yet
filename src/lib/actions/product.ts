@@ -2,20 +2,30 @@
 
 import { db } from "@/drizzle/db";
 import { insertProductSchema, products } from "@/drizzle/schema/project";
-import { eq } from "drizzle-orm";
-import { revalidatePath } from "next/cache";
+import { eq, mapColumnsInAliasedSQLToAlias } from "drizzle-orm";
+import { revalidatePath, revalidateTag } from "next/cache";
 import { redirect } from "next/navigation";
-import { del } from "@vercel/blob";
+import { del, put } from "@vercel/blob";
+import { updateOrderProduct } from "@/lib/actions/order";
+import { z } from "zod";
+import { Field } from "react-hook-form";
 
-const CreateProduct = insertProductSchema.omit({
-  id: true,
-  createdAt: true,
-  updatedAt: true,
-});
+const CreateProduct = insertProductSchema
+  .omit({
+    id: true,
+    imageUrl: true,
+    createdAt: true,
+    updatedAt: true,
+  })
+  .extend({
+    file: z.instanceof(File),
+  });
 
 export async function createProduct(formData: FormData) {
-  const data = CreateProduct.parse({
-    imageUrl: formData.get("imageUrl") as File,
+  // console.log(formData);
+
+  const { file, ...data } = CreateProduct.parse({
+    file: formData.get("file") as File,
     name: formData.get("name"),
     description: formData.get("description"),
     price: Number(formData.get("price")),
@@ -23,14 +33,16 @@ export async function createProduct(formData: FormData) {
   });
 
   try {
-    await db.insert(products).values(data);
+    const { url } = await put(data.name, file, {
+      access: "public",
+    });
+
+    await db.insert(products).values({ ...data, imageUrl: url });
   } catch (error) {
-    return {
-      message: "Lỗi cơ sở dữ liệu: Không thể tạo sản phẩm mới.",
-    };
+    throw new Error("Lỗi cơ sở dữ liệu: Không thể thêm sản phẩm.");
   }
 
-  revalidatePath("/dashboard/product");
+  revalidateTag("products");
   redirect("/dashboard/product");
 }
 
@@ -52,12 +64,10 @@ export async function editProduct(id: string, formData: FormData) {
   try {
     await db.update(products).set(data).where(eq(products.id, id));
   } catch (error) {
-    return {
-      message: "Lỗi cơ sở dữ liệu: Không thể chỉnh sửa sản phẩm.",
-    };
+    throw new Error("Lỗi cơ sở dữ liệu: Không thể chỉnh sửa sản phẩm.");
   }
 
-  revalidatePath("/dashboard/product");
+  revalidateTag("products");
   redirect("/dashboard/product");
 }
 
@@ -67,10 +77,8 @@ export async function deleteProduct(id: string, imageUrl: string) {
 
     await db.delete(products).where(eq(products.id, id));
   } catch (error) {
-    return {
-      message: "Lỗi cơ sở dữ liệu: Không thể xóa sản phẩm.",
-    };
+    throw new Error("Lỗi cơ sở dữ liệu: Không thể xóa sản phẩm.");
   }
 
-  revalidatePath("/dashboard/product");
+  revalidateTag("products");
 }
