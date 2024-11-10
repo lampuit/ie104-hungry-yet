@@ -25,6 +25,17 @@ export async function getProductById (id: string){
   .where(eq(products.id, id))
 }
 
+export async function getProductByCategoryId(id: string) {
+  const response = await db
+    .select({
+      ...getTableColumns(products),
+    })
+    .from(products)
+    .where(eq(products.categoryId, id));
+  return response;
+}
+
+
 export async function getFavoriteByUserId(userId: string) {
   const response = await db
     .select({

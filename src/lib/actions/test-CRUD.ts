@@ -4,17 +4,18 @@ import {
   updateShoppingCart,
 } from "./shopping-cart";
 
+import { createFavorite, deleteFavorite } from "./favorite";
 import {
-  createFavorite,
-  deleteFavorite,
-} from "./favorite";
-import { getFavoriteByUserId, getShoppingCartByUserId }from "@/lib/data"
+  getFavoriteByUserId,
+  getShoppingCartByUserId,
+  getProductByCategoryId,
+} from "@/lib/data";
 
 //sucessfull SHOPPING CART
 async function testCreateShoppingCart() {
   const formData = new FormData();
-  formData.append("userId", "PqEEV28ZywjNXbhRsZ-r_");
-  formData.append("productId", "88a7b29b-2b3b-4d42-acca-a6f4460c36f9");
+  formData.append("userId", "qWINSwQ1EN3wRZdMpDJS8");
+  formData.append("productId", "b944c6f8-dbab-47b3-b4b8-4a52dd4eaf72");
   formData.append("quantity", "2");
 
   console.log(formData);
@@ -50,7 +51,6 @@ async function testDeleteShoppingCart() {
 }
 // testDeleteShoppingCart();
 
-
 //sucessfull FAVORITE
 async function testCreateFavorite() {
   const formData = new FormData();
@@ -70,14 +70,19 @@ async function testGetFavoriteByUserId() {
 // testGetFavoriteByUserId()
 
 async function testDeleteFavorite() {
-  await deleteFavorite('PqEEV28ZywjNXbhRsZ-r_', '07cb15c6-92c6-48ae-b963-7fa28fcf8004')
+  await deleteFavorite(
+    "PqEEV28ZywjNXbhRsZ-r_",
+    "07cb15c6-92c6-48ae-b963-7fa28fcf8004",
+  );
 }
 
 // testDeleteFavorite()
 
+async function testGetProductByCategoryId() {
+  const response = await getProductByCategoryId(
+    "020bdc7a-9264-4b9a-a2cb-ecb56dd8160b"
+  );
+  console.log("Product Data:", response);
+}
 
-
-
-
-
-
+// testGetProductByCategoryId();
