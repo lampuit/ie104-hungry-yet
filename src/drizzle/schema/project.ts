@@ -6,6 +6,7 @@ import {
   integer,
   timestamp,
   uuid,
+
   boolean,
 } from "drizzle-orm/pg-core";
 import { user } from "./auth";
@@ -58,8 +59,15 @@ export const ratings = pgTable("ratings", {
     .references(() => user.id), // Khóa ngoại
   star: integer("star").notNull(),
   review: text("review"),
-  imageURL: text("imageURL")
+  imageURL: text("imageURL"),
+  createdAt: timestamp("createdAt").notNull().defaultNow(),
+  updatedAt: timestamp("updatedAt").$onUpdate(() => new Date()),
 });
+
+//Relation: 1 product -> n rating
+export const productRatingRelation = relations(products, ({ many }) => ({
+  ratings: many(ratings),
+}));
 
 // Enum cho trạng thái đơn hàng
 export const statusEnum = pgEnum("status", [
@@ -141,7 +149,6 @@ export const userWorkShifts = pgTable("userWorkShifts", {
   workDate: timestamp("workDate").notNull(),
 });
 
-
 // Bảng ShoppingCart
 export const shoppingCart = pgTable("shoppingCart", {
   id: uuid("id").notNull().primaryKey().defaultRandom(),
@@ -179,13 +186,13 @@ export const favorite = pgTable("favorite", {
 });
 
 //Relation: 1 user -> n favorites
-export const favoriteRelations = relations(user, ({many}) => ({
-  favorite: many(favorite)
-}))
+export const favoriteRelations = relations(user, ({ many }) => ({
+  favorite: many(favorite),
+}));
 
-export const userfavoriteRelations = relations(favorite, ({many}) => ({
-  user: many(user)
-}))
+export const userfavoriteRelations = relations(favorite, ({ many }) => ({
+  user: many(user),
+}));
 
 export const insertProductSchema = createInsertSchema(products);
 export const insertCategorySchema = createInsertSchema(products);
@@ -193,3 +200,4 @@ export const insertOrderProductSchema = createInsertSchema(orderProducts);
 export const inserShoppingCartSchema = createInsertSchema(shoppingCart);
 export const insertFavouriteSchema = createInsertSchema(favorite);
 export const insertDiscountSchema = createInsertSchema(discounts);
+export const insertRatingsSchema = createInsertSchema(ratings);
