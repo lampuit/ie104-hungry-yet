@@ -38,5 +38,9 @@ export async function updateShoppingCart(formData: FormData) {
 }
 
 export async function deleteShoppingCart(id: string) {
+  try{
   await db.delete(shoppingCart).where(eq(shoppingCart.id, id));
+  } catch (error) {
+    console.error('Error deleting shopping cart',error);
+  }
 }
