@@ -14,6 +14,17 @@ export async function getAllProducts () {
     .leftJoin(categories, eq(products.categoryId, categories.id));
 }
 
+export async function getProductById (id: string){
+  return await db
+  .select({
+    ...getTableColumns(products),
+    categoryName: categories.name,
+  })
+  .from(products)
+  .leftJoin(categories, eq(products.categoryId, categories.id))
+  .where(eq(products.id, id))
+}
+
 export async function getFavoriteByUserId(userId: string) {
   const response = await db
     .select({

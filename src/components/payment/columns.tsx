@@ -68,7 +68,6 @@ export const columns: ColumnDef<Product>[] = [
     meta: {
       headerClassName: "bg-green-400",
       cellClassName: "font-medium bg-blue-500",
-
     },
   },
   {
@@ -85,7 +84,6 @@ export const columns: ColumnDef<Product>[] = [
         </div>
       );
     },
-
     meta: {
       cellClassName: "font-medium",
     },
@@ -105,7 +103,6 @@ export const columns: ColumnDef<Product>[] = [
           {formatted}
         </div>
       );
-
     },
   },
   {

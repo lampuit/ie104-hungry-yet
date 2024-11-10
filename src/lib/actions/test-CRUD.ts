@@ -20,7 +20,7 @@ async function testCreateShoppingCart() {
   console.log(formData);
   await createShoppingCart(formData);
 }
-testCreateShoppingCart()
+// testCreateShoppingCart()
 
 //successfull
 async function testGetShoppingCartByUserId() {
@@ -74,6 +74,9 @@ async function testDeleteFavorite() {
 }
 
 // testDeleteFavorite()
+
+
+
 
 
 
