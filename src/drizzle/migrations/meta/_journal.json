@@ -5,15 +5,8 @@
     {
       "idx": 0,
       "version": "7",
-      "when": 1730360301449,
-      "tag": "0000_bright_bullseye",
-      "breakpoints": true
-    },
-    {
-      "idx": 1,
-      "version": "7",
-      "when": 1730793833202,
-      "tag": "0001_worried_sheva_callister",
+      "when": 1731241917155,
+      "tag": "0000_chief_mastermind",
       "breakpoints": true
     }
   ]

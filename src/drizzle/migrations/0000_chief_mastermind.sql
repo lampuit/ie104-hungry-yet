@@ -43,10 +43,12 @@ CREATE TABLE IF NOT EXISTS "categories" (
 );
 --> statement-breakpoint
 CREATE TABLE IF NOT EXISTS "discounts" (
-	"discountCode" text PRIMARY KEY NOT NULL,
+	"id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
 	"discountName" text,
 	"fromDate" timestamp,
-	"toDate" timestamp
+	"toDate" timestamp,
+	"createdAt" timestamp DEFAULT now() NOT NULL,
+	"updatedAt" timestamp NOT NULL
 );
 --> statement-breakpoint
 CREATE TABLE IF NOT EXISTS "favorite" (
@@ -73,7 +75,7 @@ CREATE TABLE IF NOT EXISTS "orders" (
 	"orderDate" timestamp NOT NULL,
 	"deliveryAddress" text,
 	"deliveryTime" timestamp,
-	"discountCode" text,
+	"discountId" uuid,
 	"createdAt" timestamp DEFAULT now() NOT NULL,
 	"updatedAt" timestamp NOT NULL
 );
@@ -90,6 +92,7 @@ CREATE TABLE IF NOT EXISTS "products" (
 	"price" real NOT NULL,
 	"imageUrl" text NOT NULL,
 	"categoryId" uuid,
+	"isPublish" boolean NOT NULL,
 	"createdAt" timestamp DEFAULT now() NOT NULL,
 	"updatedAt" timestamp NOT NULL
 );
@@ -98,7 +101,8 @@ CREATE TABLE IF NOT EXISTS "ratings" (
 	"productId" uuid NOT NULL,
 	"userId" text NOT NULL,
 	"star" integer NOT NULL,
-	"review" text
+	"review" text,
+	"imageURL" text
 );
 --> statement-breakpoint
 CREATE TABLE IF NOT EXISTS "shifts" (
@@ -185,7 +189,7 @@ EXCEPTION
 END $$;
 --> statement-breakpoint
 DO $$ BEGIN
- ALTER TABLE "orders" ADD CONSTRAINT "orders_discountCode_discounts_discountCode_fk" FOREIGN KEY ("discountCode") REFERENCES "public"."discounts"("discountCode") ON DELETE no action ON UPDATE no action;
+ ALTER TABLE "orders" ADD CONSTRAINT "orders_discountId_discounts_id_fk" FOREIGN KEY ("discountId") REFERENCES "public"."discounts"("id") ON DELETE no action ON UPDATE no action;
 EXCEPTION
  WHEN duplicate_object THEN null;
 END $$;

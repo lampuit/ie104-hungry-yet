@@ -66,12 +66,24 @@ export const columns: ColumnDef<Product>[] = [
     accessorKey: "name",
     header: () => <div>Tên sản phẩm</div>,
     meta: {
-      cellClassName: "font-medium",
+      headerClassName: "bg-green-400",
+      cellClassName: "font-medium bg-blue-500",
     },
   },
   {
     accessorKey: "quantity",
     header: () => <div>Số lượng</div>,
+    cell: function Action({ row }) {
+      const quantity = row.original.quantity;
+
+      return (
+        <div className="flex items-center justify-around">
+          <Button>{"<"}</Button>
+          {quantity}
+          <Button>{">"}</Button>
+        </div>
+      );
+    },
     meta: {
       cellClassName: "font-medium",
     },
@@ -86,7 +98,11 @@ export const columns: ColumnDef<Product>[] = [
         currency: "VND",
       }).format(price);
 
-      return <div>{formatted}</div>;
+      return (
+        <div className="bg-blue-400 font-semibold text-red-500">
+          {formatted}
+        </div>
+      );
     },
   },
   {

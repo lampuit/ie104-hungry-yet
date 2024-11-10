@@ -6,6 +6,7 @@ import {
   integer,
   timestamp,
   uuid,
+  boolean,
 } from "drizzle-orm/pg-core";
 import { user } from "./auth";
 import { relations } from "drizzle-orm";
@@ -27,6 +28,7 @@ export const products = pgTable("products", {
   price: real("price").notNull(),
   imageUrl: text("imageUrl").notNull(),
   categoryId: uuid("categoryId").references(() => categories.id), // Khóa ngoại
+  isPublish: boolean("isPublish").notNull(),
   createdAt: timestamp("createdAt").notNull().defaultNow(),
   updatedAt: timestamp("updatedAt")
     .notNull()
@@ -81,7 +83,7 @@ export const orders = pgTable("orders", {
   orderDate: timestamp("orderDate").notNull(),
   deliveryAddress: text("deliveryAddress"),
   deliveryTime: timestamp("deliveryTime"),
-  discountCode: text("discountCode").references(() => discounts.discountCode), // Khóa ngoại
+  discountId: uuid("discountId").references(() => discounts.id), // Khóa ngoại
   createdAt: timestamp("createdAt").notNull().defaultNow(),
   updatedAt: timestamp("updatedAt")
     .notNull()
@@ -111,10 +113,14 @@ export const payments = pgTable("payments", {
 
 // Bảng Discounts
 export const discounts = pgTable("discounts", {
-  discountCode: text("discountCode").primaryKey(),
-  discountName: text("discountName"),
+  id: uuid("id").primaryKey().notNull().defaultRandom(),
+  name: text("discountName"),
   fromDate: timestamp("fromDate"),
   toDate: timestamp("toDate"),
+  createdAt: timestamp("createdAt").notNull().defaultNow(),
+  updatedAt: timestamp("updatedAt")
+    .notNull()
+    .$onUpdate(() => new Date()),
 });
 
 // Bảng Shifts
@@ -185,5 +191,5 @@ export const insertProductSchema = createInsertSchema(products);
 export const insertCategorySchema = createInsertSchema(products);
 export const insertOrderProductSchema = createInsertSchema(orderProducts);
 export const inserShoppingCartSchema = createInsertSchema(shoppingCart);
-
 export const insertFavouriteSchema = createInsertSchema(favorite);
+export const insertDiscountSchema = createInsertSchema(discounts);
