@@ -1,11 +1,16 @@
-"use server"
+"use server";
 import { db } from "@/drizzle/db";
-import { favorite, products, shoppingCart, categories } from "@/drizzle/schema/project";
+import {
+  favorite,
+  products,
+  shoppingCart,
+  categories,
+  ratings,
+} from "@/drizzle/schema/project";
 import { eq, and, getTableColumns } from "drizzle-orm";
 
-
-export async function getAllProducts () {
-    return await db
+export async function getAllProducts() {
+  return await db
     .select({
       ...getTableColumns(products),
       categoryName: categories.name,
@@ -14,15 +19,15 @@ export async function getAllProducts () {
     .leftJoin(categories, eq(products.categoryId, categories.id));
 }
 
-export async function getProductById (id: string){
+export async function getProductById(id: string) {
   return await db
-  .select({
-    ...getTableColumns(products),
-    categoryName: categories.name,
-  })
-  .from(products)
-  .leftJoin(categories, eq(products.categoryId, categories.id))
-  .where(eq(products.id, id))
+    .select({
+      ...getTableColumns(products),
+      categoryName: categories.name,
+    })
+    .from(products)
+    .leftJoin(categories, eq(products.categoryId, categories.id))
+    .where(eq(products.id, id));
 }
 
 export async function getProductByCategoryId(id: string) {
@@ -34,7 +39,6 @@ export async function getProductByCategoryId(id: string) {
     .where(eq(products.categoryId, id));
   return response;
 }
-
 
 export async function getFavoriteByUserId(userId: string) {
   const response = await db
@@ -81,4 +85,29 @@ export async function getShoppingCartByUserId(userId: string) {
   }));
 
   return updatedResponse;
+}
+
+export async function getAllRatings() {
+  return await db
+    .select({
+      ...getTableColumns(ratings),
+      productName: products.name,
+      productPrice: products.price,
+      productImageUrl: products.imageUrl,
+    })
+    .from(ratings)
+    .leftJoin(products, eq(ratings.productId, products.id));
+}
+
+export async function getRatingsByProductId(id: string) {
+  return await db
+    .select({
+      ...getTableColumns(ratings),
+      productName: products.name,
+      productPrice: products.price,
+      productImageUrl: products.imageUrl,
+    })
+    .from(ratings)
+    .leftJoin(products, eq(ratings.productId, products.id))
+    .where(eq(ratings.productId, id));
 }
