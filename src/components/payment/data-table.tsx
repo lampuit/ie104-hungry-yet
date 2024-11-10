@@ -43,6 +43,7 @@ export function DataTable<TData, TValue>({
                     key={header.id}
                     className={header.column.columnDef.meta?.headerClassName}
                   >
+
                     {header.isPlaceholder
                       ? null
                       : flexRender(
@@ -67,6 +68,7 @@ export function DataTable<TData, TValue>({
                     key={cell.id}
                     className={cell.column.columnDef.meta?.cellClassName}
                   >
+
                     {flexRender(cell.column.columnDef.cell, cell.getContext())}
                   </TableCell>
                 ))}

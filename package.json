@@ -46,6 +46,7 @@
     "react-router-dom": "^6.27.0",
     "react-toastify": "^10.0.6",
     "remeda": "2",
+    "swr": "^2.2.5",
     "tailwind-merge": "^2.5.4",
     "tailwindcss-animate": "^1.0.7",
     "zod": "^3.23.8"

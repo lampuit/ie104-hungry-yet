@@ -64,6 +64,7 @@ export function EditForm({
 }: {
   product: any;
   categories: any;
+
 }) {
   const { toast } = useToast();
 
@@ -80,6 +81,7 @@ export function EditForm({
       description: product.description || "",
       category: product.categoryId || "",
       price: product.price || undefined,
+
     },
   });
 
@@ -87,7 +89,6 @@ export function EditForm({
     try {
       //  Tạo sản phẩm
       await createProduct(formData);
-
       // Hiện thông báo thành công
       toast({
         title: "Chỉnh sửa sản phẩm thành công.",
@@ -135,6 +136,33 @@ export function EditForm({
               </CardHeader>
               <CardContent className="flex flex-col gap-4 p-6">
                 <FormField // Field đính kèm image
+
+                <Label className="col-span-2">Hình ảnh sản phẩm</Label>
+                <div
+                  className={cn(
+                    "relative flex aspect-square w-full items-center justify-center overflow-hidden rounded-lg border-2",
+                    {
+                      "border-dashed hover:bg-slate-50":
+                        !form.getValues("imageUrl"),
+                    },
+                  )}
+                >
+                  {form.getValues("imageUrl") ? (
+                    <Image
+                      priority
+                      src={form.getValues("imageUrl")}
+                      alt="image"
+                      width={0}
+                      height={0}
+                      sizes="100vw"
+                      style={{ width: "100%", height: "auto" }}
+                    />
+                  ) : (
+                    "Hãy tải hình ảnh lên"
+                  )}
+                </div>
+                <FormField
+
                   control={form.control}
                   name="file"
                   render={({ field }) => (

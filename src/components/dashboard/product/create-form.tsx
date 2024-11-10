@@ -65,6 +65,7 @@ export function CreateForm({ categories }: { categories: any }) {
 
   const formRef = useRef<HTMLFormElement | null>(null);
 
+
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     // Định nghĩa các giá trị mặc định
@@ -79,7 +80,22 @@ export function CreateForm({ categories }: { categories: any }) {
 
   const formAction = async (formData: FormData) => {
     try {
+
       //  Tạo sản phẩm
+
+      const formData = new FormData();
+
+      formData.append(
+        "imageUrl",
+        imageRef.current!,
+        `${imageRef.current?.name}`,
+      );
+      formData.append("name", values.name);
+      formData.append("description", values.description);
+      formData.append("category", values.category);
+      formData.append("price", values.price.toString());
+
+
       await createProduct(formData);
 
       // Hiện thông báo thành công
@@ -166,7 +182,8 @@ export function CreateForm({ categories }: { categories: any }) {
                       </Button>
                       <FormControl>
                         <Input
-                          accept="image/*"
+
+         accept="image/*"
                           type="file"
                           className="hidden"
                           onChange={(e) => {
@@ -221,6 +238,7 @@ export function CreateForm({ categories }: { categories: any }) {
                               <Input
                                 className="w-full bg-background pl-8"
                                 placeholder="0.000"
+
                                 type="number"
                                 value={field.value ?? ""}
                                 onChange={(e) => {
