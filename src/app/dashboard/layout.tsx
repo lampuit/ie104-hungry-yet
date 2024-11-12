@@ -16,8 +16,10 @@ import {
   SidebarTrigger,
 } from "@/components/ui/sidebar";
 import { usePathname } from "next/navigation";
-import { ReactNode, Suspense } from "react";
-import { BadgeCent, Home, Package2, Ticket } from "lucide-react";
+
+import { ReactNode } from "react";
+import { BadgeCent, Home, Package2, Ticket, Clock } from "lucide-react";
+
 import React from "react";
 import Link from "next/link";
 
@@ -32,6 +34,12 @@ const items = [
     url: "/dashboard/product",
     icon: Package2,
   },
+  {
+    title: "Shift",
+    url: "/dashboard/shift",
+    icon: Clock,
+  },
+
   {
     title: "Discount",
     url: "/dashboard/discount",

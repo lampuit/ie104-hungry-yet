@@ -1,0 +1,1 @@
+ALTER TABLE "discounts" RENAME COLUMN "discountName" TO "name";
