@@ -32,16 +32,21 @@ import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
 import { ToastAction } from "@/components/ui/toast";
 import { createProduct } from "@/lib/actions/product";
+import { useFormState } from "react-dom";
+import { product } from "remeda";
+import { put } from "@vercel/blob";
+import { Switch } from "@/components/ui/switch";
 
+// Tạo schema form với các trường dữ liệu tương ứng với cơ sở dữ liệu
 const formSchema = z.object({
-  imageUrl: z.string({ required_error: "Vui lòng tải hình ảnh lên." }),
+  file: z.string().min(1, { message: "Vui lòng tải hình ảnh lên." }),
   name: z.string().min(2, {
     message: "Tên sản phẩm phải chứa ít nhất 2 ký tự.",
   }),
   description: z.string().min(5, {
     message: "Mô tả sản phẩm phải chứa ít nhất 5 ký tự.",
   }),
-  category: z.string().nonempty({
+  category: z.string().min(1, {
     message: "Vui lòng chọn một danh mục cho sản phẩm.",
   }),
   price: z.coerce
@@ -52,45 +57,43 @@ const formSchema = z.object({
     .positive({
       message: "Giá sản phẩm phải là một số dương.",
     }),
+  isPublish: z.boolean(),
 });
 
 export function CreateForm({ categories }: { categories: any }) {
   const { toast } = useToast();
 
-  const imageRef = useRef<File | null>(null);
+  const [isPending, setIsPending] = useState(false);
+
+  const formRef = useRef<HTMLFormElement | null>(null);
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
+    // Định nghĩa các giá trị mặc định
     defaultValues: {
-      imageUrl: "",
+      file: "",
       name: "",
       description: "",
       category: "",
       price: undefined,
+      isPublish: false,
     },
   });
 
-  const onSubmit = async (values: z.infer<typeof formSchema>) => {
+  const formAction = async (formData: FormData) => {
     try {
-      const formData = new FormData();
-
-      formData.append(
-        "imageUrl",
-        imageRef.current!,
-        `${imageRef.current?.name}`,
-      );
-      formData.append("name", values.name);
-      formData.append("description", values.description);
-      formData.append("category", values.category);
-      formData.append("price", values.price.toString());
-
+      //  Tạo sản phẩm
       await createProduct(formData);
 
+      // Hiện thông báo thành công
       toast({
         title: "Tạo sản phẩm thành công.",
-        description: `Tên sản phẩm: ${values.name}`,
+        description: `Tên sản phẩm: ${formData.get("name")}`,
       });
     } catch (error) {
+      setIsPending(false);
+
+      // Hiện thông báo lỗi
       if (error instanceof Error) {
         toast({
           variant: "destructive",
@@ -104,12 +107,17 @@ export function CreateForm({ categories }: { categories: any }) {
 
   return (
     <Form {...form}>
-      <form
-        className="flex flex-col gap-4"
-        onSubmit={form.handleSubmit(onSubmit)}
-      >
+      <form ref={formRef} className="flex flex-col gap-4" action={formAction}>
         <div className="flex items-center justify-end">
-          <Button className="gap-2">
+          <Button
+            type="submit"
+            className="gap-2"
+            onClick={form.handleSubmit(() => {
+              setIsPending(true);
+              formRef.current?.requestSubmit();
+            })}
+            disabled={isPending}
+          >
             <PlusCircle className="h-3.5 w-3.5" />
             <span className="sr-only sm:not-sr-only sm:whitespace-nowrap">
               Tạo sản phẩm
@@ -123,32 +131,34 @@ export function CreateForm({ categories }: { categories: any }) {
                 <CardTitle className="text-lg">Hình ảnh</CardTitle>
               </CardHeader>
               <CardContent className="flex flex-col gap-4 p-6">
-                <Label className="col-span-2">Hình ảnh sản phẩm</Label>
-                <div
-                  className={cn(
-                    "relative flex aspect-square w-full items-center justify-center overflow-hidden rounded-lg border-2",
-                    {
-                      "border-dashed hover:bg-slate-50":
-                        !form.getValues("imageUrl"),
-                    },
-                  )}
-                >
-                  {form.getValues("imageUrl") ? (
-                    <Image
-                      src={form.getValues("imageUrl")}
-                      alt="image"
-                      fill={true}
-                      className="object-cover"
-                    />
-                  ) : (
-                    "Hãy tải hình ảnh lên"
-                  )}
-                </div>
-                <FormField
+                <FormField // Field đính kèm image
                   control={form.control}
-                  name="imageUrl"
+                  name="file"
                   render={({ field }) => (
                     <FormItem>
+                      <Label className="col-span-2">Hình ảnh sản phẩm</Label>
+                      <div
+                        className={cn(
+                          "relative flex aspect-square w-full items-center justify-center overflow-hidden rounded-lg border-2",
+                          {
+                            "border-dashed hover:bg-slate-50": field.value,
+                          },
+                        )}
+                      >
+                        {field.value ? (
+                          <Image
+                            priority
+                            src={field.value}
+                            alt="preview-image"
+                            width={0}
+                            height={0}
+                            sizes="100vw"
+                            style={{ width: "100%", height: "auto" }}
+                          />
+                        ) : (
+                          "Hãy tải hình ảnh lên"
+                        )}
+                      </div>
                       <Button
                         className="text-black"
                         type="button"
@@ -157,21 +167,21 @@ export function CreateForm({ categories }: { categories: any }) {
                       >
                         <FormLabel>Tải hình ảnh</FormLabel>
                       </Button>
-
                       <FormControl>
                         <Input
-                          onChange={(e) => {
-                            if (e.target.files && e.target.files.length > 0) {
-                              imageRef.current = e.target.files[0];
-                              form.setValue(
-                                "imageUrl",
-                                URL.createObjectURL(e.target.files[0]),
-                              );
-                            }
-                          }}
                           accept="image/*"
                           type="file"
                           className="hidden"
+                          onChange={(e) => {
+                            // Kiểm tra file đẫ được attach
+                            if (e.target.files && e.target.files[0]) {
+                              const file = e.target.files[0];
+
+                              const newImageUrl = URL.createObjectURL(file);
+                              field.onChange(newImageUrl);
+                            }
+                          }}
+                          name={field.name}
                         />
                       </FormControl>
                       <FormMessage />
@@ -188,7 +198,7 @@ export function CreateForm({ categories }: { categories: any }) {
                   <CardTitle className="text-lg">Thông Tin Sản Phẩm</CardTitle>
                 </CardHeader>
                 <CardContent className="grid gap-6 p-6">
-                  <FormField
+                  <FormField // Filed nhập tên
                     control={form.control}
                     name="name"
                     render={({ field }) => (
@@ -202,7 +212,7 @@ export function CreateForm({ categories }: { categories: any }) {
                     )}
                   />
                   <div className="grid grid-cols-2 gap-4">
-                    <FormField
+                    <FormField // Field nhập giá
                       control={form.control}
                       name="price"
                       render={({ field }) => (
@@ -214,15 +224,15 @@ export function CreateForm({ categories }: { categories: any }) {
                               <Input
                                 className="w-full bg-background pl-8"
                                 placeholder="0.000"
-                                value={
-                                  field.value !== undefined
-                                    ? String(field.value)
-                                    : ""
-                                }
+                                type="number"
+                                value={field.value ?? ""}
                                 onChange={(e) => {
-                                  const value = e.target.value;
-                                  field.onChange(value ? Number(value) : null);
+                                  // Kiểm tra giá trị input nếu trống truyền "undefined", ngược lại thay đổi giá trị field
+                                  if (e.target.value === "")
+                                    return field.onChange(undefined);
+                                  field.onChange(Number(e.target.value));
                                 }}
+                                name={field.name}
                               />
                             </div>
                           </FormControl>
@@ -231,7 +241,7 @@ export function CreateForm({ categories }: { categories: any }) {
                       )}
                     />
                   </div>
-                  <FormField
+                  <FormField // Field nhập mô tả
                     control={form.control}
                     name="description"
                     render={({ field }) => (
@@ -258,6 +268,7 @@ export function CreateForm({ categories }: { categories: any }) {
                           <Select
                             onValueChange={field.onChange}
                             defaultValue={field.value}
+                            name={field.name}
                           >
                             <FormControl>
                               <SelectTrigger>
@@ -280,6 +291,26 @@ export function CreateForm({ categories }: { categories: any }) {
                       )}
                     />
                   </div>
+                  <FormField // Field switch công khai
+                    control={form.control}
+                    name="isPublish"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormControl>
+                          <div className="flex items-center space-x-2">
+                            <Switch
+                              name={field.name}
+                              checked={!!field.value}
+                              onCheckedChange={field.onChange}
+                              id="airplane-mode"
+                            />
+                            <Label htmlFor="airplane-mode">Công khai</Label>
+                          </div>
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
                 </CardContent>
               </Card>
             </div>

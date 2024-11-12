@@ -15,7 +15,10 @@ import {
 import { MoreHorizontal } from "lucide-react";
 import { ColumnDef } from "@tanstack/react-table";
 import { useRouter } from "next/navigation";
-import { insertProductSchema } from "@/drizzle/schema/project";
+import {
+  insertDiscountSchema,
+  insertProductSchema,
+} from "@/drizzle/schema/project";
 import z from "zod";
 import {
   AlertDialog,
@@ -32,65 +35,41 @@ import { deleteProduct } from "@/lib/actions/product";
 import React from "react";
 import { toast } from "@/hooks/use-toast";
 import Link from "next/link";
+import { deleteDiscount } from "@/lib/actions/discount";
 
-export type Product = z.infer<typeof insertProductSchema> & {
-  categoryName: string | null;
-};
+export type Discount = z.infer<typeof insertDiscountSchema>;
 
-export const columns: ColumnDef<Product>[] = [
-  {
-    id: "image",
-    cell: ({ row }) => {
-      const product = row.original;
-      return (
-        <Image
-          priority
-          alt="Product image"
-          className="aspect-square rounded-md object-cover"
-          width="160"
-          height="160"
-          src={product.imageUrl}
-        />
-      );
-    },
-    meta: {
-      headerClassName: "hidden w-[160px] sm:table-cell",
-      cellClassName: "hidden sm:table-cell",
-    },
-  },
+export const columns: ColumnDef<Discount>[] = [
   {
     accessorKey: "name",
-    header: () => <div>Tên sản phẩm</div>,
+    header: () => <div>Mã</div>,
     cell: ({ row }) => {
       const name = row.getValue("name") as string;
-
-      return <div className="text-lg font-semibold">{name}</div>;
+      return <div className="font-semibold">{name}</div>;
     },
   },
   {
-    accessorKey: "price",
-    header: () => <div>Giá</div>,
+    accessorKey: "fromDate",
+    header: () => <div>Bắt đầu</div>,
     cell: ({ row }) => {
-      const price = parseFloat(row.getValue("price"));
-      const formatted = new Intl.NumberFormat("vi-VN", {
-        style: "currency",
-        currency: "VND",
-      }).format(price);
-
-      return <div>{formatted}</div>;
-    },
-  },
-
-  {
-    accessorKey: "categoryName",
-    header: () => <div>Thể loại</div>,
-    cell: ({ row }) => {
-      const category = String(row.getValue("categoryName"));
-      return <Badge variant="outline">{category}</Badge>;
+      const from_date = new Date(row.getValue("fromDate"));
+      return <div className="text-green-700">{from_date.toLocaleString()}</div>;
     },
     meta: {
-      headerClassName: "hidden lg:table-cell",
-      cellClassName: "hidden lg:table-cell",
+      headerClassName: "hidden md:table-cell",
+      cellClassName: "hidden md:table-cell",
+    },
+  },
+  {
+    accessorKey: "toDate",
+    header: () => <div>Kết thúc</div>,
+    cell: ({ row }) => {
+      const to_date = new Date(row.getValue("toDate"));
+      return <div className="text-red-700">{to_date.toLocaleString()}</div>;
+    },
+    meta: {
+      headerClassName: "hidden md:table-cell",
+      cellClassName: "hidden md:table-cell",
     },
   },
   {
@@ -111,7 +90,7 @@ export const columns: ColumnDef<Product>[] = [
       const router = useRouter();
       const [isDeleteDialogOpen, setIsDeleteDialogOpen] = React.useState(false);
 
-      const product = row.original;
+      const discount = row.original;
 
       return (
         <>
@@ -125,14 +104,11 @@ export const columns: ColumnDef<Product>[] = [
             <DropdownMenuContent align="end">
               <DropdownMenuLabel>Actions</DropdownMenuLabel>
               <DropdownMenuItem
-                onClick={() => navigator.clipboard.writeText(product.id!)}
+                onClick={() => navigator.clipboard.writeText(discount.id!)}
               >
                 Sao chép mã
               </DropdownMenuItem>
               <DropdownMenuSeparator />
-              <DropdownMenuItem asChild>
-                <Link href={`/dashboard/product/${product.id}`}>Chỉnh sửa</Link>
-              </DropdownMenuItem>
               <DropdownMenuItem onSelect={() => setIsDeleteDialogOpen(true)}>
                 Xóa
               </DropdownMenuItem>
@@ -146,19 +122,18 @@ export const columns: ColumnDef<Product>[] = [
             <AlertDialogContent>
               <AlertDialogHeader>
                 <AlertDialogTitle>
-                  Bạn có chắc chắn muốn xóa sản phẩm không ?
+                  Bạn có chắc chắn muốn xóa mã không ?
                 </AlertDialogTitle>
                 <AlertDialogDescription>
-                  Thực hiện này sẽ không được thu hồi. Sản phẩm sẽ được xóa khỏi
-                  dữ liệu.
+                  Thực hiện này sẽ không được thu hồi. Mã sẽ được xóa khỏi dữ
+                  liệu.
                 </AlertDialogDescription>
               </AlertDialogHeader>
               <AlertDialogFooter>
                 <AlertDialogCancel>Hủy</AlertDialogCancel>
                 <AlertDialogAction
                   onClick={async () => {
-                    await deleteProduct(product.id!, product.imageUrl!);
-
+                    await deleteDiscount(discount.id!);
                     toast({
                       title: "Xóa thành công sản phẩm.",
                     });

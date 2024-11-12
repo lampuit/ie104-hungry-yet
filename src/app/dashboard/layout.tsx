@@ -17,7 +17,8 @@ import {
 } from "@/components/ui/sidebar";
 import { usePathname } from "next/navigation";
 import { ReactNode } from "react";
-import { Home, Package2, Clock } from "lucide-react";
+import { BadgeCent, Home, Package2, Ticket, Clock } from "lucide-react";
+
 import React from "react";
 import Link from "next/link";
 
@@ -32,15 +33,26 @@ const items = [
     url: "/dashboard/product",
     icon: Package2,
   },
-
   {
     title: "Shift Management",
     url: "/dashboard/shift",
     icon: Clock,
   },
+
+  {
+    title: "Discount",
+    url: "/dashboard/discount",
+    icon: Ticket,
+  },
 ];
 
-export default function Layout({ children }: { children: ReactNode }) {
+export default function Layout({
+  children,
+  modal,
+}: {
+  children: ReactNode;
+  modal: ReactNode;
+}) {
   const pathname = usePathname();
   const pathSegments = pathname.split("/").filter(Boolean);
 
@@ -84,6 +96,7 @@ export default function Layout({ children }: { children: ReactNode }) {
             </BreadcrumbList>
           </Breadcrumb>
         </header>
+        {modal}
         {children}
       </SidebarInset>
     </SidebarProvider>

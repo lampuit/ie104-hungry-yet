@@ -40,13 +40,14 @@ export const categoryRelations = relations(categories, ({ many }) => ({
   products: many(products),
 }));
 
-//Relation: 1 product -> 1 category
+// Relation: 1 product -> 1 category
 export const productRelations = relations(products, ({ one }) => ({
   category: one(categories, {
     fields: [products.categoryId],
     references: [categories.id],
   }),
 }));
+
 
 // Bảng Ratings
 export const ratings = pgTable("ratings", {
@@ -118,6 +119,7 @@ export const payments = pgTable("payments", {
   paymentName: text("paymentName").notNull(),
 });
 
+
 // Bảng Discounts
 export const discounts = pgTable("discounts", {
   id: uuid("id").primaryKey().notNull().defaultRandom(),
@@ -171,6 +173,7 @@ export const shoppingCart = pgTable("shoppingCart", {
     .notNull()
     .references(() => products.id), // Khóa ngoại
   quantity: integer("quantity").notNull(),
+
   createdAt: timestamp("createdAt").notNull().defaultNow(),
   updatedAt: timestamp("updatedAt")
     .notNull()

@@ -1,5 +1,9 @@
 {
+<<<<<<< HEAD
+  "id": "a57d11d0-79ae-48b5-87f3-c23c20fedf74",
+=======
   "id": "3967ea6c-966e-49d3-afad-12cdb046c34b",
+>>>>>>> main
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "7",
   "dialect": "postgresql",
@@ -233,6 +237,8 @@
       "name": "discounts",
       "schema": "",
       "columns": {
+<<<<<<< HEAD
+=======
         "id": {
           "name": "id",
           "type": "uuid",
@@ -398,6 +404,7 @@
       "name": "orders",
       "schema": "",
       "columns": {
+>>>>>>> main
         "id": {
           "name": "id",
           "type": "uuid",
@@ -405,59 +412,31 @@
           "notNull": true,
           "default": "gen_random_uuid()"
         },
-        "userId": {
-          "name": "userId",
+        "name": {
+          "name": "name",
           "type": "text",
           "primaryKey": false,
           "notNull": true
         },
-        "userShipId": {
-          "name": "userShipId",
+        "description": {
+          "name": "description",
           "type": "text",
           "primaryKey": false,
-          "notNull": false
+          "notNull": true
         },
-        "userCookId": {
-          "name": "userCookId",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "paymentId": {
-          "name": "paymentId",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "totalAmount": {
-          "name": "totalAmount",
-          "type": "real",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "status": {
-          "name": "status",
-          "type": "status",
-          "typeSchema": "public",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "orderDate": {
-          "name": "orderDate",
+        "fromDate": {
+          "name": "fromDate",
           "type": "timestamp",
           "primaryKey": false,
           "notNull": true
         },
-        "deliveryAddress": {
-          "name": "deliveryAddress",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "deliveryTime": {
-          "name": "deliveryTime",
+        "toDate": {
+          "name": "toDate",
           "type": "timestamp",
           "primaryKey": false,
+<<<<<<< HEAD
+          "notNull": true
+=======
           "notNull": false
         },
         "discountId": {
@@ -465,6 +444,7 @@
           "type": "uuid",
           "primaryKey": false,
           "notNull": false
+>>>>>>> main
         },
         "createdAt": {
           "name": "createdAt",
@@ -481,6 +461,8 @@
         }
       },
       "indexes": {},
+<<<<<<< HEAD
+=======
       "foreignKeys": {
         "orders_userId_user_id_fk": {
           "name": "orders_userId_user_id_fk",
@@ -569,6 +551,7 @@
         }
       },
       "indexes": {},
+>>>>>>> main
       "foreignKeys": {},
       "compositePrimaryKeys": {},
       "uniqueConstraints": {}
@@ -652,6 +635,8 @@
       },
       "compositePrimaryKeys": {},
       "uniqueConstraints": {}
+<<<<<<< HEAD
+=======
     },
     "public.ratings": {
       "name": "ratings",
@@ -901,8 +886,10 @@
         "shopping",
         "shipped"
       ]
+>>>>>>> main
     }
   },
+  "enums": {},
   "schemas": {},
   "sequences": {},
   "_meta": {

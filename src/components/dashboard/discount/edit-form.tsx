@@ -31,11 +31,10 @@ import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
 import { ToastAction } from "@/components/ui/toast";
-import { createProduct, editProduct } from "@/lib/actions/product";
+import { createProduct } from "@/lib/actions/product";
 import { useFormState } from "react-dom";
 import { product } from "remeda";
 import { put } from "@vercel/blob";
-import { Switch } from "@/components/ui/switch";
 
 // Tạo schema form với các trường dữ liệu tương ứng với cơ sở dữ liệu
 const formSchema = z.object({
@@ -57,7 +56,6 @@ const formSchema = z.object({
     .positive({
       message: "Giá sản phẩm phải là một số dương.",
     }),
-  isPublish: z.boolean(),
 });
 
 export function EditForm({
@@ -82,14 +80,13 @@ export function EditForm({
       description: product.description || "",
       category: product.categoryId || "",
       price: product.price || undefined,
-      isPublish: product.isPublish || false,
     },
   });
 
   const formAction = async (formData: FormData) => {
     try {
       //  Tạo sản phẩm
-      await editProduct(product.id, formData);
+      await createProduct(formData);
 
       // Hiện thông báo thành công
       toast({
@@ -297,26 +294,6 @@ export function EditForm({
                       )}
                     />
                   </div>
-                  <FormField // Field switch công khai
-                    control={form.control}
-                    name="isPublish"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormControl>
-                          <div className="flex items-center space-x-2">
-                            <Switch
-                              name={field.name}
-                              checked={!!field.value}
-                              onCheckedChange={field.onChange}
-                              id="airplane-mode"
-                            />
-                            <Label htmlFor="airplane-mode">Công khai</Label>
-                          </div>
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
                 </CardContent>
               </Card>
             </div>
