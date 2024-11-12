@@ -34,7 +34,7 @@ const items = [
     icon: Package2,
   },
   {
-    title: "Shift Management",
+    title: "Shift",
     url: "/dashboard/shift",
     icon: Clock,
   },
