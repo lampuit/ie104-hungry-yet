@@ -3,19 +3,27 @@ import { EditForm } from "@/components/dashboard/product/edit-form";
 import { products } from "@/drizzle/schema/project";
 import { eq } from "drizzle-orm";
 import { Suspense } from "react";
-import { EditSkeleton } from "@/components/dashboard/product/edit-skeleton";
+import { unstable_cache } from "next/cache";
 
 export default async function Edit({ params }: { params: { id: string } }) {
-  const [categories, product] = await Promise.all([
-    db.query.categories.findMany(),
-    db.query.products.findFirst({
-      where: eq(products.id, params.id),
-    }),
-  ]);
+  const getProductWithCatgories = unstable_cache(
+    async () => {
+      return await Promise.all([
+        db.query.categories.findMany(),
+        db.query.products.findFirst({
+          where: eq(products.id, params.id),
+        }),
+      ]);
+    },
+    [params.id],
+    { revalidate: 60, tags: ["product"] },
+  );
+
+  const [categories, product] = await getProductWithCatgories();
 
   return (
     <div className="flex-1 p-4">
-      <Suspense fallback={<EditSkeleton />}>
+      <Suspense fallback={<div>Loading...</div>}>
         <EditForm categories={categories} product={product} />
       </Suspense>
     </div>

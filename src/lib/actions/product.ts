@@ -2,7 +2,7 @@
 
 import { db } from "@/drizzle/db";
 import { insertProductSchema, products } from "@/drizzle/schema/project";
-import { eq, mapColumnsInAliasedSQLToAlias } from "drizzle-orm";
+import { eq } from "drizzle-orm";
 import { revalidatePath, revalidateTag } from "next/cache";
 import { redirect } from "next/navigation";
 import { del, put } from "@vercel/blob";
@@ -22,7 +22,7 @@ const CreateProduct = insertProductSchema
   });
 
 export async function createProduct(formData: FormData) {
-  // console.log(formData);
+  console.log(formData);
 
   const { file, ...data } = CreateProduct.parse({
     file: formData.get("file") as File,
@@ -30,6 +30,7 @@ export async function createProduct(formData: FormData) {
     description: formData.get("description"),
     price: Number(formData.get("price")),
     categoryId: formData.get("category"),
+    isPublish: Boolean(formData.get("isPublish")),
   });
 
   try {
@@ -39,7 +40,8 @@ export async function createProduct(formData: FormData) {
 
     await db.insert(products).values({ ...data, imageUrl: url });
   } catch (error) {
-    throw new Error("Lỗi cơ sở dữ liệu: Không thể thêm sản phẩm.");
+    if (error instanceof Error)
+      throw new Error("Lỗi cơ sở dữ liệu: Không thể thêm sản phẩm.");
   }
 
   revalidateTag("products");
@@ -59,6 +61,7 @@ export async function editProduct(id: string, formData: FormData) {
     description: formData.get("description"),
     price: Number(formData.get("price")),
     categoryId: formData.get("category"),
+    isPublish: Boolean(formData.get("isPublish")),
   });
 
   try {

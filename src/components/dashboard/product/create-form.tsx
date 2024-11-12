@@ -35,6 +35,7 @@ import { createProduct } from "@/lib/actions/product";
 import { useFormState } from "react-dom";
 import { product } from "remeda";
 import { put } from "@vercel/blob";
+import { Switch } from "@/components/ui/switch";
 
 // Tạo schema form với các trường dữ liệu tương ứng với cơ sở dữ liệu
 const formSchema = z.object({
@@ -56,6 +57,7 @@ const formSchema = z.object({
     .positive({
       message: "Giá sản phẩm phải là một số dương.",
     }),
+  isPublish: z.boolean(),
 });
 
 export function CreateForm({ categories }: { categories: any }) {
@@ -74,6 +76,7 @@ export function CreateForm({ categories }: { categories: any }) {
       description: "",
       category: "",
       price: undefined,
+      isPublish: false,
     },
   });
 
@@ -288,6 +291,26 @@ export function CreateForm({ categories }: { categories: any }) {
                       )}
                     />
                   </div>
+                  <FormField // Field switch công khai
+                    control={form.control}
+                    name="isPublish"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormControl>
+                          <div className="flex items-center space-x-2">
+                            <Switch
+                              name={field.name}
+                              checked={!!field.value}
+                              onCheckedChange={field.onChange}
+                              id="airplane-mode"
+                            />
+                            <Label htmlFor="airplane-mode">Công khai</Label>
+                          </div>
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
                 </CardContent>
               </Card>
             </div>

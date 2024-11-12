@@ -1,5 +1,5 @@
 {
-  "id": "e83a249a-4493-449d-a4d5-e95728e0c101",
+  "id": "a57d11d0-79ae-48b5-87f3-c23c20fedf74",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "7",
   "dialect": "postgresql",
@@ -233,157 +233,6 @@
       "name": "discounts",
       "schema": "",
       "columns": {
-        "discountCode": {
-          "name": "discountCode",
-          "type": "text",
-          "primaryKey": true,
-          "notNull": true
-        },
-        "discountName": {
-          "name": "discountName",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "fromDate": {
-          "name": "fromDate",
-          "type": "timestamp",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "toDate": {
-          "name": "toDate",
-          "type": "timestamp",
-          "primaryKey": false,
-          "notNull": false
-        }
-      },
-      "indexes": {},
-      "foreignKeys": {},
-      "compositePrimaryKeys": {},
-      "uniqueConstraints": {}
-    },
-    "public.favorite": {
-      "name": "favorite",
-      "schema": "",
-      "columns": {
-        "userId": {
-          "name": "userId",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "productId": {
-          "name": "productId",
-          "type": "uuid",
-          "primaryKey": false,
-          "notNull": true
-        }
-      },
-      "indexes": {},
-      "foreignKeys": {
-        "favorite_userId_user_id_fk": {
-          "name": "favorite_userId_user_id_fk",
-          "tableFrom": "favorite",
-          "tableTo": "user",
-          "columnsFrom": [
-            "userId"
-          ],
-          "columnsTo": [
-            "id"
-          ],
-          "onDelete": "no action",
-          "onUpdate": "no action"
-        },
-        "favorite_productId_products_id_fk": {
-          "name": "favorite_productId_products_id_fk",
-          "tableFrom": "favorite",
-          "tableTo": "products",
-          "columnsFrom": [
-            "productId"
-          ],
-          "columnsTo": [
-            "id"
-          ],
-          "onDelete": "no action",
-          "onUpdate": "no action"
-        }
-      },
-      "compositePrimaryKeys": {},
-      "uniqueConstraints": {}
-    },
-    "public.orderProducts": {
-      "name": "orderProducts",
-      "schema": "",
-      "columns": {
-        "orderId": {
-          "name": "orderId",
-          "type": "uuid",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "productId": {
-          "name": "productId",
-          "type": "uuid",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "quantity": {
-          "name": "quantity",
-          "type": "integer",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "createdAt": {
-          "name": "createdAt",
-          "type": "timestamp",
-          "primaryKey": false,
-          "notNull": true,
-          "default": "now()"
-        },
-        "updatedAt": {
-          "name": "updatedAt",
-          "type": "timestamp",
-          "primaryKey": false,
-          "notNull": true
-        }
-      },
-      "indexes": {},
-      "foreignKeys": {
-        "orderProducts_orderId_orders_id_fk": {
-          "name": "orderProducts_orderId_orders_id_fk",
-          "tableFrom": "orderProducts",
-          "tableTo": "orders",
-          "columnsFrom": [
-            "orderId"
-          ],
-          "columnsTo": [
-            "id"
-          ],
-          "onDelete": "no action",
-          "onUpdate": "no action"
-        },
-        "orderProducts_productId_products_id_fk": {
-          "name": "orderProducts_productId_products_id_fk",
-          "tableFrom": "orderProducts",
-          "tableTo": "products",
-          "columnsFrom": [
-            "productId"
-          ],
-          "columnsTo": [
-            "id"
-          ],
-          "onDelete": "no action",
-          "onUpdate": "no action"
-        }
-      },
-      "compositePrimaryKeys": {},
-      "uniqueConstraints": {}
-    },
-    "public.orders": {
-      "name": "orders",
-      "schema": "",
-      "columns": {
         "id": {
           "name": "id",
           "type": "uuid",
@@ -391,66 +240,29 @@
           "notNull": true,
           "default": "gen_random_uuid()"
         },
-        "userId": {
-          "name": "userId",
+        "name": {
+          "name": "name",
           "type": "text",
           "primaryKey": false,
           "notNull": true
         },
-        "userShipId": {
-          "name": "userShipId",
+        "description": {
+          "name": "description",
           "type": "text",
           "primaryKey": false,
-          "notNull": false
+          "notNull": true
         },
-        "userCookId": {
-          "name": "userCookId",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "paymentId": {
-          "name": "paymentId",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "totalAmount": {
-          "name": "totalAmount",
-          "type": "real",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "status": {
-          "name": "status",
-          "type": "status",
-          "typeSchema": "public",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "orderDate": {
-          "name": "orderDate",
+        "fromDate": {
+          "name": "fromDate",
           "type": "timestamp",
           "primaryKey": false,
           "notNull": true
         },
-        "deliveryAddress": {
-          "name": "deliveryAddress",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "deliveryTime": {
-          "name": "deliveryTime",
+        "toDate": {
+          "name": "toDate",
           "type": "timestamp",
           "primaryKey": false,
-          "notNull": false
-        },
-        "discountCode": {
-          "name": "discountCode",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": false
+          "notNull": true
         },
         "createdAt": {
           "name": "createdAt",
@@ -462,94 +274,6 @@
         "updatedAt": {
           "name": "updatedAt",
           "type": "timestamp",
-          "primaryKey": false,
-          "notNull": true
-        }
-      },
-      "indexes": {},
-      "foreignKeys": {
-        "orders_userId_user_id_fk": {
-          "name": "orders_userId_user_id_fk",
-          "tableFrom": "orders",
-          "tableTo": "user",
-          "columnsFrom": [
-            "userId"
-          ],
-          "columnsTo": [
-            "id"
-          ],
-          "onDelete": "no action",
-          "onUpdate": "no action"
-        },
-        "orders_userShipId_user_id_fk": {
-          "name": "orders_userShipId_user_id_fk",
-          "tableFrom": "orders",
-          "tableTo": "user",
-          "columnsFrom": [
-            "userShipId"
-          ],
-          "columnsTo": [
-            "id"
-          ],
-          "onDelete": "no action",
-          "onUpdate": "no action"
-        },
-        "orders_userCookId_user_id_fk": {
-          "name": "orders_userCookId_user_id_fk",
-          "tableFrom": "orders",
-          "tableTo": "user",
-          "columnsFrom": [
-            "userCookId"
-          ],
-          "columnsTo": [
-            "id"
-          ],
-          "onDelete": "no action",
-          "onUpdate": "no action"
-        },
-        "orders_paymentId_payments_id_fk": {
-          "name": "orders_paymentId_payments_id_fk",
-          "tableFrom": "orders",
-          "tableTo": "payments",
-          "columnsFrom": [
-            "paymentId"
-          ],
-          "columnsTo": [
-            "id"
-          ],
-          "onDelete": "no action",
-          "onUpdate": "no action"
-        },
-        "orders_discountCode_discounts_discountCode_fk": {
-          "name": "orders_discountCode_discounts_discountCode_fk",
-          "tableFrom": "orders",
-          "tableTo": "discounts",
-          "columnsFrom": [
-            "discountCode"
-          ],
-          "columnsTo": [
-            "discountCode"
-          ],
-          "onDelete": "no action",
-          "onUpdate": "no action"
-        }
-      },
-      "compositePrimaryKeys": {},
-      "uniqueConstraints": {}
-    },
-    "public.payments": {
-      "name": "payments",
-      "schema": "",
-      "columns": {
-        "id": {
-          "name": "id",
-          "type": "text",
-          "primaryKey": true,
-          "notNull": true
-        },
-        "paymentName": {
-          "name": "paymentName",
-          "type": "text",
           "primaryKey": false,
           "notNull": true
         }
@@ -632,251 +356,9 @@
       },
       "compositePrimaryKeys": {},
       "uniqueConstraints": {}
-    },
-    "public.ratings": {
-      "name": "ratings",
-      "schema": "",
-      "columns": {
-        "productId": {
-          "name": "productId",
-          "type": "uuid",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "userId": {
-          "name": "userId",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "star": {
-          "name": "star",
-          "type": "integer",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "review": {
-          "name": "review",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": false
-        }
-      },
-      "indexes": {},
-      "foreignKeys": {
-        "ratings_productId_products_id_fk": {
-          "name": "ratings_productId_products_id_fk",
-          "tableFrom": "ratings",
-          "tableTo": "products",
-          "columnsFrom": [
-            "productId"
-          ],
-          "columnsTo": [
-            "id"
-          ],
-          "onDelete": "no action",
-          "onUpdate": "no action"
-        },
-        "ratings_userId_user_id_fk": {
-          "name": "ratings_userId_user_id_fk",
-          "tableFrom": "ratings",
-          "tableTo": "user",
-          "columnsFrom": [
-            "userId"
-          ],
-          "columnsTo": [
-            "id"
-          ],
-          "onDelete": "no action",
-          "onUpdate": "no action"
-        }
-      },
-      "compositePrimaryKeys": {},
-      "uniqueConstraints": {}
-    },
-    "public.shifts": {
-      "name": "shifts",
-      "schema": "",
-      "columns": {
-        "id": {
-          "name": "id",
-          "type": "text",
-          "primaryKey": true,
-          "notNull": true
-        },
-        "shiftName": {
-          "name": "shiftName",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "startTime": {
-          "name": "startTime",
-          "type": "timestamp",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "endTime": {
-          "name": "endTime",
-          "type": "timestamp",
-          "primaryKey": false,
-          "notNull": false
-        }
-      },
-      "indexes": {},
-      "foreignKeys": {},
-      "compositePrimaryKeys": {},
-      "uniqueConstraints": {}
-    },
-    "public.shoppingCart": {
-      "name": "shoppingCart",
-      "schema": "",
-      "columns": {
-        "id": {
-          "name": "id",
-          "type": "uuid",
-          "primaryKey": true,
-          "notNull": true,
-          "default": "gen_random_uuid()"
-        },
-        "userId": {
-          "name": "userId",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "productId": {
-          "name": "productId",
-          "type": "uuid",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "quantity": {
-          "name": "quantity",
-          "type": "integer",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "createdAt": {
-          "name": "createdAt",
-          "type": "timestamp",
-          "primaryKey": false,
-          "notNull": true,
-          "default": "now()"
-        },
-        "updatedAt": {
-          "name": "updatedAt",
-          "type": "timestamp",
-          "primaryKey": false,
-          "notNull": true
-        }
-      },
-      "indexes": {},
-      "foreignKeys": {
-        "shoppingCart_userId_user_id_fk": {
-          "name": "shoppingCart_userId_user_id_fk",
-          "tableFrom": "shoppingCart",
-          "tableTo": "user",
-          "columnsFrom": [
-            "userId"
-          ],
-          "columnsTo": [
-            "id"
-          ],
-          "onDelete": "no action",
-          "onUpdate": "no action"
-        },
-        "shoppingCart_productId_products_id_fk": {
-          "name": "shoppingCart_productId_products_id_fk",
-          "tableFrom": "shoppingCart",
-          "tableTo": "products",
-          "columnsFrom": [
-            "productId"
-          ],
-          "columnsTo": [
-            "id"
-          ],
-          "onDelete": "no action",
-          "onUpdate": "no action"
-        }
-      },
-      "compositePrimaryKeys": {},
-      "uniqueConstraints": {}
-    },
-    "public.userWorkShifts": {
-      "name": "userWorkShifts",
-      "schema": "",
-      "columns": {
-        "id": {
-          "name": "id",
-          "type": "text",
-          "primaryKey": true,
-          "notNull": true
-        },
-        "userId": {
-          "name": "userId",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "shiftId": {
-          "name": "shiftId",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "workDate": {
-          "name": "workDate",
-          "type": "timestamp",
-          "primaryKey": false,
-          "notNull": true
-        }
-      },
-      "indexes": {},
-      "foreignKeys": {
-        "userWorkShifts_userId_user_id_fk": {
-          "name": "userWorkShifts_userId_user_id_fk",
-          "tableFrom": "userWorkShifts",
-          "tableTo": "user",
-          "columnsFrom": [
-            "userId"
-          ],
-          "columnsTo": [
-            "id"
-          ],
-          "onDelete": "no action",
-          "onUpdate": "no action"
-        },
-        "userWorkShifts_shiftId_shifts_id_fk": {
-          "name": "userWorkShifts_shiftId_shifts_id_fk",
-          "tableFrom": "userWorkShifts",
-          "tableTo": "shifts",
-          "columnsFrom": [
-            "shiftId"
-          ],
-          "columnsTo": [
-            "id"
-          ],
-          "onDelete": "no action",
-          "onUpdate": "no action"
-        }
-      },
-      "compositePrimaryKeys": {},
-      "uniqueConstraints": {}
     }
   },
-  "enums": {
-    "public.status": {
-      "name": "status",
-      "schema": "public",
-      "values": [
-        "cooking",
-        "cooked",
-        "shopping",
-        "shipped"
-      ]
-    }
-  },
+  "enums": {},
   "schemas": {},
   "sequences": {},
   "_meta": {

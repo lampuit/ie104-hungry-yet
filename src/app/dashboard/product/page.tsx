@@ -21,7 +21,7 @@ const getProducts = unstable_cache(
   { revalidate: 3600, tags: ["products"] },
 );
 
-export default async function Dashboard() {
+export default async function Product() {
   const products = await getProducts();
 
   return (
