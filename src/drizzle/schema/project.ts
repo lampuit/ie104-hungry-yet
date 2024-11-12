@@ -6,7 +6,6 @@ import {
   integer,
   timestamp,
   uuid,
-
   boolean,
 } from "drizzle-orm/pg-core";
 import { user } from "./auth";
@@ -135,8 +134,8 @@ export const discounts = pgTable("discounts", {
 export const shifts = pgTable("shifts", {
   id: uuid("id").notNull().defaultRandom().primaryKey(),
   name: text("name").notNull(),
-  startTime: timestamp("startTime"),
-  endTime: timestamp("endTime"),
+  startTime: text("startTime"),
+  endTime: text("endTime"),
 });
 
 // Bảng userWorkShifts

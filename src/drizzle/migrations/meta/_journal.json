@@ -43,6 +43,13 @@
       "when": 1731392620997,
       "tag": "0005_short_sharon_ventura",
       "breakpoints": true
+    },
+    {
+      "idx": 6,
+      "version": "7",
+      "when": 1731395263534,
+      "tag": "0006_famous_beast",
+      "breakpoints": true
     }
   ]
 }

@@ -17,7 +17,7 @@ import {
 } from "@/components/ui/sidebar";
 import { usePathname } from "next/navigation";
 import { ReactNode } from "react";
-import { Home, Package2 } from "lucide-react";
+import { Home, Package2, Clock } from "lucide-react";
 import React from "react";
 import Link from "next/link";
 
@@ -31,6 +31,12 @@ const items = [
     title: "Product",
     url: "/dashboard/product",
     icon: Package2,
+  },
+
+  {
+    title: "Shift Management",
+    url: "/dashboard/shift",
+    icon: Clock,
   },
 ];
 
