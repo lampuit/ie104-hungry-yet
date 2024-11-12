@@ -11,7 +11,7 @@ import {
 import { user } from "./auth";
 import { relations } from "drizzle-orm";
 import { createInsertSchema, createSelectSchema } from "drizzle-zod";
-import { primaryKey } from "drizzle-orm/mysql-core";
+import { number } from "zod";
 
 // Bảng Categories
 export const categories = pgTable("categories", {
@@ -53,8 +53,11 @@ export const discounts = pgTable("discounts", {
   id: uuid("id").primaryKey().notNull().defaultRandom(),
   name: text("name").notNull(),
   description: text("description").notNull(),
+  discount: integer("discount").notNull(),
   fromDate: timestamp("fromDate").notNull(),
   toDate: timestamp("toDate").notNull(),
+  createdAt: timestamp("createdAt").notNull().defaultNow(),
+  updatedAt: timestamp("updatedAt").$onUpdate(() => new Date()),
 });
 // Bảng Ratings
 export const ratings = pgTable("ratings", {

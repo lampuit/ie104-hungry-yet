@@ -16,7 +16,7 @@ import {
   SidebarTrigger,
 } from "@/components/ui/sidebar";
 import { usePathname } from "next/navigation";
-import { ReactNode } from "react";
+import { ReactNode, Suspense } from "react";
 import { BadgeCent, Home, Package2, Ticket } from "lucide-react";
 import React from "react";
 import Link from "next/link";

@@ -40,8 +40,8 @@ export async function createProduct(formData: FormData) {
 
     await db.insert(products).values({ ...data, imageUrl: url });
   } catch (error) {
-    if (error instanceof Error)
-      throw new Error("Lỗi cơ sở dữ liệu: Không thể thêm sản phẩm.");
+    if (error instanceof Error) throw new Error(error.message);
+    // throw new Error("Lỗi cơ sở dữ liệu: Không thể thêm sản phẩm.");
   }
 
   revalidateTag("products");

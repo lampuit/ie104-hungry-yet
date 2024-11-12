@@ -21,6 +21,8 @@ export default async function Edit({ params }: { params: { id: string } }) {
 
   const [categories, product] = await getProductWithCatgories();
 
+  console.log(product);
+
   return (
     <div className="flex-1 p-4">
       <Suspense fallback={<div>Loading...</div>}>

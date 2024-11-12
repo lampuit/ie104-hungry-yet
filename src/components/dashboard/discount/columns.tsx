@@ -37,7 +37,10 @@ import { toast } from "@/hooks/use-toast";
 import Link from "next/link";
 import { deleteDiscount } from "@/lib/actions/discount";
 
-export type Discount = z.infer<typeof insertDiscountSchema>;
+export type Discount = Omit<
+  z.infer<typeof insertDiscountSchema>,
+  "description"
+>;
 
 export const columns: ColumnDef<Discount>[] = [
   {
