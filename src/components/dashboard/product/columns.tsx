@@ -13,17 +13,28 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { MoreHorizontal } from "lucide-react";
-
 import { ColumnDef } from "@tanstack/react-table";
+import { useRouter } from "next/navigation";
+import { insertProductSchema } from "@/drizzle/schema/project";
+import z from "zod";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
+import { deleteProduct } from "@/lib/actions/product";
+import React from "react";
+import { toast } from "@/hooks/use-toast";
+import Link from "next/link";
 
-export type Product = {
-  id: string;
-  name: string;
-  imageURL: string;
-  price: number;
-  category: string;
-  createdAt: string;
-  updatedAt: string;
+export type Product = z.infer<typeof insertProductSchema> & {
+  categoryName: string | null;
 };
 
 export const columns: ColumnDef<Product>[] = [
@@ -33,11 +44,12 @@ export const columns: ColumnDef<Product>[] = [
       const product = row.original;
       return (
         <Image
+          priority
           alt="Product image"
           className="aspect-square rounded-md object-cover"
           width="120"
           height="120"
-          src={product.imageURL}
+          src={product.imageUrl}
         />
       );
     },
@@ -68,10 +80,10 @@ export const columns: ColumnDef<Product>[] = [
   },
 
   {
-    accessorKey: "category",
+    accessorKey: "categoryName",
     header: () => <div>Thể loại</div>,
     cell: ({ row }) => {
-      const category = String(row.getValue("category"));
+      const category = String(row.getValue("categoryName"));
       return <Badge variant="outline">{category}</Badge>;
     },
     meta: {
@@ -82,6 +94,10 @@ export const columns: ColumnDef<Product>[] = [
   {
     accessorKey: "createdAt",
     header: () => <div>Ngày tạo</div>,
+    cell: ({ row }) => {
+      const created_at = new Date(row.getValue("createdAt"));
+      return <div>{created_at.toLocaleDateString()}</div>;
+    },
     meta: {
       headerClassName: "hidden md:table-cell",
       cellClassName: "hidden md:table-cell",
@@ -89,31 +105,69 @@ export const columns: ColumnDef<Product>[] = [
   },
   {
     id: "actions",
-    cell: ({ row }) => {
+    cell: function Actions({ row }) {
+      const router = useRouter();
+      const [isDeleteDialogOpen, setIsDeleteDialogOpen] = React.useState(false);
+
       const product = row.original;
 
       return (
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button variant="ghost" className="h-8 w-8 p-0">
-              <span className="sr-only">Open menu</span>
-              <MoreHorizontal className="h-4 w-4" />
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="end">
-            <DropdownMenuLabel>Actions</DropdownMenuLabel>
-            <DropdownMenuItem
-              onClick={() => navigator.clipboard.writeText(product.id)}
-            >
-              Sao chép mã
-            </DropdownMenuItem>
-            <DropdownMenuSeparator />
-            <DropdownMenuItem>Chỉnh sửa</DropdownMenuItem>
-            <DropdownMenuItem className="text-bg-destructive">
-              Xóa
-            </DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
+        <>
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button variant="ghost" className="h-8 w-8 p-0">
+                <span className="sr-only">Open menu</span>
+                <MoreHorizontal className="h-4 w-4" />
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end">
+              <DropdownMenuLabel>Actions</DropdownMenuLabel>
+              <DropdownMenuItem
+                onClick={() => navigator.clipboard.writeText(product.id!)}
+              >
+                Sao chép mã
+              </DropdownMenuItem>
+              <DropdownMenuSeparator />
+              <DropdownMenuItem asChild>
+                <Link href={`/dashboard/product/${product.id}`}>Chỉnh sửa</Link>
+              </DropdownMenuItem>
+              <DropdownMenuItem onSelect={() => setIsDeleteDialogOpen(true)}>
+                Xóa
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
+          <AlertDialog
+            open={isDeleteDialogOpen}
+            onOpenChange={() => setIsDeleteDialogOpen(!isDeleteDialogOpen)}
+          >
+            <AlertDialogTrigger asChild />
+            <AlertDialogContent>
+              <AlertDialogHeader>
+                <AlertDialogTitle>
+                  Bạn có chắc chắn muốn xóa sản phẩm không ?
+                </AlertDialogTitle>
+                <AlertDialogDescription>
+                  Thực hiện này sẽ không được thu hồi. Sản phẩm sẽ được xóa khỏi
+                  dữ liệu.
+                </AlertDialogDescription>
+              </AlertDialogHeader>
+              <AlertDialogFooter>
+                <AlertDialogCancel>Hủy</AlertDialogCancel>
+                <AlertDialogAction
+                  onClick={async () => {
+                    await deleteProduct(product.id!, product.imageUrl!);
+
+                    toast({
+                      title: "Xóa thành công sản phẩm.",
+                    });
+                  }}
+                >
+                  Tiếp tục
+                </AlertDialogAction>
+              </AlertDialogFooter>
+            </AlertDialogContent>
+          </AlertDialog>
+        </>
       );
     },
   },

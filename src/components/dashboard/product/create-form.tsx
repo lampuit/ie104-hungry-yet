@@ -20,7 +20,7 @@ import {
 } from "@/components/ui/select";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
-import z from "zod";
+import z, { set } from "zod";
 import { upload } from "@vercel/blob/client";
 import { DollarSign, Percent, PlusCircle } from "lucide-react";
 import Image from "next/image";
@@ -52,23 +52,12 @@ const formSchema = z.object({
     .positive({
       message: "Giá sản phẩm phải là một số dương.",
     }),
-  // discount: z
-  //   .number({
-  //     required_error:
-  //       "Giảm giá phải là số từ 0% trở lên và không được để trống.",
-  //   })
-  //   .min(0, {
-  //     message: "Giảm giá phải là số từ 0% trở lên.",
-  //   })
-  //   .max(100, {
-  //     message: "Giảm giá không thể vượt quá 100%.",
-  //   }),
 });
 
 export function CreateForm({ categories }: { categories: any }) {
   const { toast } = useToast();
 
-  const [image, setImage] = useState<File | null>();
+  const imageRef = useRef<File | null>(null);
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -77,31 +66,30 @@ export function CreateForm({ categories }: { categories: any }) {
       name: "",
       description: "",
       category: "",
-      price: 0,
+      price: undefined,
     },
   });
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     try {
-      if (!image) {
-        throw new Error("Vui lòng chọn file");
-      }
-
-      const newUrl = await upload(image.name, image, {
-        access: "public",
-        handleUploadUrl: "/api/upload",
-      });
-
       const formData = new FormData();
-      formData.append("imageUrl", newUrl.url);
+
+      formData.append(
+        "imageUrl",
+        imageRef.current!,
+        `${imageRef.current?.name}`,
+      );
       formData.append("name", values.name);
       formData.append("description", values.description);
       formData.append("category", values.category);
       formData.append("price", values.price.toString());
 
-      console.log(formData);
-
       await createProduct(formData);
+
+      toast({
+        title: "Tạo sản phẩm thành công.",
+        description: `Tên sản phẩm: ${values.name}`,
+      });
     } catch (error) {
       if (error instanceof Error) {
         toast({
@@ -117,11 +105,11 @@ export function CreateForm({ categories }: { categories: any }) {
   return (
     <Form {...form}>
       <form
-        className="flex flex-col gap-2"
+        className="flex flex-col gap-4"
         onSubmit={form.handleSubmit(onSubmit)}
       >
-        <div className="flex h-10 items-center justify-end">
-          <Button size="sm" className="h-8 gap-1">
+        <div className="flex items-center justify-end">
+          <Button className="gap-2">
             <PlusCircle className="h-3.5 w-3.5" />
             <span className="sr-only sm:not-sr-only sm:whitespace-nowrap">
               Tạo sản phẩm
@@ -140,13 +128,14 @@ export function CreateForm({ categories }: { categories: any }) {
                   className={cn(
                     "relative flex aspect-square w-full items-center justify-center overflow-hidden rounded-lg border-2",
                     {
-                      "border-dashed hover:bg-slate-50": !image,
+                      "border-dashed hover:bg-slate-50":
+                        !form.getValues("imageUrl"),
                     },
                   )}
                 >
-                  {image ? (
+                  {form.getValues("imageUrl") ? (
                     <Image
-                      src={URL.createObjectURL(image)}
+                      src={form.getValues("imageUrl")}
                       alt="image"
                       fill={true}
                       className="object-cover"
@@ -173,8 +162,11 @@ export function CreateForm({ categories }: { categories: any }) {
                         <Input
                           onChange={(e) => {
                             if (e.target.files && e.target.files.length > 0) {
-                              setImage(e.target.files[0]);
-                              form.setValue("imageUrl", e.target.files[0].name);
+                              imageRef.current = e.target.files[0];
+                              form.setValue(
+                                "imageUrl",
+                                URL.createObjectURL(e.target.files[0]),
+                              );
                             }
                           }}
                           accept="image/*"
@@ -221,9 +213,16 @@ export function CreateForm({ categories }: { categories: any }) {
                               <DollarSign className="absolute left-2.5 top-3 h-4 w-4 text-muted-foreground" />
                               <Input
                                 className="w-full bg-background pl-8"
-                                type="number"
                                 placeholder="0.000"
-                                {...field}
+                                value={
+                                  field.value !== undefined
+                                    ? String(field.value)
+                                    : ""
+                                }
+                                onChange={(e) => {
+                                  const value = e.target.value;
+                                  field.onChange(value ? Number(value) : null);
+                                }}
                               />
                             </div>
                           </FormControl>

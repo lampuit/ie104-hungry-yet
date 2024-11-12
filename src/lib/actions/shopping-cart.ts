@@ -13,10 +13,6 @@ const CreateShoppingCart = inserShoppingCartSchema.omit({
   updatedAt: true,
 });
 
-export async function getShoppingCartByUserId(userId: string) {
-  return await db.select().from(shoppingCart).where(eq(shoppingCart.userId, userId));
-}
-
 export async function createShoppingCart(formData: FormData) {
   const data = CreateShoppingCart.parse({
     userId: formData.get("userId"),
@@ -36,11 +32,15 @@ export async function updateShoppingCart(formData: FormData) {
     .where(
       and(
         eq(shoppingCart.userId, formData.get("userId") as string),
-        eq(shoppingCart.productId, formData.get("productId") as string)
-      )
+        eq(shoppingCart.productId, formData.get("productId") as string),
+      ),
     );
 }
 
 export async function deleteShoppingCart(id: string) {
+  try{
   await db.delete(shoppingCart).where(eq(shoppingCart.id, id));
+  } catch (error) {
+    console.error('Error deleting shopping cart',error);
+  }
 }

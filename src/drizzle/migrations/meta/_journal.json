@@ -5,8 +5,15 @@
     {
       "idx": 0,
       "version": "7",
-      "when": 1730360301449,
-      "tag": "0000_bright_bullseye",
+      "when": 1731241917155,
+      "tag": "0000_chief_mastermind",
+      "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1731248270068,
+      "tag": "0001_smart_vin_gonzales",
       "breakpoints": true
     }
   ]

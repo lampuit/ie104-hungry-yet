@@ -1,5 +1,5 @@
 {
-  "id": "e83a249a-4493-449d-a4d5-e95728e0c101",
+  "id": "3967ea6c-966e-49d3-afad-12cdb046c34b",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "7",
   "dialect": "postgresql",
@@ -233,11 +233,12 @@
       "name": "discounts",
       "schema": "",
       "columns": {
-        "discountCode": {
-          "name": "discountCode",
-          "type": "text",
+        "id": {
+          "name": "id",
+          "type": "uuid",
           "primaryKey": true,
-          "notNull": true
+          "notNull": true,
+          "default": "gen_random_uuid()"
         },
         "discountName": {
           "name": "discountName",
@@ -256,6 +257,19 @@
           "type": "timestamp",
           "primaryKey": false,
           "notNull": false
+        },
+        "createdAt": {
+          "name": "createdAt",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "updatedAt": {
+          "name": "updatedAt",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true
         }
       },
       "indexes": {},
@@ -446,9 +460,9 @@
           "primaryKey": false,
           "notNull": false
         },
-        "discountCode": {
-          "name": "discountCode",
-          "type": "text",
+        "discountId": {
+          "name": "discountId",
+          "type": "uuid",
           "primaryKey": false,
           "notNull": false
         },
@@ -520,15 +534,15 @@
           "onDelete": "no action",
           "onUpdate": "no action"
         },
-        "orders_discountCode_discounts_discountCode_fk": {
-          "name": "orders_discountCode_discounts_discountCode_fk",
+        "orders_discountId_discounts_id_fk": {
+          "name": "orders_discountId_discounts_id_fk",
           "tableFrom": "orders",
           "tableTo": "discounts",
           "columnsFrom": [
-            "discountCode"
+            "discountId"
           ],
           "columnsTo": [
-            "discountCode"
+            "id"
           ],
           "onDelete": "no action",
           "onUpdate": "no action"
@@ -600,6 +614,12 @@
           "primaryKey": false,
           "notNull": false
         },
+        "isPublish": {
+          "name": "isPublish",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": true
+        },
         "createdAt": {
           "name": "createdAt",
           "type": "timestamp",
@@ -657,6 +677,12 @@
         },
         "review": {
           "name": "review",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "imageURL": {
+          "name": "imageURL",
           "type": "text",
           "primaryKey": false,
           "notNull": false
