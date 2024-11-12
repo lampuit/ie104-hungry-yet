@@ -6,7 +6,6 @@ import {
   integer,
   timestamp,
   uuid,
-
   boolean,
 } from "drizzle-orm/pg-core";
 import { user } from "./auth";
@@ -41,13 +40,14 @@ export const categoryRelations = relations(categories, ({ many }) => ({
   products: many(products),
 }));
 
-//Relation: 1 product -> 1 category
+// Relation: 1 product -> 1 category
 export const productRelations = relations(products, ({ one }) => ({
   category: one(categories, {
     fields: [products.categoryId],
     references: [categories.id],
   }),
 }));
+
 
 // Bảng Ratings
 export const ratings = pgTable("ratings", {
@@ -119,10 +119,11 @@ export const payments = pgTable("payments", {
   paymentName: text("paymentName").notNull(),
 });
 
+
 // Bảng Discounts
 export const discounts = pgTable("discounts", {
   id: uuid("id").primaryKey().notNull().defaultRandom(),
-  name: text("discountName"),
+  name: text("name"),
   fromDate: timestamp("fromDate"),
   toDate: timestamp("toDate"),
   createdAt: timestamp("createdAt").notNull().defaultNow(),
@@ -133,21 +134,34 @@ export const discounts = pgTable("discounts", {
 
 // Bảng Shifts
 export const shifts = pgTable("shifts", {
-  id: text("id").primaryKey(),
-  shiftName: text("shiftName").notNull(),
-  startTime: timestamp("startTime"),
-  endTime: timestamp("endTime"),
+  id: uuid("id").notNull().defaultRandom().primaryKey(),
+  name: text("name").notNull(),
+  startTime: text("startTime"),
+  endTime: text("endTime"),
 });
 
-// Bảng userWorkSHifts
+// Bảng userWorkShifts
 export const userWorkShifts = pgTable("userWorkShifts", {
-  id: text("id").primaryKey(),
+  id: uuid("id").notNull().defaultRandom().primaryKey(),
   userId: text("userId")
     .notNull()
     .references(() => user.id), // Khóa ngoại
-  shiftId: text("shiftId").references(() => shifts.id), // Khóa ngoại
+  shiftId: uuid("shiftId").references(() => shifts.id), // Khóa ngoại
   workDate: timestamp("workDate").notNull(),
+  createdAt: timestamp("createdAt").notNull().defaultNow(),
+  updatedAt: timestamp("updatedAt")
+    .$onUpdate(() => new Date()),
 });
+
+//Relation: 1 user -> n userworkshift
+export const userWorkShiftRelation = relations(user, ({many}) => ({
+  userWorkShifts: many(userWorkShifts),
+}))
+
+//Relation: 1 shift -> n userworkshift
+export const shiftUserRelation = relations(shifts, ({many})=> ({
+  userWorkShifts: many(userWorkShifts),
+}))
 
 // Bảng ShoppingCart
 export const shoppingCart = pgTable("shoppingCart", {
@@ -159,6 +173,7 @@ export const shoppingCart = pgTable("shoppingCart", {
     .notNull()
     .references(() => products.id), // Khóa ngoại
   quantity: integer("quantity").notNull(),
+
   createdAt: timestamp("createdAt").notNull().defaultNow(),
   updatedAt: timestamp("updatedAt")
     .notNull()
@@ -201,3 +216,4 @@ export const inserShoppingCartSchema = createInsertSchema(shoppingCart);
 export const insertFavouriteSchema = createInsertSchema(favorite);
 export const insertDiscountSchema = createInsertSchema(discounts);
 export const insertRatingsSchema = createInsertSchema(ratings);
+export const insertUserWorkShiftSchema = createInsertSchema(userWorkShifts);
