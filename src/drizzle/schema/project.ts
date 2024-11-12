@@ -122,7 +122,7 @@ export const payments = pgTable("payments", {
 // Bảng Discounts
 export const discounts = pgTable("discounts", {
   id: uuid("id").primaryKey().notNull().defaultRandom(),
-  name: text("discountName"),
+  name: text("name"),
   fromDate: timestamp("fromDate"),
   toDate: timestamp("toDate"),
   createdAt: timestamp("createdAt").notNull().defaultNow(),
@@ -133,21 +133,34 @@ export const discounts = pgTable("discounts", {
 
 // Bảng Shifts
 export const shifts = pgTable("shifts", {
-  id: text("id").primaryKey(),
-  shiftName: text("shiftName").notNull(),
+  id: uuid("id").notNull().defaultRandom().primaryKey(),
+  name: text("name").notNull(),
   startTime: timestamp("startTime"),
   endTime: timestamp("endTime"),
 });
 
-// Bảng userWorkSHifts
+// Bảng userWorkShifts
 export const userWorkShifts = pgTable("userWorkShifts", {
-  id: text("id").primaryKey(),
+  id: uuid("id").notNull().defaultRandom().primaryKey(),
   userId: text("userId")
     .notNull()
     .references(() => user.id), // Khóa ngoại
-  shiftId: text("shiftId").references(() => shifts.id), // Khóa ngoại
+  shiftId: uuid("shiftId").references(() => shifts.id), // Khóa ngoại
   workDate: timestamp("workDate").notNull(),
+  createdAt: timestamp("createdAt").notNull().defaultNow(),
+  updatedAt: timestamp("updatedAt")
+    .$onUpdate(() => new Date()),
 });
+
+//Relation: 1 user -> n userworkshift
+export const userWorkShiftRelation = relations(user, ({many}) => ({
+  userWorkShifts: many(userWorkShifts),
+}))
+
+//Relation: 1 shift -> n userworkshift
+export const shiftUserRelation = relations(shifts, ({many})=> ({
+  userWorkShifts: many(userWorkShifts),
+}))
 
 // Bảng ShoppingCart
 export const shoppingCart = pgTable("shoppingCart", {
@@ -201,3 +214,4 @@ export const inserShoppingCartSchema = createInsertSchema(shoppingCart);
 export const insertFavouriteSchema = createInsertSchema(favorite);
 export const insertDiscountSchema = createInsertSchema(discounts);
 export const insertRatingsSchema = createInsertSchema(ratings);
+export const insertUserWorkShiftSchema = createInsertSchema(userWorkShifts);
