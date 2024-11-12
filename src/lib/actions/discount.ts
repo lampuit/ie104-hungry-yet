@@ -1,11 +1,7 @@
 "use server";
 
 import { db } from "@/drizzle/db";
-import {
-  discounts,
-  insertDiscountSchema,
-  insertProductSchema,
-} from "@/drizzle/schema/project";
+import { discounts, insertDiscountSchema } from "@/drizzle/schema/project";
 import { eq } from "drizzle-orm";
 import { revalidateTag } from "next/cache";
 import { redirect } from "next/navigation";
