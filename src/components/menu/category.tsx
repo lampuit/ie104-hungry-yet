@@ -1,92 +1,43 @@
-import { categories, categoryRelations } from '@/drizzle/schema/project';
-import { getSession } from '@/lib/auth-client';
-import { getAllProducts } from '@/lib/data';
-import React, { useEffect, useState } from 'react';
-import useSWR from 'swr';
 
-// Nhận dữ liệu tất cả sản phẩm từ API
-const ProductFetcher = async () => {
-    const response = await getAllProducts();
-    return response;
-}
+import React, { useEffect, useState } from 'react';
+import { getAllCategory, getAllProducts } from '@/lib/data';
+import useSWR from "swr";
 
 // Nhận dữ liệu tất cả danh mục từ API
-// const CategoryFetcher = async () => {
-//     const response = await getAllCategories();
-//     return response;
-// }
+const CategoryFetcher = async () => {
+    return getAllCategory();
+}
 
-// Tất cả các danh mục
-
-
-export const listCategory = [
-    'Khai vị',
-    'Món chính',
-    'Tráng miệng',
-    'Đồ uống',
-    'Combo',
-    'Best Seller'
-]
-
-export const dishes = {
-    'Khai vị': [
-        { name: 'Appetizer 1', image: '/images/appetizers.jpg' },
-        { name: 'Appetizer 2', image: '/images/appetizers.jpg' },
-        { name: 'Appetizer 3', image: '/images/appetizers.jpg' },
-        { name: 'Appetizer 1', image: '/images/appetizers.jpg' },
-        { name: 'Appetizer 2', image: '/images/appetizers.jpg' },
-        { name: 'Appetizer 3', image: '/images/appetizers.jpg' },
-        { name: 'Appetizer 1', image: '/images/appetizers.jpg' },
-        { name: 'Appetizer 2', image: '/images/appetizers.jpg' },
-        { name: 'Appetizer 3', image: '/images/appetizers.jpg' },
-        { name: 'Appetizer 1', image: '/images/appetizers.jpg' },
-        { name: 'Appetizer 2', image: '/images/appetizers.jpg' },
-        { name: 'Appetizer 3', image: '/images/appetizers.jpg' }
-    ],
-    'Món chính': [
-        { name: 'Main Dish 1', image: '/images/main-dishes.jpg' },
-        { name: 'Main Dish 2', image: '/images/main-dishes.jpg' },
-        { name: 'Main Dish 3', image: '/images/main-dishes.jpg' }
-    ],
-    'Tráng miệng': [
-        { name: 'Dessert 1', image: '/images/desserts.jpg' },
-        { name: 'Dessert 2', image: '/images/desserts.jpg' },
-        { name: 'Dessert 3', image: '/images/desserts.jpg' }
-    ],
-    'Đồ uống': [
-        { name: 'Drink 1', image: '/images/drinks.jpg' },
-        { name: 'Drink 2', image: '/images/drinks.jpg' },
-        { name: 'Drink 3', image: '/images/drinks.jpg' }
-    ],
-    'Combo': [
-        { name: 'Combo 1', image: '/images/intro-dish.jpg' },
-        { name: 'Combo 2', image: '/images/intro-dish.jpg' },
-        { name: 'Combo 3', image: '/images/intro-dish.jpg' }
-    ],
-    'Best Seller': [
-        { name: 'Best Seller 1', image: '/images/intro-dish.jpg' },
-        { name: 'Best Seller 2', image: '/images/intro-dish.jpg' },
-        { name: 'Best Seller 3', image: '/images/intro-dish.jpg' }
-    ]
-};
+export let listCategory: any[] = []
 
 interface CategoryProps {
-    clickedIndex: number;
-    setClickedIndex: (index: number) => void;
+    clickedIndex: string;
+    setClickedIndex: (index: string) => void;
 }
 
 export function Category({ clickedIndex, setClickedIndex }: CategoryProps) {
+    const [cateId, setCateId] = useState<string>('');
+    const { data, error } = useSWR('category', CategoryFetcher);
+    const [ listCate, setCate ] = useState<any[]>([]);
+    listCategory = listCate;
+
+    useEffect(() => {
+        if (data) {
+            setCate(data);
+        }
+    }, [data]);
+
     return (
         <div className="flex flex-row justify-center items-center gap-4 py-5">
-            {listCategory.map((category, i) => (
-                <div key={i} className="flex flex-col justify-end items-center gap-2 w-32">
+            { listCate.map((cate) => (
+                <div key={cate.id} className="flex flex-col justify-end items-center gap-2 w-32">
                     <p
-                        className={`md:text-base sm:text-sm font-semibold cursor-pointer ${clickedIndex === i ? 'text-amber-500' : 'text-black'} hover:text-amber-500`}
-                        onClick={() => setClickedIndex(i)}
+                        className={`md:text-base sm:text-sm font-semibold cursor-pointer ${clickedIndex === cate.id ? 'text-amber-500' : 'text-black'} hover:text-amber-500`}
+                        onClick={() => setClickedIndex(cate.id)}
                     >
-                        {category}
+                        {cate.name}
                     </p>
-                    {clickedIndex === i && <Underline />}
+                    {clickedIndex === cate.id && <Underline />}
                 </div>
             ))}
         </div>

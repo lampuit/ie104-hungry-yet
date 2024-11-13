@@ -1,5 +1,7 @@
 import React from 'react';
 import { Button } from '../ui/button';
+import { get } from 'http';
+import { getProductByCategoryId } from '@/lib/data';
 
 interface Dish {
     name: string;
@@ -7,14 +9,13 @@ interface Dish {
 }
 
 interface DishListProps {
-    category: string;
-    dishes: { [key: string]: Dish[] };
+    dishes: Dish[];
 }
 
-export const DishList: React.FC<DishListProps> = ({ category, dishes }) => {
+export const DishList = ({dishes}: DishListProps) => {
     return (
         <div className="grid lg:grid-cols-3 md:grid-cols-2 sm:grid-cols-1 gap-y-10 gap-x-8 mx-10 px-10">
-            {dishes[category].map((dish, index) => (
+            {dishes?.map((dish:any, index:any) => (
                 <div key={index} className="shadow-md rounded-3xl flex flex-col items-center group">
                     <img src={dish.image} alt={dish.name} className="w-full h-80 rounded-3xl object-cover" />
                     <div className='flex flex-col justify-center items-center gap-3 py-4 w-full px-3'>
