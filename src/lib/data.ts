@@ -30,6 +30,16 @@ export async function getProductById(id: string) {
     .where(eq(products.id, id));
 }
 
+
+export async function getAllCategory() {
+  const response = await db
+    .select({
+      ...getTableColumns(categories),
+    })
+    .from(categories)
+  return response;
+}
+
 export async function getProductByCategoryId(id: string) {
   const response = await db
     .select({
