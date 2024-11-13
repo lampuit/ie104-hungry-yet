@@ -9,7 +9,8 @@ import {
   getFavoriteByUserId,
   getShoppingCartByUserId,
   getProductByCategoryId,
-  getAllCategory
+  getAllCategory,
+  getUserById
 } from "@/lib/data";
 
 //sucessfull SHOPPING CART
@@ -94,3 +95,10 @@ async function testGetAllCategory(){
 }
 
 // testGetAllCategory()
+
+async function testGetUserById (id: string){
+  const response = await getUserById(id);
+  console.log("User Data:", response);
+}
+
+// testGetUserById('_RDKyc9nUb-HmT9Y1jebj')

@@ -7,8 +7,17 @@ import {
   categories,
   ratings,
 } from "@/drizzle/schema/project";
+import { user } from "@/drizzle/schema/auth";
 import { eq, and, getTableColumns } from "drizzle-orm";
 
+export async function getUserById(id: string) {
+  return await db
+    .select({
+      ...getTableColumns(user),
+    })
+    .from(user)
+    .where(eq(user.id, id));
+}
 export async function getAllProducts() {
   return await db
     .select({
@@ -30,13 +39,12 @@ export async function getProductById(id: string) {
     .where(eq(products.id, id));
 }
 
-
 export async function getAllCategory() {
   const response = await db
     .select({
       ...getTableColumns(categories),
     })
-    .from(categories)
+    .from(categories);
   return response;
 }
 
