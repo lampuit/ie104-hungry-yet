@@ -47,22 +47,24 @@ export const columns: ColumnDef<Product>[] = [
           priority
           alt="Product image"
           className="aspect-square rounded-md object-cover"
-          width="120"
-          height="120"
+          width="160"
+          height="160"
           src={product.imageUrl}
         />
       );
     },
     meta: {
-      headerClassName: "hidden w-[120px] sm:table-cell",
+      headerClassName: "hidden w-[160px] sm:table-cell",
       cellClassName: "hidden sm:table-cell",
     },
   },
   {
     accessorKey: "name",
     header: () => <div>Tên sản phẩm</div>,
-    meta: {
-      cellClassName: "font-medium",
+    cell: ({ row }) => {
+      const name = row.getValue("name") as string;
+
+      return <div className="text-lg font-semibold">{name}</div>;
     },
   },
   {

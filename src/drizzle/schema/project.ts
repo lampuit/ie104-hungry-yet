@@ -6,6 +6,7 @@ import {
   integer,
   timestamp,
   uuid,
+  boolean,
 } from "drizzle-orm/pg-core";
 import { user } from "./auth";
 import { relations } from "drizzle-orm";
@@ -27,6 +28,7 @@ export const products = pgTable("products", {
   price: real("price").notNull(),
   imageUrl: text("imageUrl").notNull(),
   categoryId: uuid("categoryId").references(() => categories.id), // Khóa ngoại
+  isPublish: boolean("isPublish").notNull(),
   createdAt: timestamp("createdAt").notNull().defaultNow(),
   updatedAt: timestamp("updatedAt")
     .notNull()
@@ -38,13 +40,14 @@ export const categoryRelations = relations(categories, ({ many }) => ({
   products: many(products),
 }));
 
-//Relation: 1 product -> 1 category
+// Relation: 1 product -> 1 category
 export const productRelations = relations(products, ({ one }) => ({
   category: one(categories, {
     fields: [products.categoryId],
     references: [categories.id],
   }),
 }));
+
 
 // Bảng Ratings
 export const ratings = pgTable("ratings", {
@@ -56,8 +59,15 @@ export const ratings = pgTable("ratings", {
     .references(() => user.id), // Khóa ngoại
   star: integer("star").notNull(),
   review: text("review"),
-  imageURL: text("imageURL")
+  imageURL: text("imageURL"),
+  createdAt: timestamp("createdAt").notNull().defaultNow(),
+  updatedAt: timestamp("updatedAt").$onUpdate(() => new Date()),
 });
+
+//Relation: 1 product -> n rating
+export const productRatingRelation = relations(products, ({ many }) => ({
+  ratings: many(ratings),
+}));
 
 // Enum cho trạng thái đơn hàng
 export const statusEnum = pgEnum("status", [
@@ -81,7 +91,7 @@ export const orders = pgTable("orders", {
   orderDate: timestamp("orderDate").notNull(),
   deliveryAddress: text("deliveryAddress"),
   deliveryTime: timestamp("deliveryTime"),
-  discountCode: text("discountCode").references(() => discounts.discountCode), // Khóa ngoại
+  discountId: uuid("discountId").references(() => discounts.id), // Khóa ngoại
   createdAt: timestamp("createdAt").notNull().defaultNow(),
   updatedAt: timestamp("updatedAt")
     .notNull()
@@ -109,32 +119,49 @@ export const payments = pgTable("payments", {
   paymentName: text("paymentName").notNull(),
 });
 
+
 // Bảng Discounts
 export const discounts = pgTable("discounts", {
-  discountCode: text("discountCode").primaryKey(),
-  discountName: text("discountName"),
+  id: uuid("id").primaryKey().notNull().defaultRandom(),
+  name: text("name"),
   fromDate: timestamp("fromDate"),
   toDate: timestamp("toDate"),
+  createdAt: timestamp("createdAt").notNull().defaultNow(),
+  updatedAt: timestamp("updatedAt")
+    .notNull()
+    .$onUpdate(() => new Date()),
 });
 
 // Bảng Shifts
 export const shifts = pgTable("shifts", {
-  id: text("id").primaryKey(),
-  shiftName: text("shiftName").notNull(),
-  startTime: timestamp("startTime"),
-  endTime: timestamp("endTime"),
+  id: uuid("id").notNull().defaultRandom().primaryKey(),
+  name: text("name").notNull(),
+  startTime: text("startTime"),
+  endTime: text("endTime"),
 });
 
-// Bảng userWorkSHifts
+// Bảng userWorkShifts
 export const userWorkShifts = pgTable("userWorkShifts", {
-  id: text("id").primaryKey(),
+  id: uuid("id").notNull().defaultRandom().primaryKey(),
   userId: text("userId")
     .notNull()
     .references(() => user.id), // Khóa ngoại
-  shiftId: text("shiftId").references(() => shifts.id), // Khóa ngoại
+  shiftId: uuid("shiftId").references(() => shifts.id), // Khóa ngoại
   workDate: timestamp("workDate").notNull(),
+  createdAt: timestamp("createdAt").notNull().defaultNow(),
+  updatedAt: timestamp("updatedAt")
+    .$onUpdate(() => new Date()),
 });
 
+//Relation: 1 user -> n userworkshift
+export const userWorkShiftRelation = relations(user, ({many}) => ({
+  userWorkShifts: many(userWorkShifts),
+}))
+
+//Relation: 1 shift -> n userworkshift
+export const shiftUserRelation = relations(shifts, ({many})=> ({
+  userWorkShifts: many(userWorkShifts),
+}))
 
 // Bảng ShoppingCart
 export const shoppingCart = pgTable("shoppingCart", {
@@ -146,6 +173,7 @@ export const shoppingCart = pgTable("shoppingCart", {
     .notNull()
     .references(() => products.id), // Khóa ngoại
   quantity: integer("quantity").notNull(),
+
   createdAt: timestamp("createdAt").notNull().defaultNow(),
   updatedAt: timestamp("updatedAt")
     .notNull()
@@ -173,17 +201,19 @@ export const favorite = pgTable("favorite", {
 });
 
 //Relation: 1 user -> n favorites
-export const favoriteRelations = relations(user, ({many}) => ({
-  favorite: many(favorite)
-}))
+export const favoriteRelations = relations(user, ({ many }) => ({
+  favorite: many(favorite),
+}));
 
-export const userfavoriteRelations = relations(favorite, ({many}) => ({
-  user: many(user)
-}))
+export const userfavoriteRelations = relations(favorite, ({ many }) => ({
+  user: many(user),
+}));
 
 export const insertProductSchema = createInsertSchema(products);
 export const insertCategorySchema = createInsertSchema(products);
 export const insertOrderProductSchema = createInsertSchema(orderProducts);
 export const inserShoppingCartSchema = createInsertSchema(shoppingCart);
-
 export const insertFavouriteSchema = createInsertSchema(favorite);
+export const insertDiscountSchema = createInsertSchema(discounts);
+export const insertRatingsSchema = createInsertSchema(ratings);
+export const insertUserWorkShiftSchema = createInsertSchema(userWorkShifts);

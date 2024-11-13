@@ -25,24 +25,28 @@ import { upload } from "@vercel/blob/client";
 import { ArrowDownToLine, DollarSign, Percent, PlusCircle } from "lucide-react";
 import Image from "next/image";
 
-import React, { useRef, useState } from "react";
+import { useRef, useState } from "react";
 import { cn } from "@/lib/utils";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
 import { ToastAction } from "@/components/ui/toast";
-import { editProduct } from "@/lib/actions/product";
-import { del, head } from "@vercel/blob";
+import { createProduct, editProduct } from "@/lib/actions/product";
+import { useFormState } from "react-dom";
+import { product } from "remeda";
+import { put } from "@vercel/blob";
+import { Switch } from "@/components/ui/switch";
 
+// Tạo schema form với các trường dữ liệu tương ứng với cơ sở dữ liệu
 const formSchema = z.object({
-  imageUrl: z.string({ required_error: "Vui lòng tải hình ảnh lên." }),
+  file: z.string().min(1, { message: "Vui lòng tải hình ảnh lên." }),
   name: z.string().min(2, {
     message: "Tên sản phẩm phải chứa ít nhất 2 ký tự.",
   }),
   description: z.string().min(5, {
     message: "Mô tả sản phẩm phải chứa ít nhất 5 ký tự.",
   }),
-  category: z.string().nonempty({
+  category: z.string().min(1, {
     message: "Vui lòng chọn một danh mục cho sản phẩm.",
   }),
   price: z.coerce
@@ -53,66 +57,49 @@ const formSchema = z.object({
     .positive({
       message: "Giá sản phẩm phải là một số dương.",
     }),
-  // discount: z
-  //   .number({
-  //     required_error:
-  //       "Giảm giá phải là số từ 0% trở lên và không được để trống.",
-  //   })
-  //   .min(0, {
-  //     message: "Giảm giá phải là số từ 0% trở lên.",
-  //   })
-  //   .max(100, {
-  //     message: "Giảm giá không thể vượt quá 100%.",
-  //   }),
+  isPublish: z.boolean(),
 });
 
 export function EditForm({
-  categories,
   product,
+  categories,
 }: {
-  categories: any;
   product: any;
+  categories: any;
 }) {
   const { toast } = useToast();
 
-  const [file, setFile] = useState<File | null>();
+  const [isPending, setIsPending] = useState(false);
+
+  const formRef = useRef<HTMLFormElement | null>(null);
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
+    // Định nghĩa các giá trị mặc định
     defaultValues: {
-      imageUrl: product.imageUrl,
-      name: product.name,
-      description: product.description,
-      category: product.categoryId,
-      price: product.price,
+      file: product.imageUrl || "",
+      name: product.name || "",
+      description: product.description || "",
+      category: product.categoryId || "",
+      price: product.price || undefined,
+      isPublish: product.isPublish || false,
     },
   });
 
-  const onSubmit = async (values: z.infer<typeof formSchema>) => {
+  const formAction = async (formData: FormData) => {
     try {
-      const formData = new FormData();
-
-      let imageUrl = values.imageUrl;
-
-      console.log(imageUrl);
-
-      if (imageUrl != product.imageUrl && file) {
-        await del(product.imageUrl);
-      }
-      console.log(imageUrl);
-      formData.append("imageUrl", imageUrl);
-      formData.append("name", values.name);
-      formData.append("description", values.description);
-      formData.append("category", values.category);
-      formData.append("price", values.price.toString());
-
+      //  Tạo sản phẩm
       await editProduct(product.id, formData);
 
+      // Hiện thông báo thành công
       toast({
         title: "Chỉnh sửa sản phẩm thành công.",
-        description: `Tên sản phẩm: ${values.name}`,
+        description: `Tên sản phẩm: ${formData.get("name")}`,
       });
     } catch (error) {
+      setIsPending(false);
+
+      // Hiện thông báo lỗi
       if (error instanceof Error) {
         toast({
           variant: "destructive",
@@ -126,12 +113,17 @@ export function EditForm({
 
   return (
     <Form {...form}>
-      <form
-        className="flex flex-col gap-4"
-        onSubmit={form.handleSubmit(onSubmit)}
-      >
+      <form ref={formRef} className="flex flex-col gap-4" action={formAction}>
         <div className="flex items-center justify-end">
-          <Button className="gap-2">
+          <Button
+            type="submit"
+            className="gap-2"
+            onClick={form.handleSubmit(() => {
+              setIsPending(true);
+              formRef.current?.requestSubmit();
+            })}
+            disabled={isPending}
+          >
             <ArrowDownToLine className="h-3.5 w-3.5" />
             <span className="sr-only sm:not-sr-only sm:whitespace-nowrap">
               Lưu sản phẩm
@@ -145,35 +137,34 @@ export function EditForm({
                 <CardTitle className="text-lg">Hình ảnh</CardTitle>
               </CardHeader>
               <CardContent className="flex flex-col gap-4 p-6">
-                <Label className="col-span-2">Hình ảnh sản phẩm</Label>
-                <div
-                  className={cn(
-                    "relative flex aspect-square w-full items-center justify-center overflow-hidden rounded-lg border-2",
-                    {
-                      "border-dashed hover:bg-slate-50":
-                        !form.getValues("imageUrl"),
-                    },
-                  )}
-                >
-                  {form.getValues("imageUrl") ? (
-                    <Image
-                      priority
-                      src={form.getValues("imageUrl")}
-                      alt="image"
-                      width={0}
-                      height={0}
-                      sizes="100vw"
-                      style={{ width: "100%", height: "auto" }}
-                    />
-                  ) : (
-                    "Hãy tải hình ảnh lên"
-                  )}
-                </div>
-                <FormField
+                <FormField // Field đính kèm image
                   control={form.control}
-                  name="imageUrl"
+                  name="file"
                   render={({ field }) => (
                     <FormItem>
+                      <Label className="col-span-2">Hình ảnh sản phẩm</Label>
+                      <div
+                        className={cn(
+                          "relative flex aspect-square w-full items-center justify-center overflow-hidden rounded-lg border-2",
+                          {
+                            "border-dashed hover:bg-slate-50": field.value,
+                          },
+                        )}
+                      >
+                        {field.value ? (
+                          <Image
+                            priority
+                            src={field.value}
+                            alt="preview-image"
+                            width={0}
+                            height={0}
+                            sizes="100vw"
+                            style={{ width: "100%", height: "auto" }}
+                          />
+                        ) : (
+                          "Hãy tải hình ảnh lên"
+                        )}
+                      </div>
                       <Button
                         className="text-black"
                         type="button"
@@ -182,21 +173,21 @@ export function EditForm({
                       >
                         <FormLabel>Tải hình ảnh</FormLabel>
                       </Button>
-
                       <FormControl>
                         <Input
-                          onChange={(e) => {
-                            if (e.target.files && e.target.files.length > 0) {
-                              setFile(e.target.files[0]);
-                              form.setValue(
-                                "imageUrl",
-                                URL.createObjectURL(e.target.files[0]),
-                              );
-                            }
-                          }}
                           accept="image/*"
                           type="file"
                           className="hidden"
+                          onChange={(e) => {
+                            // Kiểm tra file đẫ được attach
+                            if (e.target.files && e.target.files[0]) {
+                              const file = e.target.files[0];
+
+                              const newImageUrl = URL.createObjectURL(file);
+                              field.onChange(newImageUrl);
+                            }
+                          }}
+                          name={field.name}
                         />
                       </FormControl>
                       <FormMessage />
@@ -213,7 +204,7 @@ export function EditForm({
                   <CardTitle className="text-lg">Thông Tin Sản Phẩm</CardTitle>
                 </CardHeader>
                 <CardContent className="grid gap-6 p-6">
-                  <FormField
+                  <FormField // Filed nhập tên
                     control={form.control}
                     name="name"
                     render={({ field }) => (
@@ -227,7 +218,7 @@ export function EditForm({
                     )}
                   />
                   <div className="grid grid-cols-2 gap-4">
-                    <FormField
+                    <FormField // Field nhập giá
                       control={form.control}
                       name="price"
                       render={({ field }) => (
@@ -239,7 +230,15 @@ export function EditForm({
                               <Input
                                 className="w-full bg-background pl-8"
                                 placeholder="0.000"
-                                {...field}
+                                type="number"
+                                value={field.value ?? ""}
+                                onChange={(e) => {
+                                  // Kiểm tra giá trị input nếu trống truyền "undefined", ngược lại thay đổi giá trị field
+                                  if (e.target.value === "")
+                                    return field.onChange(undefined);
+                                  field.onChange(Number(e.target.value));
+                                }}
+                                name={field.name}
                               />
                             </div>
                           </FormControl>
@@ -248,7 +247,7 @@ export function EditForm({
                       )}
                     />
                   </div>
-                  <FormField
+                  <FormField // Field nhập mô tả
                     control={form.control}
                     name="description"
                     render={({ field }) => (
@@ -275,6 +274,7 @@ export function EditForm({
                           <Select
                             onValueChange={field.onChange}
                             defaultValue={field.value}
+                            name={field.name}
                           >
                             <FormControl>
                               <SelectTrigger>
@@ -297,6 +297,26 @@ export function EditForm({
                       )}
                     />
                   </div>
+                  <FormField // Field switch công khai
+                    control={form.control}
+                    name="isPublish"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormControl>
+                          <div className="flex items-center space-x-2">
+                            <Switch
+                              name={field.name}
+                              checked={!!field.value}
+                              onCheckedChange={field.onChange}
+                              id="airplane-mode"
+                            />
+                            <Label htmlFor="airplane-mode">Công khai</Label>
+                          </div>
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
                 </CardContent>
               </Card>
             </div>
