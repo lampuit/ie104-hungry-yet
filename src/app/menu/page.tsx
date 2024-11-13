@@ -1,11 +1,11 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Search } from "@/components/menu/search";
 import { Category } from "@/components/menu/category";
 import { DishList } from "@/components/menu/dish-list";
 import { listCategory } from "@/components/menu/category";
-import { dishes } from "@/components/menu/category";
+import { dishes } from "@/components/menu/dish-list";
 import {
     Pagination,
     PaginationContent,
@@ -15,10 +15,18 @@ import {
     PaginationNext,
     PaginationPrevious,
 } from "@/components/ui/pagination"
-import { ScrollArea } from "@/components/ui/scroll-area"
+import { getProductByCategoryId } from "@/lib/data";
 
 export default function MenuPage() {
     const [clickedIndex, setClickedIndex] = useState<number>(0);
+    const getDishesByCategoryId  = async (clickedIndex : string) => {
+        const response = await getProductByCategoryId(clickedIndex);
+        console.log("HI: ", response);
+        return response;
+    }
+    useEffect(() => {
+        getDishesByCategoryId(listCategory[clickedIndex]);
+    }, [clickedIndex]);
     return (
         <main className="w-screen">
             <header className="mt-8">
@@ -27,7 +35,7 @@ export default function MenuPage() {
 
             <section className="flex flex-col items-center">
                 <section className="sticky">
-                    <Category clickedIndex={clickedIndex} setClickedIndex={setClickedIndex} />
+                    <Category clickedIndex={clickedIndex} setClickedIndex={setClickedIndex}  />
                 </section>
 
                 <section className="mb-10 max-w-screen-xl">

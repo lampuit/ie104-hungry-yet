@@ -1,5 +1,7 @@
 import React from 'react';
 import { Button } from '../ui/button';
+import { get } from 'http';
+import { getProductByCategoryId } from '@/lib/data';
 
 interface Dish {
     name: string;
@@ -10,6 +12,48 @@ interface DishListProps {
     category: string;
     dishes: { [key: string]: Dish[] };
 }
+
+export const dishes = {
+    'Khai vị': [
+        { name: 'Appetizer 1', image: '/images/appetizers.jpg' },
+        { name: 'Appetizer 2', image: '/images/appetizers.jpg' },
+        { name: 'Appetizer 3', image: '/images/appetizers.jpg' },
+        { name: 'Appetizer 1', image: '/images/appetizers.jpg' },
+        { name: 'Appetizer 2', image: '/images/appetizers.jpg' },
+        { name: 'Appetizer 3', image: '/images/appetizers.jpg' },
+        { name: 'Appetizer 1', image: '/images/appetizers.jpg' },
+        { name: 'Appetizer 2', image: '/images/appetizers.jpg' },
+        { name: 'Appetizer 3', image: '/images/appetizers.jpg' },
+        { name: 'Appetizer 1', image: '/images/appetizers.jpg' },
+        { name: 'Appetizer 2', image: '/images/appetizers.jpg' },
+        { name: 'Appetizer 3', image: '/images/appetizers.jpg' }
+    ],
+    'Món chính': [
+        { name: 'Main Dish 1', image: '/images/main-dishes.jpg' },
+        { name: 'Main Dish 2', image: '/images/main-dishes.jpg' },
+        { name: 'Main Dish 3', image: '/images/main-dishes.jpg' }
+    ],
+    'Tráng miệng': [
+        { name: 'Dessert 1', image: '/images/desserts.jpg' },
+        { name: 'Dessert 2', image: '/images/desserts.jpg' },
+        { name: 'Dessert 3', image: '/images/desserts.jpg' }
+    ],
+    'Đồ uống': [
+        { name: 'Drink 1', image: '/images/drinks.jpg' },
+        { name: 'Drink 2', image: '/images/drinks.jpg' },
+        { name: 'Drink 3', image: '/images/drinks.jpg' }
+    ],
+    'Combo': [
+        { name: 'Combo 1', image: '/images/intro-dish.jpg' },
+        { name: 'Combo 2', image: '/images/intro-dish.jpg' },
+        { name: 'Combo 3', image: '/images/intro-dish.jpg' }
+    ],
+    'Best Seller': [
+        { name: 'Best Seller 1', image: '/images/intro-dish.jpg' },
+        { name: 'Best Seller 2', image: '/images/intro-dish.jpg' },
+        { name: 'Best Seller 3', image: '/images/intro-dish.jpg' }
+    ]
+};
 
 export const DishList: React.FC<DishListProps> = ({ category, dishes }) => {
     return (
