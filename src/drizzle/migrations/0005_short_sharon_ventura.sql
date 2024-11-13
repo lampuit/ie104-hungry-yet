@@ -1,1 +1,0 @@
-ALTER TABLE "shifts" RENAME COLUMN "shiftName" TO "name";

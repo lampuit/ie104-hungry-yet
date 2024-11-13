@@ -1,1 +1,0 @@
-ALTER TABLE "userWorkShifts" ALTER COLUMN "shiftId" SET DATA TYPE uuid;

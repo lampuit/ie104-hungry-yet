@@ -1,9 +1,5 @@
 {
-<<<<<<< HEAD
-  "id": "a57d11d0-79ae-48b5-87f3-c23c20fedf74",
-=======
-  "id": "3967ea6c-966e-49d3-afad-12cdb046c34b",
->>>>>>> main
+  "id": "1f2161ad-332e-4513-93c3-a771591a7983",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "7",
   "dialect": "postgresql",
@@ -188,7 +184,8 @@
         },
         "role": {
           "name": "role",
-          "type": "text",
+          "type": "role",
+          "typeSchema": "public",
           "primaryKey": false,
           "notNull": false
         },
@@ -237,8 +234,6 @@
       "name": "discounts",
       "schema": "",
       "columns": {
-<<<<<<< HEAD
-=======
         "id": {
           "name": "id",
           "type": "uuid",
@@ -246,8 +241,8 @@
           "notNull": true,
           "default": "gen_random_uuid()"
         },
-        "discountName": {
-          "name": "discountName",
+        "name": {
+          "name": "name",
           "type": "text",
           "primaryKey": false,
           "notNull": false
@@ -404,7 +399,6 @@
       "name": "orders",
       "schema": "",
       "columns": {
->>>>>>> main
         "id": {
           "name": "id",
           "type": "uuid",
@@ -412,31 +406,59 @@
           "notNull": true,
           "default": "gen_random_uuid()"
         },
-        "name": {
-          "name": "name",
+        "userId": {
+          "name": "userId",
           "type": "text",
           "primaryKey": false,
           "notNull": true
         },
-        "description": {
-          "name": "description",
+        "userShipId": {
+          "name": "userShipId",
           "type": "text",
           "primaryKey": false,
-          "notNull": true
+          "notNull": false
         },
-        "fromDate": {
-          "name": "fromDate",
+        "userCookId": {
+          "name": "userCookId",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "paymentId": {
+          "name": "paymentId",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "totalAmount": {
+          "name": "totalAmount",
+          "type": "real",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "status": {
+          "name": "status",
+          "type": "status",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "orderDate": {
+          "name": "orderDate",
           "type": "timestamp",
           "primaryKey": false,
           "notNull": true
         },
-        "toDate": {
-          "name": "toDate",
+        "deliveryAddress": {
+          "name": "deliveryAddress",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "deliveryTime": {
+          "name": "deliveryTime",
           "type": "timestamp",
           "primaryKey": false,
-<<<<<<< HEAD
-          "notNull": true
-=======
           "notNull": false
         },
         "discountId": {
@@ -444,7 +466,6 @@
           "type": "uuid",
           "primaryKey": false,
           "notNull": false
->>>>>>> main
         },
         "createdAt": {
           "name": "createdAt",
@@ -461,8 +482,6 @@
         }
       },
       "indexes": {},
-<<<<<<< HEAD
-=======
       "foreignKeys": {
         "orders_userId_user_id_fk": {
           "name": "orders_userId_user_id_fk",
@@ -551,7 +570,6 @@
         }
       },
       "indexes": {},
->>>>>>> main
       "foreignKeys": {},
       "compositePrimaryKeys": {},
       "uniqueConstraints": {}
@@ -635,8 +653,6 @@
       },
       "compositePrimaryKeys": {},
       "uniqueConstraints": {}
-<<<<<<< HEAD
-=======
     },
     "public.ratings": {
       "name": "ratings",
@@ -669,6 +685,19 @@
         "imageURL": {
           "name": "imageURL",
           "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "createdAt": {
+          "name": "createdAt",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "updatedAt": {
+          "name": "updatedAt",
+          "type": "timestamp",
           "primaryKey": false,
           "notNull": false
         }
@@ -711,25 +740,26 @@
       "columns": {
         "id": {
           "name": "id",
-          "type": "text",
+          "type": "uuid",
           "primaryKey": true,
-          "notNull": true
+          "notNull": true,
+          "default": "gen_random_uuid()"
         },
-        "shiftName": {
-          "name": "shiftName",
+        "name": {
+          "name": "name",
           "type": "text",
           "primaryKey": false,
           "notNull": true
         },
         "startTime": {
           "name": "startTime",
-          "type": "timestamp",
+          "type": "text",
           "primaryKey": false,
           "notNull": false
         },
         "endTime": {
           "name": "endTime",
-          "type": "timestamp",
+          "type": "text",
           "primaryKey": false,
           "notNull": false
         }
@@ -820,9 +850,10 @@
       "columns": {
         "id": {
           "name": "id",
-          "type": "text",
+          "type": "uuid",
           "primaryKey": true,
-          "notNull": true
+          "notNull": true,
+          "default": "gen_random_uuid()"
         },
         "userId": {
           "name": "userId",
@@ -832,7 +863,7 @@
         },
         "shiftId": {
           "name": "shiftId",
-          "type": "text",
+          "type": "uuid",
           "primaryKey": false,
           "notNull": false
         },
@@ -841,6 +872,19 @@
           "type": "timestamp",
           "primaryKey": false,
           "notNull": true
+        },
+        "createdAt": {
+          "name": "createdAt",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "updatedAt": {
+          "name": "updatedAt",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": false
         }
       },
       "indexes": {},
@@ -877,6 +921,15 @@
     }
   },
   "enums": {
+    "public.role": {
+      "name": "role",
+      "schema": "public",
+      "values": [
+        "admin",
+        "staff",
+        "customer"
+      ]
+    },
     "public.status": {
       "name": "status",
       "schema": "public",
@@ -886,10 +939,8 @@
         "shopping",
         "shipped"
       ]
->>>>>>> main
     }
   },
-  "enums": {},
   "schemas": {},
   "sequences": {},
   "_meta": {
