@@ -18,7 +18,7 @@ export function Testimonials() {
             opts={{
                 align: "start",
             }}
-            className="w-full xl:max-w-screen-xl lg:max-w-screen-lg md:max-w-screen-md mx-auto mt-8">
+            className="w-11/12 xl:max-w-screen-xl lg:max-w-screen-lg md:max-w-screen-md mx-auto mt-8">
             <CarouselContent>
                 {Array.from({ length: 10 }).map((_, index) => (
                     <CarouselItem key={index} className="md:basis-full lg:basis-1/2 xl:basis-1/3">

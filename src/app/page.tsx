@@ -86,16 +86,17 @@ export default function Homepage() {
           <HorizontalLine />
         </div>
         <Testimonials />
+
       </section>
 
       <section className="mx-10 px-10 mb-16 flex justify-center items-start gap-40">
-          <div className="flex flex-col justify-center gap-4">
-            <h2 className="italic font-semibold text-5xl">FAQ</h2>
-            <HorizontalLine />
-          </div>
-          <ScrollArea className="h-[400px]">
-            <FAQ />
-          </ScrollArea>
+        <div className="flex flex-col justify-center gap-4">
+          <h2 className="italic font-semibold text-5xl">FAQ</h2>
+          <HorizontalLine />
+        </div>
+        <ScrollArea className="h-[400px]">
+          <FAQ />
+        </ScrollArea>
       </section>
 
       <footer className="mt-10 h-80 w-screen bg-black">

@@ -14,12 +14,11 @@ const category = [
     { name: 'img42', src: '/images/food/img42.jpg', alt: 'food img42' },
 ];
 
-
 export function Categories() {
     return (
         <div className="grid grid-rows-1 grid-cols-10 gap-x-8 w-screen z-0">
             {category.map((cate) => (
-                <div className='flex flex-col items-start'>
+                <div className='flex flex-col items-start hover:scale-125'>
                     <div key={cate.name} className="rounded-lg">
                         <Image
                             src={cate.src}

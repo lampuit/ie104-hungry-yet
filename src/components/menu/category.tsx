@@ -1,4 +1,23 @@
-import React, { useState } from 'react';
+import { categories, categoryRelations } from '@/drizzle/schema/project';
+import { getSession } from '@/lib/auth-client';
+import { getAllProducts } from '@/lib/data';
+import React, { useEffect, useState } from 'react';
+import useSWR from 'swr';
+
+// Nhận dữ liệu tất cả sản phẩm từ API
+const ProductFetcher = async () => {
+    const response = await getAllProducts();
+    return response;
+}
+
+// Nhận dữ liệu tất cả danh mục từ API
+// const CategoryFetcher = async () => {
+//     const response = await getAllCategories();
+//     return response;
+// }
+
+// Tất cả các danh mục
+
 
 export const listCategory = [
     'Khai vị',
@@ -11,9 +30,6 @@ export const listCategory = [
 
 export const dishes = {
     'Khai vị': [
-        { name: 'Appetizer 1', image: '/images/appetizers.jpg' },
-        { name: 'Appetizer 2', image: '/images/appetizers.jpg' },
-        { name: 'Appetizer 3', image: '/images/appetizers.jpg' },
         { name: 'Appetizer 1', image: '/images/appetizers.jpg' },
         { name: 'Appetizer 2', image: '/images/appetizers.jpg' },
         { name: 'Appetizer 3', image: '/images/appetizers.jpg' },

@@ -35,7 +35,7 @@ export function Intro() {
 
             <div className="relative flex justify-center items-center gap-x-36 px-32">
                 <Image
-                    src="/images/intro-dish.jpg"
+                    src="/images/intro-dish-2.jpg"
                     width={400}
                     height={280}
                     alt="Intro dish">
