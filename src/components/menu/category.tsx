@@ -8,24 +8,18 @@ const CategoryFetcher = async () => {
     return getAllCategory();
 }
 
-export const listCategory = [
-    'Khai vị',
-    'Món chính',
-    'Tráng miệng',
-    'Đồ uống',
-    'Combo',
-    'Best Seller'
-]
+export let listCategory: any[] = []
 
 interface CategoryProps {
-    clickedIndex: number;
-    setClickedIndex: (index: number) => void;
+    clickedIndex: string;
+    setClickedIndex: (index: string) => void;
 }
 
 export function Category({ clickedIndex, setClickedIndex }: CategoryProps) {
     const [cateId, setCateId] = useState<string>('');
     const { data, error } = useSWR('category', CategoryFetcher);
     const [ listCate, setCate ] = useState<any[]>([]);
+    listCategory = listCate;
 
     useEffect(() => {
         if (data) {

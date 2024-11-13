@@ -81,16 +81,16 @@ async function testDeleteFavorite() {
 
 async function testGetProductByCategoryId() {
   const response = await getProductByCategoryId(
-    "020bdc7a-9264-4b9a-a2cb-ecb56dd8160b"
+    "1cf9e139-8bb0-4c78-8357-f813588f11ca"
   );
   console.log("Product Data:", response);
 }
 
-// testGetProductByCategoryId();
+testGetProductByCategoryId();
 
 async function testGetAllCategory(){
   const response = await getAllCategory();
   console.log("All Category Data:", response);
 }
 
-testGetAllCategory()
+// testGetAllCategory()

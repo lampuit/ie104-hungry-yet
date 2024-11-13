@@ -9,56 +9,13 @@ interface Dish {
 }
 
 interface DishListProps {
-    category: string;
-    dishes: { [key: string]: Dish[] };
+    dishes: Dish[];
 }
 
-export const dishes = {
-    'Khai vị': [
-        { name: 'Appetizer 1', image: '/images/appetizers.jpg' },
-        { name: 'Appetizer 2', image: '/images/appetizers.jpg' },
-        { name: 'Appetizer 3', image: '/images/appetizers.jpg' },
-        { name: 'Appetizer 1', image: '/images/appetizers.jpg' },
-        { name: 'Appetizer 2', image: '/images/appetizers.jpg' },
-        { name: 'Appetizer 3', image: '/images/appetizers.jpg' },
-        { name: 'Appetizer 1', image: '/images/appetizers.jpg' },
-        { name: 'Appetizer 2', image: '/images/appetizers.jpg' },
-        { name: 'Appetizer 3', image: '/images/appetizers.jpg' },
-        { name: 'Appetizer 1', image: '/images/appetizers.jpg' },
-        { name: 'Appetizer 2', image: '/images/appetizers.jpg' },
-        { name: 'Appetizer 3', image: '/images/appetizers.jpg' }
-    ],
-    'Món chính': [
-        { name: 'Main Dish 1', image: '/images/main-dishes.jpg' },
-        { name: 'Main Dish 2', image: '/images/main-dishes.jpg' },
-        { name: 'Main Dish 3', image: '/images/main-dishes.jpg' }
-    ],
-    'Tráng miệng': [
-        { name: 'Dessert 1', image: '/images/desserts.jpg' },
-        { name: 'Dessert 2', image: '/images/desserts.jpg' },
-        { name: 'Dessert 3', image: '/images/desserts.jpg' }
-    ],
-    'Đồ uống': [
-        { name: 'Drink 1', image: '/images/drinks.jpg' },
-        { name: 'Drink 2', image: '/images/drinks.jpg' },
-        { name: 'Drink 3', image: '/images/drinks.jpg' }
-    ],
-    'Combo': [
-        { name: 'Combo 1', image: '/images/intro-dish.jpg' },
-        { name: 'Combo 2', image: '/images/intro-dish.jpg' },
-        { name: 'Combo 3', image: '/images/intro-dish.jpg' }
-    ],
-    'Best Seller': [
-        { name: 'Best Seller 1', image: '/images/intro-dish.jpg' },
-        { name: 'Best Seller 2', image: '/images/intro-dish.jpg' },
-        { name: 'Best Seller 3', image: '/images/intro-dish.jpg' }
-    ]
-};
-
-export const DishList: React.FC<DishListProps> = ({ category, dishes }) => {
+export const DishList = ({dishes}: DishListProps) => {
     return (
         <div className="grid lg:grid-cols-3 md:grid-cols-2 sm:grid-cols-1 gap-y-10 gap-x-8 mx-10 px-10">
-            {dishes[category].map((dish, index) => (
+            {dishes?.map((dish:any, index:any) => (
                 <div key={index} className="shadow-md rounded-3xl flex flex-col items-center group">
                     <img src={dish.image} alt={dish.name} className="w-full h-80 rounded-3xl object-cover" />
                     <div className='flex flex-col justify-center items-center gap-3 py-4 w-full px-3'>
