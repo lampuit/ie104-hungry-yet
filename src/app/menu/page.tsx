@@ -19,6 +19,8 @@ import { CategoryFetcher } from "@/components/menu/category";
 interface Dish {
   name: string;
   image: string;
+  price: number;
+  des: string;
   published: boolean;
 }
 
@@ -59,6 +61,8 @@ export default function MenuPage() {
           name: item.name,
           image: item.imageUrl,
           published: item.isPublish,
+          price: item.price,
+          des: item.description,
         })),
       );
     } catch (error) {

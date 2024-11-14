@@ -6,6 +6,8 @@ import { getProductByCategoryId } from '@/lib/data';
 interface Dish {
     name: string;
     image: string;
+    price: number;
+    des: string;
     published: boolean;
 }
 
@@ -26,7 +28,7 @@ export const DishList = ({ dishesList }: DishListProps) => {
                                         <p className='font-semibold text-xl'>{dish.name}</p>
                                         <FavoriteIcon />
                                     </div>
-                                    <p className='font-normal'>Phân loại</p>
+                                    <p className='font-normal'>{dish.des}</p>
                                 </div>
                                 <div className='flex justify-between items-center w-full'>
                                     <div className='flex items-center gap-1'>
@@ -35,7 +37,7 @@ export const DishList = ({ dishesList }: DishListProps) => {
                                     </div>
                                     <div className='flex justify-end items-center gap-2'>
                                         <MoneyIcon />
-                                        <p className='font-semibold'>45000 <span className='font-normal'>vnd</span></p>
+                                        <p className='font-semibold'>{dish.price} <span className='font-normal'>vnd</span></p>
                                     </div>
                                 </div>
                                 <div className='flex justify-between items-center w-full'>
