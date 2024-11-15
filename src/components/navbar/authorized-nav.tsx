@@ -14,7 +14,7 @@ export function AuthorizedNavbar() {
           <Link href={"#"} className="hover:text-amber-500">Công việc</Link>
           <Link href={"/about"} className="hover:text-amber-500">Về chúng tôi</Link>
         </div>
-        <CircleUserRound size={32}/>
+        <CircleUserRound size={32} className="stroke-[1.5px]"/>
       </nav>
     );
 }
