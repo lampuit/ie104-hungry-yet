@@ -9,6 +9,8 @@ import { AuthorizedNavbar } from "@/components/navbar/authorized-nav";
 import { getSession } from "@/lib/auth-client";
 import { use, useEffect, useState } from "react";
 import { metadata } from "./metadata";
+import { usePathname } from "next/navigation";
+import useSWR from "swr";
 
 // Font chữ chính cho toàn bộ trang web
 export const montserrat = Montserrat({
@@ -16,6 +18,7 @@ export const montserrat = Montserrat({
   weight: ["400", "500", "600", "700"],
 });
 
+// Lấy userId từ session
 const fetcher = async () => {
   const response = await getSession();
   const userId = response?.data?.user?.id as string;
@@ -28,22 +31,19 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const [userId, setUserId] = useState<string | null>(null);
+  const { data: userId, error } = useSWR('userId', fetcher);
+  const pathname = usePathname();
 
-  useEffect(() => {
-    const fetchUserId = async () => {
-      const id = await fetcher();
-      setUserId(id);
-    }
-    fetchUserId();
-  }, []);
-  console.log("hello", userId);
+  const isDashboardPath = pathname.startsWith("/dashboard");
+
   return (
     <html lang="en">
       <body className={`${montserrat.className} overflow-x-hidden`}>
-        <div className="flex justify-center w-screen bg-black z-10">
-          {userId ? <AuthorizedNavbar /> : <UnauthorizedNavbar />}
-        </div>
+        {!isDashboardPath && (
+          <div className="flex justify-center w-screen bg-black z-10">
+            {userId ? <AuthorizedNavbar /> : <UnauthorizedNavbar />}
+          </div>
+        )}
         {children}
         <Toaster />
       </body>
