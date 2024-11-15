@@ -33,7 +33,7 @@ export const DishList = ({ dishesList }: DishListProps) => {
                                         <p className='font-semibold text-xl'>{dish.name}</p>
                                         <FavoriteIcon />
                                     </div>
-                                    <p className='font-normal'>{dish.des}</p>
+                                    <p className='font-normal'>{`${dish.des.substr(0, 31)}${(dish.des.length > 32) ? "..." : ""}`}</p>
                                 </div>
                                 <div className='flex justify-between items-center w-full'>
                                     <div className='flex items-center gap-1'>

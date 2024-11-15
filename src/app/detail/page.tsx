@@ -24,24 +24,38 @@ import {
     PaginationPrevious,
 } from "@/components/ui/pagination"
 import useSWR from "swr";
-import { getAllProducts } from "@/lib/data"
+import { getProductById } from "@/lib/data"
+import { useEffect, useState } from "react";
+import LoadingSpinner from "@/components/ui/loading-spinner";
+import { useRouter, useSearchParams } from "next/navigation";
 
 const fetcher = async(id: string) => {
     return getProductById({ id });
 }
 
-interface DetailProps {
+interface Dish {
+    categoryId: string;
+    categoryName: string;
+    createdAt: Date;
+    des: string;
     id: string;
-}
+    imageUrl: string;
+    price: number;
+    name: string;
+  }
 
-export default function Detail({ id }: DetailProps) {
+export default function Detail() {
+    const searchParams = useSearchParams();
+    const router = useRouter();
+    const id = searchParams.get("id");
     const { data, error } = useSWR(id, fetcher);
-    const [dish, setDish] = useState<any[]>([]);
+    const [dish, setDish] = useState<Dish | null>(null);
 
     useEffect(() => {
-        if (data) {
-          const formattedData = data.map((item: any) => ({
-            categoryId: item.categoryId || undefined,
+        if (data && Array.isArray(data) && data.length > 0) {
+          const item = data[0];
+          const formattedData = {
+            categoryId: item.categoryId || "",
             categoryName: item.categoryName || "/images/fallback.jpg",
             createdAt: item.createdAt || undefined,
             des: item.description || "",
@@ -49,21 +63,17 @@ export default function Detail({ id }: DetailProps) {
             imageUrl: item.imageUrl,
             price: item.price,
             name: item.name,
-          }));
+          };
           setDish(formattedData);
         }
       }, [data]);
-
-      console.log(dish)
+      console.log(dish);
     
       if (error) return <div>Error loading data.</div>;
       if (!data) {
         return <LoadingSpinner />;
       }
-
-      const handleClick = () => {
-            alert('hello')
-      }
+    
     return (
         <main>
             <section className="my-10 mx-10 w-80 text-base font-semibold">
@@ -85,13 +95,13 @@ export default function Detail({ id }: DetailProps) {
             </section>
             <section className="flex justify-center">
                 <div className="flex border p-5 gap-24 items-center justify-between max-w-5xl rounded-md">
-                    <Image src={"/images/square.jpg"} alt="..." width={320} height={320} className="rounded-md"></Image>
+                    <img src={dish?.imageUrl} alt={dish?.name} className="w-80 h-80" />
                     <div>
                         <div className="space-y-8">
                             <div className="space-y-2">
                                 <div className="flex gap-52 items-center">
                                     <div className="flex gap-7 items-center">
-                                        <h1 className="font-semibold text-4xl">Nem nướng</h1>
+                                        <h1 className="font-semibold text-4xl">{dish?.name}</h1>
                                         <Badge variant="outline" className="rounded-md bg-amber-400">Món ăn</Badge>
                                     </div>
                                     <Bookmark size={28} />
@@ -106,7 +116,7 @@ export default function Detail({ id }: DetailProps) {
                                         <span>50</span>
                                     </div>
                                 </div>
-                                <h1 className="font-bold text-4xl text-red-500">45.000 <span className="font-normal">đ</span></h1>
+                                <h1 className="font-bold text-4xl text-red-500">{dish?.price}<span className="font-normal">đ</span></h1>
                             </div>
                             <div className="flex items-center gap-8">
                                 <Button variant={"outline"}
@@ -124,9 +134,7 @@ export default function Detail({ id }: DetailProps) {
             <section className="flex justify-center my-10">
                 <div className="p-5 gap-3 max-w-5xl">
                     <h1 className="font-semibold text-2xl">Mô tả món ăn</h1>
-                    <p className="max-w-5xl">Nem nướng là một món ăn truyền thống nổi tiếng của Việt Nam, đặc biệt phổ biến ở các tỉnh miền Trung và miền Nam.
-                        Thành phần chính là thịt heo xay nhuyễn, ướp gia vị và sau đó được nướng trên than hồng, tạo nên hương vị thơm lừng, hấp dẫn. Thịt heo dùng làm nem nướng thường được pha trộn với một ít mỡ để tạo độ mềm, giữ nước và có vị béo vừa phải. Gia vị ướp nem thường bao gồm hành, tỏi, tiêu, nước mắm, đường và một ít bột ngọt để tăng thêm vị đậm đà.
-                        Khi ăn, nem nướng thường được cuốn với bánh tráng, kèm theo các loại rau sống như xà lách, rau thơm, dưa leo, chuối xanh, khế chua và bún tươi. Món ăn không thể thiếu phần nước chấm đậm đà – thường là mắm nêm hoặc mắm chua ngọt, đôi khi còn có thêm tương đậu phộng.</p>
+                    <p className="max-w-5xl">{dish?.des}</p>
                 </div>
             </section>
             <section className="space-y-10 mx-10 px-5">
