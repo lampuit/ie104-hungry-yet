@@ -1,14 +1,11 @@
-
 import React, { useEffect, useState } from 'react';
 import { getAllCategory, getAllProducts } from '@/lib/data';
 import useSWR from "swr";
 
-// Nhận dữ liệu tất cả danh mục từ API
-const CategoryFetcher = async () => {
+// Lấy danh sách các danh mục món ăn
+export const CategoryFetcher = async () => {
     return getAllCategory();
 }
-
-export let listCategory: any[] = []
 
 interface CategoryProps {
     clickedIndex: string;
@@ -16,20 +13,24 @@ interface CategoryProps {
 }
 
 export function Category({ clickedIndex, setClickedIndex }: CategoryProps) {
-    const [cateId, setCateId] = useState<string>('');
     const { data, error } = useSWR('category', CategoryFetcher);
     const [ listCate, setCate ] = useState<any[]>([]);
-    listCategory = listCate;
 
+    // Tự động gán dữ liệu vào listCate khi data được fetch
     useEffect(() => {
         if (data) {
-            setCate(data);
+            // Sắp xếp danh mục theo thứ tự ưu tiên (cho hiển thị)
+            const priorityOrder = ["Khai vị", "Món chính", "Tráng miệng", "Đồ uống"];
+            const sortedCategories = data.sort((a, b) => {
+                return priorityOrder.indexOf(a.name) - priorityOrder.indexOf(b.name);
+            });
+            setCate(sortedCategories);
         }
     }, [data]);
 
     return (
         <div className="flex flex-row justify-center items-center gap-4 py-5">
-            { listCate.map((cate) => (
+            {listCate.map((cate) => (
                 <div key={cate.id} className="flex flex-col justify-end items-center gap-2 w-32">
                     <p
                         className={`md:text-base sm:text-sm font-semibold cursor-pointer ${clickedIndex === cate.id ? 'text-amber-500' : 'text-black'} hover:text-amber-500`}

@@ -6,43 +6,47 @@ import { getProductByCategoryId } from '@/lib/data';
 interface Dish {
     name: string;
     image: string;
+    price: number;
+    des: string;
+    published: boolean;
 }
 
 interface DishListProps {
-    dishes: Dish[];
+    dishesList: Dish[];
 }
 
-export const DishList = ({dishes}: DishListProps) => {
+export const DishList = ({ dishesList }: DishListProps) => {
     return (
         <div className="grid lg:grid-cols-3 md:grid-cols-2 sm:grid-cols-1 gap-y-10 gap-x-8 mx-10 px-10">
-            {dishes?.map((dish:any, index:any) => (
-                <div key={index} className="shadow-md rounded-3xl flex flex-col items-center group">
-                    <img src={dish.image} alt={dish.name} className="w-full h-80 rounded-3xl object-cover" />
-                    <div className='flex flex-col justify-center items-center gap-3 py-4 w-full px-3'>
-                        <div className='flex flex-col justify-between items-start gap-1 w-full'>
-                            <div className='flex justify-between items-center w-full'>
-                                <p className='font-semibold text-xl'>{dish.name}</p>
-                                <FavoriteIcon />
+            {dishesList?.map((dish: any, index: any) => (
+                    dish.published ? (
+                        <div key={index} className="shadow-md rounded-3xl flex flex-col items-center group">
+                            <img src={dish.image} alt={dish.name} className="w-full h-80 rounded-3xl object-cover" />
+                            <div className='flex flex-col justify-center items-center gap-3 py-4 w-full px-3'>
+                                <div className='flex flex-col justify-between items-start gap-1 w-full'>
+                                    <div className='flex justify-between items-center w-full'>
+                                        <p className='font-semibold text-xl'>{dish.name}</p>
+                                        <FavoriteIcon />
+                                    </div>
+                                    <p className='font-normal'>{dish.des}</p>
+                                </div>
+                                <div className='flex justify-between items-center w-full'>
+                                    <div className='flex items-center gap-1'>
+                                        <StarIcon />
+                                        <p className='font-normal'>4.8</p>
+                                    </div>
+                                    <div className='flex justify-end items-center gap-2'>
+                                        <MoneyIcon />
+                                        <p className='font-semibold'>{dish.price} <span className='font-normal'>vnd</span></p>
+                                    </div>
+                                </div>
+                                <div className='flex justify-between items-center w-full'>
+                                    <Button className='rounded-3xl bg-black hover:bg-red-500 hidden group-hover:flex transition-all duration-300 ease-in-out'>Xem chi tiết</Button>
+                                    <Button className='rounded-3xl bg-amber-500 hover:bg-red-500 hidden group-hover:flex transition-all duration-300 ease-in-out'><AddToCartIcon /> <span>Thêm giỏ hàng</span></Button>
+                                </div>
                             </div>
-                            <p className='font-normal'>Phân loại</p>
                         </div>
-                        <div className='flex justify-between items-center w-full'>
-                            <div className='flex items-center gap-1'>
-                                <StarIcon />
-                                <p className='font-normal'>4.8</p>
-                            </div>
-                            <div className='flex justify-end items-center gap-2'>
-                                <MoneyIcon />
-                                <p className='font-semibold'>45000 <span className='font-normal'>vnd</span></p>
-                            </div>
-                        </div>
-                        <div className='flex justify-between items-center w-full'>
-                            <Button className='rounded-3xl bg-black hover:bg-red-500 hidden group-hover:flex transition-all duration-300 ease-in-out'>Xem chi tiết</Button>
-                            <Button className='rounded-3xl bg-amber-500 hover:bg-red-500 hidden group-hover:flex transition-all duration-300 ease-in-out'><AddToCartIcon /> <span>Thêm giỏ hàng</span></Button>
-                        </div>
-                    </div>
-
-                </div>
+                    ) : null
             ))}
         </div>
     );
