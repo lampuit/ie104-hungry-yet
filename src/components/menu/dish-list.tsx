@@ -2,8 +2,10 @@ import React from 'react';
 import { Button } from '../ui/button';
 import { get } from 'http';
 import { getProductByCategoryId } from '@/lib/data';
+import { useRouter } from 'next/navigation';
 
 interface Dish {
+    id: string;
     name: string;
     image: string;
     price: number;
@@ -16,6 +18,10 @@ interface DishListProps {
 }
 
 export const DishList = ({ dishesList }: DishListProps) => {
+    const router = useRouter();
+    const directToDetail =(id: string) => {
+        router.push(`/detail/${id}`);
+    }
     return (
         <div className="grid lg:grid-cols-3 md:grid-cols-2 sm:grid-cols-1 gap-y-10 gap-x-8 mx-10 px-10">
             {dishesList?.map((dish: any, index: any) => (
@@ -41,7 +47,7 @@ export const DishList = ({ dishesList }: DishListProps) => {
                                     </div>
                                 </div>
                                 <div className='flex justify-between items-center w-full'>
-                                    <Button className='rounded-3xl bg-black hover:bg-red-500 hidden group-hover:flex transition-all duration-300 ease-in-out'>Xem chi tiết</Button>
+                                    <Button onClick={() => directToDetail(dish.id)} className='rounded-3xl bg-black hover:bg-red-500 hidden group-hover:flex transition-all duration-300 ease-in-out'>Xem chi tiết</Button>
                                     <Button className='rounded-3xl bg-amber-500 hover:bg-red-500 hidden group-hover:flex transition-all duration-300 ease-in-out'><AddToCartIcon /> <span>Thêm giỏ hàng</span></Button>
                                 </div>
                             </div>
