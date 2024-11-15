@@ -48,14 +48,25 @@ export async function getAllCategory() {
   return response;
 }
 
-export async function getProductByCategoryId(id: string) {
-  const response = await db
+export async function getProductByCategoryId(
+  id: string,
+  page = 1,
+  pageSize = 3,
+) {
+  // Count total records for the specified category ID
+  const totalRecords = await db.$count(products, eq(products.categoryId, id));
+
+  // Retrieve the paginated records
+  const records = await db
     .select({
       ...getTableColumns(products),
     })
     .from(products)
-    .where(eq(products.categoryId, id));
-  return response;
+    .where(eq(products.categoryId, id))
+    .limit(pageSize)
+    .offset((page - 1) * pageSize);
+  // Return both totalRecords and the records for the current page
+  return { totalRecords, records };
 }
 
 export async function getFavoriteByUserId(userId: string) {
