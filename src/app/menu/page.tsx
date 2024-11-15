@@ -17,6 +17,7 @@ import { CategoryFetcher } from "@/components/menu/category";
 
 // Đối tượng mô tả một món ăn
 interface Dish {
+  id: string;
   name: string;
   image: string;
   price: number;
@@ -58,6 +59,7 @@ export default function MenuPage() {
       // Biến đổi dữ liệu trả về đúng định dạng cần cho DishList
       setDishesList(
         response.map((item) => ({
+          id: item.id,
           name: item.name,
           image: item.imageUrl,
           published: item.isPublish,

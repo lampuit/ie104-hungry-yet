@@ -11,7 +11,7 @@ import {
 
 import Image from "next/image"
 
-import { DetailHeader } from "@/components/detail/detail-header"
+// import { DetailHeader } from "@/components/detail/detail-header"
 import { Badge } from "@/components/ui/badge"
 import { Bookmark, MessageCircle, MessageCircleMore, ShoppingCart, Star } from "lucide-react"
 import { Button } from "@/components/ui/button"
@@ -30,13 +30,16 @@ import useSWR from "swr";
 import { useEffect, useState } from "react";
 import LoadingSpinner from "@/components/ui/loading-spinner"
 
-const fetcher = () => {
-    return getProductById('07cb15c6-92c6-48ae-b963-7fa28fcf8004');
+const fetcher = async(id: string) => {
+    return getProductById({ id });
 }
 
-export default function Detail() {
-    const { data, error } = useSWR("get product by ID", fetcher);
-  
+interface DetailProps {
+    id: string;
+}
+
+export default function Detail({ id }: DetailProps) {
+    const { data, error } = useSWR(id, fetcher);
     const [dish, setDish] = useState<any[]>([]);
 
     useEffect(() => {
@@ -67,7 +70,7 @@ export default function Detail() {
       }
     return (
         <main>
-            <DetailHeader />
+            {/* <DetailHeader /> */}
             <section className="my-10 mx-10 w-80 text-base font-semibold">
                 <Breadcrumb>
                     <BreadcrumbList className="text-black">

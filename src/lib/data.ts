@@ -28,7 +28,7 @@ export async function getAllProducts() {
     .leftJoin(categories, eq(products.categoryId, categories.id));
 }
 
-export async function getProductById(id: string) {
+export async function getProductById({ id }: { id: string }) {
   return await db
     .select({
       ...getTableColumns(products),
