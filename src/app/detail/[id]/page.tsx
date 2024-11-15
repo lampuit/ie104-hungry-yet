@@ -31,7 +31,7 @@ import { useEffect, useState } from "react";
 import LoadingSpinner from "@/components/ui/loading-spinner"
 
 const fetcher = async(id: string) => {
-    return getProductById(id);
+    return getProductById({ id });
 }
 
 interface DetailProps {
