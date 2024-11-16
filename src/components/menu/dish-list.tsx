@@ -1,9 +1,9 @@
 import React from 'react';
 import { Button } from '../ui/button';
-import { get } from 'http';
-import { getProductByCategoryId } from '@/lib/data';
+import { useRouter } from 'next/navigation';
 
 interface Dish {
+    id: string;
     name: string;
     image: string;
     price: number;
@@ -16,6 +16,11 @@ interface DishListProps {
 }
 
 export const DishList = ({ dishesList }: DishListProps) => {
+    const router = useRouter();
+    const handleProductOnClick = (productId: string) => {
+        router.push(`/detail?id=${productId}`);
+    };
+
     return (
         <div className="grid lg:grid-cols-3 md:grid-cols-2 sm:grid-cols-1 gap-y-10 gap-x-8 mx-10 px-10">
             {dishesList?.map((dish: any, index: any) => (
@@ -28,7 +33,7 @@ export const DishList = ({ dishesList }: DishListProps) => {
                                         <p className='font-semibold text-xl'>{dish.name}</p>
                                         <FavoriteIcon />
                                     </div>
-                                    <p className='font-normal'>{dish.des}</p>
+                                    <p className='font-normal'>{`${dish.des.substr(0, 31)}${(dish.des.length > 32) ? "..." : ""}`}</p>
                                 </div>
                                 <div className='flex justify-between items-center w-full'>
                                     <div className='flex items-center gap-1'>
@@ -41,7 +46,7 @@ export const DishList = ({ dishesList }: DishListProps) => {
                                     </div>
                                 </div>
                                 <div className='flex justify-between items-center w-full'>
-                                    <Button className='rounded-3xl bg-black hover:bg-red-500 hidden group-hover:flex transition-all duration-300 ease-in-out'>Xem chi tiết</Button>
+                                    <Button onClick={() => handleProductOnClick(dish.id)} className='rounded-3xl bg-black hover:bg-red-500 hidden group-hover:flex transition-all duration-300 ease-in-out'>Xem chi tiết</Button>
                                     <Button className='rounded-3xl bg-amber-500 hover:bg-red-500 hidden group-hover:flex transition-all duration-300 ease-in-out'><AddToCartIcon /> <span>Thêm giỏ hàng</span></Button>
                                 </div>
                             </div>
