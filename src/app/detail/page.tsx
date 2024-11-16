@@ -50,6 +50,7 @@ export default function Detail() {
     const id = searchParams.get("id");
     const { data, error } = useSWR(id, fetcher);
     const [dish, setDish] = useState<Dish | null>(null);
+    // const [selectedButton, setSelectedButton] = useState("all");
 
     useEffect(() => {
         if (data && Array.isArray(data) && data.length > 0) {
