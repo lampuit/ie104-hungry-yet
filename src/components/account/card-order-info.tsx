@@ -1,10 +1,16 @@
 
-import { CalendarDays } from 'lucide-react';
+import { CalendarDays, Eye, MessageCircleQuestion } from 'lucide-react';
 import Image from 'next/image';
 import { Button } from '../ui/button';
-import { cn } from '@/lib/utils';
+import {
+    Tooltip,
+    TooltipContent,
+    TooltipProvider,
+    TooltipTrigger,
+} from "@/components/ui/tooltip"
 
-export const CardOrderInfo = () => {
+
+export function CardOrderInfo() {
     return (
         <div className='flex gap-12 bg-white'>
             <div className='flex flex-col gap-2 w-full my-4 ml-4'>
@@ -22,10 +28,29 @@ export const CardOrderInfo = () => {
                         <span className='text-amber-500'>Ngày 11-12-2024</span></p>
                 </div>
             </div>
-            <div className='flex flex-col gap-4 p-4 justify-center'>
-                <Button variant={"outline"} className='w-40 text-lg'>Xem chi tiết</Button>
-                <Button className='w-40 text-lg bg-amber-500'>Liên hệ shop</Button>
+            <div className='flex gap-4 p-4 items-start'>
+                <TooltipProvider>
+                    <Tooltip>
+                        <div className='w-8 h-8 border-2 rounded-full flex items-center justify-center'>
+                            <TooltipTrigger><Eye className='w-6 h-6 stroke-[1.5px]' /></TooltipTrigger>
+                        </div>
+                        <TooltipContent>
+                            <p>Chi tiết</p>
+                        </TooltipContent>
+                    </Tooltip>
+                </TooltipProvider>
+                <TooltipProvider>
+                    <Tooltip>
+                        <div className='bg-amber-500 w-8 h-8 border-2 rounded-full flex items-center justify-center'>
+                            <TooltipTrigger><MessageCircleQuestion className='w-6 h-6 stroke-[1.5px]' /></TooltipTrigger>
+                        </div>
+                        <TooltipContent>
+                            <p>Liên hệ shop</p>
+                        </TooltipContent>
+                    </Tooltip>
+                </TooltipProvider>
             </div>
         </div>
     )
 }
+
