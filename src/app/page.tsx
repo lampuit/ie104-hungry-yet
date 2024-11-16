@@ -14,9 +14,11 @@ import { Exhibition } from "@/components/home/exhibition";
 import { Testimonials } from "@/components/home/testimonials";
 import { HorizontalLine } from "@/components/home/intro";
 import { FAQ } from "@/components/home/faq";
-import { Charm } from "next/font/google";
+import { Charm, Quando } from "next/font/google";
 import { getSession } from "@/lib/auth-client";
 import useSWR from "swr";
+import { getShoppingCartByUserId } from "@/lib/data";
+import { use, useEffect, useState } from "react";
 export const charm = Charm({
   subsets: ["vietnamese"],
   weight: ["400", "700"],
@@ -29,8 +31,34 @@ const fetcher = async () => {
   return userId;
 };
 
+interface ShoppingCart {
+  cartId: string;
+  quantity: number;
+}
+
 export default function Homepage() {
   const { data: userId, error } = useSWR('userId', fetcher);
+  const [shoppingCart, setShoppingCart] = useState<ShoppingCart[]>([]);
+
+  const ShoppingCartFetcher = async (id: string) => {
+    try {
+      const response = await getShoppingCartByUserId(id);
+      setShoppingCart(
+        response.map((item) => ({
+          cartId: item.cartId,
+          quantity: item.quantity,
+        }))
+      );
+    } catch (error) {
+      console.error("Error fetching shopping cart:", error);
+    }
+  }
+
+  useEffect(() => {
+    if (userId) {
+      ShoppingCartFetcher(userId);
+    }
+  }, []);
 
   return (
     <main>

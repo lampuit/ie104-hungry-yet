@@ -105,7 +105,7 @@ export default function MenuPage() {
       </header>
 
       <section className="flex flex-col items-center">
-        <section className="sticky">
+        <section className="sticky top-0 bg-white w-full">
           <Category
             clickedIndex={clickedIndex}
             setClickedIndex={(index) => {
