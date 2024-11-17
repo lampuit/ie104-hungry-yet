@@ -31,15 +31,12 @@ import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
 import { ToastAction } from "@/components/ui/toast";
-import { createProduct } from "@/lib/actions/product";
-import { useFormState } from "react-dom";
-import { product } from "remeda";
-import { put } from "@vercel/blob";
 import { Switch } from "@/components/ui/switch";
+import { createProduct } from "@/lib/actions/product";
 
 // Tạo schema form với các trường dữ liệu tương ứng với cơ sở dữ liệu
 const formSchema = z.object({
-  file: z.string().min(1, { message: "Vui lòng tải hình ảnh lên." }),
+  imageUrl: z.string().min(1, { message: "Vui lòng tải hình ảnh lên." }),
   name: z.string().min(2, {
     message: "Tên sản phẩm phải chứa ít nhất 2 ký tự.",
   }),
@@ -66,12 +63,13 @@ export function CreateForm({ categories }: { categories: any }) {
   const [isPending, setIsPending] = useState(false);
 
   const formRef = useRef<HTMLFormElement | null>(null);
+  const [file, setFile] = useState<File | null>(null);
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     // Định nghĩa các giá trị mặc định
     defaultValues: {
-      file: "",
+      imageUrl: "",
       name: "",
       description: "",
       category: "",
@@ -80,15 +78,28 @@ export function CreateForm({ categories }: { categories: any }) {
     },
   });
 
-  const formAction = async (formData: FormData) => {
+  const onSubmit = async (values: z.infer<typeof formSchema>) => {
     try {
+      setIsPending(true);
+      if (!file) throw new Error("Vui lòng chọn ảnh");
+
+      // Upload image lên storage
+      const newBlob = await upload(values.name, file, {
+        access: "public",
+        handleUploadUrl: "/api/image/upload",
+      });
+
       //  Tạo sản phẩm
-      await createProduct(formData);
+      await createProduct({
+        ...values,
+        categoryId: values.category,
+        imageUrl: newBlob.url,
+      });
 
       // Hiện thông báo thành công
       toast({
         title: "Tạo sản phẩm thành công.",
-        description: `Tên sản phẩm: ${formData.get("name")}`,
+        description: `Tên sản phẩm: ${values.name}`,
       });
     } catch (error) {
       setIsPending(false);
@@ -107,17 +118,13 @@ export function CreateForm({ categories }: { categories: any }) {
 
   return (
     <Form {...form}>
-      <form ref={formRef} className="flex flex-col gap-4" action={formAction}>
+      <form
+        ref={formRef}
+        className="flex flex-col gap-4"
+        onSubmit={form.handleSubmit(onSubmit)}
+      >
         <div className="flex items-center justify-end">
-          <Button
-            type="submit"
-            className="gap-2"
-            onClick={form.handleSubmit(() => {
-              setIsPending(true);
-              formRef.current?.requestSubmit();
-            })}
-            disabled={isPending}
-          >
+          <Button type="submit" className="gap-2" disabled={isPending}>
             <PlusCircle className="h-3.5 w-3.5" />
             <span className="sr-only sm:not-sr-only sm:whitespace-nowrap">
               Tạo sản phẩm
@@ -133,7 +140,7 @@ export function CreateForm({ categories }: { categories: any }) {
               <CardContent className="flex flex-col gap-4 p-6">
                 <FormField // Field đính kèm image
                   control={form.control}
-                  name="file"
+                  name="imageUrl"
                   render={({ field }) => (
                     <FormItem>
                       <Label className="col-span-2">Hình ảnh sản phẩm</Label>
@@ -179,6 +186,8 @@ export function CreateForm({ categories }: { categories: any }) {
 
                               const newImageUrl = URL.createObjectURL(file);
                               field.onChange(newImageUrl);
+                              console.log(file);
+                              setFile(file);
                             }
                           }}
                           name={field.name}
@@ -268,7 +277,6 @@ export function CreateForm({ categories }: { categories: any }) {
                           <Select
                             onValueChange={field.onChange}
                             defaultValue={field.value}
-                            name={field.name}
                           >
                             <FormControl>
                               <SelectTrigger>

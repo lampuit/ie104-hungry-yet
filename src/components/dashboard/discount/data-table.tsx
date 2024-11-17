@@ -19,7 +19,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
-import React from "react";
+import React, { Suspense } from "react";
 import { Input } from "@/components/ui/input";
 import { PlusCircle } from "lucide-react";
 import Link from "next/link";
@@ -63,6 +63,7 @@ export function DataTable<TData, TValue>({
           <Button className="gap-2" asChild>
             <Link href="/dashboard/discount/create">
               <PlusCircle className="h-3.5 w-3.5" />
+
               <span className="sr-only sm:not-sr-only sm:whitespace-nowrap">
                 Thêm mã
               </span>

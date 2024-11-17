@@ -1,25 +1,13 @@
 import { columns } from "@/components/dashboard/discount/columns";
 import { DataTable } from "@/components/dashboard/discount/data-table";
-import { db } from "@/drizzle/db";
-import { unstable_cache } from "next/cache";
-import { Suspense } from "react";
-
-const getDiscounts = unstable_cache(
-  async () => {
-    return await db.query.discounts.findMany();
-  },
-  ["discounts"],
-  { revalidate: 3600, tags: ["discounts"] },
-);
+import { fetchDiscounts } from "@/lib/data";
 
 export default async function Discount() {
-  const discounts = await getDiscounts();
+  const discounts = await fetchDiscounts();
 
   return (
     <div className="flex-1 p-4">
-      <Suspense fallback={<div>Loading...</div>}>
-        <DataTable columns={columns} data={discounts} />
-      </Suspense>
+      <DataTable columns={columns} data={discounts} />
     </div>
   );
 }
