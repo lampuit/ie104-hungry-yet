@@ -36,6 +36,7 @@ import React from "react";
 import { toast } from "@/hooks/use-toast";
 import Link from "next/link";
 import { deleteDiscount } from "@/lib/actions/discount";
+import { ToastAction } from "@/components/ui/toast";
 
 export type Discount = z.infer<typeof insertDiscountSchema>;
 
@@ -70,6 +71,15 @@ export const columns: ColumnDef<Discount>[] = [
     meta: {
       headerClassName: "hidden md:table-cell",
       cellClassName: "hidden md:table-cell",
+    },
+  },
+  {
+    accessorKey: "discount",
+    header: () => <div>Giảm giá</div>,
+    cell: ({ row }) => {
+      const discount = parseFloat(row.getValue("discount")).toFixed(2) + "%";
+
+      return <div>{discount}</div>;
     },
   },
   {
@@ -133,10 +143,25 @@ export const columns: ColumnDef<Discount>[] = [
                 <AlertDialogCancel>Hủy</AlertDialogCancel>
                 <AlertDialogAction
                   onClick={async () => {
-                    await deleteDiscount(discount.id!);
-                    toast({
-                      title: "Xóa thành công sản phẩm.",
-                    });
+                    try {
+                      // Xóa sản phẩm ra khỏi database
+                      deleteDiscount(discount.id!);
+                      toast({
+                        title: "Xóa thành công mã",
+                        description: `Tên mã: ${discount.name}`,
+                      });
+                    } catch (error) {
+                      if (error instanceof Error) {
+                        toast({
+                          variant: "destructive",
+                          title: "Uh oh! Có gì đó sai.",
+                          description: error.message,
+                          action: (
+                            <ToastAction altText="Thử lại">Thử lại</ToastAction>
+                          ),
+                        });
+                      }
+                    }
                   }}
                 >
                   Tiếp tục

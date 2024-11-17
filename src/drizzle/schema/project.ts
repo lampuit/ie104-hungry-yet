@@ -48,7 +48,6 @@ export const productRelations = relations(products, ({ one }) => ({
   }),
 }));
 
-
 // Bảng Ratings
 export const ratings = pgTable("ratings", {
   productId: uuid("productId")
@@ -119,11 +118,11 @@ export const payments = pgTable("payments", {
   paymentName: text("paymentName").notNull(),
 });
 
-
 // Bảng Discounts
 export const discounts = pgTable("discounts", {
   id: uuid("id").primaryKey().notNull().defaultRandom(),
   name: text("name"),
+  discount: integer("discount"),
   fromDate: timestamp("fromDate"),
   toDate: timestamp("toDate"),
   createdAt: timestamp("createdAt").notNull().defaultNow(),
@@ -149,19 +148,18 @@ export const userWorkShifts = pgTable("userWorkShifts", {
   shiftId: uuid("shiftId").references(() => shifts.id), // Khóa ngoại
   workDate: timestamp("workDate").notNull(),
   createdAt: timestamp("createdAt").notNull().defaultNow(),
-  updatedAt: timestamp("updatedAt")
-    .$onUpdate(() => new Date()),
+  updatedAt: timestamp("updatedAt").$onUpdate(() => new Date()),
 });
 
 //Relation: 1 user -> n userworkshift
-export const userWorkShiftRelation = relations(user, ({many}) => ({
+export const userWorkShiftRelation = relations(user, ({ many }) => ({
   userWorkShifts: many(userWorkShifts),
-}))
+}));
 
 //Relation: 1 shift -> n userworkshift
-export const shiftUserRelation = relations(shifts, ({many})=> ({
+export const shiftUserRelation = relations(shifts, ({ many }) => ({
   userWorkShifts: many(userWorkShifts),
-}))
+}));
 
 // Bảng ShoppingCart
 export const shoppingCart = pgTable("shoppingCart", {
