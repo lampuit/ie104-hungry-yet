@@ -9,7 +9,6 @@ import { SidebarInset, SidebarProvider, SidebarTrigger } from "@/components/ui/s
 
 export default function Layout({
     children,
-    modal,
 }: {
     children: ReactNode;
     modal: ReactNode;
