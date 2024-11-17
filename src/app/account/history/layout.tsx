@@ -36,23 +36,20 @@ export default function Layout({
                 <div className="flex flex-col gap-5 w-full lg:w-2/3">
                     <div className="flex gap-4 justify-around bg-white rounded-lg p-2 shadow-md">
                         <Button
-                            variant={activeButton === "Đang giao" ? "default" : "ghost"}
+                            variant={activeButton === "Đang giao" ? "secondary" : "ghost"}
                             onClick={() => handleButtonClick("Đang giao", "/account/history")}
-                            className="bg-gray-200 text-black hover:bg-gray-100 hover:text-black"
                         >
                             <Package /> Đang giao
                         </Button>
                         <Button
-                            variant={activeButton === "Hoàn thành" ? "default" : "ghost"}
+                            variant={activeButton === "Hoàn thành" ? "secondary" : "ghost"}
                             onClick={() => handleButtonClick("Hoàn thành", "/account/history/complete")}
-                            className="bg-gray-200 text-black hover:bg-gray-100 hover:text-black"
                         >
                             <PackageCheck /> Hoàn thành
                         </Button>
                         <Button
-                            variant={activeButton === "Đã hủy" ? "default" : "ghost"}
+                            variant={activeButton === "Đã hủy" ? "secondary" : "ghost"}
                             onClick={() => handleButtonClick("Đã hủy", "/account/history/cancel")}
-                            className="bg-gray-200 text-black hover:bg-gray-100 hover:text-black"
                         >
                             <PackageX /> Đã hủy
                         </Button>

@@ -2,7 +2,7 @@
 
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Button } from "@/components/ui/button";
-import { ClipboardList, Heart, LogOut, UserIcon } from "lucide-react";
+import { ClipboardList, Heart, LogOut, Settings, UserIcon } from "lucide-react";
 import { usePathname } from "next/navigation";
 import { ReactNode } from "react";
 import { SidebarInset, SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar"
@@ -37,6 +37,10 @@ export default function Layout({
                     <div className="flex gap-3">
                         <Heart className="stroke-red-500" />
                         <p>Danh mục yêu thích</p>
+                    </div>
+                    <div className="flex gap-3">
+                        <Settings className="stroke-gray-500" />
+                        <p>Cài đặt</p>
                     </div>
                     <Button variant={"outline"} className="mt-6 w-32 border-gray-400 text-gray-400
                      hover:bg-gray-400 hover:bg-opacity-20 hover:text-gray-400">
