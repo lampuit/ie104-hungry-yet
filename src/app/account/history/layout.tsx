@@ -32,7 +32,7 @@ export default function Layout({
     return (
         <div className="grow flex flex-col gap-4">
             <h1 className="text-2xl font-semibold">Đơn hàng của tôi</h1>
-            <div className="grow flex flex-col lg:flex-row gap-8 p-6 bg-gray-100 min-h-screen">
+            <div className="grow flex flex-col lg:flex-row gap-8 p-6 bg-gray-100">
                 <div className="flex flex-col gap-5 w-full lg:w-2/3">
                     <div className="flex gap-4 justify-around bg-white rounded-lg p-2 shadow-md">
                         <Button
@@ -56,7 +56,7 @@ export default function Layout({
                     </div>
                     <div>{children}</div>
                 </div>
-                <div className="flex flex-col lg:w-1/3 bg-white rounded-lg p-4 shadow-md">
+                <div className="flex flex-col h-1/2 bg-white rounded-lg p-4 shadow-md">
                     <h2 className="text-xl font-semibold mb-4">Chat</h2>
                     <p>Chat content goes here...</p>
                     <Input className="focus-visible:ring-0 focus-visible:ring-offset-0"></Input>

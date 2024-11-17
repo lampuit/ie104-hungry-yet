@@ -52,7 +52,7 @@ export default function Account() {
     }
     return (
         <div className="grow flex flex-col gap-5">
-            <h2 className="font-medium text-2xl">Tài khoản của tôi</h2>
+            <h2 className="font-semibold text-2xl">Tài khoản của tôi</h2>
             <div className="flex gap-24 p-16 border-2 rounded-md bg-white">
                 <div className="flex flex-col items-center gap-6 ">
                     <Avatar className="w-32 h-32">
