@@ -5,10 +5,11 @@ import { Eye, PhoneCall, Truck } from "lucide-react";
 export function AccountCardHistory() {
     const pathname = usePathname();
     const isCompletePage = pathname.includes("/account/history/complete");
+    const isCancelPage = pathname.includes("/account/history/cancel");
     return (
         <div className="flex w-full border-b-2 p-4">
             <div className="flex flex-col gap-4 w-2/3">
-                {isCompletePage ?
+                {isCompletePage || isCancelPage ?
                     <div className="flex flex-wrap gap-2">
                         <p className="text-sm text-gray-400 flex gap-1 items-center hover:text-black"><Eye className="w-4 h-4" /> <span className="font-medium">Xem chi tiết</span></p>
                     </div> :
@@ -23,13 +24,19 @@ export function AccountCardHistory() {
                 <div className="flex flex-col gap-1 items-end">
                     {isCompletePage ?
                         <p className="text-gray-500 text-xs">Trạng thái: <span className="font-semibold text-green-500">Hoàn thành</span></p> :
-                        <p className="text-gray-500 text-xs">Trạng thái: <span className="font-semibold text-green-500">Đang giao</span></p>
+                        isCancelPage ?
+                            <p className="text-gray-500 text-xs">Trạng thái: <span className="font-semibold text-red-500">Đã hủy</span></p> :
+                            <p className="text-gray-500 text-xs">Trạng thái: <span className="font-semibold text-green-500">Đang giao</span></p>
                     }
                     <p className="text-gray-500 text-xs">Ngày đặt hàng: <span className="text-amber-500 font-semibold">12/12/2021</span></p>
                 </div>
                 {isCompletePage ?
                     <div className="flex justify-end gap-4 mt-2">
                         <Button variant={"outline"} className="w-auto text-xs">Đánh giá</Button>
+                        <Button className="bg-amber-500 w-auto text-xs">Mua lại</Button>
+                    </div> :
+                isCancelPage ?
+                    <div className="flex justify-end gap-4 mt-2">
                         <Button className="bg-amber-500 w-auto text-xs">Mua lại</Button>
                     </div> :
                     <div className="flex justify-end gap-4 mt-2">

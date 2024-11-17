@@ -1,6 +1,7 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 import { Package, PackageCheck, PackageX } from "lucide-react";
 import { usePathname, useRouter } from "next/navigation";
 import { ReactNode, useEffect, useState } from "react";
@@ -14,15 +15,15 @@ export default function Layout({
     const router = useRouter();
     const [activeButton, setActiveButton] = useState<string>("Đang giao");
 
-    useEffect(() => {
-        if (pathname === "/account/history/complete") {
-            setActiveButton("Hoàn thành");
-        } else if (pathname === "/account/history/cancel") {
-            setActiveButton("Đã hủy");
-        } else {
-            setActiveButton("Đang giao");
-        }
-    }, [pathname]);
+    // useEffect(() => {
+    //     if (pathname === "/account/history/complete") {
+    //         setActiveButton("Hoàn thành");
+    //     } else if (pathname === "/account/history/cancel") {
+    //         setActiveButton("Đã hủy");
+    //     } else {
+    //         setActiveButton("Đang giao");
+    //     }
+    // }, [pathname]);
 
     const handleButtonClick = (buttonName: string, path: string) => {
         setActiveButton(buttonName);
@@ -35,23 +36,23 @@ export default function Layout({
                 <div className="flex flex-col gap-5 w-full lg:w-2/3">
                     <div className="flex gap-4 justify-around bg-white rounded-lg p-2 shadow-md">
                         <Button
-                            variant={activeButton === "Đang giao" ? "outline" : "ghost"}
+                            variant={activeButton === "Đang giao" ? "default" : "ghost"}
                             onClick={() => handleButtonClick("Đang giao", "/account/history")}
-                            className="focus:bg-gray-200"
+                            className="bg-gray-200 text-black hover:bg-gray-100 hover:text-black"
                         >
                             <Package /> Đang giao
                         </Button>
                         <Button
-                            variant={activeButton === "Hoàn thành" ? "outline" : "ghost"}
+                            variant={activeButton === "Hoàn thành" ? "default" : "ghost"}
                             onClick={() => handleButtonClick("Hoàn thành", "/account/history/complete")}
-                            className="focus:bg-gray-200"
+                            className="bg-gray-200 text-black hover:bg-gray-100 hover:text-black"
                         >
                             <PackageCheck /> Hoàn thành
                         </Button>
                         <Button
-                            variant={activeButton === "Đã hủy" ? "outline" : "ghost"}
+                            variant={activeButton === "Đã hủy" ? "default" : "ghost"}
                             onClick={() => handleButtonClick("Đã hủy", "/account/history/cancel")}
-                            className="focus:bg-gray-200"
+                            className="bg-gray-200 text-black hover:bg-gray-100 hover:text-black"
                         >
                             <PackageX /> Đã hủy
                         </Button>
@@ -61,6 +62,7 @@ export default function Layout({
                 <div className="flex flex-col lg:w-1/3 bg-white rounded-lg p-4 shadow-md">
                     <h2 className="text-xl font-semibold mb-4">Chat</h2>
                     <p>Chat content goes here...</p>
+                    <Input className="focus-visible:ring-0 focus-visible:ring-offset-0"></Input>
                 </div>
             </div>
         </div>
