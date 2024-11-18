@@ -4,7 +4,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Button } from "@/components/ui/button";
 import { ClipboardList, Heart, LogOut, Settings, UserIcon } from "lucide-react";
 import { usePathname, useRouter } from "next/navigation";
-import { ReactNode, useState } from "react";
+import { ReactNode, useEffect, useState } from "react";
 
 export default function Layout({
     children,
@@ -15,15 +15,17 @@ export default function Layout({
     const pathname = usePathname();
     const pathSegments = pathname.split("/").filter(Boolean);
     const router = useRouter();
-    const [activePath, setActivePath] = useState<string>("Thông tin đơn hàng");
+    const [activePath, setActivePath] = useState<string>("");
 
     // useEffect(() => {
-    //     if (pathname === "/account/history/complete") {
-    //         setActiveButton("Hoàn thành");
-    //     } else if (pathname === "/account/history/cancel") {
-    //         setActiveButton("Đã hủy");
+    //     if (pathname === "/account/favorite") {
+    //         setActivePath("Danh mục yêu thích");
+    //     } else if (pathname === "/account/setting") {
+    //         setActivePath("Cài đặt");
+    //     } else if (pathname === "/account") {
+    //         setActivePath("Thông tin tài khoản");
     //     } else {
-    //         setActiveButton("Đang giao");
+    //         setActivePath("Thông tin đơn hàng");
     //     }
     // }, [pathname]);
 
@@ -42,22 +44,22 @@ export default function Layout({
                         </Avatar>
                         <p className="text-sm font-semibold">Lê Thị Kim Cúc</p>
                     </div>
-                    <div  onClick={() => handleClick("Thông tin tài khoản","/account")}
-                       className={activePath === "Thông tin tài khoản" ? "flex gap-3 shadow p-2 rounded-md" : "flex gap-3"}>
+                    <div onClick={() => handleClick("Thông tin tài khoản", "/account")}
+                        className={activePath === "Thông tin tài khoản" ? "flex gap-3 shadow p-2 rounded-md" : "flex gap-3"}>
                         <UserIcon className="stroke-amber-500" />
                         <p>Thông tin tài khoản</p>
                     </div>
-                    <div onClick={() => handleClick("Thông tin đơn hàng","/account/history")}
+                    <div onClick={() => handleClick("Thông tin đơn hàng", "/account/history")}
                         className={activePath === "Thông tin đơn hàng" ? "flex gap-3 shadow p-2 rounded-md" : "flex gap-3"}>
                         <ClipboardList className="stroke-blue-500" />
                         <p>Thông tin đơn hàng</p>
                     </div>
-                    <div onClick={() => handleClick("Danh mục yêu thích","/account/favorite")}
-                       className={activePath === "Danh mục yêu thích" ? "flex gap-3 shadow p-2 rounded-md" : "flex gap-3"}>
+                    <div onClick={() => handleClick("Danh mục yêu thích", "/account/favorite")}
+                        className={activePath === "Danh mục yêu thích" ? "flex gap-3 shadow p-2 rounded-md" : "flex gap-3"}>
                         <Heart className="stroke-red-500" />
                         <p>Danh mục yêu thích</p>
                     </div>
-                    <div onClick={() => handleClick("Cài đặt","/account/setting")}
+                    <div onClick={() => handleClick("Cài đặt", "/account/setting")}
                         className={activePath === "Cài đặt" ? "flex gap-3 shadow p-2 rounded-md" : "flex gap-3"}>
                         <Settings className="stroke-gray-500" />
                         <p>Cài đặt</p>

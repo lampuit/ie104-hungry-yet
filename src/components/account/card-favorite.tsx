@@ -22,8 +22,8 @@ export function AccountFavorite() {
                         </p>
                     </div>
                     <div className="flex gap-4 items-end justify-end">
-                        <Button variant={"outline"}>Xem chi tiết</Button>
-                        <Button className="bg-amber-500">
+                        <Button variant={"outline"} className="text-xs">Xem chi tiết</Button>
+                        <Button className="bg-amber-500 text-xs">
                             <ShoppingCart /> Thêm giỏ hàng
                         </Button>
                     </div>
@@ -33,7 +33,7 @@ export function AccountFavorite() {
                 <TooltipProvider>
                     <Tooltip>
                         <TooltipTrigger>
-                            <X className="bg-red-500 text-white rounded-sm hover:bg-red-600" />
+                            <X className="text-white bg-gray-200 rounded-sm hover:bg-red-500" />
                         </TooltipTrigger>
                         <TooltipContent>
                             <p>Bỏ yêu thích</p>

@@ -1,6 +1,6 @@
 import { usePathname } from "next/navigation";
 import { Button } from "../ui/button";
-import { Eye, PhoneCall, Truck } from "lucide-react";
+import { Eye, PhoneCall, RefreshCcw, Star, Truck, X } from "lucide-react";
 
 export function AccountCardHistory() {
     const pathname = usePathname();
@@ -32,16 +32,16 @@ export function AccountCardHistory() {
                 </div>
                 {isCompletePage ?
                     <div className="flex justify-end gap-4 mt-2">
-                        <Button variant={"outline"} className="w-auto text-xs">Đánh giá</Button>
-                        <Button className="bg-amber-500 w-auto text-xs">Mua lại</Button>
+                        <Button variant={"outline"} className="w-auto text-xs"><Star/>Đánh giá</Button>
+                        <Button className="bg-amber-500 w-auto text-xs"><RefreshCcw/> Mua lại</Button>
                     </div> :
                 isCancelPage ?
                     <div className="flex justify-end gap-4 mt-2">
-                        <Button className="bg-amber-500 w-auto text-xs">Mua lại</Button>
+                        <Button className="bg-amber-500 w-auto text-xs"><RefreshCcw/>Mua lại</Button>
                     </div> :
                     <div className="flex justify-end gap-4 mt-2">
-                        <Button variant={"outline"} className="w-auto text-xs">Hủy đơn</Button>
-                        <Button className="bg-amber-500 w-auto text-xs">Xem chi tiết</Button>
+                        <Button variant={"outline"} className="w-auto text-xs hover:bg-red-500 hover:text-white"><X/>Hủy đơn</Button>
+                        <Button className="bg-amber-500 w-auto text-xs"><Eye/>Xem chi tiết</Button>
                     </div>
                 }
             </div>
