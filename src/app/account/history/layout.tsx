@@ -2,7 +2,7 @@
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Package, PackageCheck, PackageX } from "lucide-react";
+import { Package, PackageCheck, PackageX, Image, Paperclip } from "lucide-react";
 import { usePathname, useRouter } from "next/navigation";
 import { ReactNode, useEffect, useState } from "react";
 
@@ -55,11 +55,6 @@ export default function Layout({
                         </Button>
                     </div>
                     <div>{children}</div>
-                </div>
-                <div className="flex flex-col h-1/2 bg-white rounded-lg p-4 shadow-md">
-                    <h2 className="text-xl font-semibold mb-4">Chat</h2>
-                    <p>Chat content goes here...</p>
-                    <Input className="focus-visible:ring-0 focus-visible:ring-offset-0"></Input>
                 </div>
             </div>
         </div>

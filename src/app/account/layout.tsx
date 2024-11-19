@@ -35,7 +35,7 @@ export default function Layout({
     };
     return (
         <main className="bg-gray-50 w-full">
-            <div className="flex gap-12 justify-around p-10 px-40">
+            <div className="flex gap-12 justify-around p-5 px-10">
                 <div className="flex flex-col gap-6 ">
                     <div className="flex mb-4 gap-2 items-center w-full border-b-2 px-4 pb-4">
                         <Avatar>
