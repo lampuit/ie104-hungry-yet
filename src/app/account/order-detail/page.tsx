@@ -162,22 +162,6 @@ export default function OrderDetail() {
                             <div>(Đã bao gồm VAT)</div>
                         </CardContent>
                     </Card>
-                    <Card>
-                        <CardHeader>
-                            <CardTitle>
-                                Khách hàng
-                            </CardTitle>
-                            <CardContent>
-                                <span className="flex items-center gap-2 font-semibold"><User className="w-4 h-4" />Thông tin:</span>
-                                <span>Lê Thị Kim Cúc</span>
-                                <span>Số điện thoại: XXXXXXXX</span>
-                            </CardContent>
-                            <CardContent>
-                                <span className="flex items-center gap-2 font-semibold"><User className="w-4 h-4" />Địa chỉ:</span>
-                                <span>Địa chỉ cụ thể</span>
-                            </CardContent>
-                        </CardHeader>
-                    </Card>
                 </div>
             </div>
         </div>
