@@ -60,7 +60,7 @@ export default function MenuPage() {
     try {
       const response = await getProductByCategoryId(clickedIndex);
       setDishesList(
-        response.map((item) => ({
+        response?.records.map((item:any) => ({
           id: item.id,
           name: item.name,
           image: item.imageUrl,
