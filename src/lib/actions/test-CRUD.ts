@@ -56,13 +56,13 @@ async function testDeleteShoppingCart() {
 //sucessfull FAVORITE
 async function testCreateFavorite() {
   const formData = new FormData();
-  formData.append("userId", "PqEEV28ZywjNXbhRsZ-r_");
-  formData.append("productId", "07cb15c6-92c6-48ae-b963-7fa28fcf8004");
+  formData.append("userId", "0ygURwyW1JQw274gSmiDV");
+  formData.append("productId", "a1b2513f-f3ed-4e27-822e-ec4ac4fceccf");
   console.log(formData);
   await createFavorite(formData);
 }
 
-// testCreateFavorite();
+testCreateFavorite();
 
 async function testGetFavoriteByUserId() {
   const result = await getFavoriteByUserId("PqEEV28ZywjNXbhRsZ-r_");

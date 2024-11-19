@@ -14,46 +14,14 @@ import { Exhibition } from "@/components/home/exhibition";
 import { Testimonials } from "@/components/home/testimonials";
 import { HorizontalLine } from "@/components/home/intro";
 import { FAQ } from "@/components/home/faq";
-import { Charm, Quando } from "next/font/google";
-import { getSession } from "@/lib/auth-client";
-import useSWR from "swr";
-import { getShoppingCartByUserId } from "@/lib/data";
-import { use, useEffect, useState } from "react";
-import { ShoppingCart } from "lucide-react";
+import { Charm } from "next/font/google";
 export const charm = Charm({
   subsets: ["vietnamese"],
   weight: ["400", "700"],
 });
 
-// Lấy userId từ session
-export const fetcher = async () => {
-  const response = await getSession();
-  const userId = response?.data?.user?.id as string;
-  return userId;
-};
-
 export default function Homepage() {
-  const { data: userId, error } = useSWR('userId', fetcher);
-  const [shoppingCart, setShoppingCart] = useState<any[]>([]);
-
-  const ShoppingCartFetcher = async (id: string) => {
-    try {
-      const response = await getShoppingCartByUserId(id);
-      setShoppingCart(response);
-    } catch (error) {
-      console.error("Error fetching shopping cart:", error);
-    }
-  }
-
-  useEffect(() => {
-    if (userId) {
-      ShoppingCartFetcher(userId);
-    }
-  }, []);
-
-  console.log("Hi", userId);
-  console.log("Hello", shoppingCart);
-
+ 
   return (
     <main>
       <header className="relative flex flex-col justify-between items-center h-[calc(100vh-80px)] w-screen overflow-hidden z-0 bg-black">
@@ -65,7 +33,7 @@ export default function Homepage() {
           <p className="sm:text-xl md:text-2xl text-center">Chọn hương vị, nhận yêu thương - chỉ từ một cú CLICK!</p>
           <div className="flex justify-around min-w-72 gap-x-3">
             <Button asChild className="bg-amber-500 rounded-3xl hover:bg-red-500">
-              <Link href={userId ? shoppingCart.length > 0 ? "/menu/cart" : "/menu" : "/login"}>Đặt hàng ngay</Link>
+              <Link href={"/menu/cart"}>Đặt hàng ngay</Link>
             </Button>
             <Button asChild className="bg-black rounded-3xl hover:bg-red-500">
               <Link href={"/menu"}>Xem thực đơn</Link>
