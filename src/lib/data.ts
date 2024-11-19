@@ -7,6 +7,8 @@ import {
   shoppingCart,
   categories,
   ratings,
+  shifts,
+  userWorkShifts
 } from "@/drizzle/schema/project";
 import { user } from "@/drizzle/schema/auth";
 import { eq, and, getTableColumns } from "drizzle-orm";
@@ -56,6 +58,20 @@ export async function getUserById(id: string) {
     .from(user)
     .where(eq(user.id, id));
 }
+
+export async function getAllShift() {
+  return await db
+    .select()
+    .from(shifts);
+}
+
+export async function getAllEmployee() {
+  return await db
+    .select ()
+    .from(user)
+    .where(eq(user.role, "staff"));
+}
+
 export async function getAllProducts() {
   return await db
     .select({
@@ -86,14 +102,25 @@ export async function getAllCategory() {
   return response;
 }
 
-export async function getProductByCategoryId(id: string) {
-  const response = await db
+export async function getProductByCategoryId(
+  id: string,
+  page = 1,
+  pageSize = 3,
+) {
+  // Count total records for the specified category ID
+  const totalRecords = await db.$count(products, eq(products.categoryId, id));
+
+  // Retrieve the paginated records
+  const records = await db
     .select({
       ...getTableColumns(products),
     })
     .from(products)
-    .where(eq(products.categoryId, id));
-  return response;
+    .where(eq(products.categoryId, id))
+    .limit(pageSize)
+    .offset((page - 1) * pageSize);
+  // Return both totalRecords and the records for the current page
+  return { totalRecords, records };
 }
 
 export async function getFavoriteByUserId(userId: string) {
@@ -166,4 +193,10 @@ export async function getRatingsByProductId(id: string) {
     .from(ratings)
     .leftJoin(products, eq(ratings.productId, products.id))
     .where(eq(ratings.productId, id));
+}
+
+export async function getUserWorkShift() {
+  return await db
+    .select()
+    .from(userWorkShifts);
 }

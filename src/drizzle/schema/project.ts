@@ -141,7 +141,7 @@ export const shifts = pgTable("shifts", {
 
 // Bảng userWorkShifts
 export const userWorkShifts = pgTable("userWorkShifts", {
-  id: uuid("id").notNull().defaultRandom().primaryKey(),
+  id: text("id").notNull().primaryKey(),
   userId: text("userId")
     .notNull()
     .references(() => user.id), // Khóa ngoại

@@ -1,6 +1,5 @@
 "use client";
-
-import React, { useState } from "react";
+import React, { use, useEffect, useState, useCallback, Suspense } from "react";
 import { addDays, format } from "date-fns";
 import { vi } from "date-fns/locale";
 import {
@@ -17,11 +16,28 @@ import {
 } from "@/components/ui/popover";
 import { ShiftCalendar } from "@/components/shift/calendar";
 import { Calendar } from "@/components/ui/calendar";
+import { getAllEmployee } from "@/lib/data";
+import useSWR from "swr";
+import LoadingSpinner from "@/components/ui/loading-spinner";
+
+const fetcher = async () => {
+  return getAllEmployee();
+};
 
 export default function ShiftManagement() {
   const [selectedDate, setSelectedDate] = useState<Date>(new Date());
   const selectedYear = selectedDate.getFullYear();
   const selectedMonth = selectedDate.getMonth();
+
+  const { data, error } = useSWR("employees", fetcher, {
+    revalidateIfStale: true,
+    revalidateOnFocus: false,
+    revalidateOnReconnect: true,
+  });
+
+  const employees = data || [];
+
+  console.log("employees", employees)
 
   return (
     <div className="container p-4">
@@ -50,6 +66,7 @@ export default function ShiftManagement() {
               selected={selectedDate}
               onSelect={(day) => day && setSelectedDate(day)}
               initialFocus
+
             />
           </PopoverContent>
         </Popover>
@@ -72,9 +89,10 @@ export default function ShiftManagement() {
           </Button>
         </div>
       </div>
-      <div className="space-y-4">
-        <ShiftCalendar year={selectedYear} month={selectedMonth} />
-      </div>
+
+      <ShiftCalendar year={selectedYear} month={selectedMonth} employees={employees} />
+
     </div>
   );
+
 }
