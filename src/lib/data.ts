@@ -1,4 +1,5 @@
 "use server";
+
 import { db } from "@/drizzle/db";
 import {
   favorite,
@@ -9,6 +10,43 @@ import {
 } from "@/drizzle/schema/project";
 import { user } from "@/drizzle/schema/auth";
 import { eq, and, getTableColumns } from "drizzle-orm";
+import { unstable_noStore } from "next/cache";
+
+export async function fetchProducts() {
+  try {
+    return await db
+      .select({
+        ...getTableColumns(products),
+        categoryName: categories.name,
+      })
+      .from(products)
+      .leftJoin(categories, eq(products.categoryId, categories.id));
+  } catch (error) {
+    throw new Error("Không thể lấy dữ liệu danh sách sản phẩm.");
+  }
+}
+
+export async function fetchDiscounts() {
+  try {
+    return await db.query.discounts.findMany();
+  } catch (error) {
+    throw new Error("Không thể lấy dữ liệu mã ưu đãi.");
+  }
+}
+
+export async function fetchProductId(id: string) {
+  try {
+    unstable_noStore();
+    return await Promise.all([
+      db.query.categories.findMany(),
+      db.query.products.findFirst({
+        where: eq(products.id, id),
+      }),
+    ]);
+  } catch (error) {
+    throw new Error("Không thể lấy dữ liệu sản phẩm.");
+  }
+}
 
 export async function getUserById(id: string) {
   return await db

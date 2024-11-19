@@ -24,7 +24,7 @@ export default function ShiftManagement() {
   const selectedMonth = selectedDate.getMonth();
 
   return (
-    <div className="container mx-auto p-4">
+    <div className="container p-4">
       <h1 className="mb-6 text-3xl font-bold">Quản lý ca làm việc</h1>
       <div className="mb-6 flex items-center justify-between">
         <Popover>

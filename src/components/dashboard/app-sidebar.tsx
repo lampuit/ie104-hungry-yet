@@ -1,3 +1,5 @@
+"use client";
+
 import {
   Sidebar,
   SidebarContent,
@@ -8,16 +10,38 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from "@/components/ui/sidebar";
+import { BadgeCent, Home, Package2, Ticket, Clock } from "lucide-react";
 
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 
-export function AppSidebar({
-  items,
-  pathname,
-}: {
-  items: { title: string; url: string; icon: any }[];
-  pathname: string;
-}) {
+const items = [
+  {
+    title: "Home",
+    url: "/dashboard",
+    icon: Home,
+  },
+  {
+    title: "Product",
+    url: "/dashboard/product",
+    icon: Package2,
+  },
+  {
+    title: "Shift",
+    url: "/dashboard/shift",
+    icon: Clock,
+  },
+
+  {
+    title: "Discount",
+    url: "/dashboard/discount",
+    icon: Ticket,
+  },
+];
+
+export function AppSidebar() {
+  const pathname = usePathname();
+
   return (
     <Sidebar>
       <SidebarContent>

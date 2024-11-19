@@ -32,6 +32,7 @@ import { deleteProduct } from "@/lib/actions/product";
 import React from "react";
 import { toast } from "@/hooks/use-toast";
 import Link from "next/link";
+import { ToastAction } from "@/components/ui/toast";
 
 export type Product = z.infer<typeof insertProductSchema> & {
   categoryName: string | null;
@@ -68,6 +69,23 @@ export const columns: ColumnDef<Product>[] = [
     },
   },
   {
+    accessorKey: "isPublish",
+    header: () => <div>Công khai</div>,
+    cell: ({ row }) => {
+      const isPublish = Boolean(row.getValue("isPublish"));
+
+      return isPublish ? (
+        <Badge>Hiện</Badge>
+      ) : (
+        <Badge variant="secondary">Ẩn</Badge>
+      );
+    },
+    meta: {
+      headerClassName: "hidden lg:table-cell",
+      cellClassName: "hidden lg:table-cell",
+    },
+  },
+  {
     accessorKey: "price",
     header: () => <div>Giá</div>,
     cell: ({ row }) => {
@@ -80,7 +98,6 @@ export const columns: ColumnDef<Product>[] = [
       return <div>{formatted}</div>;
     },
   },
-
   {
     accessorKey: "categoryName",
     header: () => <div>Thể loại</div>,
@@ -157,11 +174,32 @@ export const columns: ColumnDef<Product>[] = [
                 <AlertDialogCancel>Hủy</AlertDialogCancel>
                 <AlertDialogAction
                   onClick={async () => {
-                    await deleteProduct(product.id!, product.imageUrl!);
+                    try {
+                      await Promise.all([
+                        // Xóa image ra khỏi storage
+                        fetch(`/api/image/delete?url=${product.imageUrl}`, {
+                          method: "DELETE",
+                        }),
 
-                    toast({
-                      title: "Xóa thành công sản phẩm.",
-                    });
+                        // Xóa sản phẩm ra khỏi database
+                        deleteProduct(product.id!),
+                      ]);
+                      toast({
+                        title: "Xóa thành công sản phẩm.",
+                        description: `Tên sản phẩm: ${product.name}`,
+                      });
+                    } catch (error) {
+                      if (error instanceof Error) {
+                        toast({
+                          variant: "destructive",
+                          title: "Uh oh! Có gì đó sai.",
+                          description: error.message,
+                          action: (
+                            <ToastAction altText="Thử lại">Thử lại</ToastAction>
+                          ),
+                        });
+                      }
+                    }
                   }}
                 >
                   Tiếp tục

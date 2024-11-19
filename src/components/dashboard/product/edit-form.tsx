@@ -22,7 +22,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import z, { set } from "zod";
 import { upload } from "@vercel/blob/client";
-import { ArrowDownToLine, DollarSign, Percent, PlusCircle } from "lucide-react";
+import { Bookmark, DollarSign, Percent, PlusCircle } from "lucide-react";
 import Image from "next/image";
 
 import { useRef, useState } from "react";
@@ -31,15 +31,13 @@ import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
 import { ToastAction } from "@/components/ui/toast";
-import { createProduct, editProduct } from "@/lib/actions/product";
-import { useFormState } from "react-dom";
-import { product } from "remeda";
-import { put } from "@vercel/blob";
 import { Switch } from "@/components/ui/switch";
+import { createProduct, editProduct } from "@/lib/actions/product";
+import { del } from "@vercel/blob";
 
 // Tạo schema form với các trường dữ liệu tương ứng với cơ sở dữ liệu
 const formSchema = z.object({
-  file: z.string().min(1, { message: "Vui lòng tải hình ảnh lên." }),
+  imageUrl: z.string().min(1, { message: "Vui lòng tải hình ảnh lên." }),
   name: z.string().min(2, {
     message: "Tên sản phẩm phải chứa ít nhất 2 ký tự.",
   }),
@@ -61,23 +59,24 @@ const formSchema = z.object({
 });
 
 export function EditForm({
-  product,
   categories,
+  product,
 }: {
-  product: any;
   categories: any;
+  product: any;
 }) {
   const { toast } = useToast();
 
   const [isPending, setIsPending] = useState(false);
 
   const formRef = useRef<HTMLFormElement | null>(null);
+  const [file, setFile] = useState<File | null>(null);
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     // Định nghĩa các giá trị mặc định
     defaultValues: {
-      file: product.imageUrl || "",
+      imageUrl: product.imageUrl || "",
       name: product.name || "",
       description: product.description || "",
       category: product.categoryId || "",
@@ -86,15 +85,43 @@ export function EditForm({
     },
   });
 
-  const formAction = async (formData: FormData) => {
+  const onSubmit = async (values: z.infer<typeof formSchema>) => {
     try {
-      //  Tạo sản phẩm
-      await editProduct(product.id, formData);
+      setIsPending(true);
+
+      if (values.imageUrl != product.imageUrl) {
+        if (!file) throw new Error("Vui lòng chọn ảnh");
+
+        // Xóa image cũ
+        console.log(product.imageUrl);
+        await fetch(`/api/image/delete?${product.imageUrl}`, {
+          method: "DELETE",
+        });
+
+        // Upload image mới lên storage
+        const newBlob = await upload(values.name, file, {
+          access: "public",
+          handleUploadUrl: "/api/image/upload",
+        });
+
+        //  Tạo sản phẩm image mới
+        await editProduct(product.id, {
+          ...values,
+          categoryId: values.category,
+          imageUrl: newBlob.url,
+        });
+      }
+
+      //  Tạo sản phẩm với image cũ
+      await editProduct(product.id, {
+        ...values,
+        categoryId: values.category,
+      });
 
       // Hiện thông báo thành công
       toast({
         title: "Chỉnh sửa sản phẩm thành công.",
-        description: `Tên sản phẩm: ${formData.get("name")}`,
+        description: `Tên sản phẩm: ${values.name}`,
       });
     } catch (error) {
       setIsPending(false);
@@ -113,18 +140,14 @@ export function EditForm({
 
   return (
     <Form {...form}>
-      <form ref={formRef} className="flex flex-col gap-4" action={formAction}>
+      <form
+        ref={formRef}
+        className="flex flex-col gap-4"
+        onSubmit={form.handleSubmit(onSubmit)}
+      >
         <div className="flex items-center justify-end">
-          <Button
-            type="submit"
-            className="gap-2"
-            onClick={form.handleSubmit(() => {
-              setIsPending(true);
-              formRef.current?.requestSubmit();
-            })}
-            disabled={isPending}
-          >
-            <ArrowDownToLine className="h-3.5 w-3.5" />
+          <Button type="submit" className="gap-2" disabled={isPending}>
+            <Bookmark className="h-3.5 w-3.5" />
             <span className="sr-only sm:not-sr-only sm:whitespace-nowrap">
               Lưu sản phẩm
             </span>
@@ -139,7 +162,7 @@ export function EditForm({
               <CardContent className="flex flex-col gap-4 p-6">
                 <FormField // Field đính kèm image
                   control={form.control}
-                  name="file"
+                  name="imageUrl"
                   render={({ field }) => (
                     <FormItem>
                       <Label className="col-span-2">Hình ảnh sản phẩm</Label>
@@ -185,6 +208,8 @@ export function EditForm({
 
                               const newImageUrl = URL.createObjectURL(file);
                               field.onChange(newImageUrl);
+                              console.log(file);
+                              setFile(file);
                             }
                           }}
                           name={field.name}
@@ -274,7 +299,6 @@ export function EditForm({
                           <Select
                             onValueChange={field.onChange}
                             defaultValue={field.value}
-                            name={field.name}
                           >
                             <FormControl>
                               <SelectTrigger>
