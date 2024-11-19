@@ -146,16 +146,20 @@ export default function OrderDetail() {
                     </Card>
                 </div>
                 <div className="grow flex flex-col gap-6">
-                    <Card>
+                    <Card className="w-auto">
                         <CardHeader>
                             <CardTitle>
                                 Hóa đơn
                             </CardTitle>
                         </CardHeader>
-                        <CardContent className="flex flex-col gap-4">
-                            <span className="flex ">Tạm tính: <span>100000đ</span></span>
-                            <span className="flex ">Giảm giá: <span>10000đ</span></span>
-                            <span className="flex flex-col gap-2"><span className="flex ">Tổng cộng: <span>90000đ</span></span>(Đã bao gồm VAT)</span>
+                        <CardContent className="grid grid-row-4 grid-cols-2">
+                            <div>Tạm tính:</div>
+                            <div>100000đ</div>
+                            <div>Giảm giá:</div>
+                            <div>10000đ</div>
+                            <div>Tổng cộng: </div>
+                            <div>90000đ</div>
+                            <div>(Đã bao gồm VAT)</div>
                         </CardContent>
                     </Card>
                     <Card>
@@ -164,8 +168,13 @@ export default function OrderDetail() {
                                 Khách hàng
                             </CardTitle>
                             <CardContent>
-                                <p className="flex"><User />Thông tin:</p>
-                                <p className="flex"><MapPin />Địa chỉ:</p>
+                                <span className="flex items-center gap-2 font-semibold"><User className="w-4 h-4" />Thông tin:</span>
+                                <span>Lê Thị Kim Cúc</span>
+                                <span>Số điện thoại: XXXXXXXX</span>
+                            </CardContent>
+                            <CardContent>
+                                <span className="flex items-center gap-2 font-semibold"><User className="w-4 h-4" />Địa chỉ:</span>
+                                <span>Địa chỉ cụ thể</span>
                             </CardContent>
                         </CardHeader>
                     </Card>
