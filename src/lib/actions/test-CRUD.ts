@@ -10,7 +10,8 @@ import {
   getShoppingCartByUserId,
   getProductByCategoryId,
   getAllCategory,
-  getUserById
+  getUserById,
+  getUserWorkShift
 } from "@/lib/data";
 
 //sucessfull SHOPPING CART
@@ -80,14 +81,14 @@ async function testDeleteFavorite() {
 
 // testDeleteFavorite()
 
-async function testGetProductByCategoryId() {
+async function testGetProductByCategoryId(id: string) {
   const response = await getProductByCategoryId(
-    "1cf9e139-8bb0-4c78-8357-f813588f11ca"
+    id
   );
   console.log("Product Data:", response);
 }
 
-testGetProductByCategoryId();
+testGetProductByCategoryId('58f8a47c-c295-4e70-8482-ba02444155fc');
 
 async function testGetAllCategory(){
   const response = await getAllCategory();
@@ -102,3 +103,10 @@ async function testGetUserById (id: string){
 }
 
 // testGetUserById('_RDKyc9nUb-HmT9Y1jebj')
+
+async function testGetAllUserWorkShift(){
+  const response = await getUserWorkShift();
+  console.log("All User Work Shift Data:", response);
+}
+
+// testGetAllUserWorkShift();
