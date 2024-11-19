@@ -3,7 +3,7 @@
 import { db } from "@/drizzle/db";
 import { discounts, insertDiscountSchema } from "@/drizzle/schema/project";
 import { eq } from "drizzle-orm";
-import { revalidateTag } from "next/cache";
+import { revalidatePath, revalidateTag } from "next/cache";
 import { redirect } from "next/navigation";
 
 const CreateDiscount = insertDiscountSchema.omit({
@@ -12,22 +12,18 @@ const CreateDiscount = insertDiscountSchema.omit({
   updatedAt: true,
 });
 
-export async function createDiscount(formData: FormData) {
-  const data = CreateDiscount.parse({
-    name: formData.get("name"),
-    description: formData.get("description"),
-    fromDate: new Date(formData.get("fromDate") as string),
-    toDate: new Date(formData.get("toDate") as string),
-  });
+export async function createDiscount(values: any) {
+  const newDiscount = CreateDiscount.parse(values);
 
   try {
-    await db.insert(discounts).values(data);
+    await db.insert(discounts).values(newDiscount);
   } catch (error) {
     if (error instanceof Error)
       throw new Error("Lỗi cơ sở dữ liệu: Không thể thêm mã.");
   }
 
-  revalidateTag("discounts");
+  revalidatePath("/dashboard/discount");
+  redirect("/dashboard/discount");
 }
 
 export async function deleteDiscount(id: string) {
@@ -37,5 +33,6 @@ export async function deleteDiscount(id: string) {
     throw new Error("Lỗi cơ sở dữ liệu: Không thể xóa mã.");
   }
 
-  revalidateTag("discounts");
+  revalidatePath("/dashboard/discount");
+  redirect("/dashboard/discount");
 }
