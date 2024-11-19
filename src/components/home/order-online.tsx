@@ -1,7 +1,18 @@
 import { Button } from "@/components/ui/button"
+import { getSession } from "@/lib/auth-client";
 import Image from "next/image"
+import useSWR from "swr";
+
+// Lấy userId từ session
+const fetcher = async () => {
+    const response = await getSession();
+    const userId = response?.data?.user?.id as string;
+    return userId;
+  };
 
 export function OrderOnline() {
+    const { data: userId, error } = useSWR('userId', fetcher);
+
     return (
         <div className="relative flex justify-center items-center w-screen py-16 bg-black">
             <div className="absolute w-full h-full opacity-40 z-0">
@@ -20,7 +31,7 @@ export function OrderOnline() {
                 <p className="px-4">Bạn muốn hương vị tươi mới? Đặt ngay để thưởng thức ẩm thực Việt Nam tại nhà - giao tận nơi, ngon tuyệt vời!</p>
                 <div>
                     <Button asChild className="bg-amber-500 hover:bg-red-500 rounded-3xl">
-                        <a href={"#"}>Đặt ngay</a>
+                        <a href={userId ? "/menu/cart" : "/login"}>Đặt ngay</a>
                     </Button>
                 </div>
             </div>

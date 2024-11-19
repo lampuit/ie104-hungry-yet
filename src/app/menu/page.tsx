@@ -1,6 +1,6 @@
 "use client";
-import { useEffect, useState } from "react";
-import { useSearchParams, useRouter } from "next/navigation";
+import { use, useEffect, useState } from "react";
+import { useSearchParams, useRouter, redirect } from "next/navigation";
 import { Search } from "@/components/menu/search";
 import { Category } from "@/components/menu/category";
 import { DishList } from "@/components/menu/dish-list";
@@ -14,6 +14,8 @@ import {
 } from "@/components/ui/pagination";
 import { getProductByCategoryId } from "@/lib/data";
 import { CategoryFetcher } from "@/components/menu/category";
+import { getSession } from "@/lib/auth-client";
+import useSWR from "swr";
 
 // Đối tượng mô tả một món ăn
 interface Dish {
@@ -25,7 +27,21 @@ interface Dish {
   published: boolean;
 }
 
+// Lấy session
+export const fetcher = async () => {
+  const category = CategoryFetcher();
+  return category;
+};
+
+  // Nhận danh sách categories và đặt category mặc định (được chọn khi tải trang) là "Khai vị"
+  // export const fetchCategories = async () => {
+  //  return  CategoryFetcher(); // Lấy danh sách categories
+  // };
+
 export default function MenuPage() {
+  // Kiểm tra session
+  const { data } = useSWR("fetcherKey", fetcher);
+
   // Lấy tên danh mục sau khi click vào từ trang Homepage
   const searchParams = useSearchParams();
   const router = useRouter();
@@ -34,23 +50,10 @@ export default function MenuPage() {
   // ID của danh mục được chọn
   const [clickedIndex, setClickedIndex] = useState<string>("");
   const [dishesList, setDishesList] = useState<Dish[]>([]); // Danh sách món ăn được lưu trữ dưới dạng 1 mảng các đối tượng Dish
-  const [categories, setCategories] = useState<any[]>([]); // Danh sách categories
+  // const [categories, setCategories] = useState<any[]>([]); // Danh sách categories
 
-  // Nhận danh sách categories và đặt category mặc định (được chọn khi tải trang) là "Khai vị"
-  const fetchCategories = async () => {
-    try {
-      const response = await CategoryFetcher(); // Lấy danh sách categories
-      setCategories(response);
-
-      // Gán danh mục mặc định là "Khai vị" hoặc danh mục được chọn từ trang Homepage
-      const defaultCategory = response.find((category) => category.name === (categoryName || "Khai vị"));
-      if (defaultCategory) {
-        setClickedIndex(defaultCategory.id);
-      }
-    } catch (error) {
-      console.error("Error fetching categories:", error);
-    }
-  };
+  
+  const categories = data || [];
 
   // Hàm lấy danh sách món ăn theo danh mục cụ thể (clickedIndex)
   const getDishesByCategoryId = async (clickedIndex: string) => {
@@ -72,26 +75,29 @@ export default function MenuPage() {
   };
 
   // Tự động gọi API khi người dùng chọn danh mục khác (clickedIndex thay đổi)
+
+  const fetchCategories =  () => {
+      // Gán danh mục mặc định là "Khai vị" hoặc danh mục được chọn từ trang Homepage
+      const defaultCategory = categories.find((category) => category.name === (categoryName || "Khai vị"));
+      if (defaultCategory) {
+        setClickedIndex(defaultCategory.id);
+      }
+  };
+  // Tự động gọi API khi trang được tải
   useEffect(() => {
+    fetchCategories()
     if (clickedIndex) {
       getDishesByCategoryId(clickedIndex);
     }
-  }, [clickedIndex]);
 
-  // Tự động gọi API khi trang được tải
-  useEffect(() => {
-    fetchCategories();
-  }, []);
-
-  // Update clickedIndex if categoryName is present in the URL
-  useEffect(() => {
-    if (categoryName && categories.length > 0) {
-      const category = categories.find((cat) => cat.name === categoryName);
+    if (categoryName ) {
+      const category = Array.isArray(categories) ? categories.find((cat:any) => cat.name === categoryName) : undefined;
       if (category) {
         setClickedIndex(category.id);
       }
     }
-  }, [categoryName, categories]);
+    
+  }, [clickedIndex, categoryName]);
 
   // Hàm xử lý khi người dùng click vào một danh mục khác
   const handleCategoryClick = (categoryName: string) => {
@@ -105,11 +111,11 @@ export default function MenuPage() {
       </header>
 
       <section className="flex flex-col items-center">
-        <section className="sticky">
+        <section className="sticky top-0 bg-white w-full">
           <Category
             clickedIndex={clickedIndex}
             setClickedIndex={(index) => {
-              const category = categories.find((cat) => cat.id === index);
+              const category = Array.isArray(categories) ? categories.find((cat) => cat.id === index) : undefined;
               if (category) {
                 handleCategoryClick(category.name);
               }

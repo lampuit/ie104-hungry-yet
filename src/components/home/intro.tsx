@@ -4,12 +4,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { getSession } from '@/lib/auth-client';
 import useSWR from 'swr';
-
-const fetcher = async () => {
-    const response = await getSession();
-    const userId = response?.data?.user?.id as string;
-    return userId;
-}
+import { fetcher } from '@/app/page';
 
 export function Intro() {
     const { data: userId, error } = useSWR('userId', fetcher);
