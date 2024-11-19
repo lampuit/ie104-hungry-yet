@@ -7,6 +7,8 @@ import {
   shoppingCart,
   categories,
   ratings,
+  shifts,
+  userWorkShifts
 } from "@/drizzle/schema/project";
 import { user } from "@/drizzle/schema/auth";
 import { eq, and, getTableColumns } from "drizzle-orm";
@@ -56,6 +58,20 @@ export async function getUserById(id: string) {
     .from(user)
     .where(eq(user.id, id));
 }
+
+export async function getAllShift() {
+  return await db
+    .select()
+    .from(shifts);
+}
+
+export async function getAllEmployee() {
+  return await db
+    .select ()
+    .from(user)
+    .where(eq(user.role, "staff"));
+}
+
 export async function getAllProducts() {
   return await db
     .select({
@@ -177,4 +193,10 @@ export async function getRatingsByProductId(id: string) {
     .from(ratings)
     .leftJoin(products, eq(ratings.productId, products.id))
     .where(eq(ratings.productId, id));
+}
+
+export async function getUserWorkShift() {
+  return await db
+    .select()
+    .from(userWorkShifts);
 }

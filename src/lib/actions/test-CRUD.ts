@@ -10,7 +10,8 @@ import {
   getShoppingCartByUserId,
   getProductByCategoryId,
   getAllCategory,
-  getUserById
+  getUserById,
+  getUserWorkShift
 } from "@/lib/data";
 
 //sucessfull SHOPPING CART
@@ -102,3 +103,10 @@ async function testGetUserById (id: string){
 }
 
 // testGetUserById('_RDKyc9nUb-HmT9Y1jebj')
+
+async function testGetAllUserWorkShift(){
+  const response = await getUserWorkShift();
+  console.log("All User Work Shift Data:", response);
+}
+
+// testGetAllUserWorkShift();
