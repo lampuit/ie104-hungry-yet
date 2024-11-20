@@ -32,7 +32,7 @@ export default function Layout({
     return (
         <div className="grow flex flex-col gap-4 px-20">
             <h1 className="text-2xl font-semibold">Đơn hàng của tôi</h1>
-            <div className="flex flex-col lg:flex-row gap-8 py-6 bg-gray-100 w-full px-10">
+            <div className="flex flex-col lg:flex-row">
                 <div className="flex flex-col gap-5 w-full">
                     <div className="flex gap-4 justify-around bg-white rounded-lg p-2 shadow-md">
                         <Button

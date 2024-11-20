@@ -25,7 +25,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 
 export default function OrderDetail() {
     return (
-        <div className="grow flex flex-col gap-4">
+        <div className="grow flex flex-col gap-8">
             <div>
                 <div className="flex gap-4 items-center">
                     <Button variant={"outline"}><Undo2 /></Button>
@@ -49,7 +49,7 @@ export default function OrderDetail() {
             </div>
             <div className="flex gap-4">
                 <div className="flex flex-col gap-4">
-                    <Card>
+                    <Card className="shadow-md">
                         <CardHeader>
                             <CardTitle>
                                 Tiến trình
@@ -84,7 +84,7 @@ export default function OrderDetail() {
                             <Progress className="mt-4 h-2" value={23} />
                         </CardContent>
                     </Card>
-                    <Card>
+                    <Card className="shadow-md">
                         <CardHeader>
                             <CardTitle>
                                 Chi tiết đơn hàng
@@ -146,7 +146,7 @@ export default function OrderDetail() {
                         </CardContent>
                     </Card>
                 </div>
-                <Card className="h-[280px]">
+                <Card className="h-[280px] shadow-md">
                     <CardHeader className="border-b-2">
                         <CardTitle>
                             Hóa đơn

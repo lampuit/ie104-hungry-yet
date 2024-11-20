@@ -7,7 +7,7 @@ export function AccountCardHistory() {
     const isCompletePage = pathname.includes("/account/history/complete");
     const isCancelPage = pathname.includes("/account/history/cancel");
     return (
-        <div className="flex w-full border-b-2 p-4">
+        <div className="flex w-full border-b-2 p-6">
             <div className="flex flex-col gap-4 w-2/3">
                 {isCompletePage || isCancelPage ?
                     <div className="flex flex-wrap gap-2">

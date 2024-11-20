@@ -6,7 +6,7 @@ import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/comp
 
 export function AccountFavorite() {
     return (
-        <div className="bg-white rounded shadow border-b-2 relative">
+        <div className="bg-white rounded shadow-md border-b-2 relative">
             <div className="flex gap-7 p-4 items-end">
                 <Image className="rounded" src={"/images/long1.jpg"} alt="review" width={120} height={180}></Image>
                 <div className="flex flex-col gap-6">
