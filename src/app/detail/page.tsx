@@ -9,7 +9,6 @@ import {
     BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb"
 
-import Image from "next/image"
 import { Badge } from "@/components/ui/badge"
 import { Bookmark, MessageCircle, MessageCircleMore, ShoppingCart, Star } from "lucide-react"
 import { Button } from "@/components/ui/button"
@@ -28,6 +27,7 @@ import { getProductById } from "@/lib/data"
 import { useEffect, useState } from "react";
 import LoadingSpinner from "@/components/ui/loading-spinner";
 import { useRouter, useSearchParams } from "next/navigation";
+import { TbCurrencyDong } from "react-icons/tb";
 
 const fetcher = async(id: string) => {
     return getProductById({ id });
@@ -46,11 +46,9 @@ interface Dish {
 
 export default function Detail() {
     const searchParams = useSearchParams();
-    const router = useRouter();
     const id = searchParams.get("id");
     const { data, error } = useSWR(id, fetcher);
     const [dish, setDish] = useState<Dish | null>(null);
-    // const [selectedButton, setSelectedButton] = useState("all");
 
     useEffect(() => {
         if (data && Array.isArray(data) && data.length > 0) {
@@ -117,7 +115,7 @@ export default function Detail() {
                                         <span>50</span>
                                     </div>
                                 </div>
-                                <h1 className="font-bold text-4xl text-red-500">{dish?.price}<span className="font-normal">đ</span></h1>
+                                <div className="flex items-center font-bold text-4xl text-red-500">{dish?.price}<TbCurrencyDong className="stroke-red-500"/></div>
                             </div>
                             <div className="flex items-center gap-8">
                                 <Button variant={"outline"}

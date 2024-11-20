@@ -4,6 +4,7 @@ import type { Metadata } from "next";
 import { Montserrat } from "next/font/google";
 import "@/styles/globals.css";
 import { Toaster } from "@/components/ui/toaster";
+import { Toaster as Sonner } from "@/components/ui/sonner";
 import { UnauthorizedNavbar } from "@/components/navbar/unauthorized-nav";
 import { AuthorizedNavbar } from "@/components/navbar/authorized-nav";
 import { getSession } from "@/lib/auth-client";
@@ -46,6 +47,7 @@ export default function RootLayout({
         )}
         {children}
         <Toaster />
+        <Sonner />
       </body>
     </html>
   );

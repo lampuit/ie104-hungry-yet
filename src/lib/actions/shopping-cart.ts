@@ -19,10 +19,10 @@ export async function createShoppingCart(formData: FormData) {
     productId: formData.get("productId"),
     quantity: Number(formData.get("quantity")),
   });
+    // If the item does not exist, insert a new item
+    const response = await db.insert(shoppingCart).values(data);
+    console.log("response",response);
 
-  console.log(data);
-
-  await db.insert(shoppingCart).values(data);
 }
 
 export async function updateShoppingCart(formData: FormData) {

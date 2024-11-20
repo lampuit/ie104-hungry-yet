@@ -10,7 +10,8 @@ import {
   getShoppingCartByUserId,
   getProductByCategoryId,
   getAllCategory,
-  getUserById
+  getUserById,
+  getUserWorkShift
 } from "@/lib/data";
 
 //sucessfull SHOPPING CART
@@ -56,13 +57,13 @@ async function testDeleteShoppingCart() {
 //sucessfull FAVORITE
 async function testCreateFavorite() {
   const formData = new FormData();
-  formData.append("userId", "PqEEV28ZywjNXbhRsZ-r_");
-  formData.append("productId", "07cb15c6-92c6-48ae-b963-7fa28fcf8004");
+  formData.append("userId", "0ygURwyW1JQw274gSmiDV");
+  formData.append("productId", "a1b2513f-f3ed-4e27-822e-ec4ac4fceccf");
   console.log(formData);
   await createFavorite(formData);
 }
 
-// testCreateFavorite();
+testCreateFavorite();
 
 async function testGetFavoriteByUserId() {
   const result = await getFavoriteByUserId("PqEEV28ZywjNXbhRsZ-r_");
@@ -80,14 +81,14 @@ async function testDeleteFavorite() {
 
 // testDeleteFavorite()
 
-async function testGetProductByCategoryId() {
+async function testGetProductByCategoryId(id: string) {
   const response = await getProductByCategoryId(
-    "1cf9e139-8bb0-4c78-8357-f813588f11ca"
+    id
   );
   console.log("Product Data:", response);
 }
 
-testGetProductByCategoryId();
+testGetProductByCategoryId('58f8a47c-c295-4e70-8482-ba02444155fc');
 
 async function testGetAllCategory(){
   const response = await getAllCategory();
@@ -102,3 +103,10 @@ async function testGetUserById (id: string){
 }
 
 // testGetUserById('_RDKyc9nUb-HmT9Y1jebj')
+
+async function testGetAllUserWorkShift(){
+  const response = await getUserWorkShift();
+  console.log("All User Work Shift Data:", response);
+}
+
+// testGetAllUserWorkShift();

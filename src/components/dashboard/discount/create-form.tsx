@@ -25,7 +25,7 @@ import { upload } from "@vercel/blob/client";
 import { DollarSign, Percent, PlusCircle } from "lucide-react";
 import Image from "next/image";
 
-import { useRef, useState } from "react";
+import { Suspense, useRef, useState } from "react";
 import { cn } from "@/lib/utils";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
@@ -47,6 +47,13 @@ const formSchema = z.object({
   description: z.string().min(5, {
     message: "Mô tả sản phẩm phải chứa ít nhất 5 ký tự.",
   }),
+  discount: z.coerce
+    .number({
+      required_error: "Số ưu đãi phải là một số dương và không được để trống.",
+    })
+    .positive({
+      message: "Giá sản phẩm phải là một số dương.",
+    }),
   fromDate: z.coerce.date(),
   toDate: z.coerce.date(),
 });
@@ -65,25 +72,23 @@ export function CreateForm() {
     defaultValues: {
       name: "",
       description: "",
+      discount: undefined,
       fromDate: new Date(),
       toDate: new Date(),
     },
   });
 
-  const formAction = async (formData: FormData) => {
+  const onSubmit = async (values: z.infer<typeof formSchema>) => {
     try {
-      // Thêm các trường dữ liệu còn thiếu khi submit -- Tiền xử lý
-      const values = form.getValues();
-      formData.append("fromDate", values.fromDate.toISOString());
-      formData.append("toDate", values.toDate.toISOString());
+      setIsPending(true);
 
       //  Tạo mã
-      await createDiscount(formData);
+      await createDiscount(values);
 
       // Hiện mã thành công
       toast({
         title: "Tạo mã thành công.",
-        description: `Tên sản phẩm: ${formData.get("name")}`,
+        description: `Tên mã: ${values.name}`,
       });
 
       router.back();
@@ -104,7 +109,11 @@ export function CreateForm() {
 
   return (
     <Form {...form}>
-      <form ref={formRef} className="space-y-8" action={formAction}>
+      <form
+        ref={formRef}
+        className="space-y-4"
+        onSubmit={form.handleSubmit(onSubmit)}
+      >
         <FormField
           control={form.control}
           name="name"
@@ -131,19 +140,30 @@ export function CreateForm() {
             </FormItem>
           )}
         />
-        <FormField
+        <FormField // Field nhập giá
           control={form.control}
-          name="fromDate"
+          name="discount"
           render={({ field }) => (
-            <FormItem className="flex flex-col">
-              <FormLabel>Ngày Bắt Đầu</FormLabel>
-              <DatetimePicker
-                {...field}
-                format={[
-                  ["months", "days", "years"],
-                  ["hours", "minutes", "am/pm"],
-                ]}
-              />
+            <FormItem>
+              <Label>Giá</Label>
+              <FormControl>
+                <div className="relative">
+                  <Percent className="absolute left-2.5 top-3 h-4 w-4 text-muted-foreground" />
+                  <Input
+                    className="w-full bg-background pl-8"
+                    placeholder="0"
+                    type="number"
+                    value={field.value ?? ""}
+                    onChange={(e) => {
+                      // Kiểm tra giá trị input nếu trống truyền "undefined", ngược lại thay đổi giá trị field
+                      if (e.target.value === "")
+                        return field.onChange(undefined);
+                      field.onChange(Number(e.target.value));
+                    }}
+                    name={field.name}
+                  />
+                </div>
+              </FormControl>
               <FormMessage />
             </FormItem>
           )}
@@ -165,14 +185,24 @@ export function CreateForm() {
             </FormItem>
           )}
         />
-        <Button
-          type="submit"
-          disabled={isPending}
-          onClick={form.handleSubmit(() => {
-            setIsPending(true);
-            formRef.current?.requestSubmit();
-          })}
-        >
+        <FormField
+          control={form.control}
+          name="fromDate"
+          render={({ field }) => (
+            <FormItem className="flex flex-col">
+              <FormLabel>Ngày Bắt Đầu</FormLabel>
+              <DatetimePicker
+                {...field}
+                format={[
+                  ["months", "days", "years"],
+                  ["hours", "minutes", "am/pm"],
+                ]}
+              />
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <Button type="submit" disabled={isPending}>
           Tạo mã
         </Button>
       </form>
