@@ -1,6 +1,6 @@
 import Image from "next/image";
 import { Button } from "../ui/button";
-import { ShoppingCart, X } from "lucide-react";
+import { Eye, ShoppingCart, X } from "lucide-react";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip"
 
 
@@ -22,10 +22,8 @@ export function AccountFavorite() {
                         </p>
                     </div>
                     <div className="flex gap-4 items-end justify-end">
-                        <Button variant={"outline"} className="text-xs">Xem chi tiết</Button>
-                        <Button className="bg-amber-500 text-xs">
-                            <ShoppingCart /> Thêm giỏ hàng
-                        </Button>
+                        <Button variant={"outline"} className="text-xs"><Eye />Xem chi tiết</Button>
+                        <Button className="bg-amber-500 text-xs"><ShoppingCart /> Thêm giỏ hàng</Button>
                     </div>
                 </div>
             </div>

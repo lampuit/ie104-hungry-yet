@@ -18,7 +18,7 @@ export function AccountCardHistory() {
                         <p className="text-sm flex gap-1 items-center"><PhoneCall className="w-4 h-4" /> <span className="font-medium">0901429731</span></p>
                     </div>
                 }
-                <p className="text-xl">Thành tiền: <span className="font-semibold text-red-500">100.000đ</span></p>
+                <p className="text-xl py-6">Thành tiền: <span className="font-semibold text-red-500">100.000đ</span></p>
             </div>
             <div className="flex flex-col gap-12 items-end w-1/3">
                 <div className="flex flex-col gap-1 items-end">
