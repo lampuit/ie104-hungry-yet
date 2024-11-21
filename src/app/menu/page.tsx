@@ -40,7 +40,7 @@ export const fetcher = async () => {
 
 export default function MenuPage() {
   // Kiểm tra session
-  const { data } = useSWR("fetcherKey", fetcher);
+  const { data, isLoading } = useSWR("fetcherKey", fetcher);
 
   // Lấy tên danh mục sau khi click vào từ trang Homepage
   const searchParams = useSearchParams();
