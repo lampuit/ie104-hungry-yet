@@ -4,7 +4,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Button } from "@/components/ui/button";
 import { ClipboardList, Heart, LogOut, Settings, UserIcon } from "lucide-react";
 import { usePathname, useRouter } from "next/navigation";
-import { ReactNode, useEffect, useState } from "react";
+import { ReactNode, useState } from "react";
 
 export default function Layout({
     children,
@@ -16,18 +16,6 @@ export default function Layout({
     const pathSegments = pathname.split("/").filter(Boolean);
     const router = useRouter();
     const [activePath, setActivePath] = useState<string>("");
-
-    // useEffect(() => {
-    //     if (pathname === "/account/favorite") {
-    //         setActivePath("Danh mục yêu thích");
-    //     } else if (pathname === "/account/setting") {
-    //         setActivePath("Cài đặt");
-    //     } else if (pathname === "/account") {
-    //         setActivePath("Thông tin tài khoản");
-    //     } else {
-    //         setActivePath("Thông tin đơn hàng");
-    //     }
-    // }, [pathname]);
 
     const handleClick = (pathname: string, path: string) => {
         setActivePath(pathname);

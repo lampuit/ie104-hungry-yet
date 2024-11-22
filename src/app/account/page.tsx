@@ -51,25 +51,29 @@ export default function Account() {
         })
     }
     return (
-        <div className="grow flex flex-col gap-5">
-            <h2 className="font-semibold text-2xl">Tài khoản của tôi</h2>
-            <div className="flex gap-24 p-16 border-2 rounded-md bg-white">
-                <div className="flex flex-col items-center gap-6 ">
-                    <Avatar className="w-32 h-32">
+        <div className="grow flex flex-col gap-5 md:px-8">
+            <h2 className="font-semibold text-xl md:text-2xl">Tài khoản của tôi</h2>
+            <div className="flex flex-col md:flex-row gap-8 p-4 md:p-16 border-2 rounded-md bg-white">
+                {/* Avatar Section */}
+                <div className="flex flex-col items-center gap-4 md:gap-6 w-full md:w-auto">
+                    <Avatar className="w-24 h-24 md:w-32 md:h-32">
                         <AvatarImage src="/images/kimcuc.jpg" />
                         <AvatarFallback>KC</AvatarFallback>
                     </Avatar>
-                    <Button variant={"outline"} className="border-amber-500 text-amber-500 text-xs w-5/6 h-11/12
+                    <Button variant={"outline"} className="w-full md:w-5/6 h-11/12 border-amber-500 text-amber-500 text-sm md:text-xs
                          hover:bg-amber-500 hover:bg-opacity-20 hover:text-amber-500">
-                        <SquarePen className="stroke-amber-500 w-4 h-4" /> Thay đổi ảnh</Button>
+                        <SquarePen className="stroke-amber-500 w-4 h-4" /> Thay đổi ảnh
+                    </Button>
                 </div>
-                <div className="grow flex flex-col gap-6">
-                    <div className="flex gap-4 w-full grow">
-                        <div className="grow">
+
+                {/* Form Section */}
+                <div className="flex flex-col gap-4 md:gap-6 w-full">
+                    <div className="flex flex-col md:flex-row gap-4 w-full">
+                        <div className="w-full">
                             <p>Họ và tên:</p>
                             <Input className="focus-visible:ring-0 focus-visible:ring-offset-0" />
                         </div>
-                        <div className="grow">
+                        <div className="w-full">
                             <p>Số điện thoại/Email:</p>
                             <Input className="focus-visible:ring-0 focus-visible:ring-offset-0" />
                         </div>
@@ -78,9 +82,9 @@ export default function Account() {
                         <p>Địa chỉ:</p>
                         <Input className="focus-visible:ring-0 focus-visible:ring-offset-0" />
                     </div>
-                    <div className="flex gap-6">
+                    <div className="flex flex-col md:flex-row gap-4 md:gap-6">
                         <p>Giới tính: </p>
-                        <RadioGroup defaultValue="option-one" className="flex gap-4">
+                        <RadioGroup defaultValue="option-one" className="flex flex-row gap-4">
                             <div className="flex items-center space-x-2">
                                 <RadioGroupItem value="option-one" id="option-one" />
                                 <Label htmlFor="option-one">Nam</Label>
@@ -97,7 +101,7 @@ export default function Account() {
                     </div>
                     <div>
                         <Form {...form}>
-                            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+                            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
                                 <FormField
                                     control={form.control}
                                     name="dob"
@@ -110,7 +114,7 @@ export default function Account() {
                                                         <Button
                                                             variant={"outline"}
                                                             className={cn(
-                                                                "w-[240px] pl-3 text-left font-normal",
+                                                                "w-full md:w-[240px] pl-3 text-left font-normal",
                                                                 !field.value && "text-muted-foreground"
                                                             )}
                                                         >
@@ -142,7 +146,7 @@ export default function Account() {
                             </form>
                         </Form>
                     </div>
-                    <Button className="w-1/5 bg-amber-500">Lưu thay đổi</Button>
+                    <Button className="w-full md:w-1/5 bg-amber-500">Lưu thay đổi</Button>
                 </div>
             </div>
         </div>
