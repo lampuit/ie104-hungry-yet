@@ -7,20 +7,28 @@ import {
   timestamp,
   uuid,
   boolean,
+  primaryKey,
 } from "drizzle-orm/pg-core";
 import { user } from "./auth";
 import { relations } from "drizzle-orm";
-import { createInsertSchema, createSelectSchema } from "drizzle-zod";
-import { primaryKey } from "drizzle-orm/mysql-core";
+import { createInsertSchema } from "drizzle-zod";
 
-// Bảng Categories
+// Định nghĩa Enum Status (Trạng thái đơn hàng)
+export const statusEnum = pgEnum("status", [
+  "cooking",
+  "cooked",
+  "shopping",
+  "shipped",
+]);
+
+// Bảng Categories (Thể loại)
 export const categories = pgTable("categories", {
   id: uuid("id").primaryKey().defaultRandom(),
   name: text("name").notNull(),
   imageUrl: text("imageUrl"),
 });
 
-// Bảng Products
+// Bảng Products (Sản phẩm)
 export const products = pgTable("products", {
   id: uuid("id").primaryKey().defaultRandom(),
   name: text("name").notNull(),
@@ -40,7 +48,7 @@ export const categoryRelations = relations(categories, ({ many }) => ({
   products: many(products),
 }));
 
-// Relation: 1 product -> 1 category
+// Relation: 1 product -> 1 categories
 export const productRelations = relations(products, ({ one }) => ({
   category: one(categories, {
     fields: [products.categoryId],
@@ -48,14 +56,14 @@ export const productRelations = relations(products, ({ one }) => ({
   }),
 }));
 
-// Bảng Ratings
+// Bảng Ratings (Đánh giá)
 export const ratings = pgTable("ratings", {
   productId: uuid("productId")
     .notNull()
-    .references(() => products.id), // Khóa ngoại
+    .references(() => products.id, { onDelete: "cascade" }), // Khóa ngoại
   userId: text("userId")
     .notNull()
-    .references(() => user.id), // Khóa ngoại
+    .references(() => user.id, { onDelete: "cascade" }), // Khóa ngoại
   star: integer("star").notNull(),
   review: text("review"),
   imageURL: text("imageURL"),
@@ -63,21 +71,14 @@ export const ratings = pgTable("ratings", {
   updatedAt: timestamp("updatedAt").$onUpdate(() => new Date()),
 });
 
-//Relation: 1 product -> n rating
-export const productRatingRelation = relations(products, ({ many }) => ({
-  ratings: many(ratings),
+// Relation: 1 product -> n users && 1 user -> n products
+export const ratingsRelations = relations(ratings, ({ one }) => ({
+  products: one(products),
+  users: one(user),
 }));
 
-// Enum cho trạng thái đơn hàng
-export const statusEnum = pgEnum("status", [
-  "cooking",
-  "cooked",
-  "shopping",
-  "shipped",
-]);
-
-// Bảng Orders
-export const orders = pgTable("orders", {
+// Bảng Invoices (Hóa đơn)
+export const invoices = pgTable("invoices", {
   id: uuid("id").primaryKey().notNull().defaultRandom(),
   userId: text("userId")
     .notNull()
@@ -97,11 +98,11 @@ export const orders = pgTable("orders", {
     .$onUpdate(() => new Date()),
 });
 
-// Bảng OrderProducts
-export const orderProducts = pgTable("orderProducts", {
+// Bảng Orders (Đặt hàng)
+export const orders = pgTable("orders", {
   orderId: uuid("orderId")
     .notNull()
-    .references(() => orders.id), // Khóa ngoại
+    .references(() => invoices.id, { onDelete: "cascade" }), // Khóa ngoại
   productId: uuid("productId")
     .notNull()
     .references(() => products.id), // Khóa ngoại
@@ -112,13 +113,13 @@ export const orderProducts = pgTable("orderProducts", {
     .$onUpdate(() => new Date()),
 });
 
-// Bảng Payments
+// Bảng Payments (Thanh toán)
 export const payments = pgTable("payments", {
   id: text("id").primaryKey(),
   paymentName: text("paymentName").notNull(),
 });
 
-// Bảng Discounts
+// Bảng Discounts (Giám giá)
 export const discounts = pgTable("discounts", {
   id: uuid("id").primaryKey().notNull().defaultRandom(),
   name: text("name"),
@@ -131,7 +132,7 @@ export const discounts = pgTable("discounts", {
     .$onUpdate(() => new Date()),
 });
 
-// Bảng Shifts
+// Bảng Shifts (Ca làm)
 export const shifts = pgTable("shifts", {
   id: uuid("id").notNull().defaultRandom().primaryKey(),
   name: text("name").notNull(),
@@ -139,8 +140,8 @@ export const shifts = pgTable("shifts", {
   endTime: text("endTime"),
 });
 
-// Bảng userWorkShifts
-export const userWorkShifts = pgTable("userWorkShifts", {
+// Bảng Assigments (Phân công)
+export const assigments = pgTable("assigments", {
   id: uuid("id").notNull().defaultRandom().primaryKey(),
   userId: text("userId")
     .notNull()
@@ -153,65 +154,76 @@ export const userWorkShifts = pgTable("userWorkShifts", {
 
 //Relation: 1 user -> n userworkshift
 export const userWorkShiftRelation = relations(user, ({ many }) => ({
-  userWorkShifts: many(userWorkShifts),
+  userWorkShifts: many(assigments),
 }));
 
 //Relation: 1 shift -> n userworkshift
 export const shiftUserRelation = relations(shifts, ({ many }) => ({
-  userWorkShifts: many(userWorkShifts),
+  userWorkShifts: many(assigments),
 }));
 
-// Bảng ShoppingCart
-export const shoppingCart = pgTable("shoppingCart", {
-  id: uuid("id").notNull().primaryKey().defaultRandom(),
-  userId: text("userId")
-    .notNull()
-    .references(() => user.id), // Khóa ngoại
-  productId: uuid("productId")
-    .notNull()
-    .references(() => products.id), // Khóa ngoại
-  quantity: integer("quantity").notNull(),
+// Bảng Carts (Giỏ hàng)
+export const carts = pgTable(
+  "carts",
+  {
+    userId: text("userId")
+      .notNull()
+      .references(() => user.id, { onDelete: "cascade" }), // Khóa ngoại
+    productId: uuid("productId")
+      .notNull()
+      .references(() => products.id, { onDelete: "cascade" }), // Khóa ngoại
+    quantity: integer("quantity").notNull(),
 
-  createdAt: timestamp("createdAt").notNull().defaultNow(),
-  updatedAt: timestamp("updatedAt")
-    .notNull()
-    .$onUpdate(() => new Date()),
-});
+    createdAt: timestamp("createdAt").notNull().defaultNow(),
+    updatedAt: timestamp("updatedAt")
+      .notNull()
+      .$onUpdate(() => new Date()),
+  },
+  (t) => ({
+    pk: primaryKey({ columns: [t.userId, t.productId] }),
+  }),
+);
 
-// Relation: 1 shoppingcart -> n products
-export const shoppingCartRelations = relations(shoppingCart, ({ many }) => ({
-  products: many(products),
+// Relation: 1 cart -> n products && 1 product -> n carts
+export const cartsRelations = relations(carts, ({ one }) => ({
+  products: one(products),
+  carts: one(carts),
 }));
 
-// Relation: 1 product -> n shoppingcart
-export const productShoppingCartRelation = relations(products, ({ many }) => ({
-  shoppingCart: many(shoppingCart),
-}));
+// Bảng Favorites (Yêu thích)
+export const favorites = pgTable(
+  "favorites",
+  {
+    userId: text("userId")
+      .notNull()
+      .references(() => user.id, { onDelete: "cascade" }), // Khóa ngoại
+    productId: uuid("productId")
+      .notNull()
+      .references(() => products.id, { onDelete: "cascade" }), // Khóa ngoại
+  },
+  (t) => ({
+    pk: primaryKey({ columns: [t.userId, t.productId] }),
+  }),
+);
 
-// Bảng Favorite
-export const favorite = pgTable("favorite", {
-  userId: text("userId")
-    .notNull()
-    .references(() => user.id), // Khóa ngoại
-  productId: uuid("productId")
-    .notNull()
-    .references(() => products.id), // Khóa ngoại
-});
-
-//Relation: 1 user -> n favorites
-export const favoriteRelations = relations(user, ({ many }) => ({
-  favorite: many(favorite),
-}));
-
-export const userfavoriteRelations = relations(favorite, ({ many }) => ({
-  user: many(user),
+//Relation: 1 user -> n products && 1 product -> n users
+export const favoritesRelations = relations(favorites, ({ one }) => ({
+  products: one(products),
+  carts: one(carts),
 }));
 
 export const insertProductSchema = createInsertSchema(products);
-export const insertCategorySchema = createInsertSchema(products);
-export const insertOrderProductSchema = createInsertSchema(orderProducts);
-export const inserShoppingCartSchema = createInsertSchema(shoppingCart);
-export const insertFavouriteSchema = createInsertSchema(favorite);
+
+export const insertCategorySchema = createInsertSchema(categories);
+
+export const insertOrderSchema = createInsertSchema(orders);
+
+export const inserCartSchema = createInsertSchema(carts);
+
+export const insertFavouriteSchema = createInsertSchema(favorites);
+
 export const insertDiscountSchema = createInsertSchema(discounts);
-export const insertRatingsSchema = createInsertSchema(ratings);
-export const insertUserWorkShiftSchema = createInsertSchema(userWorkShifts);
+
+export const insertRatingSchema = createInsertSchema(ratings);
+
+export const insertAssigmentSchema = createInsertSchema(assigments);
