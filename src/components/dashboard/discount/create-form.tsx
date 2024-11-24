@@ -38,6 +38,7 @@ import { put } from "@vercel/blob";
 import { DatetimePicker } from "@/components/ui/datetime-picker";
 import { createDiscount } from "@/lib/actions/discount";
 import { useRouter } from "next/navigation";
+import { SmartDatetimeInput } from "@/components/ui/smart-date-time-input";
 
 // Tạo schema form với các trường dữ liệu tương ứng với cơ sở dữ liệu
 const formSchema = z.object({
@@ -172,32 +173,30 @@ export function CreateForm() {
           control={form.control}
           name="fromDate"
           render={({ field }) => (
-            <FormItem className="flex flex-col">
+            <FormItem>
               <FormLabel>Ngày Bắt Đầu</FormLabel>
-              <DatetimePicker
-                {...field}
-                format={[
-                  ["months", "days", "years"],
-                  ["hours", "minutes", "am/pm"],
-                ]}
-              />
+              <FormControl>
+                <SmartDatetimeInput
+                  value={field.value}
+                  onValueChange={field.onChange}
+                />
+              </FormControl>
               <FormMessage />
             </FormItem>
           )}
         />
         <FormField
           control={form.control}
-          name="fromDate"
+          name="toDate"
           render={({ field }) => (
-            <FormItem className="flex flex-col">
-              <FormLabel>Ngày Bắt Đầu</FormLabel>
-              <DatetimePicker
-                {...field}
-                format={[
-                  ["months", "days", "years"],
-                  ["hours", "minutes", "am/pm"],
-                ]}
-              />
+            <FormItem>
+              <FormLabel>Ngày Kết Thúc</FormLabel>
+              <FormControl>
+                <SmartDatetimeInput
+                  value={field.value}
+                  onValueChange={field.onChange}
+                />
+              </FormControl>
               <FormMessage />
             </FormItem>
           )}
