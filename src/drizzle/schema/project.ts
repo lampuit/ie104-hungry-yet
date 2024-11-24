@@ -50,10 +50,7 @@ export const categoryRelations = relations(categories, ({ many }) => ({
 
 // Relation: 1 product -> 1 categories
 export const productRelations = relations(products, ({ one }) => ({
-  category: one(categories, {
-    fields: [products.categoryId],
-    references: [categories.id],
-  }),
+  category: one(categories),
 }));
 
 // Bảng Ratings (Đánh giá)
@@ -152,14 +149,14 @@ export const assigments = pgTable("assigments", {
   updatedAt: timestamp("updatedAt").$onUpdate(() => new Date()),
 });
 
-//Relation: 1 user -> n userworkshift
-export const userWorkShiftRelation = relations(user, ({ many }) => ({
-  userWorkShifts: many(assigments),
+// Relation: 1 user -> n shifts
+export const userToShiftsRelations = relations(user, ({ many }) => ({
+  shifts: many(assigments),
 }));
 
-//Relation: 1 shift -> n userworkshift
-export const shiftUserRelation = relations(shifts, ({ many }) => ({
-  userWorkShifts: many(assigments),
+// Relation: 1 shift -> n user
+export const shiftsToUserRelations = relations(shifts, ({ many }) => ({
+  user: many(assigments),
 }));
 
 // Bảng Carts (Giỏ hàng)

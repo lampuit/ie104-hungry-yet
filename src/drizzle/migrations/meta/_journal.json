@@ -15,6 +15,13 @@
       "when": 1731860150232,
       "tag": "0001_concerned_sabretooth",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1732007213541,
+      "tag": "0002_mixed_mongoose",
+      "breakpoints": true
     }
   ]
 }
