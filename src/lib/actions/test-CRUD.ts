@@ -1,5 +1,5 @@
 import {
-  createShoppingCart,
+  createCart,
   deleteShoppingCart,
   updateShoppingCart,
 } from "./shopping-cart";
@@ -15,16 +15,16 @@ import {
 } from "@/lib/data";
 
 //sucessfull SHOPPING CART
-async function testCreateShoppingCart() {
+async function testcreateCart() {
   const formData = new FormData();
   formData.append("userId", "qWINSwQ1EN3wRZdMpDJS8");
   formData.append("productId", "b944c6f8-dbab-47b3-b4b8-4a52dd4eaf72");
   formData.append("quantity", "2");
 
   console.log(formData);
-  await createShoppingCart(formData);
+  await createCart(formData);
 }
-// testCreateShoppingCart()
+// testcreateCart()
 
 //successfull
 async function testGetShoppingCartByUserId() {

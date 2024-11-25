@@ -1,7 +1,7 @@
 import { toast } from "sonner";
 import { Button } from "../ui/button"
 import { ShoppingCart } from "lucide-react";
-import { createShoppingCart } from "@/lib/actions/shopping-cart";
+import { createCart } from "@/lib/actions/shopping-cart";
 import { getSession } from "@/lib/auth-client";
 
 interface Dish {
@@ -31,7 +31,7 @@ export const AddToCartButton: React.FC<{ dish: Dish }> = ({ dish }) => {
         data.append('productId', productId);
         data.append('quantity', '1');
 
-        await createShoppingCart(data);
+        await createCart(data);
 
         
             console.log(`Add product ${productId} to cart`);
