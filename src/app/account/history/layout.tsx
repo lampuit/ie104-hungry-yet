@@ -30,10 +30,10 @@ export default function Layout({
         router.push(path);
     };
     return (
-        <div className="grow flex flex-col gap-4">
+        <div className="grow flex flex-col gap-4 px-20">
             <h1 className="text-2xl font-semibold">Đơn hàng của tôi</h1>
-            <div className="grow flex flex-col lg:flex-row gap-8 p-6 bg-gray-100">
-                <div className="flex flex-col gap-5 w-full lg:w-2/3">
+            <div className="flex flex-col lg:flex-row">
+                <div className="flex flex-col gap-5 w-full">
                     <div className="flex gap-4 justify-around bg-white rounded-lg p-2 shadow-md">
                         <Button
                             variant={activeButton === "Đang giao" ? "secondary" : "ghost"}
@@ -54,7 +54,7 @@ export default function Layout({
                             <PackageX /> Đã hủy
                         </Button>
                     </div>
-                    <div>{children}</div>
+                    {children}
                 </div>
             </div>
         </div>
