@@ -7,13 +7,13 @@ import {
 } from "@/drizzle/schema/project";
 import { eq, and } from "drizzle-orm";
 
-const CreateShoppingCart = inserCartSchema.omit({
+const createCarts = inserCartSchema.omit({
   createdAt: true,
   updatedAt: true,
 });
 
-export async function createShoppingCart(formData: FormData) {
-  const data = CreateShoppingCart.parse({
+export async function createCart(formData: FormData) {
+  const data = createCarts.parse({
     userId: formData.get("userId"),
     productId: formData.get("productId"),
     quantity: Number(formData.get("quantity")),
@@ -24,7 +24,7 @@ export async function createShoppingCart(formData: FormData) {
 
 }
 
-export async function updateShoppingCart(formData: FormData) {
+export async function updateCarts(formData: FormData) {
   await db
     .update(carts)
     .set({ quantity: Number(formData.get("quantity")) })
