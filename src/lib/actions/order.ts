@@ -1,10 +1,10 @@
 "use server";
 
 import { db } from "@/drizzle/db";
-import { insertOrderProductSchema, orderProducts } from "@/drizzle/schema/project";
-import { eq,sql } from "drizzle-orm";
+import { insertOrderSchema, orders } from "@/drizzle/schema/project";
+import { eq, sql, and } from "drizzle-orm";
 
-const CreateOrderProduct = insertOrderProductSchema.omit({
+const CreateOrderProduct = insertOrderSchema.omit({
   createdAt: true,
   updatedAt: true,
 });
@@ -18,17 +18,17 @@ export async function createOrderProduct(formData: FormData) {
 
   console.log(data);
 
-  await db.insert(orderProducts).values(data);
+  await db.insert(orders).values(data);
 }
 
 export async function updateOrderProduct(formData: FormData) {
-    await db.update(orderProducts)
-        .set({ quantity: Number(formData.get("quantity"))})
-        .where(eq(orderProducts.orderId, formData.get("orderId") as string));
+  await db.update(orders)
+    .set({ quantity: Number(formData.get("quantity")) })
+    .where(and(eq(orders.productId, formData.get("productId") as string), eq(orders.invoiceId, formData.get("invoiceId") as string)));
 }
 
-export async function deleteOrderProduct(orderId: string) {
-  await db.delete(orderProducts).where(eq(orderProducts.orderId, orderId));
+export async function deleteOrderProduct(productId: string, invoiceId: string) {
+  await db.delete(orders).where(and(eq(orders.productId, productId), eq(orders.invoiceId, invoiceId)));
 }
 
 

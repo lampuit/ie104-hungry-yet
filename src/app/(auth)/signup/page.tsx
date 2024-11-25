@@ -125,7 +125,7 @@ export default function Sign() {
                     Đăng ký...
                   </>
                 ) : (
-                  "Đăng nhập"
+                  "Đăng ký"
                 )}
               </Button>
             </form>

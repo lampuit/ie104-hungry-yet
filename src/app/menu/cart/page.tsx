@@ -14,6 +14,7 @@ import { Summary } from "@/components/menu/cart/summary";
 import { getSession } from "@/lib/auth-client";
 import { redirect } from "next/navigation";
 import useSWR from "swr";
+import LoadingSpinner from "@/components/ui/loading-spinner";
 
 // Lấy session
 export const fetcher = async () => {
@@ -22,10 +23,17 @@ export const fetcher = async () => {
 };
 
 export default function CartPage() {
-  const { data: userId, error } = useSWR("userId", fetcher);
-  if (!userId) {
-    redirect("/login");
+  const { data: userId, error, isLoading } = useSWR("userId", fetcher);
+
+  if (isLoading) {
+    return <LoadingSpinner />;
   }
+  else {
+    if (!userId) {
+      redirect("/login");
+    }
+  }
+
 
   return (
     <main>
