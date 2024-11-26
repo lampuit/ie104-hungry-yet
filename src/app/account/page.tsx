@@ -80,6 +80,7 @@ export default function Account() {
                 </div>
 
                 {/* Form Section */}
+                {/* //<Form {...form}> */}
                 <div className="flex flex-col gap-4 md:gap-6 w-full">
                     <div className="flex flex-col md:flex-row gap-4 w-full">
                         <div className="w-full">
@@ -88,16 +89,16 @@ export default function Account() {
                         </div>
                         <div className="w-full">
                             <p>Email:</p>
-                            <Input className="focus-visible:ring-0 focus-visible:ring-offset-0" />
+                            <Input className="focus-visible:ring-0 focus-visible:ring-offset-0" value={userInfo?.[0]?.email || ""} />
                         </div>
                         <div className="w-full">
                             <p>Số điện thoại:</p>
-                            <Input className="focus-visible:ring-0 focus-visible:ring-offset-0" />
+                            <Input className="focus-visible:ring-0 focus-visible:ring-offset-0" value={userInfo?.[0]?.phone || ""} />
                         </div>
                     </div>
                     <div>
                         <p>Địa chỉ:</p>
-                        <Input className="focus-visible:ring-0 focus-visible:ring-offset-0" />
+                        <Input className="focus-visible:ring-0 focus-visible:ring-offset-0" value={userInfo?.[0]?.address || ""} />
                     </div>
                     <div className="flex flex-col md:flex-row gap-4 md:gap-6">
                         <p>Giới tính: </p>
