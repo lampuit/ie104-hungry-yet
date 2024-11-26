@@ -67,19 +67,22 @@ export default function Account() {
 
     console.log("user", userInfo);
 
-    //     async function onSubmit(values: z.infer<typeof formSchema>) {
-    //         try {
-    //             await updateUser({
-    //                 ...values,
-    //                 });
+    async function onSubmit(values: z.infer<typeof formSchema>) {
+        try {
+            const data = new FormData();
+            data.append("name", values.name);
+            data.append("email", values.email);
+            data.append("phone", values.phone);
+            data.append("gender", values.gender)
 
-    //         } catch (error) {
+            await updateUser(data);
+            toast({ description: "Cập nhật thông tin thành công!" });
 
-    //             toast.error(`${error}.`);
-    //         } finally {
-    //         }
-    //     }
-    // }
+        } catch (error) {
+            console.log(error);
+            toast({ description: "Cập nhật thông tin thất bại!" });
+        }
+    }
     return (
         <div className="grow flex flex-col gap-5 md:px-8">
             <h2 className="font-semibold text-xl md:text-2xl">Tài khoản của tôi</h2>
@@ -95,27 +98,25 @@ export default function Account() {
                     </Button>
                 </div>
 
-            {/* Form Section */}
-            {/* <Form {...form}>
-                <form
-                    onSubmit={form.handleSubmit(onSubmit)}
-                    className="flex flex-col justify-center space-y-8">
-
-                    <FormField
-                        control={form.control}
-                        name="email"
-                        render={({ field }) => (
-                            <FormItem>
-                                <div className="font-medium">Email</div>
-                                <FormControl>
-                                    <Input placeholder="Nhập email" {...field} />
-                                </FormControl>
-                                <FormMessage />
-                            </FormItem>
-                        )} />
-                </form>
-            </Form> */}
-            {/* <div className="flex flex-col gap-4 md:gap-6 w-full">
+                <Form {...form}>
+                    <form
+                        onSubmit={form.handleSubmit(onSubmit)}
+                        className="flex flex-col justify-center space-y-8">
+                        <FormField
+                            control={form.control}
+                            name="email"
+                            render={({ field }) => (
+                                <FormItem>
+                                    <div className="font-medium">Email</div>
+                                    <FormControl>
+                                        <Input defaultValue={userInfo?.[0]?.email || ""} placeholder="Nhập email" {...field} />
+                                    </FormControl>
+                                    <FormMessage />
+                                </FormItem>
+                            )} />
+                    </form>
+                </Form>
+                {/* <div className="flex flex-col gap-4 md:gap-6 w-full">
                     <div className="flex flex-col md:flex-row gap-4 w-full">
                         <div className="w-full">
                             <p>Họ và tên:</p>
@@ -200,7 +201,8 @@ export default function Account() {
                     </div>
                     <Button className="w-full md:w-1/5 bg-amber-500">Lưu thay đổi</Button>
                 </div> */}
+            </div>
         </div>
-    </div>
-);
+    );
 }
+
