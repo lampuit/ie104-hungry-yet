@@ -73,13 +73,12 @@ export async function getAllEmployee() {
 }
 
 export async function getAllProducts() {
-  return await db
-    .select({
-      ...getTableColumns(products),
-      categoryName: categories.name,
-    })
-    .from(products)
-    .leftJoin(categories, eq(products.categoryId, categories.id));
+  return await db.query.products.findMany({
+    with: {
+      category: true,
+    }
+  });
+    
 }
 
 export async function getProductById({ id }: { id: string }) {
@@ -104,8 +103,8 @@ export async function getAllCategory() {
 
 export async function getProductByCategoryId(
   id: string,
-  page = 1,
-  pageSize = 3,
+  page : number,
+  pageSize: number,
 ) {
   // Count total records for the specified category ID
   const totalRecords = await db.$count(products, eq(products.categoryId, id));

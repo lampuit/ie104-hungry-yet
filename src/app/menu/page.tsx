@@ -61,7 +61,7 @@ export default function MenuPage() {
   // Hàm lấy danh sách món ăn theo danh mục cụ thể (clickedIndex)
   const getDishesByCategoryId = async (clickedIndex: string) => {
     try {
-      const response = await getProductByCategoryId(clickedIndex);
+      const response = await getProductByCategoryId(clickedIndex, 1, 6);
       setDishesList(
         response?.records.map((item: any) => ({
           id: item.id,
