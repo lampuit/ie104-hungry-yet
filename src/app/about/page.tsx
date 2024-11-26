@@ -3,7 +3,7 @@ import Image from "next/image";
 export default function AboutPage() {
     return (
         <div className="w-full flex flex-col gap-8 my-8">
-            <div className="flex flex-col gap-4 p-8">
+            <div className="flex flex-col gap-4 px-16">
                 <h1 className="font-bold text-4xl text-center">Về chúng tôi</h1>
                 <p className="p-4 text-lg">HungryYet? là nền tảng đặt đồ ăn tiên phong,
                     mang đến trải nghiệm ăn uống tiện lợi, phong phú và đầy thú vị dành cho mọi thực khách.
@@ -15,7 +15,7 @@ export default function AboutPage() {
                     hiện diện trong từng bữa ăn của bạn.</p>
             </div>
             <img src="/images/anananan2.png" alt="" />
-            <div className="flex justify-center p-8">
+            <div className="flex justify-center items-center px-16">
                 <div className="flex flex-col gap-2 w-1/3">
                     <h1 className="font-bold text-3xl">WHAT WE DO</h1>
                     <h3 className="font-bold text-2xl">Savor the Moment!</h3>
