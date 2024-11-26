@@ -1,7 +1,7 @@
 "use client"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Button } from "@/components/ui/button";
-import { ClipboardList, Heart, LogOut, SquarePen, UserIcon } from "lucide-react";
+import { Camera, ClipboardList, Heart, LogOut, SquarePen, UserIcon } from "lucide-react";
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
@@ -72,7 +72,7 @@ export default function Account() {
                 <div className="flex flex-col items-center gap-4 md:gap-6 w-full md:w-auto">
                     <Avatar className="w-24 h-24 md:w-32 md:h-32">
                         <AvatarImage src={userInfo?.[0]?.imageUrl ?? undefined} />
-                        <AvatarFallback>KC</AvatarFallback>
+                        <AvatarFallback><Camera className="w-10 h-10" /></AvatarFallback>
                     </Avatar>
                     <Button variant={"outline"} className="w-full md:w-5/6 h-11/12 border-amber-500 text-amber-500 text-sm md:text-xs hover:bg-amber-500 hover:bg-opacity-20 hover:text-amber-500">
                         <SquarePen className="stroke-amber-500 w-4 h-4" /> Thay đổi ảnh
@@ -87,7 +87,11 @@ export default function Account() {
                             <Input className="focus-visible:ring-0 focus-visible:ring-offset-0"  value={userInfo?.[0]?.name || ""}/>
                         </div>
                         <div className="w-full">
-                            <p>Số điện thoại/Email:</p>
+                            <p>Email:</p>
+                            <Input className="focus-visible:ring-0 focus-visible:ring-offset-0" />
+                        </div>
+                        <div className="w-full">
+                            <p>Số điện thoại:</p>
                             <Input className="focus-visible:ring-0 focus-visible:ring-offset-0" />
                         </div>
                     </div>
