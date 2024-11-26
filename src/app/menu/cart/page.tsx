@@ -11,29 +11,13 @@ import {
 } from "@/components/ui/breadcrumb";
 import { ProductList } from "@/components/menu/cart/product-list";
 import { Summary } from "@/components/menu/cart/summary";
-import { getSession } from "@/lib/auth-client";
 import { redirect } from "next/navigation";
-import useSWR from "swr";
-import LoadingSpinner from "@/components/ui/loading-spinner";
-
-// Lấy session
-export const fetcher = async () => {
-  const session = await getSession();
-  return session;
-};
 
 export default function CartPage() {
-  const { data: userId, error, isLoading } = useSWR("userId", fetcher);
-
-  if (isLoading) {
-    return <LoadingSpinner />;
-  }
-  else {
+  const userId = sessionStorage.getItem("userId");
     if (!userId) {
       redirect("/login");
     }
-  }
-
 
   return (
     <main>

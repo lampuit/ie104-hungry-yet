@@ -2,7 +2,6 @@ import { toast } from "sonner";
 import { Button } from "../ui/button"
 import { ShoppingCart } from "lucide-react";
 import { createCart } from "@/lib/actions/shopping-cart";
-import { getSession } from "@/lib/auth-client";
 import { redirect, useRouter } from "next/navigation";
 
 interface Dish {
@@ -14,16 +13,10 @@ interface Dish {
     published: boolean;
 }
 
-import swr from "swr";
-
-export const fetcher = async () => {
-    const session = await getSession();
-    return session?.data?.user?.id;
-};
 
 export const AddToCartButton: React.FC<{ dish: Dish }> = ({ dish }) => {
     const router = useRouter();
-    const { data: userId } = swr("userId", fetcher);
+    const userId = sessionStorage.getItem('userId');
     const handleAddToCartOnClick = async (productId: string) => {
         const data = new FormData();
         console.log(sessionStorage.getItem('userId'));
@@ -46,7 +39,7 @@ export const AddToCartButton: React.FC<{ dish: Dish }> = ({ dish }) => {
                 minute: "numeric",
                 second: "numeric",
                 hour12: true,
-              });
+            });
 
             console.log(`Add product ${productId} to cart`);
             toast(`Đã thêm ${dish.name} vào giỏ hàng`, {

@@ -1,29 +1,24 @@
 "use client";
 import React, { useState, useEffect } from "react";
 import { getShoppingCartByUserId } from "@/lib/data";
-import { getSession } from "@/lib/auth-client";
 import useSWR from "swr";
 import LoadingSpinner from "@/components/ui/loading-spinner";
 
 import { Cart, columns } from "@/app/menu/cart/columns";
 import { DataTable } from "@/app/menu/cart/data-table";
+import { FaLessThanEqual } from "react-icons/fa6";
 
 // Fetch function dùng cho SWR
 const fetcher = async (userId: string) => {
   return getShoppingCartByUserId(userId);
 };
 
-const userFetcher = async () => {
-  const response = await getSession();
-  return response?.data?.user?.id;
-}
-
 export function ProductList() {
-  const { data: userId, error: userError } = useSWR("userId", userFetcher);
-  const { data, error } = useSWR(userId, fetcher, {
+  const userId = sessionStorage.getItem("userId");
+  const { data, isLoading, error } = useSWR(userId, fetcher, {
     revalidateIfStale: true,
     revalidateOnFocus: false,
-    revalidateOnReconnect: false,
+    revalidateOnReconnect: true,
   });
   const [dishes, setDishes] = useState<any[]>([]);
 

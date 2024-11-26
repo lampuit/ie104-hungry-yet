@@ -14,7 +14,6 @@ import {
 } from "@/components/ui/pagination";
 import { getProductByCategoryId } from "@/lib/data";
 import { CategoryFetcher } from "@/components/menu/category";
-import { getSession } from "@/lib/auth-client";
 import useSWR from "swr";
 
 // Đối tượng mô tả một món ăn
@@ -33,14 +32,18 @@ export const fetcher = async () => {
   return category;
 };
 
-  // Nhận danh sách categories và đặt category mặc định (được chọn khi tải trang) là "Khai vị"
-  // export const fetchCategories = async () => {
-  //  return  CategoryFetcher(); // Lấy danh sách categories
-  // };
+// Nhận danh sách categories và đặt category mặc định (được chọn khi tải trang) là "Khai vị"
+// export const fetchCategories = async () => {
+//  return  CategoryFetcher(); // Lấy danh sách categories
+// };
 
 export default function MenuPage() {
   // Kiểm tra session
-  const { data, isLoading } = useSWR("fetcherKey", fetcher);
+  const { data, isLoading, error } = useSWR("fetcherKey", fetcher, {
+    revalidateIfStale: true,
+    revalidateOnFocus: false,
+    revalidateOnReconnect: true
+  });
 
   // Lấy tên danh mục sau khi click vào từ trang Homepage
   const searchParams = useSearchParams();
@@ -52,7 +55,7 @@ export default function MenuPage() {
   const [dishesList, setDishesList] = useState<Dish[]>([]); // Danh sách món ăn được lưu trữ dưới dạng 1 mảng các đối tượng Dish
   // const [categories, setCategories] = useState<any[]>([]); // Danh sách categories
 
-  
+
   const categories = data || [];
 
   // Hàm lấy danh sách món ăn theo danh mục cụ thể (clickedIndex)
@@ -60,7 +63,7 @@ export default function MenuPage() {
     try {
       const response = await getProductByCategoryId(clickedIndex);
       setDishesList(
-        response?.records.map((item:any) => ({
+        response?.records.map((item: any) => ({
           id: item.id,
           name: item.name,
           image: item.imageUrl,
@@ -76,12 +79,12 @@ export default function MenuPage() {
 
   // Tự động gọi API khi người dùng chọn danh mục khác (clickedIndex thay đổi)
 
-  const fetchCategories =  () => {
-      // Gán danh mục mặc định là "Khai vị" hoặc danh mục được chọn từ trang Homepage
-      const defaultCategory = categories.find((category) => category.name === (categoryName || "Khai vị"));
-      if (defaultCategory) {
-        setClickedIndex(defaultCategory.id);
-      }
+  const fetchCategories = () => {
+    // Gán danh mục mặc định là "Khai vị" hoặc danh mục được chọn từ trang Homepage
+    const defaultCategory = categories.find((category) => category.name === (categoryName || "Khai vị"));
+    if (defaultCategory) {
+      setClickedIndex(defaultCategory.id);
+    }
   };
   // Tự động gọi API khi trang được tải
   useEffect(() => {
@@ -90,13 +93,13 @@ export default function MenuPage() {
       getDishesByCategoryId(clickedIndex);
     }
 
-    if (categoryName ) {
-      const category = Array.isArray(categories) ? categories.find((cat:any) => cat.name === categoryName) : undefined;
+    if (categoryName) {
+      const category = Array.isArray(categories) ? categories.find((cat: any) => cat.name === categoryName) : undefined;
       if (category) {
         setClickedIndex(category.id);
       }
     }
-    
+
   }, [clickedIndex, categoryName]);
 
   // Hàm xử lý khi người dùng click vào một danh mục khác

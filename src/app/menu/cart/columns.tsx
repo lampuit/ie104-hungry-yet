@@ -1,5 +1,3 @@
-"use client"
-
 import { Button } from "@/components/ui/button"
 import { createFavorite, deleteFavorite } from "@/lib/actions/favorite"
 import { deletecarts } from "@/lib/actions/shopping-cart"
@@ -18,6 +16,8 @@ import {
     AlertDialogTitle,
     AlertDialogTrigger,
 } from "@/components/ui/alert-dialog"
+import { toast } from "sonner"
+import { mutate } from "swr";
 
 // This type is used to define the shape of our data.
 // You can use a Zod schema here if you want.
@@ -111,11 +111,14 @@ export const columns: ColumnDef<Cart>[] = [
         cell: ({ row }) => {
             const handleDeleteItem = async () => {
                 const id = row.original.id;
-                await deletecarts(id, sessionStorage.getItem("userId") as string)
+                const userId = sessionStorage.getItem("userId") as string;
+                await deletecarts(id, userId as string)
+                mutate(userId);
+                toast("Xoá thành công")
             }
 
             return <AlertDialog>
-                <AlertDialogTrigger><Trash className="stroke-amber-500"/></AlertDialogTrigger>
+                <AlertDialogTrigger><Trash className="stroke-amber-500" /></AlertDialogTrigger>
                 <AlertDialogContent>
                     <AlertDialogHeader>
                         <AlertDialogTitle>Bạn có muốn xoá không?</AlertDialogTitle>
@@ -132,3 +135,4 @@ export const columns: ColumnDef<Cart>[] = [
         },
     }
 ]
+
