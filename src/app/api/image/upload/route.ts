@@ -21,7 +21,7 @@ export async function POST(request: Request): Promise<NextResponse> {
             "image/jpeg",
             "image/png",
             "image/gif",
-            "image/avif",
+            "image/webp",
           ],
           tokenPayload: JSON.stringify({
             // optional, sent to your server on upload completion

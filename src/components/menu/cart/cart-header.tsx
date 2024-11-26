@@ -10,7 +10,7 @@ export function CartHeader() {
                     <Logo />
                     <p className="xs:text-xl sm:text-2xl font-bold px-2">Hungry Yet?</p>
                 </Link>
-                <p className="xs:text-xl sm:text-2xl font-bold">| Giỏ hàng</p>
+                <p className="xs:text-xl sm:text-2xl font-bold">| Về chúng tôi</p>
             </div>
             <div className="flex flex-row justify-between items-center grow max-w-24">
                 <BellIcon />

@@ -1,6 +1,6 @@
 {
-  "id": "0dfa56a2-24b8-471a-9619-51d05d41ad95",
-  "prevId": "3967ea6c-966e-49d3-afad-12cdb046c34b",
+  "id": "4e954473-835b-4a0b-8524-75a2fe1b8cec",
+  "prevId": "1f2161ad-332e-4513-93c3-a771591a7983",
   "version": "7",
   "dialect": "postgresql",
   "tables": {
@@ -184,7 +184,8 @@
         },
         "role": {
           "name": "role",
-          "type": "text",
+          "type": "role",
+          "typeSchema": "public",
           "primaryKey": false,
           "notNull": false
         },
@@ -240,9 +241,15 @@
           "notNull": true,
           "default": "gen_random_uuid()"
         },
-        "discountName": {
-          "name": "discountName",
+        "name": {
+          "name": "name",
           "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "discount": {
+          "name": "discount",
+          "type": "integer",
           "primaryKey": false,
           "notNull": false
         },
@@ -739,25 +746,26 @@
       "columns": {
         "id": {
           "name": "id",
-          "type": "text",
+          "type": "uuid",
           "primaryKey": true,
-          "notNull": true
+          "notNull": true,
+          "default": "gen_random_uuid()"
         },
-        "shiftName": {
-          "name": "shiftName",
+        "name": {
+          "name": "name",
           "type": "text",
           "primaryKey": false,
           "notNull": true
         },
         "startTime": {
           "name": "startTime",
-          "type": "timestamp",
+          "type": "text",
           "primaryKey": false,
           "notNull": false
         },
         "endTime": {
           "name": "endTime",
-          "type": "timestamp",
+          "type": "text",
           "primaryKey": false,
           "notNull": false
         }
@@ -848,9 +856,10 @@
       "columns": {
         "id": {
           "name": "id",
-          "type": "text",
+          "type": "uuid",
           "primaryKey": true,
-          "notNull": true
+          "notNull": true,
+          "default": "gen_random_uuid()"
         },
         "userId": {
           "name": "userId",
@@ -860,7 +869,7 @@
         },
         "shiftId": {
           "name": "shiftId",
-          "type": "text",
+          "type": "uuid",
           "primaryKey": false,
           "notNull": false
         },
@@ -869,6 +878,19 @@
           "type": "timestamp",
           "primaryKey": false,
           "notNull": true
+        },
+        "createdAt": {
+          "name": "createdAt",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "updatedAt": {
+          "name": "updatedAt",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": false
         }
       },
       "indexes": {},
@@ -905,6 +927,15 @@
     }
   },
   "enums": {
+    "public.role": {
+      "name": "role",
+      "schema": "public",
+      "values": [
+        "admin",
+        "staff",
+        "customer"
+      ]
+    },
     "public.status": {
       "name": "status",
       "schema": "public",

@@ -1,4 +1,10 @@
 DO $$ BEGIN
+ CREATE TYPE "public"."role" AS ENUM('admin', 'staff', 'customer');
+EXCEPTION
+ WHEN duplicate_object THEN null;
+END $$;
+--> statement-breakpoint
+DO $$ BEGIN
  CREATE TYPE "public"."status" AS ENUM('cooking', 'cooked', 'shopping', 'shipped');
 EXCEPTION
  WHEN duplicate_object THEN null;
@@ -32,7 +38,7 @@ CREATE TABLE IF NOT EXISTS "user" (
 	"email" text,
 	"address" text,
 	"imageUrl" text,
-	"role" text,
+	"role" "role",
 	"createdAt" timestamp
 );
 --> statement-breakpoint
@@ -44,7 +50,7 @@ CREATE TABLE IF NOT EXISTS "categories" (
 --> statement-breakpoint
 CREATE TABLE IF NOT EXISTS "discounts" (
 	"id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
-	"discountName" text,
+	"name" text,
 	"fromDate" timestamp,
 	"toDate" timestamp,
 	"createdAt" timestamp DEFAULT now() NOT NULL,
@@ -102,14 +108,16 @@ CREATE TABLE IF NOT EXISTS "ratings" (
 	"userId" text NOT NULL,
 	"star" integer NOT NULL,
 	"review" text,
-	"imageURL" text
+	"imageURL" text,
+	"createdAt" timestamp DEFAULT now() NOT NULL,
+	"updatedAt" timestamp
 );
 --> statement-breakpoint
 CREATE TABLE IF NOT EXISTS "shifts" (
-	"id" text PRIMARY KEY NOT NULL,
-	"shiftName" text NOT NULL,
-	"startTime" timestamp,
-	"endTime" timestamp
+	"id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
+	"name" text NOT NULL,
+	"startTime" text,
+	"endTime" text
 );
 --> statement-breakpoint
 CREATE TABLE IF NOT EXISTS "shoppingCart" (
@@ -122,10 +130,12 @@ CREATE TABLE IF NOT EXISTS "shoppingCart" (
 );
 --> statement-breakpoint
 CREATE TABLE IF NOT EXISTS "userWorkShifts" (
-	"id" text PRIMARY KEY NOT NULL,
+	"id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
 	"userId" text NOT NULL,
-	"shiftId" text,
-	"workDate" timestamp NOT NULL
+	"shiftId" uuid,
+	"workDate" timestamp NOT NULL,
+	"createdAt" timestamp DEFAULT now() NOT NULL,
+	"updatedAt" timestamp
 );
 --> statement-breakpoint
 DO $$ BEGIN

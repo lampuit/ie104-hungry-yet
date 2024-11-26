@@ -1,7 +1,7 @@
 import {
-  createShoppingCart,
-  deleteShoppingCart,
-  updateShoppingCart,
+  createCart,
+  deletecarts,
+  updateCarts,
 } from "./shopping-cart";
 
 import { createFavorite, deleteFavorite } from "./favorite";
@@ -9,19 +9,22 @@ import {
   getFavoriteByUserId,
   getShoppingCartByUserId,
   getProductByCategoryId,
+  getAllCategory,
+  getUserById,
+  getUserWorkShift
 } from "@/lib/data";
 
 //sucessfull SHOPPING CART
-async function testCreateShoppingCart() {
+async function testcreateCart() {
   const formData = new FormData();
   formData.append("userId", "qWINSwQ1EN3wRZdMpDJS8");
   formData.append("productId", "b944c6f8-dbab-47b3-b4b8-4a52dd4eaf72");
   formData.append("quantity", "2");
 
   console.log(formData);
-  await createShoppingCart(formData);
+  await createCart(formData);
 }
-// testCreateShoppingCart()
+// testcreateCart()
 
 //successfull
 async function testGetShoppingCartByUserId() {
@@ -38,14 +41,15 @@ async function testUpdateShppingCart() {
   formData.append("quantity", "5");
 
   console.log(formData);
-  await updateShoppingCart(formData);
+  await updateCarts(formData);
 }
 // testUpdateShppingCart()
 
 //successfull
 async function testDeleteShoppingCart() {
-  const response = await deleteShoppingCart(
+  const response = await deletecarts(
     "07cb15c6-92c6-48ae-b963-7fa28fcf8004",
+    ""
   );
   console.log("Response:", response);
 }
@@ -54,8 +58,8 @@ async function testDeleteShoppingCart() {
 //sucessfull FAVORITE
 async function testCreateFavorite() {
   const formData = new FormData();
-  formData.append("userId", "PqEEV28ZywjNXbhRsZ-r_");
-  formData.append("productId", "07cb15c6-92c6-48ae-b963-7fa28fcf8004");
+  formData.append("userId", "0ygURwyW1JQw274gSmiDV");
+  formData.append("productId", "a1b2513f-f3ed-4e27-822e-ec4ac4fceccf");
   console.log(formData);
   await createFavorite(formData);
 }
@@ -78,11 +82,32 @@ async function testDeleteFavorite() {
 
 // testDeleteFavorite()
 
-async function testGetProductByCategoryId() {
+async function testGetProductByCategoryId(id: string) {
   const response = await getProductByCategoryId(
-    "020bdc7a-9264-4b9a-a2cb-ecb56dd8160b"
+    id
   );
   console.log("Product Data:", response);
 }
 
-// testGetProductByCategoryId();
+// testGetProductByCategoryId('58f8a47c-c295-4e70-8482-ba02444155fc');
+
+async function testGetAllCategory(){
+  const response = await getAllCategory();
+  console.log("All Category Data:", response);
+}
+
+// testGetAllCategory()
+
+async function testGetUserById (id: string){
+  const response = await getUserById(id);
+  console.log("User Data:", response);
+}
+
+testGetUserById('_RDKyc9nUb-HmT9Y1jebj')
+
+async function testGetAllUserWorkShift(){
+  const response = await getUserWorkShift();
+  console.log("All User Work Shift Data:", response);
+}
+
+// testGetAllUserWorkShift();

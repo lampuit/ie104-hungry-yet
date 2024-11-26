@@ -1,8 +1,5 @@
 import { CreateForm } from "@/components/dashboard/product/create-form";
-import { Button } from "@/components/ui/button";
 import { db } from "@/drizzle/db";
-import { categories } from "@/drizzle/schema/project";
-import { PlusCircle } from "lucide-react";
 
 export default async function Create() {
   const categories = await db.query.categories.findMany();

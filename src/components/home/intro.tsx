@@ -2,8 +2,13 @@ import React from 'react'
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import Image from "next/image";
+import { getSession } from '@/lib/auth-client';
+import useSWR from 'swr';
+import { fetcher } from '@/app/page';
 
 export function Intro() {
+    const { data: userId, error } = useSWR('userId', fetcher);
+
     return (
         <div className="flex flex-col justify-between items-center w-screen mx-10 py-10 gap-y-52">
             <div className="relative flex justify-center items-center gap-x-36 px-32">
@@ -35,7 +40,7 @@ export function Intro() {
 
             <div className="relative flex justify-center items-center gap-x-36 px-32">
                 <Image
-                    src="/images/intro-dish.jpg"
+                    src="/images/intro-dish-2.jpg"
                     width={400}
                     height={280}
                     alt="Intro dish">
@@ -56,7 +61,7 @@ export function Intro() {
                         </p>
                     </div>
                     <Button asChild className='bg-amber-500 hover:bg-red-500 rounded-3xl'>
-                        <Link href={"#"}>Đặt hàng ngay</Link>
+                        <Link href={ userId ? "/menu/cart" : "/login" }>Đặt hàng ngay</Link>
                     </Button>
                 </div>
             </div>

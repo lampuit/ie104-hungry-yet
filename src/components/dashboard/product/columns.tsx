@@ -32,6 +32,7 @@ import { deleteProduct } from "@/lib/actions/product";
 import React from "react";
 import { toast } from "@/hooks/use-toast";
 import Link from "next/link";
+import { ToastAction } from "@/components/ui/toast";
 
 export type Product = z.infer<typeof insertProductSchema> & {
   categoryName: string | null;
@@ -47,22 +48,41 @@ export const columns: ColumnDef<Product>[] = [
           priority
           alt="Product image"
           className="aspect-square rounded-md object-cover"
-          width="120"
-          height="120"
+          width="160"
+          height="160"
           src={product.imageUrl}
         />
       );
     },
     meta: {
-      headerClassName: "hidden w-[120px] sm:table-cell",
+      headerClassName: "hidden w-[160px] sm:table-cell",
       cellClassName: "hidden sm:table-cell",
     },
   },
   {
     accessorKey: "name",
     header: () => <div>Tên sản phẩm</div>,
+    cell: ({ row }) => {
+      const name = row.getValue("name") as string;
+
+      return <div className="text-lg font-semibold">{name}</div>;
+    },
+  },
+  {
+    accessorKey: "isPublish",
+    header: () => <div>Công khai</div>,
+    cell: ({ row }) => {
+      const isPublish = Boolean(row.getValue("isPublish"));
+
+      return isPublish ? (
+        <Badge>Hiện</Badge>
+      ) : (
+        <Badge variant="secondary">Ẩn</Badge>
+      );
+    },
     meta: {
-      cellClassName: "font-medium",
+      headerClassName: "hidden lg:table-cell",
+      cellClassName: "hidden lg:table-cell",
     },
   },
   {
@@ -78,7 +98,6 @@ export const columns: ColumnDef<Product>[] = [
       return <div>{formatted}</div>;
     },
   },
-
   {
     accessorKey: "categoryName",
     header: () => <div>Thể loại</div>,
@@ -155,11 +174,32 @@ export const columns: ColumnDef<Product>[] = [
                 <AlertDialogCancel>Hủy</AlertDialogCancel>
                 <AlertDialogAction
                   onClick={async () => {
-                    await deleteProduct(product.id!, product.imageUrl!);
+                    try {
+                      await Promise.all([
+                        // Xóa image ra khỏi storage
+                        fetch(`/api/image/delete?url=${product.imageUrl}`, {
+                          method: "DELETE",
+                        }),
 
-                    toast({
-                      title: "Xóa thành công sản phẩm.",
-                    });
+                        // Xóa sản phẩm ra khỏi database
+                        deleteProduct(product.id!),
+                      ]);
+                      toast({
+                        title: "Xóa thành công sản phẩm.",
+                        description: `Tên sản phẩm: ${product.name}`,
+                      });
+                    } catch (error) {
+                      if (error instanceof Error) {
+                        toast({
+                          variant: "destructive",
+                          title: "Uh oh! Có gì đó sai.",
+                          description: error.message,
+                          action: (
+                            <ToastAction altText="Thử lại">Thử lại</ToastAction>
+                          ),
+                        });
+                      }
+                    }
                   }}
                 >
                   Tiếp tục

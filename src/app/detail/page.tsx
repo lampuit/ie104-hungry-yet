@@ -9,9 +9,6 @@ import {
     BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb"
 
-import Image from "next/image"
-
-import { DetailHeader } from "@/components/detail/detail-header"
 import { Badge } from "@/components/ui/badge"
 import { Bookmark, MessageCircle, MessageCircleMore, ShoppingCart, Star } from "lucide-react"
 import { Button } from "@/components/ui/button"
@@ -25,24 +22,39 @@ import {
     PaginationNext,
     PaginationPrevious,
 } from "@/components/ui/pagination"
-import {getProductById} from "@/lib/data"
 import useSWR from "swr";
+import { getProductById } from "@/lib/data"
 import { useEffect, useState } from "react";
-import LoadingSpinner from "@/components/ui/loading-spinner"
+import LoadingSpinner from "@/components/ui/loading-spinner";
+import { useRouter, useSearchParams } from "next/navigation";
+import { TbCurrencyDong } from "react-icons/tb";
 
-const fetcher = () => {
-    return getProductById('07cb15c6-92c6-48ae-b963-7fa28fcf8004');
+const fetcher = async(id: string) => {
+    return getProductById({ id });
 }
 
+interface Dish {
+    categoryId: string;
+    categoryName: string;
+    createdAt: Date;
+    des: string;
+    id: string;
+    imageUrl: string;
+    price: number;
+    name: string;
+  }
+
 export default function Detail() {
-    const { data, error } = useSWR("get product by ID", fetcher);
-  
-    const [dish, setDish] = useState<any[]>([]);
+    const searchParams = useSearchParams();
+    const id = searchParams.get("id");
+    const { data, error } = useSWR(id, fetcher);
+    const [dish, setDish] = useState<Dish | null>(null);
 
     useEffect(() => {
-        if (data) {
-          const formattedData = data.map((item: any) => ({
-            categoryId: item.categoryId || undefined,
+        if (data && Array.isArray(data) && data.length > 0) {
+          const item = data[0];
+          const formattedData = {
+            categoryId: item.categoryId || "",
             categoryName: item.categoryName || "/images/fallback.jpg",
             createdAt: item.createdAt || undefined,
             des: item.description || "",
@@ -50,24 +62,19 @@ export default function Detail() {
             imageUrl: item.imageUrl,
             price: item.price,
             name: item.name,
-          }));
+          };
           setDish(formattedData);
         }
       }, [data]);
-
-      console.log(dish)
+      console.log(dish);
     
       if (error) return <div>Error loading data.</div>;
       if (!data) {
         return <LoadingSpinner />;
       }
-
-      const handleClick = () => {
-            alert('hello')
-      }
+    
     return (
         <main>
-            <DetailHeader />
             <section className="my-10 mx-10 w-80 text-base font-semibold">
                 <Breadcrumb>
                     <BreadcrumbList className="text-black">
@@ -87,14 +94,14 @@ export default function Detail() {
             </section>
             <section className="flex justify-center">
                 <div className="flex border p-5 gap-24 items-center justify-between max-w-5xl rounded-md">
-                    <Image src={"/images/square.jpg"} alt="..." width={320} height={320} className="rounded-md"></Image>
+                    <img src={dish?.imageUrl} alt={dish?.name} className="w-80 h-80" />
                     <div>
                         <div className="space-y-8">
                             <div className="space-y-2">
                                 <div className="flex gap-52 items-center">
                                     <div className="flex gap-7 items-center">
-                                        <h1 className="font-semibold text-4xl">{dish[0]?.name}</h1>
-                                        <Badge variant="outline" className="rounded-md bg-amber-400">{dish[0]?.categoryName}</Badge>
+                                        <h1 className="font-semibold text-4xl">{dish?.name}</h1>
+                                        <Badge variant="outline" className="rounded-md bg-amber-400">Món ăn</Badge>
                                     </div>
                                     <Bookmark size={28} />
                                 </div>
@@ -108,7 +115,7 @@ export default function Detail() {
                                         <span>50</span>
                                     </div>
                                 </div>
-                                <h1 className="font-bold text-4xl text-red-500">{dish[0]?.price}<span className="font-normal">đ</span></h1>
+                                <div className="flex items-center font-bold text-4xl text-red-500">{dish?.price}<TbCurrencyDong className="stroke-red-500"/></div>
                             </div>
                             <div className="flex items-center gap-8">
                                 <Button variant={"outline"}
@@ -116,7 +123,7 @@ export default function Detail() {
                                     hover:bg-amber-500 hover:bg-opacity-20 hover:text-amber-500 gap-2">
                                     <ShoppingCart /> <span>Thêm giỏ hàng</span>
                                 </Button>
-                                <Button onClick={handleClick} className="font-semibold border-red-500 bg-red-500 border-2
+                                <Button className="font-semibold border-red-500 bg-red-500 border-2
                                     hover:bg-red-500 hover:shadow-md hover:text-white">Mua ngay</Button>
                             </div>
                         </div>
@@ -126,7 +133,7 @@ export default function Detail() {
             <section className="flex justify-center my-10">
                 <div className="p-5 gap-3 max-w-5xl">
                     <h1 className="font-semibold text-2xl">Mô tả món ăn</h1>
-                    <p className="max-w-5xl">{dish[0]?.des}</p>
+                    <p className="max-w-5xl">{dish?.des}</p>
                 </div>
             </section>
             <section className="space-y-10 mx-10 px-5">

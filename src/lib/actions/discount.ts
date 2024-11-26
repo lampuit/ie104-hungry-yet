@@ -1,55 +1,38 @@
 "use server";
 
 import { db } from "@/drizzle/db";
-import { insertDiscountSchema, discounts } from "@/drizzle/schema/project";
-import { eq, and } from "drizzle-orm";
+import { discounts, insertDiscountSchema } from "@/drizzle/schema/project";
+import { eq } from "drizzle-orm";
+import { revalidatePath, revalidateTag } from "next/cache";
+import { redirect } from "next/navigation";
 
-//remove some attributes created automatically
 const CreateDiscount = insertDiscountSchema.omit({
   id: true,
   createdAt: true,
   updatedAt: true,
 });
 
-//create a new discount
-export async function createDiscount(formData: FormData) {
-  // return object if data is available else error
-  const data = CreateDiscount.parse({
-    discountCode: formData.get("discountCode"),
-    discountName: formData.get("discountName") as string,
-    fromDate: new Date(formData.get("fromDate") as string),
-    toDate: new Date(formData.get("toDate") as string),
-  });
-  console.log(data);
-  await db.insert(discounts).values(data);
+export async function createDiscount(values: any) {
+  const newDiscount = CreateDiscount.parse(values);
+
+  try {
+    await db.insert(discounts).values(newDiscount);
+  } catch (error) {
+    if (error instanceof Error)
+      throw new Error("Lỗi cơ sở dữ liệu: Không thể thêm mã.");
+  }
+
+  revalidatePath("/dashboard/discount");
+  redirect("/dashboard/discount");
 }
 
-
-//update an existing discount
-export async function updateDiscount(formData: FormData) {
+export async function deleteDiscount(id: string) {
   try {
-    await db
-      .update(discounts)
-      .set({
-        name: formData.get("name") as string | undefined,
-        fromDate: new Date(formData.get("fromDate") as string),
-        toDate: new Date(formData.get("toDate") as string),
-      })
-      .where(eq(discounts.id, formData.get("id") as string));
+    await db.delete(discounts).where(eq(discounts.id, id));
   } catch (error) {
-    console.error("Error updating discount:", error);
-    throw error;
+    throw new Error("Lỗi cơ sở dữ liệu: Không thể xóa mã.");
   }
-}
 
-//delete a discount
-export async function deleteFavorite(id: string) {
-  try {
-    await db.delete(discounts).where(and(eq(discounts.id, id)));
-
-    console.log(`Discount with id ${id} has been deleted successfully.`);
-  } catch (error) {
-    console.error(`Error deleting discount with id ${id}:`, error);
-    throw error;
-  }
+  revalidatePath("/dashboard/discount");
+  redirect("/dashboard/discount");
 }
