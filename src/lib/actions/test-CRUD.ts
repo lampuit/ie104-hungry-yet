@@ -1,7 +1,7 @@
 import {
   createCart,
-  deleteShoppingCart,
-  updateShoppingCart,
+  deletecarts,
+  updateCarts,
 } from "./shopping-cart";
 
 import { createFavorite, deleteFavorite } from "./favorite";
@@ -41,14 +41,15 @@ async function testUpdateShppingCart() {
   formData.append("quantity", "5");
 
   console.log(formData);
-  await updateShoppingCart(formData);
+  await updateCarts(formData);
 }
 // testUpdateShppingCart()
 
 //successfull
 async function testDeleteShoppingCart() {
-  const response = await deleteShoppingCart(
+  const response = await deletecarts(
     "07cb15c6-92c6-48ae-b963-7fa28fcf8004",
+    ""
   );
   console.log("Response:", response);
 }
@@ -63,7 +64,7 @@ async function testCreateFavorite() {
   await createFavorite(formData);
 }
 
-testCreateFavorite();
+// testCreateFavorite();
 
 async function testGetFavoriteByUserId() {
   const result = await getFavoriteByUserId("PqEEV28ZywjNXbhRsZ-r_");
@@ -88,7 +89,7 @@ async function testGetProductByCategoryId(id: string) {
   console.log("Product Data:", response);
 }
 
-testGetProductByCategoryId('58f8a47c-c295-4e70-8482-ba02444155fc');
+// testGetProductByCategoryId('58f8a47c-c295-4e70-8482-ba02444155fc');
 
 async function testGetAllCategory(){
   const response = await getAllCategory();
@@ -102,7 +103,7 @@ async function testGetUserById (id: string){
   console.log("User Data:", response);
 }
 
-// testGetUserById('_RDKyc9nUb-HmT9Y1jebj')
+testGetUserById('_RDKyc9nUb-HmT9Y1jebj')
 
 async function testGetAllUserWorkShift(){
   const response = await getUserWorkShift();
