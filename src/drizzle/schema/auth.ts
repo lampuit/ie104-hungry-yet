@@ -1,12 +1,14 @@
 import { pgTable, pgEnum, text, timestamp } from "drizzle-orm/pg-core";
 
 export const userRoleEnum = pgEnum("role", ["admin", "staff", "customer"]);
+export const genderEnum = pgEnum("gender", ["Nam", "Nữ", "Khác"]);
 
 export const user = pgTable("user", {
   id: text("id").primaryKey(),
   name: text("name"),
   phone: text("phone"),
   email: text("email"),
+  gender: genderEnum("gender"),
   address: text("address"),
   imageUrl: text("imageUrl"),
   role: userRoleEnum("role"),
