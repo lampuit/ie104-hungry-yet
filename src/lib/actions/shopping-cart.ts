@@ -1,11 +1,13 @@
 "use server";
 
 import { db } from "@/drizzle/db";
+import { revalidatePath } from "next/cache";
 import {
   inserCartSchema,
   carts,
 } from "@/drizzle/schema/project";
 import { eq, and } from "drizzle-orm";
+import { revalidateEvents } from "swr/_internal";
 
 const createCarts = inserCartSchema.omit({
   createdAt: true,
@@ -46,4 +48,6 @@ export async function deletecarts(productId: string, userId: string) {
   } catch (error) {
     console.error('Error deleting shopping cart', error);
   }
+
+  revalidatePath("/menu/cart");
 }

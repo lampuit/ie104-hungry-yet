@@ -3,6 +3,7 @@ import { Button } from "../ui/button"
 import { ShoppingCart } from "lucide-react";
 import { createCart } from "@/lib/actions/shopping-cart";
 import { getSession } from "@/lib/auth-client";
+import { redirect, useRouter } from "next/navigation";
 
 interface Dish {
     id: string;
@@ -21,28 +22,42 @@ export const fetcher = async () => {
 };
 
 export const AddToCartButton: React.FC<{ dish: Dish }> = ({ dish }) => {
-
-
+    const router = useRouter();
     const { data: userId } = swr("userId", fetcher);
-
     const handleAddToCartOnClick = async (productId: string) => {
         const data = new FormData();
-        data.append('userId', userId as string);
-        data.append('productId', productId);
-        data.append('quantity', '1');
+        console.log(sessionStorage.getItem('userId'));
+        if (!sessionStorage.getItem('userId')) {
+            router.push("/login");
+        }
+        else {
+            data.append('userId', userId as string);
+            data.append('productId', productId);
+            data.append('quantity', '1');
 
-        await createCart(data);
+            await createCart(data);
 
-        
+            const currentDateTime = new Date().toLocaleString("en-US", {
+                weekday: "long",
+                year: "numeric",
+                month: "long",
+                day: "numeric",
+                hour: "numeric",
+                minute: "numeric",
+                second: "numeric",
+                hour12: true,
+              });
+
             console.log(`Add product ${productId} to cart`);
             toast(`Đã thêm ${dish.name} vào giỏ hàng`, {
-                description: "Sunday, December 03, 2023 at 9:00 AM",
+                description: currentDateTime,
                 action: {
-                    label: "Done",
-                    onClick: () => console.log("Added successfully"),
+                    label: "Xem giỏ hàng",
+                    onClick: () => router.push("/menu/cart"),
                 },
             });
-        
+        }
+
     };
     return (
         <Button onClick={() => handleAddToCartOnClick(dish.id)}
