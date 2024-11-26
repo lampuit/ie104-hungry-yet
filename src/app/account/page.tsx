@@ -1,7 +1,7 @@
 "use client"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Button } from "@/components/ui/button";
-import { ClipboardList, Heart, LogOut, SquarePen, UserIcon } from "lucide-react";
+import { Camera, ClipboardList, Heart, LogOut, SquarePen, UserIcon } from "lucide-react";
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
@@ -10,7 +10,6 @@ import { format } from "date-fns"
 import { CalendarIcon } from "lucide-react"
 import { useForm } from "react-hook-form"
 import { z } from "zod"
-
 import { cn } from "@/lib/utils"
 import { toast } from "@/hooks/use-toast";
 import { Calendar } from "@/components/ui/calendar"
@@ -28,6 +27,9 @@ import {
     PopoverContent,
     PopoverTrigger,
 } from "@/components/ui/popover"
+import {getUserById} from "@/lib/data";
+import useSWR from "swr";
+import {updateUser} from "@/lib/actions/user";
 
 const FormSchema = z.object({
     dob: z.date({
@@ -35,7 +37,19 @@ const FormSchema = z.object({
     }),
 })
 
+const getUser = async (id: string) => {
+    const user = await getUserById(id);
+    return user;
+};
+
 export default function Account() {
+
+    const userId = sessionStorage.getItem('userId');
+
+    const { data: userInfo, error } = useSWR(userId, getUser)
+
+    console.log("user", userInfo);
+
     const form = useForm<z.infer<typeof FormSchema>>({
         resolver: zodResolver(FormSchema),
     })
@@ -57,8 +71,8 @@ export default function Account() {
                 {/* Avatar Section */}
                 <div className="flex flex-col items-center gap-4 md:gap-6 w-full md:w-auto">
                     <Avatar className="w-24 h-24 md:w-32 md:h-32">
-                        <AvatarImage src="/images/kimcuc.jpg" />
-                        <AvatarFallback>KC</AvatarFallback>
+                        <AvatarImage src={userInfo?.[0]?.imageUrl ?? undefined} />
+                        <AvatarFallback><Camera className="w-10 h-10" /></AvatarFallback>
                     </Avatar>
                     <Button variant={"outline"} className="w-full md:w-5/6 h-11/12 border-amber-500 text-amber-500 text-sm md:text-xs hover:bg-amber-500 hover:bg-opacity-20 hover:text-amber-500">
                         <SquarePen className="stroke-amber-500 w-4 h-4" /> Thay đổi ảnh
@@ -70,10 +84,14 @@ export default function Account() {
                     <div className="flex flex-col md:flex-row gap-4 w-full">
                         <div className="w-full">
                             <p>Họ và tên:</p>
+                            <Input className="focus-visible:ring-0 focus-visible:ring-offset-0"  value={userInfo?.[0]?.name || ""}/>
+                        </div>
+                        <div className="w-full">
+                            <p>Email:</p>
                             <Input className="focus-visible:ring-0 focus-visible:ring-offset-0" />
                         </div>
                         <div className="w-full">
-                            <p>Số điện thoại/Email:</p>
+                            <p>Số điện thoại:</p>
                             <Input className="focus-visible:ring-0 focus-visible:ring-offset-0" />
                         </div>
                     </div>

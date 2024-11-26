@@ -2,12 +2,11 @@ import React from 'react'
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import Image from "next/image";
-import { getSession } from '@/lib/auth-client';
 import useSWR from 'swr';
-import { fetcher } from '@/app/page';
+
 
 export function Intro() {
-    const { data: userId, error } = useSWR('userId', fetcher);
+    const userId = sessionStorage.getItem('userId');
 
     return (
         <div className="flex flex-col justify-between items-center w-screen mx-10 py-10 gap-y-52">
