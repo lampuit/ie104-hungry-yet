@@ -21,7 +21,7 @@ export function ProductList() {
     revalidateOnReconnect: true,
   });
   const [dishes, setDishes] = useState<any[]>([]);
-
+  
   useEffect(() => {
     if (data) {
       const formattedData = data.map((item: any) => ({
