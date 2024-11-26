@@ -27,9 +27,10 @@ import {
     PopoverContent,
     PopoverTrigger,
 } from "@/components/ui/popover"
-import {getUserById} from "@/lib/data";
+import { getUserById } from "@/lib/data";
 import useSWR from "swr";
-import {updateUser} from "@/lib/actions/user";
+import { updateUser } from "@/lib/actions/user";
+import { genderEnum } from "@/drizzle/schema/auth";
 
 const FormSchema = z.object({
     dob: z.date({
@@ -42,7 +43,23 @@ const getUser = async (id: string) => {
     return user;
 };
 
+const formSchema = z.object({
+    email: z.string().email("Email không hợp lệ"),
+    name: z.string().min(1, "Tên người dùng không hợp lệ!"),
+    gender: z.enum(genderEnum.enumValues as [string, ...string[]]),
+    phone: z.string().min(10, "Số điện thoại không hợp lệ!"),
+});
+
 export default function Account() {
+    const form = useForm<z.infer<typeof formSchema>>({
+        resolver: zodResolver(formSchema),
+        defaultValues: {
+            name: "",
+            email: "",
+            phone: "",
+            gender: "",
+        },
+    });
 
     const userId = sessionStorage.getItem('userId');
 
@@ -50,20 +67,19 @@ export default function Account() {
 
     console.log("user", userInfo);
 
-    const form = useForm<z.infer<typeof FormSchema>>({
-        resolver: zodResolver(FormSchema),
-    })
+    //     async function onSubmit(values: z.infer<typeof formSchema>) {
+    //         try {
+    //             await updateUser({
+    //                 ...values,
+    //                 });
 
-    function onSubmit(data: z.infer<typeof FormSchema>) {
-        toast({
-            title: "You submitted the following values:",
-            description: (
-                <pre className="mt-2 w-[340px] rounded-md bg-slate-950 p-4">
-                    <code className="text-white">{JSON.stringify(data, null, 2)}</code>
-                </pre>
-            ),
-        })
-    }
+    //         } catch (error) {
+
+    //             toast.error(`${error}.`);
+    //         } finally {
+    //         }
+    //     }
+    // }
     return (
         <div className="grow flex flex-col gap-5 md:px-8">
             <h2 className="font-semibold text-xl md:text-2xl">Tài khoản của tôi</h2>
@@ -79,13 +95,31 @@ export default function Account() {
                     </Button>
                 </div>
 
-                {/* Form Section */}
-                {/* //<Form {...form}> */}
-                <div className="flex flex-col gap-4 md:gap-6 w-full">
+            {/* Form Section */}
+            {/* <Form {...form}>
+                <form
+                    onSubmit={form.handleSubmit(onSubmit)}
+                    className="flex flex-col justify-center space-y-8">
+
+                    <FormField
+                        control={form.control}
+                        name="email"
+                        render={({ field }) => (
+                            <FormItem>
+                                <div className="font-medium">Email</div>
+                                <FormControl>
+                                    <Input placeholder="Nhập email" {...field} />
+                                </FormControl>
+                                <FormMessage />
+                            </FormItem>
+                        )} />
+                </form>
+            </Form> */}
+            {/* <div className="flex flex-col gap-4 md:gap-6 w-full">
                     <div className="flex flex-col md:flex-row gap-4 w-full">
                         <div className="w-full">
                             <p>Họ và tên:</p>
-                            <Input className="focus-visible:ring-0 focus-visible:ring-offset-0"  value={userInfo?.[0]?.name || ""}/>
+                            <Input className="focus-visible:ring-0 focus-visible:ring-offset-0" value={userInfo?.[0]?.name || ""} />
                         </div>
                         <div className="w-full">
                             <p>Email:</p>
@@ -165,8 +199,8 @@ export default function Account() {
                         </Form>
                     </div>
                     <Button className="w-full md:w-1/5 bg-amber-500">Lưu thay đổi</Button>
-                </div>
-            </div>
+                </div> */}
         </div>
-    );
+    </div>
+);
 }
