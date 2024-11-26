@@ -170,15 +170,15 @@ export async function getShoppingCartByUserId(userId: string) {
 }
 
 export async function getAllRatings() {
-  return await db
-    .select({
-      ...getTableColumns(ratings),
-      productName: products.name,
-      productPrice: products.price,
-      productImageUrl: products.imageUrl,
-    })
-    .from(ratings)
-    .leftJoin(products, eq(ratings.productId, products.id));
+  return await db.query.ratings.findMany({
+    with:{
+      product:{
+        with: {
+          category: true
+        }
+      }
+    }
+  });
 }
 
 export async function getRatingsByProductId(id: string) {

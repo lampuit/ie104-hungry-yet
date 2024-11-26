@@ -11,8 +11,19 @@ import {
 } from "@/components/ui/carousel"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Star, Stars } from 'lucide-react';
+import useSWR from 'swr';
+
+import { getAllRatings } from '@/lib/data';
+
+const fetcher = async () => {
+    const ratings = await getAllRatings();
+    return ratings;
+}
 
 export function Testimonials() {
+
+    const { data: listRatings, error } = useSWR('ratings', fetcher);
+
     return (
         <Carousel
             opts={{
@@ -20,31 +31,27 @@ export function Testimonials() {
             }}
             className="w-11/12 xl:max-w-screen-xl lg:max-w-screen-lg md:max-w-screen-md mx-auto mt-8">
             <CarouselContent>
-                {Array.from({ length: 10 }).map((_, index) => (
+                {listRatings?.map((rating, index) => (
                     <CarouselItem key={index} className="md:basis-full lg:basis-1/2 xl:basis-1/3">
                         <Card>
                             <CardContent className="py-5 px-3 flex flex-col justify-between items-center gap-3 h-80">
                                 <div className="flex gap-2">
-                                    <Star className='fill-amber-400 stroke-amber-400' size={30}/>
-                                    <Star className='fill-amber-400 stroke-amber-400' size={30}/>
-                                    <Star className='fill-amber-400 stroke-amber-400' size={30}/>
-                                    <Star className='fill-amber-400 stroke-amber-400' size={30}/>
-                                    <Star className='fill-amber-400 stroke-amber-400' size={30}/>
+                                    {Array(rating.star).fill(0).map((_, index) => (
+                                        <Star key={index} className='fill-amber-400 stroke-amber-400' size={30} />
+                                    ))}
                                 </div>
                                 <p className="text-center">
-                                    "Food here is absolutely outstanding! Every dish bursts with so much flavor and authenticity.
-                                    Friendly staff, great food, and exceptional service makes dining here an unforgettable experience.
-                                    Highly recommend!"
+                                    {rating?.review}
                                 </p>
                                 <ThinLine />
                                 <div className="flex justity-start items-center gap-4">
                                     <Avatar className='w-12 h-12'>
-                                        <AvatarImage src="/images/main-dishes.jpg" sizes=''/>
+                                        <AvatarImage src="/images/main-dishes.jpg" sizes='' />
                                         <AvatarFallback>CN</AvatarFallback>
                                     </Avatar>
                                     <div className='flex flex-col justify-between'>
-                                        <p className='font-semibold'>Phở bò</p>
-                                        <p>Món ăn</p>
+                                        <p className='font-semibold'>{rating?.product?.name}</p>
+                                        <p>{rating?.product?.category?.name}</p>
                                     </div>
                                 </div>
                             </CardContent>
