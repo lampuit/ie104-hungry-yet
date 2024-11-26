@@ -10,7 +10,6 @@ import { format } from "date-fns"
 import { CalendarIcon } from "lucide-react"
 import { useForm } from "react-hook-form"
 import { z } from "zod"
-
 import { cn } from "@/lib/utils"
 import { toast } from "@/hooks/use-toast";
 import { Calendar } from "@/components/ui/calendar"
@@ -30,6 +29,7 @@ import {
 } from "@/components/ui/popover"
 import {getUserById} from "@/lib/data";
 import useSWR from "swr";
+import {updateUser} from "@/lib/actions/user";
 
 const FormSchema = z.object({
     dob: z.date({
