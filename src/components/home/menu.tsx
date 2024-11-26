@@ -3,19 +3,27 @@ import { Button } from "@/components/ui/button"
 import Link from "next/link"
 import Image from "next/image"
 import { useRouter } from "next/navigation";
+import { getAllCategory } from "@/lib/data";
+import useSWR from "swr";
 
-const categories = [
-    { name: 'Khai vị', src: '/images/appetizers.jpg', alt: 'Appetizers Image' },
-    { name: 'Món chính', src: '/images/main-dishes.jpg', alt: 'Main Dishes Image' },
-    { name: 'Tráng miệng', src: '/images/desserts.jpg', alt: 'Deserts Image' },
-    { name: 'Đồ uống', src: '/images/drinks.jpg', alt: 'Drinks Image' },
-];
+// const categories = [
+//     { name: 'Khai vị', src: '/images/appetizers.jpg', alt: 'Appetizers Image' },
+//     { name: 'Món chính', src: '/images/main-dishes.jpg', alt: 'Main Dishes Image' },
+//     { name: 'Tráng miệng', src: '/images/desserts.jpg', alt: 'Deserts Image' },
+//     { name: 'Đồ uống', src: '/images/drinks.jpg', alt: 'Drinks Image' },
+// ];
+
+const categoriesFectcher = async () => {
+    return getAllCategory();
+}
 
 export function Menu() {
-    // Truyền ten danh mục vào URL khi click vào món ăn (chuyển qua menu)
+    const { data: categories, error } = useSWR("categories", categoriesFectcher);
+    // Truyền tên danh mục vào URL khi click vào món ăn (chuyển qua menu)
     const router = useRouter();
-    const handleCategoryClick = (categoryName: string) => {
-        router.push(`/menu?category=${categoryName}`);
+    const handleCategoryClick = (categoryId: string) => {
+        sessionStorage.setItem("clickedIndex", categoryId);
+        router.push("/menu");
     };
 
     return (
@@ -30,13 +38,13 @@ export function Menu() {
                 </Button>
             </div>
             <div className="grid grid-cols-4 gap-x-6">
-                {categories.map((category) => (
-                    <div key={category.name} className="text-start">
+                {categories?.map((category) => (
+                    <div key={category.id} className="text-start">
                         <div className="overflow-hidden rounded-lg"
-                            onClick={() => handleCategoryClick(category.name)}>
+                            onClick={() => handleCategoryClick(category.id)}>
                             <Image
-                                src={category.src}
-                                alt={category.alt}
+                                src={category.imageUrl || "/images/appetizers.jpg"}
+                                alt={category.name}
                                 width={300}
                                 height={200}
                                 className="object-cover rounded-lg hover:scale-125 transition"

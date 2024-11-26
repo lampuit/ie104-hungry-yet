@@ -1,11 +1,12 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Button } from '../ui/button';
 import { useRouter } from 'next/navigation';
-import { toast } from 'sonner';
 import { AddToCartButton } from './add-to-cart-btn';
 import { Bookmark, Star } from 'lucide-react';
-import { TbCurrencyDong } from "react-icons/tb";
 import { FaCoins } from "react-icons/fa6";
+import { createFavorite, deleteFavorite } from '@/lib/actions/favorite';
+import { ToastAction } from '../ui/toast';
+import { toast } from '@/hooks/use-toast';
 
 interface Dish {
     id: string;
@@ -22,14 +23,43 @@ interface DishListProps {
 
 export const DishList = ({ dishesList }: DishListProps) => {
     const router = useRouter();
+
     const handleProductOnClick = (productId: string) => {
         router.push(`/detail?id=${productId}`);
     };
-    const handleBookmarkOnClick = () => { 
-        toast.success("Đã thêm vào danh sách yêu thích");
+
+    const handleBookmarkOnClick = async (productId: string, productName: string) => {
+        const userId = sessionStorage.getItem("userId");
+        if (userId) {
+            const data = new FormData();
+            data.append("productId", productId);
+            data.append("userId", userId as string);
+            try {
+                await createFavorite(data);
+                toast({
+                    description: `Đã thêm ${productName.toLowerCase()} vào mục yêu thích`,
+                  })
+            }
+            catch (e) {
+                console.log(`Add product ${productId} to cart`);
+                toast({
+                    variant: "destructive",
+                    title: `KHÔNG THỂ THÊM ${productName.toUpperCase()}.`,
+                    description: "Món này đã được thêm vào danh mục yêu thích rồi.",
+                  })
+            }
+        }
+        else {
+            router.push("/login");
+        }
     }
 
-
+    const convertToVND = (price: number) => {
+        return new Intl.NumberFormat("vi-VN", {
+            style: "currency",
+            currency: "VND",
+        }).format(price);
+    }
 
     return (
         <div className="grid lg:grid-cols-3 md:grid-cols-2 sm:grid-cols-1 gap-y-10 gap-x-8 mx-10 px-10">
@@ -41,7 +71,7 @@ export const DishList = ({ dishesList }: DishListProps) => {
                             <div className='flex flex-col justify-between items-start gap-1 w-full'>
                                 <div className='flex justify-between items-center w-full'>
                                     <p className='font-semibold text-xl'>{dish.name}</p>
-                                    <Bookmark />
+                                    <Bookmark onClick={() => handleBookmarkOnClick(dish.id, dish.name)} />
                                 </div>
                                 <p className='font-normal'>{`${dish.des.substr(0, 31)}${(dish.des.length > 32) ? "..." : ""}`}</p>
                             </div>
@@ -51,8 +81,8 @@ export const DishList = ({ dishesList }: DishListProps) => {
                                     <p className='font-normal'>4.8</p>
                                 </div>
                                 <div className='flex justify-end items-center gap-2'>
-                                    <FaCoins className='fill-amber-400'/>
-                                    <div className='flex items-center font-semibold text-red-500 text-xl'>{dish.price} <TbCurrencyDong/></div>
+                                    <FaCoins className='fill-amber-400' />
+                                    <div className='flex items-center font-semibold text-red-500 text-xl'>{convertToVND(dish.price)}</div>
                                 </div>
                             </div>
                             <div className='flex justify-between items-center w-full'>
