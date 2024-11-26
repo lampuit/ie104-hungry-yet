@@ -48,7 +48,8 @@ export default function MenuPage() {
   // Lấy tên danh mục sau khi click vào từ trang Homepage
   const searchParams = useSearchParams();
   const router = useRouter();
-  const categoryName = searchParams.get("category");
+  // const categoryName = searchParams.get("category");
+  const sessionClickIndex = sessionStorage.getItem("clickedIndex");
 
   // ID của danh mục được chọn
   const [clickedIndex, setClickedIndex] = useState<string>("");
@@ -78,33 +79,36 @@ export default function MenuPage() {
   };
 
   // Tự động gọi API khi người dùng chọn danh mục khác (clickedIndex thay đổi)
-
   const fetchCategories = () => {
     // Gán danh mục mặc định là "Khai vị" hoặc danh mục được chọn từ trang Homepage
-    const defaultCategory = categories.find((category) => category.name === (categoryName || "Khai vị"));
-    if (defaultCategory) {
-      setClickedIndex(defaultCategory.id);
+    // const defaultCategory = categories.find((category) => category.name === (categoryName || "Khai vị"));
+    if (sessionClickIndex) {
+      setClickedIndex(sessionClickIndex);
+    }
+    else {
+      setClickedIndex(categories[0]?.id);
     }
   };
   // Tự động gọi API khi trang được tải
   useEffect(() => {
-    fetchCategories()
+    fetchCategories();
     if (clickedIndex) {
       getDishesByCategoryId(clickedIndex);
     }
 
-    if (categoryName) {
-      const category = Array.isArray(categories) ? categories.find((cat: any) => cat.name === categoryName) : undefined;
-      if (category) {
-        setClickedIndex(category.id);
-      }
-    }
+    // if (categoryName) {
+    //   const category = Array.isArray(categories) ? categories.find((cat: any) => cat.name === categoryName) : undefined;
+    //   if (category) {
+    //     setClickedIndex(category.id);
+    //   }
+    // }
 
-  }, [clickedIndex, categoryName]);
+  }, [clickedIndex]);
 
   // Hàm xử lý khi người dùng click vào một danh mục khác
-  const handleCategoryClick = (categoryName: string) => {
-    router.push(`/menu?category=${categoryName}`);
+  const handleCategoryClick = (categoryId: string) => {
+    setClickedIndex(categoryId);
+    sessionStorage.setItem("clickedIndex", categoryId);
   };
 
   return (
@@ -120,7 +124,7 @@ export default function MenuPage() {
             setClickedIndex={(index) => {
               const category = Array.isArray(categories) ? categories.find((cat) => cat.id === index) : undefined;
               if (category) {
-                handleCategoryClick(category.name);
+                handleCategoryClick(category.id);
               }
             }}
           />
