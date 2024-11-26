@@ -12,6 +12,7 @@ import { use, useEffect, useState } from "react";
 import { metadata } from "./metadata";
 import { usePathname } from "next/navigation";
 import useSWR from "swr";
+import { se } from "date-fns/locale";
 
 // Font chữ chính cho toàn bộ trang web
 export const montserrat = Montserrat({
@@ -33,6 +34,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   const { data: userId, error } = useSWR('userId', fetcher);
+  sessionStorage.setItem('userId', userId ?? '');
   const pathname = usePathname();
 
   const isDashboardPath = pathname.startsWith("/dashboard");
@@ -42,7 +44,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={`${montserrat.className} overflow-x-hidden`}>
-        {!isDashboardPath && !isLoginPath && !isRegisterPath  && (
+        {!isDashboardPath && !isLoginPath && !isRegisterPath && (
           <div className="flex justify-center w-screen bg-black z-10">
             {userId ? <AuthorizedNavbar /> : <UnauthorizedNavbar />}
           </div>
