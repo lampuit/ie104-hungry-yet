@@ -27,15 +27,6 @@ export function ProductList() {
   });
   const [dishes, setDishes] = useState<any[]>([]);
 
-  // Function handle when favorite btn is clicked
-  const handleFavoriteClick = (id: number) => {
-    setDishes(
-      dishes.map((dish) =>
-        dish.id === id ? { ...dish, favorited: !dish.favorited } : dish,
-      ),
-    );
-  };
-
   useEffect(() => {
     if (data) {
       const formattedData = data.map((item: any) => ({
@@ -58,16 +49,6 @@ export function ProductList() {
   return (
     <div className="flex flex-col justify-center items-center">
       <DataTable columns={columns} data={dishes}></DataTable>
-                  {/* <TableCell className="w-32 text-center">
-                    {dish.favorited ? (
-                      <Heart className="fill-amber-500 stroke-amber-500" onClick={() => handleFavoriteClick(dish.id)} />
-                    ) : (
-                      <Heart className="stroke-amber-500" onClick={() => handleFavoriteClick(dish.id)} />
-                    )}
-                  </TableCell>
-                  <TableCell className="w-32 text-center">
-                    <Trash className="stroke-amber-500" />
-                  </TableCell> */}
     </div>
   );
 }
