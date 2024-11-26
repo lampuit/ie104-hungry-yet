@@ -1,6 +1,5 @@
 "use client";
-import { use, useEffect, useState } from "react";
-import { useSearchParams, useRouter, redirect } from "next/navigation";
+import { useEffect, useState } from "react";
 import { Search } from "@/components/menu/search";
 import { Category } from "@/components/menu/category";
 import { DishList } from "@/components/menu/dish-list";
@@ -15,6 +14,8 @@ import {
 import { getProductByCategoryId } from "@/lib/data";
 import { CategoryFetcher } from "@/components/menu/category";
 import useSWR from "swr";
+import { se } from "date-fns/locale";
+import { set } from "date-fns";
 
 // Đối tượng mô tả một món ăn
 interface Dish {
@@ -32,11 +33,6 @@ export const fetcher = async () => {
   return category;
 };
 
-// Nhận danh sách categories và đặt category mặc định (được chọn khi tải trang) là "Khai vị"
-// export const fetchCategories = async () => {
-//  return  CategoryFetcher(); // Lấy danh sách categories
-// };
-
 export default function MenuPage() {
   // Kiểm tra session
   const { data, isLoading, error } = useSWR("fetcherKey", fetcher, {
@@ -45,18 +41,14 @@ export default function MenuPage() {
     revalidateOnReconnect: true
   });
 
-  // Lấy tên danh mục sau khi click vào từ trang Homepage
-  const searchParams = useSearchParams();
-  const router = useRouter();
-  // const categoryName = searchParams.get("category");
-  const sessionClickIndex = sessionStorage.getItem("clickedIndex");
-
   // ID của danh mục được chọn
   const [clickedIndex, setClickedIndex] = useState<string>("");
   const [dishesList, setDishesList] = useState<Dish[]>([]); // Danh sách món ăn được lưu trữ dưới dạng 1 mảng các đối tượng Dish
   // const [categories, setCategories] = useState<any[]>([]); // Danh sách categories
-
-
+  if (sessionStorage.getItem("clickedIndex") === null) {
+    setClickedIndex(data?.[0]?.id || "");
+  }
+  const sessionClickIndex = sessionStorage.getItem("clickedIndex");
   const categories = data || [];
 
   // Hàm lấy danh sách món ăn theo danh mục cụ thể (clickedIndex)
@@ -95,13 +87,6 @@ export default function MenuPage() {
     if (clickedIndex) {
       getDishesByCategoryId(clickedIndex);
     }
-
-    // if (categoryName) {
-    //   const category = Array.isArray(categories) ? categories.find((cat: any) => cat.name === categoryName) : undefined;
-    //   if (category) {
-    //     setClickedIndex(category.id);
-    //   }
-    // }
 
   }, [clickedIndex]);
 
