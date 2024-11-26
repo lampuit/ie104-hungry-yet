@@ -2,6 +2,7 @@ import { pgTable, pgEnum, text, timestamp } from "drizzle-orm/pg-core";
 
 export const userRoleEnum = pgEnum("role", ["admin", "staff", "customer"]);
 export const genderEnum = pgEnum("gender", ["Nam", "Nữ", "Khác"]);
+import { createInsertSchema } from "drizzle-zod";
 
 export const user = pgTable("user", {
   id: text("id").primaryKey(),
@@ -11,6 +12,7 @@ export const user = pgTable("user", {
   gender: genderEnum("gender"),
   address: text("address"),
   imageUrl: text("imageUrl"),
+  birthday: timestamp("birthday"),
   role: userRoleEnum("role"),
   createdAt: timestamp("createdAt"),
 });
@@ -38,3 +40,5 @@ export const account = pgTable("account", {
   expiresAt: timestamp("expiresAt"),
   password: text("password"),
 });
+
+export const insertUserSchema = createInsertSchema(user);
