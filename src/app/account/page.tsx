@@ -27,9 +27,10 @@ import {
     PopoverContent,
     PopoverTrigger,
 } from "@/components/ui/popover"
-import {getUserById} from "@/lib/data";
+import { getUserById } from "@/lib/data";
 import useSWR from "swr";
-import {updateUser} from "@/lib/actions/user";
+import { updateUser } from "@/lib/actions/user";
+import { genderEnum } from "@/drizzle/schema/auth";
 
 const FormSchema = z.object({
     dob: z.date({
@@ -42,7 +43,23 @@ const getUser = async (id: string) => {
     return user;
 };
 
+const formSchema = z.object({
+    email: z.string().email("Email không hợp lệ"),
+    name: z.string().min(1, "Tên người dùng không hợp lệ!"),
+    gender: z.enum(genderEnum.enumValues as [string, ...string[]]),
+    phone: z.string().min(10, "Số điện thoại không hợp lệ!"),
+});
+
 export default function Account() {
+    const form = useForm<z.infer<typeof formSchema>>({
+        resolver: zodResolver(formSchema),
+        defaultValues: {
+            name: "",
+            email: "",
+            phone: "",
+            gender: "",
+        },
+    });
 
     const userId = sessionStorage.getItem('userId');
 
@@ -50,19 +67,21 @@ export default function Account() {
 
     console.log("user", userInfo);
 
-    const form = useForm<z.infer<typeof FormSchema>>({
-        resolver: zodResolver(FormSchema),
-    })
+    async function onSubmit(values: z.infer<typeof formSchema>) {
+        try {
+            const data = new FormData();
+            data.append("name", values.name);
+            data.append("email", values.email);
+            data.append("phone", values.phone);
+            data.append("gender", values.gender)
 
-    function onSubmit(data: z.infer<typeof FormSchema>) {
-        toast({
-            title: "You submitted the following values:",
-            description: (
-                <pre className="mt-2 w-[340px] rounded-md bg-slate-950 p-4">
-                    <code className="text-white">{JSON.stringify(data, null, 2)}</code>
-                </pre>
-            ),
-        })
+            await updateUser(data);
+            toast({ description: "Cập nhật thông tin thành công!" });
+
+        } catch (error) {
+            console.log(error);
+            toast({ description: "Cập nhật thông tin thất bại!" });
+        }
     }
     return (
         <div className="grow flex flex-col gap-5 md:px-8">
@@ -79,25 +98,42 @@ export default function Account() {
                     </Button>
                 </div>
 
-                {/* Form Section */}
-                <div className="flex flex-col gap-4 md:gap-6 w-full">
+                <Form {...form}>
+                    <form
+                        onSubmit={form.handleSubmit(onSubmit)}
+                        className="flex flex-col justify-center space-y-8">
+                        <FormField
+                            control={form.control}
+                            name="email"
+                            render={({ field }) => (
+                                <FormItem>
+                                    <div className="font-medium">Email</div>
+                                    <FormControl>
+                                        <Input defaultValue={userInfo?.[0]?.email || ""} placeholder="Nhập email" {...field} />
+                                    </FormControl>
+                                    <FormMessage />
+                                </FormItem>
+                            )} />
+                    </form>
+                </Form>
+                {/* <div className="flex flex-col gap-4 md:gap-6 w-full">
                     <div className="flex flex-col md:flex-row gap-4 w-full">
                         <div className="w-full">
                             <p>Họ và tên:</p>
-                            <Input className="focus-visible:ring-0 focus-visible:ring-offset-0"  value={userInfo?.[0]?.name || ""}/>
+                            <Input className="focus-visible:ring-0 focus-visible:ring-offset-0" value={userInfo?.[0]?.name || ""} />
                         </div>
                         <div className="w-full">
                             <p>Email:</p>
-                            <Input className="focus-visible:ring-0 focus-visible:ring-offset-0" />
+                            <Input className="focus-visible:ring-0 focus-visible:ring-offset-0" value={userInfo?.[0]?.email || ""} />
                         </div>
                         <div className="w-full">
                             <p>Số điện thoại:</p>
-                            <Input className="focus-visible:ring-0 focus-visible:ring-offset-0" />
+                            <Input className="focus-visible:ring-0 focus-visible:ring-offset-0" value={userInfo?.[0]?.phone || ""} />
                         </div>
                     </div>
                     <div>
                         <p>Địa chỉ:</p>
-                        <Input className="focus-visible:ring-0 focus-visible:ring-offset-0" />
+                        <Input className="focus-visible:ring-0 focus-visible:ring-offset-0" value={userInfo?.[0]?.address || ""} />
                     </div>
                     <div className="flex flex-col md:flex-row gap-4 md:gap-6">
                         <p>Giới tính: </p>
@@ -164,8 +200,9 @@ export default function Account() {
                         </Form>
                     </div>
                     <Button className="w-full md:w-1/5 bg-amber-500">Lưu thay đổi</Button>
-                </div>
+                </div> */}
             </div>
         </div>
     );
 }
+
