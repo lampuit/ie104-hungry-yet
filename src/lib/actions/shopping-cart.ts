@@ -15,15 +15,40 @@ const createCarts = inserCartSchema.omit({
 });
 
 export async function createCart(formData: FormData) {
+
   const data = createCarts.parse({
     userId: formData.get("userId"),
     productId: formData.get("productId"),
     quantity: Number(formData.get("quantity")),
   });
-  // If the item does not exist, insert a new item
-  const response = await db.insert(carts).values(data);
-  console.log("response", response);
 
+  const existingCartItem = await db
+    .select()
+    .from(carts)
+    .where(
+      and(
+        eq(carts.userId, data.userId),
+        eq(carts.productId, data.productId),
+      )
+    )
+    .limit(1)
+    .then((rows) => rows[0]);
+
+  if (existingCartItem) {
+    // Nếu sản phẩm đã tồn tại, tăng số lượng
+    await db
+      .update(carts)
+      .set({ quantity: Number(formData.get("quantity")) + existingCartItem.quantity })
+      .where(
+        and(
+          eq(carts.userId, data.userId),
+          eq(carts.productId, data.productId),
+        ),
+      );
+  } else {
+    // Nếu sản phẩm chưa tồn tại, thêm sản phẩm mới
+    await db.insert(carts).values(data);
+  }
 }
 
 export async function updateCarts(formData: FormData) {

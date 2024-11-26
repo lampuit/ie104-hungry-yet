@@ -1,11 +1,11 @@
 "use server";
 
 import { db } from "@/drizzle/db";
-import { insertRatingsSchema, ratings } from "@/drizzle/schema/project";
+import { insertRatingSchema, ratings } from "@/drizzle/schema/project";
 import { eq, and } from "drizzle-orm";
 
 export async function createRatings(formData: FormData) {
-  const data = insertRatingsSchema.parse({
+  const data = insertRatingSchema.parse({
     userId: formData.get("userId"),
     productId: formData.get("productId"),
     star: Number(formData.get("star")),
