@@ -23,6 +23,8 @@ const formSchema = z.object({
   email: z.string().email("Email không hợp lệ"),
   password: z.string().min(8, "Mật khẩu phải có ít nhất 8 ký tự"),
   name: z.string().min(1, "Tên người dùng không hợp lệ!"),
+  role: z.string().optional(),
+  phone: z.string().min(10, "Số điện thoại không hợp lệ!"),
 });
 
 export default function Sign() {
@@ -34,6 +36,7 @@ export default function Sign() {
       name: "",
       email: "",
       password: "",
+      phone: "",
     },
   });
 
@@ -99,15 +102,29 @@ export default function Sign() {
                   </FormItem>
                 )}
               />
+
+              <FormField
+                control={form.control}
+                name="phone"
+                render={({ field }) => (
+                  <FormItem>
+                    <div className="font-medium">Số điện thoại</div>
+                    <FormControl>
+                      <Input placeholder="Nhập số điện thoại" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
               <FormField
                 control={form.control}
                 name="password"
                 render={({ field }) => (
                   <FormItem>
-                    <div className="font-medium">Password</div>
+                    <div className="font-medium">Mật khẩu</div>
                     <FormControl>
                       <Input
-                        placeholder="Nhập email"
+                        placeholder="Nhập mật khẩu"
                         type="password"
                         {...field}
                       />

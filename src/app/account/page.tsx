@@ -60,8 +60,7 @@ export default function Account() {
                         <AvatarImage src="/images/kimcuc.jpg" />
                         <AvatarFallback>KC</AvatarFallback>
                     </Avatar>
-                    <Button variant={"outline"} className="w-full md:w-5/6 h-11/12 border-amber-500 text-amber-500 text-sm md:text-xs
-                         hover:bg-amber-500 hover:bg-opacity-20 hover:text-amber-500">
+                    <Button variant={"outline"} className="w-full md:w-5/6 h-11/12 border-amber-500 text-amber-500 text-sm md:text-xs hover:bg-amber-500 hover:bg-opacity-20 hover:text-amber-500">
                         <SquarePen className="stroke-amber-500 w-4 h-4" /> Thay đổi ảnh
                     </Button>
                 </div>
