@@ -65,25 +65,28 @@ export const columns: ColumnDef<Cart>[] = [
         accessorKey: "amount",
         header: () => <div className="w-36 text-center">Số lượng</div>,
         cell: ({ row }) => {
-            const amount = row.original.amount;
-            const handleIncrease = (amount: number) => {
-                amount += 1;
+            const [amount, setAmount] = useState(row.original.amount);
+            const handleIncrease = (quantity: number) => {
+                // amount += 1;
+                setAmount(quantity + 1);
                 const formData = new FormData();
                 formData.append("userId", sessionStorage.getItem("userId") as string);
                 formData.append("productId", row.original.id);
-                formData.append("quantity", amount.toString());
+                formData.append("quantity", (amount+1).toString());
                 updateCarts(formData);
             }
-            const handleDecrease = (amount: number) => {
-                if (amount > 1) {
-                    amount -= 1;
+            const handleDecrease = (quantity: number) => {
+                if (quantity > 1) {
+                    // amount -= 1;
+                    setAmount(quantity - 1);
                     const formData = new FormData();
                     formData.append("userId", sessionStorage.getItem("userId") as string);
                     formData.append("productId", row.original.id);
-                    formData.append("quantity", amount.toString());
+                    formData.append("quantity", (amount-1).toString());
                     updateCarts(formData);
                 }
             }
+
             return <div className="flex flex-row justify-center items-center gap-4">
                 <Button variant={"outline"}
                     className={amount > 1 ? "border-amber-500 text-amber-500 hover:bg-orange-200 w-8 h-8"
