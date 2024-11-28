@@ -1,7 +1,7 @@
 "use server";
 
 import { db } from "@/drizzle/db";
-import { insertFavouriteSchema, favorite } from "@/drizzle/schema/project";
+import { insertFavouriteSchema, favorites } from "@/drizzle/schema/project";
 import { eq, and } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
 
@@ -11,13 +11,13 @@ export async function createFavorite(formData: FormData) {
     productId: formData.get("productId"),
   });
   console.log(data);
-  await db.insert(favorite).values(data);
+  await db.insert(favorites).values(data);
   revalidatePath("/menu/cart");
 }
 
 export async function deleteFavorite(userId: string, productId: string) {
   await db
-    .delete(favorite)
-    .where(and(eq(favorite.productId, productId), eq(favorite.userId, userId)));
+    .delete(favorites)
+    .where(and(eq(favorites.productId, productId), eq(favorites.userId, userId)));
     revalidatePath("/menu/cart");
 }

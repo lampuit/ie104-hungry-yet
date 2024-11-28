@@ -1,13 +1,23 @@
-"use client"
-
 import { Button } from "@/components/ui/button"
 import { createFavorite, deleteFavorite } from "@/lib/actions/favorite"
-import { getSession } from "@/lib/auth-client"
+import { deletecarts } from "@/lib/actions/shopping-cart"
 import { ColumnDef } from "@tanstack/react-table"
 import { Heart, Trash } from "lucide-react"
 import Image from "next/image"
-import useSWR from "swr"
 import { useState } from "react"
+import {
+    AlertDialog,
+    AlertDialogAction,
+    AlertDialogCancel,
+    AlertDialogContent,
+    AlertDialogDescription,
+    AlertDialogFooter,
+    AlertDialogHeader,
+    AlertDialogTitle,
+    AlertDialogTrigger,
+} from "@/components/ui/alert-dialog"
+import { toast } from "sonner"
+import { mutate } from "swr";
 
 // This type is used to define the shape of our data.
 // You can use a Zod schema here if you want.
@@ -20,11 +30,6 @@ export type Cart = {
     amount: number
     isFavorite: boolean
 }
-
-const userFetcher = async () => {
-    const response = await getSession();
-    return response?.data?.user?.id;
-  }
 
 export const columns: ColumnDef<Cart>[] = [
     {
@@ -82,30 +87,52 @@ export const columns: ColumnDef<Cart>[] = [
         cell: ({ row }) => {
             const [isFavorite, setIsFavorite] = useState(row.original.isFavorite);
             // Function handle when favorite btn is clicked
-            const { data: uid } = useSWR("userId", userFetcher);
-            const handleDeleteFavorite = async() => {
+            const handleDeleteFavorite = async () => {
                 const id = row.original.id;
-                await deleteFavorite( uid as string, id)
+                await deleteFavorite(sessionStorage.getItem("userId") as string, id)
                 setIsFavorite(false);
             };
-            const handleUpdateFavorite = async() => {
+            const handleUpdateFavorite = async () => {
                 const data = new FormData();
                 data.append("productId", row.original.id);
-                data.append("userId", uid as string);
+                data.append("userId", sessionStorage.getItem("userId") as string);
                 await createFavorite(data);
                 setIsFavorite(true);
             }
 
             return <div>
-                <Heart className={isFavorite ? "fill-amber-500 stroke-amber-500" : "stroke-amber-500 fill-none" }
-                onClick={isFavorite ? () => handleDeleteFavorite() : () => handleUpdateFavorite()} />
+                <Heart className={isFavorite ? "fill-amber-500 stroke-amber-500" : "stroke-amber-500 fill-none"}
+                    onClick={isFavorite ? () => handleDeleteFavorite() : () => handleUpdateFavorite()} />
             </div>
         },
     },
     {
         id: "delete",
         cell: ({ row }) => {
-            return <div><Trash className="stroke-amber-500" /></div>
+            const handleDeleteItem = async () => {
+                const id = row.original.id;
+                const userId = sessionStorage.getItem("userId") as string;
+                await deletecarts(id, userId as string)
+                mutate(userId);
+                toast("Xoá thành công")
+            }
+
+            return <AlertDialog>
+                <AlertDialogTrigger><Trash className="stroke-amber-500" /></AlertDialogTrigger>
+                <AlertDialogContent>
+                    <AlertDialogHeader>
+                        <AlertDialogTitle>Bạn có muốn xoá không?</AlertDialogTitle>
+                        <AlertDialogDescription>
+                            Hành động này sẽ không thể hoàn tác.
+                        </AlertDialogDescription>
+                    </AlertDialogHeader>
+                    <AlertDialogFooter>
+                        <AlertDialogCancel>Không</AlertDialogCancel>
+                        <AlertDialogAction className="bg-red-500" onClick={() => handleDeleteItem()}>Có</AlertDialogAction>
+                    </AlertDialogFooter>
+                </AlertDialogContent>
+            </AlertDialog>
         },
     }
 ]
+

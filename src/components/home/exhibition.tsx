@@ -1,6 +1,15 @@
 import Image from "next/image"
+import {getAllProducts} from "../../lib/data"
+import useSWR from "swr"
+
+const fetcher = async() =>{
+    return await getAllProducts()
+}
 
 export function Exhibition() {
+
+    const {data:listDishes, error} = useSWR("products", fetcher)
+
     return (
         <div className="grid grid-cols-3 gap-3 px-20">
             <div className="overflow-hidden rounded-xl">

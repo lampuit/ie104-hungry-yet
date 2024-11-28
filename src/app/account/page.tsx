@@ -1,7 +1,7 @@
 "use client"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Button } from "@/components/ui/button";
-import { ClipboardList, Heart, LogOut, SquarePen, UserIcon } from "lucide-react";
+import { Camera, ClipboardList, Heart, LogOut, SquarePen, UserIcon } from "lucide-react";
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
@@ -10,7 +10,6 @@ import { format } from "date-fns"
 import { CalendarIcon } from "lucide-react"
 import { useForm } from "react-hook-form"
 import { z } from "zod"
-
 import { cn } from "@/lib/utils"
 import { toast } from "@/hooks/use-toast";
 import { Calendar } from "@/components/ui/calendar"
@@ -28,6 +27,10 @@ import {
     PopoverContent,
     PopoverTrigger,
 } from "@/components/ui/popover"
+import { getUserById } from "@/lib/data";
+import useSWR from "swr";
+import { updateUser } from "@/lib/actions/user";
+import { genderEnum } from "@/drizzle/schema/auth";
 
 const FormSchema = z.object({
     dob: z.date({
@@ -35,52 +38,106 @@ const FormSchema = z.object({
     }),
 })
 
-export default function Account() {
-    const form = useForm<z.infer<typeof FormSchema>>({
-        resolver: zodResolver(FormSchema),
-    })
+const getUser = async (id: string) => {
+    const user = await getUserById(id);
+    return user;
+};
 
-    function onSubmit(data: z.infer<typeof FormSchema>) {
-        toast({
-            title: "You submitted the following values:",
-            description: (
-                <pre className="mt-2 w-[340px] rounded-md bg-slate-950 p-4">
-                    <code className="text-white">{JSON.stringify(data, null, 2)}</code>
-                </pre>
-            ),
-        })
+const formSchema = z.object({
+    email: z.string().email("Email không hợp lệ"),
+    name: z.string().min(1, "Tên người dùng không hợp lệ!"),
+    gender: z.enum(genderEnum.enumValues as [string, ...string[]]),
+    phone: z.string().min(10, "Số điện thoại không hợp lệ!"),
+});
+
+export default function Account() {
+    const form = useForm<z.infer<typeof formSchema>>({
+        resolver: zodResolver(formSchema),
+        defaultValues: {
+            name: "",
+            email: "",
+            phone: "",
+            gender: "",
+        },
+    });
+
+    const userId = sessionStorage.getItem('userId');
+
+    const { data: userInfo, error } = useSWR(userId, getUser)
+
+    console.log("user", userInfo);
+
+    async function onSubmit(values: z.infer<typeof formSchema>) {
+        try {
+            const data = new FormData();
+            data.append("name", values.name);
+            data.append("email", values.email);
+            data.append("phone", values.phone);
+            data.append("gender", values.gender)
+
+            await updateUser(data);
+            toast({ description: "Cập nhật thông tin thành công!" });
+
+        } catch (error) {
+            console.log(error);
+            toast({ description: "Cập nhật thông tin thất bại!" });
+        }
     }
     return (
-        <div className="grow flex flex-col gap-5">
-            <h2 className="font-semibold text-2xl">Tài khoản của tôi</h2>
-            <div className="flex gap-24 p-16 border-2 rounded-md bg-white">
-                <div className="flex flex-col items-center gap-6 ">
-                    <Avatar className="w-32 h-32">
-                        <AvatarImage src="/images/kimcuc.jpg" />
-                        <AvatarFallback>KC</AvatarFallback>
+        <div className="grow flex flex-col gap-5 md:px-8">
+            <h2 className="font-semibold text-xl md:text-2xl">Tài khoản của tôi</h2>
+            <div className="flex flex-col md:flex-row gap-8 p-4 md:p-16 border-2 rounded-md bg-white">
+                {/* Avatar Section */}
+                <div className="flex flex-col items-center gap-4 md:gap-6 w-full md:w-auto">
+                    <Avatar className="w-24 h-24 md:w-32 md:h-32">
+                        <AvatarImage src={userInfo?.[0]?.imageUrl ?? undefined} />
+                        <AvatarFallback><Camera className="w-10 h-10" /></AvatarFallback>
                     </Avatar>
-                    <Button variant={"outline"} className="border-amber-500 text-amber-500 text-xs w-5/6 h-11/12
-                         hover:bg-amber-500 hover:bg-opacity-20 hover:text-amber-500">
-                        <SquarePen className="stroke-amber-500 w-4 h-4" /> Thay đổi ảnh</Button>
+                    <Button variant={"outline"} className="w-full md:w-5/6 h-11/12 border-amber-500 text-amber-500 text-sm md:text-xs hover:bg-amber-500 hover:bg-opacity-20 hover:text-amber-500">
+                        <SquarePen className="stroke-amber-500 w-4 h-4" /> Thay đổi ảnh
+                    </Button>
                 </div>
-                <div className="grow flex flex-col gap-6">
-                    <div className="flex gap-4 w-full grow">
-                        <div className="grow">
+
+                <Form {...form}>
+                    <form
+                        onSubmit={form.handleSubmit(onSubmit)}
+                        className="flex flex-col justify-center space-y-8">
+                        <FormField
+                            control={form.control}
+                            name="email"
+                            render={({ field }) => (
+                                <FormItem>
+                                    <div className="font-medium">Email</div>
+                                    <FormControl>
+                                        <Input defaultValue={userInfo?.[0]?.email || ""} placeholder="Nhập email" {...field} />
+                                    </FormControl>
+                                    <FormMessage />
+                                </FormItem>
+                            )} />
+                    </form>
+                </Form>
+                {/* <div className="flex flex-col gap-4 md:gap-6 w-full">
+                    <div className="flex flex-col md:flex-row gap-4 w-full">
+                        <div className="w-full">
                             <p>Họ và tên:</p>
-                            <Input className="focus-visible:ring-0 focus-visible:ring-offset-0" />
+                            <Input className="focus-visible:ring-0 focus-visible:ring-offset-0" value={userInfo?.[0]?.name || ""} />
                         </div>
-                        <div className="grow">
-                            <p>Số điện thoại/Email:</p>
-                            <Input className="focus-visible:ring-0 focus-visible:ring-offset-0" />
+                        <div className="w-full">
+                            <p>Email:</p>
+                            <Input className="focus-visible:ring-0 focus-visible:ring-offset-0" value={userInfo?.[0]?.email || ""} />
+                        </div>
+                        <div className="w-full">
+                            <p>Số điện thoại:</p>
+                            <Input className="focus-visible:ring-0 focus-visible:ring-offset-0" value={userInfo?.[0]?.phone || ""} />
                         </div>
                     </div>
                     <div>
                         <p>Địa chỉ:</p>
-                        <Input className="focus-visible:ring-0 focus-visible:ring-offset-0" />
+                        <Input className="focus-visible:ring-0 focus-visible:ring-offset-0" value={userInfo?.[0]?.address || ""} />
                     </div>
-                    <div className="flex gap-6">
+                    <div className="flex flex-col md:flex-row gap-4 md:gap-6">
                         <p>Giới tính: </p>
-                        <RadioGroup defaultValue="option-one" className="flex gap-4">
+                        <RadioGroup defaultValue="option-one" className="flex flex-row gap-4">
                             <div className="flex items-center space-x-2">
                                 <RadioGroupItem value="option-one" id="option-one" />
                                 <Label htmlFor="option-one">Nam</Label>
@@ -97,7 +154,7 @@ export default function Account() {
                     </div>
                     <div>
                         <Form {...form}>
-                            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+                            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
                                 <FormField
                                     control={form.control}
                                     name="dob"
@@ -110,7 +167,7 @@ export default function Account() {
                                                         <Button
                                                             variant={"outline"}
                                                             className={cn(
-                                                                "w-[240px] pl-3 text-left font-normal",
+                                                                "w-full md:w-[240px] pl-3 text-left font-normal",
                                                                 !field.value && "text-muted-foreground"
                                                             )}
                                                         >
@@ -142,9 +199,10 @@ export default function Account() {
                             </form>
                         </Form>
                     </div>
-                    <Button className="w-1/5 bg-amber-500">Lưu thay đổi</Button>
-                </div>
+                    <Button className="w-full md:w-1/5 bg-amber-500">Lưu thay đổi</Button>
+                </div> */}
             </div>
         </div>
     );
 }
+

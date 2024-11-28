@@ -16,18 +16,21 @@ export function AuthorizedNavbar() {
           <span className="sm:text-xl md:text-xl font-medium"><span className="pr-2">|</span>Giỏ Hàng</span>
           : isCheckoutPage ?
             <span className="sm:text-xl md:text-xl font-medium"><span className="pr-2">|</span>Thanh Toán</span>
-          : isDetail ? 
-            <span className="sm:text-xl md:text-xl font-medium"><span className="pr-2">|</span>Chi tiết đơn hàng</span>
-          : null
+            : isDetail ?
+              <span className="sm:text-xl md:text-xl font-medium"><span className="pr-2">|</span>Chi tiết đơn hàng</span>
+              : null
         }
       </Link>
       <div className="grow sm:text-xs sm:gap-1 md:text-base min-w-sm max-w-2xl flex flex-row justify-around items-center">
         <Link href={"/"} className="hover:text-amber-500 ">Trang chủ</Link>
         <Link href={"/menu"} className="hover:text-amber-500">Thực đơn</Link>
-        <Link href={"#"} className="hover:text-amber-500">Công việc</Link>
+        <Link href={"/menu/cart"} className="hover:text-amber-500">Giỏ hàng</Link>
         <Link href={"/about"} className="hover:text-amber-500">Về chúng tôi</Link>
       </div>
-      <CircleUserRound size={32} />
+      <Link href={"/account"}>
+        <CircleUserRound size={32} />
+      </Link>
+
     </nav>
   );
 }
