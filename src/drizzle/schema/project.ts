@@ -99,16 +99,22 @@ export const invoices = pgTable("invoices", {
   id: uuid("id").primaryKey().notNull().defaultRandom(),
   customerId: text("customerId")
     .notNull()
-    .references(() => user.id, { onUpdate: "cascade" }), // Khóa ngoại
+    .references(() => user.id, {
+      onUpdate: "cascade",
+    }), // Khóa ngoại
   shipperId: text("shipperId").references(() => user.id, {
     onUpdate: "cascade",
   }), // Khóa ngoại
-  cookId: text("cookId").references(() => user.id, { onUpdate: "cascade" }), // Khóa ngoại
-  paymentId: text("paymentId").references(() => payments.id, {
+  cookId: text("cookId").references(() => user.id, {
     onUpdate: "cascade",
   }), // Khóa ngoại
+  paymentId: text("paymentId")
+    .notNull()
+    .references(() => payments.id, {
+      onUpdate: "cascade",
+    }), // Khóa ngoại
   totalAmount: real("totalAmount"),
-  status: statusEnum("status"),
+  status: statusEnum("status").default("shopping"),
   orderDate: timestamp("orderDate").notNull(),
   deliveryAddress: text("deliveryAddress"),
   deliveryTime: timestamp("deliveryTime"),
@@ -121,7 +127,7 @@ export const invoices = pgTable("invoices", {
     .$onUpdate(() => new Date()),
 });
 
-// Relation: 1 invoice -> 1 shipper,1 invoices -> 1 customer, 1 invoice -> payment, 1 invoice -> discount, 1 invoice -> 1 cook
+// Relation: 1 invoice - 1 shipper,1 invoices - 1 customer, 1 invoice - payment, 1 invoice - discount, 1 invoice -> 1 cook
 export const invoicesRelations = relations(invoices, ({ one }) => ({
   customer: one(user, {
     fields: [invoices.customerId],
@@ -221,7 +227,7 @@ export const assigments = pgTable("assigments", {
   userId: text("userId")
     .notNull()
     .references(() => user.id), // Khóa ngoại
-  shiftId: uuid("shiftId").references(() => shifts.id), // Khóa ngoại
+  shiftId: uuid("shiftId").references(() => shifts.id, { onDelete: "cascade" }), // Khóa ngoại
   workDate: timestamp("workDate").notNull(),
   createdAt: timestamp("createdAt").notNull().defaultNow(),
   updatedAt: timestamp("updatedAt").$onUpdate(() => new Date()),
@@ -255,15 +261,23 @@ export const carts = pgTable(
       .notNull()
       .$onUpdate(() => new Date()),
   },
-  (t) => ({
-    pk: primaryKey({ columns: [t.userId, t.productId] }),
-  }),
+  (t) => [
+    {
+      pk: primaryKey({ columns: [t.userId, t.productId] }),
+    },
+  ],
 );
 
 // Relation: 1 cart - n products && 1 product - n carts
 export const cartsRelations = relations(carts, ({ one }) => ({
-  product: one(products),
-  cart: one(carts),
+  product: one(products, {
+    fields: [carts.productId],
+    references: [products.id],
+  }),
+  user: one(user, {
+    fields: [carts.userId],
+    references: [user.id],
+  }),
 }));
 
 // Bảng Favorites (Yêu thích)
@@ -277,9 +291,11 @@ export const favorites = pgTable(
       .notNull()
       .references(() => products.id, { onDelete: "cascade" }), // Khóa ngoại
   },
-  (t) => ({
-    pk: primaryKey({ columns: [t.userId, t.productId] }),
-  }),
+  (t) => [
+    {
+      pk: primaryKey({ columns: [t.userId, t.productId] }),
+    },
+  ],
 );
 
 //Relation: 1 user - n products && 1 product - n users
@@ -289,7 +305,7 @@ export const favoritesRelations = relations(favorites, ({ one }) => ({
     references: [products.id],
   }),
   user: one(user, {
-    fields: [favorites.productId],
+    fields: [favorites.userId],
     references: [user.id],
   }),
 }));
@@ -309,3 +325,5 @@ export const insertDiscountSchema = createInsertSchema(discounts);
 export const insertRatingSchema = createInsertSchema(ratings);
 
 export const insertAssigmentSchema = createInsertSchema(assigments);
+
+export const insertInvoiceSchema = createInsertSchema(invoices);

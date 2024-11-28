@@ -8,6 +8,8 @@ export default defineConfig({
   out: "./src/drizzle/migrations",
   dialect: "postgresql",
   dbCredentials: {
-    url: "postgresql://neondb_owner:jrplCIV7QZ0M@ep-purple-wave-a5592zzs.us-east-2.aws.neon.tech/neondb?sslmode=require",
+    url: process.env.DATABASE_URL as string,
   },
+  verbose: true,
+  strict: true,
 });
