@@ -14,8 +14,6 @@ import {
 import { getProductByCategoryId } from "@/lib/data";
 import { CategoryFetcher } from "@/components/menu/category";
 import useSWR from "swr";
-import { se } from "date-fns/locale";
-import { set } from "date-fns";
 
 // Đối tượng mô tả một món ăn
 interface Dish {
@@ -44,10 +42,6 @@ export default function MenuPage() {
   // ID của danh mục được chọn
   const [clickedIndex, setClickedIndex] = useState<string>("");
   const [dishesList, setDishesList] = useState<Dish[]>([]); // Danh sách món ăn được lưu trữ dưới dạng 1 mảng các đối tượng Dish
-  // const [categories, setCategories] = useState<any[]>([]); // Danh sách categories
-  if (sessionStorage.getItem("clickedIndex") === null) {
-    setClickedIndex(data?.[0]?.id || "");
-  }
   const sessionClickIndex = sessionStorage.getItem("clickedIndex");
   const categories = data || [];
 
@@ -70,25 +64,25 @@ export default function MenuPage() {
     }
   };
 
-  // Tự động gọi API khi người dùng chọn danh mục khác (clickedIndex thay đổi)
-  const fetchCategories = () => {
-    // Gán danh mục mặc định là "Khai vị" hoặc danh mục được chọn từ trang Homepage
-    // const defaultCategory = categories.find((category) => category.name === (categoryName || "Khai vị"));
-    if (sessionClickIndex) {
-      setClickedIndex(sessionClickIndex);
-    }
-    else {
-      setClickedIndex(categories[0]?.id);
-    }
-  };
   // Tự động gọi API khi trang được tải
   useEffect(() => {
-    fetchCategories();
+    if (data) {
+      // Gán danh mục mặc định là "Khai vị" hoặc danh mục được chọn từ trang Homepage
+      if (sessionClickIndex) {
+        setClickedIndex(sessionClickIndex);
+      } else {
+        setClickedIndex(data[0]?.id);
+      }
+    }
+  }, [data]);
+
+  // Tự động gọi API khi người dùng chọn danh mục khác (clickedIndex thay đổi)
+  useEffect(() => {
     if (clickedIndex) {
       getDishesByCategoryId(clickedIndex);
+      sessionStorage.setItem("clickedIndex", clickedIndex); // Persist clickedIndex
     }
-
-  }, [clickedIndex]);
+  }, [clickedIndex]);  
 
   // Hàm xử lý khi người dùng click vào một danh mục khác
   const handleCategoryClick = (categoryId: string) => {

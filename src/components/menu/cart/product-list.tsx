@@ -4,9 +4,8 @@ import { getShoppingCartByUserId } from "@/lib/data";
 import useSWR from "swr";
 import LoadingSpinner from "@/components/ui/loading-spinner";
 
-import { Cart, columns } from "@/app/menu/cart/columns";
+import { columns } from "@/app/menu/cart/columns";
 import { DataTable } from "@/app/menu/cart/data-table";
-import { FaLessThanEqual } from "react-icons/fa6";
 
 // Fetch function dùng cho SWR
 const fetcher = async (userId: string) => {
