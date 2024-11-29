@@ -68,16 +68,23 @@ export function Summary() {
                         </DialogHeader>
                         {isLoadingDiscount ? (<p>Loading...</p>) : (discounts?.map((discount) => (
                             currentDate >= new Date(discount.fromDate ?? 0) && currentDate <= new Date(discount.toDate ?? 0) ? (
-                            <div key={discount.id} className="flex justify-between items-center gap-4">
-                                <Label>{discount.name}</Label>
-                                <div>Giảm {discount.discount?.toString()}%</div>
-                                <div>HSD: {discount.toDate?.toDateString()}</div>
-                                <Button className="bg-amber-500 hover:bg-amber-500 hover:drop-shadow-lg">Chọn</Button>
-                            </div>
+                                <div key={discount.id} className="flex justify-between items-center gap-4 p-4 border-gray-300 border rounded-sm">
+                                    <div className="flex flex-col justify-around">
+                                        <Label className="text-xl font-semibold">{discount.name}</Label>
+                                        <div>Giảm {discount.discount?.toString()}%</div>
+                                        <div>HSD: {discount.toDate?.toLocaleString('en-GB', {
+                                            timeZone: 'Asia/Bangkok', // GMT+7 timezone
+                                            day: '2-digit',
+                                            month: '2-digit',
+                                            year: 'numeric'
+                                        }).replace(/\//g, '-')}</div>
+                                    </div>
+                                    <Button variant={"outline"}>Chọn</Button>
+                                </div>
                             ) : null
                         )))}
                         <DialogFooter>
-                            <Button type="submit">Save changes</Button>
+                            <Button type="submit" className="bg-amber-500 hover:bg-red-500">Save changes</Button>
                         </DialogFooter>
                     </DialogContent>
                 </Dialog>
