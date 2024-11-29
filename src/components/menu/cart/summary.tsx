@@ -45,6 +45,9 @@ export function Summary() {
         currency: "VND",
     }).format(price);
 
+    const currentDateTime = new Date();
+    const currentDate = currentDateTime;
+
     return (
         <div className="flex flex-col">
             <div className="flex justify-end items-center py-4 gap-32">
@@ -64,10 +67,14 @@ export function Summary() {
                             </DialogDescription>
                         </DialogHeader>
                         {isLoadingDiscount ? (<p>Loading...</p>) : (discounts?.map((discount) => (
+                            currentDate >= new Date(discount.fromDate ?? 0) && currentDate <= new Date(discount.toDate ?? 0) ? (
                             <div key={discount.id} className="flex justify-between items-center gap-4">
                                 <Label>{discount.name}</Label>
+                                <div>Giảm {discount.discount?.toString()}%</div>
+                                <div>HSD: {discount.toDate?.toDateString()}</div>
                                 <Button className="bg-amber-500 hover:bg-amber-500 hover:drop-shadow-lg">Chọn</Button>
                             </div>
+                            ) : null
                         )))}
                         <DialogFooter>
                             <Button type="submit">Save changes</Button>

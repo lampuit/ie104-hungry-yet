@@ -1,29 +1,29 @@
 "use client";
 import React, { useState, useEffect } from "react";
 import { getShoppingCartByUserId } from "@/lib/data";
-import useSWR from "swr";
 import LoadingSpinner from "@/components/ui/loading-spinner";
 
-import { columns } from "@/app/menu/cart/columns";
-import { DataTable } from "@/app/menu/cart/data-table";
+import { DataTable } from "@/components/menu/cart/data-table";
+import { columns } from "@/components/menu/cart/columns";
 
 // Fetch function dùng cho SWR
 const fetcher = async (userId: string) => {
-  return getShoppingCartByUserId(userId);
+  return await getShoppingCartByUserId(userId);
 };
 
 export function ProductList() {
   const userId = sessionStorage.getItem("userId");
-  const { data, isLoading, error } = useSWR(userId, fetcher, {
-    revalidateIfStale: true,
-    revalidateOnFocus: false,
-    revalidateOnReconnect: true,
-  });
+  // const { data, isLoading, error } = useSWR(userId, fetcher, {
+  //   revalidateIfStale: true,
+  //   revalidateOnFocus: false,
+  //   revalidateOnReconnect: true,
+  // });
   const [dishes, setDishes] = useState<any[]>([]);
   
   useEffect(() => {
-    if (data) {
-      const formattedData = data.map((item: any) => ({
+    fetcher(userId || "").then(data => {
+      if (data) {
+        const formattedData = data.map((item: any) => ({
         id: item.productId || undefined,
         img: item.image || "/images/fallback.jpg",
         name: item.name,
@@ -31,13 +31,14 @@ export function ProductList() {
         cost: item.price,
         amount: item.quantity,
         isFavorite: item.isFavorite || false,
-      }));
-      setDishes(formattedData);
-    }
-  }, [data]);
+        }));
+        setDishes(formattedData);
+      }
+    });
+  }, []);
 
-  if (error) return <div>Error loading data.</div>;
-  if (!data) {
+  // if (error) return <div>Error loading data.</div>;
+  if (!dishes) {
     return <LoadingSpinner />;
   }
   return (

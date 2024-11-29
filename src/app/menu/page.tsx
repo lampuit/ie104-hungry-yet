@@ -64,7 +64,7 @@ export default function MenuPage() {
     }
   };
 
-  // Tự động gọi API khi trang được tải
+  // Tự động gọi API khi trang được tải - khi người dùng chọn danh mục khác (clickedIndex thay đổi)
   useEffect(() => {
     if (data) {
       // Gán danh mục mặc định là "Khai vị" hoặc danh mục được chọn từ trang Homepage
@@ -74,15 +74,14 @@ export default function MenuPage() {
         setClickedIndex(data[0]?.id);
       }
     }
-  }, [data]);
 
-  // Tự động gọi API khi người dùng chọn danh mục khác (clickedIndex thay đổi)
-  useEffect(() => {
     if (clickedIndex) {
       getDishesByCategoryId(clickedIndex);
       sessionStorage.setItem("clickedIndex", clickedIndex); // Persist clickedIndex
     }
-  }, [clickedIndex]);  
+
+  }, [data, clickedIndex]);
+
 
   // Hàm xử lý khi người dùng click vào một danh mục khác
   const handleCategoryClick = (categoryId: string) => {
