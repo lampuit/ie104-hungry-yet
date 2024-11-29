@@ -34,8 +34,6 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   const { data: userId, error } = useSWR('userId', fetcher);
-
-  console.log("userId", userId);
   sessionStorage.setItem('userId', userId ?? '');
   const pathname = usePathname();
 
