@@ -9,8 +9,6 @@ export default function Favorite() {
             <div className="grow flex justify-between">
                 <div className="flex flex-col w-full gap-3">
                     <AccountFavorite />
-                    <AccountFavorite />
-                    <AccountFavorite />
                 </div>
             </div>
         </div>

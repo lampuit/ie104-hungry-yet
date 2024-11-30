@@ -102,6 +102,7 @@ export default function Account() {
     async function onSubmit(values: z.infer<typeof formSchema>) {
         try {
             const data = new FormData();
+            data.append("userId", userId?.toString() ?? "");
             data.append("name", values.name);
             data.append("email", values.email);
             data.append("phone", values.phone);
@@ -121,6 +122,7 @@ export default function Account() {
             console.log(error);
             toast({ description: "Cập nhật thông tin thất bại!" });
         }
+        
     }
 
     return (
@@ -192,7 +194,7 @@ export default function Account() {
                                             <RadioGroup
                                                 onValueChange={field.onChange}
                                                 value={field.value}
-                                                className="flex flex-col space-y-1"
+                                                className="flex gap-16"
                                             >
                                                 <FormItem className="flex items-center space-x-3 space-y-0">
                                                     <FormControl>
