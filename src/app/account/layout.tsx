@@ -4,17 +4,22 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { ClipboardList, Heart, LogOut, Settings, UserIcon, Loader2 } from "lucide-react";
 import { usePathname, useRouter } from "next/navigation";
-import { ReactNode, useState } from "react";
+import { ReactNode, useEffect, useState } from "react";
 import { revokeSession } from "@/lib/auth-client";
 import useSWR from "swr";
 import { getSession } from "@/lib/auth-client";
+import { getUserById } from "@/lib/data";
 
 // Fetch session data
-const fetcher = async () => {
+const sessionFetcher = async () => {
     const response = await getSession();
     const session = response?.data?.session?.id as string;
     return session;
 };
+
+const userFetcher = async (id: string) => {
+    return await getUserById(id);
+}
 
 export default function Layout({
     children,
@@ -24,15 +29,24 @@ export default function Layout({
 }) {
     const pathname = usePathname();
     const router = useRouter();
-    const [activePath, setActivePath] = useState<string>("");
+    const [activePath, setActivePath] = useState<string>("Thông tin tài khoản"); // Track active path
     const [isLoggingOut, setIsLoggingOut] = useState(false); // Track logout state
+    const [shortName, setShortName] = useState<string>("");
+    const [name, setName] = useState<string>("");
 
     const handleClick = (pathname: string, path: string) => {
         setActivePath(pathname);
         router.push(path);
     };
 
-    const { data: session, isLoading: isSessionLoading, error } = useSWR("session", fetcher);
+    const { data: session, isLoading: isSessionLoading, error } = useSWR("session", sessionFetcher);
+    const uid = sessionStorage.getItem("userId");
+    const { data: user, error: userError } = useSWR(uid, userFetcher);
+
+    useEffect(() => {
+        setShortName(user && user[0]?.name ? splitName(user[0].name) : "");
+        setName(user && user[0]?.name ? user[0].name : "");
+    }, [session, user]);
 
     const handleLogout = async () => {
         try {
@@ -56,16 +70,21 @@ export default function Layout({
         }
     };
 
+    const splitName = (name: string) => {
+        const array = name.split(" ");
+        return (array[array.length - 2]?.at(0) || '') + (array[array.length - 1]?.at(0) || '');
+    }
+
     return (
         <main className="bg-gray-50 w-full">
-            <div className="flex gap-10 justify-around px-4 py-10">
-                <div className="flex flex-col gap-6 bg-white rounded p-6 shadow-md">
+            <div className="flex gap-10 px-4 py-10">
+                <div className="flex flex-col gap-6 bg-white rounded p-6 shadow-md w-72">
                     <div className="flex mb-4 gap-2 items-center w-full border-b-2 px-4 pb-4">
                         <Avatar>
-                            <AvatarImage src="/images/kimcuc.jpg" />
-                            <AvatarFallback>KC</AvatarFallback>
+                            <AvatarImage src={user?.[0].imageUrl ?? undefined} />
+                            <AvatarFallback>{shortName}</AvatarFallback>
                         </Avatar>
-                        <p className="text-sm font-semibold">Lê Thị Kim Cúc</p>
+                        <p className="text-sm font-semibold">{name}</p>
                     </div>
                     <div
                         onClick={() => handleClick("Thông tin tài khoản", "/account")}
@@ -99,7 +118,7 @@ export default function Layout({
                         variant={"outline"}
                         onClick={handleLogout}
                         disabled={isLoggingOut || isSessionLoading} // Disable button while logging out or session is loading
-                        className={`mt-6 w-32 border-gray-400 text-gray-400 ${isLoggingOut || isSessionLoading
+                        className={`mt-6 border-gray-400 text-gray-400 ${isLoggingOut || isSessionLoading
                             ? "cursor-not-allowed opacity-50"
                             : "hover:bg-gray-400 hover:bg-opacity-20 hover:text-gray-400"
                             }`}
