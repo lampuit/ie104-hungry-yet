@@ -120,7 +120,7 @@ export const invoices = pgTable("invoices", {
   // cookId: text("cookId").references(() => user.id, {
   //   onUpdate: "cascade",
   // }), // Khóa ngoại
-  paymentId: text("paymentId")
+  paymentId: uuid("paymentId")
     .notNull()
     .references(() => payments.id, {
       onDelete: "cascade",
