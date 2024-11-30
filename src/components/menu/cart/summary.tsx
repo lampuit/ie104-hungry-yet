@@ -15,39 +15,18 @@ import {
 } from "@/components/ui/dialog"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
+import { useState } from "react"
 
-// Fetch function dùng cho SWR
-const fetcher = async (userId: string) => {
-    return getShoppingCartByUserId(userId);
-};
 
-const fetcherDiscount = async () => {
-    return fetchDiscounts();
+interface MoneyProps {
+    totalAmount: string
 }
 
-export function Summary() {
-
-    const userId = sessionStorage.getItem("userId");
-    const { data: listDish, isLoading: isLoadingDishes, error } = useSWR(userId, fetcher, {
-        revalidateIfStale: true,
-        revalidateOnFocus: false,
-        revalidateOnReconnect: true,
-    });
-
-    const { data: discounts, isLoading: isLoadingDiscount } = useSWR("discounts", fetcherDiscount)
-
-
-    const totalAmount = listDish?.reduce((acc, item) => acc + item.quantity * item.price, 0);
-
-    const price = parseFloat(totalAmount?.toString() || "0");
-    const money = new Intl.NumberFormat("vi-VN", {
-        style: "currency",
-        currency: "VND",
-    }).format(price);
+export function Summary({ totalAmount }: MoneyProps) {
 
     return (
         <div className="flex flex-col">
-            <div className="flex justify-end items-center py-4 gap-32">
+            {/* <div className="flex justify-end items-center py-4 gap-32">
                 <div className="flex items-center gap-2">
                     <Tag size={24} className="stroke-amber-500" />
                     <p className="text-xl">Mã giảm giá</p>
@@ -64,23 +43,23 @@ export function Summary() {
                             </DialogDescription>
                         </DialogHeader>
                         {isLoadingDiscount ? (<p>Loading...</p>) : (discounts?.map((discount) => (
+                            discount.toDate && new Date(discount.toDate) > new Date() &&
                             <div key={discount.id} className="flex justify-between items-center gap-4">
-                                <Label>{discount.name}</Label>
-                                <Button className="bg-amber-500 hover:bg-amber-500 hover:drop-shadow-lg">Chọn</Button>
+                                <Label>{discount.code}</Label>
+                                <Button onClick={() => {
+                                    setDiscountPercent(discount?.discount ?? 0);
+                                }} className="bg-amber-500 hover:bg-amber-500 hover:drop-shadow-lg">Chọn</Button>
                             </div>
                         )))}
-                        <DialogFooter>
-                            <Button type="submit">Save changes</Button>
-                        </DialogFooter>
                     </DialogContent>
                 </Dialog>
-            </div>
+            </div> */}
             <div className="flex justify-between item-center py-2">
                 <ShoppingCart size={32} className="stroke-red-500" />
                 <div className="flex justify-end items-center gap-32">
                     <div className="flex justify-between items-center gap-6">
                         <p className="font-semibold text-2xl">Tổng thanh toán: </p>
-                        <p className="font-semibold text-3xl text-red-500">{money}</p>
+                        <p className="font-semibold text-3xl text-red-500">{totalAmount}</p>
                     </div>
                     <Link href="/checkout">
                         <Button className="font-bold text-xl px-5 py-3 bg-red-500 hover:bg-red-500 hover:drop-shadow-lg">
