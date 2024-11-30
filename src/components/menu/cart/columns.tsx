@@ -4,7 +4,7 @@ import { deletecarts, updateCarts } from "@/lib/actions/shopping-cart"
 import { ColumnDef } from "@tanstack/react-table"
 import { Heart, Trash } from "lucide-react"
 import Image from "next/image"
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import {
     AlertDialog,
     AlertDialogAction,
@@ -29,6 +29,11 @@ export type Cart = {
     cost: number
     amount: number
     isFavorite: boolean
+}
+
+
+type CartTableMeta = {
+    onQuantityChange: (id: string, newQuantity: number) => void
 }
 
 export const columns: ColumnDef<Cart>[] = [
@@ -64,26 +69,30 @@ export const columns: ColumnDef<Cart>[] = [
     {
         accessorKey: "amount",
         header: () => <div className="w-36 text-center">Số lượng</div>,
-        cell: ({ row }) => {
+        cell: ({ row, table }) => {
             const [amount, setAmount] = useState(row.original.amount);
-            const handleIncrease = (quantity: number) => {
-                // amount += 1;
-                setAmount(quantity + 1);
+
+
+            const handleChaneAmount = (quantity: number) => {
                 const formData = new FormData();
                 formData.append("userId", sessionStorage.getItem("userId") as string);
                 formData.append("productId", row.original.id);
-                formData.append("quantity", (amount+1).toString());
+                formData.append("quantity", quantity.toString());
                 updateCarts(formData);
+                (table.options.meta as CartTableMeta).onQuantityChange(row.original.id, quantity);
+            }
+
+            // useEffect(() => {
+            // },)
+
+            const handleIncrease = (quantity: number) => {
+                setAmount(quantity + 1);
+                handleChaneAmount(amount + 1);
             }
             const handleDecrease = (quantity: number) => {
                 if (quantity > 1) {
-                    // amount -= 1;
                     setAmount(quantity - 1);
-                    const formData = new FormData();
-                    formData.append("userId", sessionStorage.getItem("userId") as string);
-                    formData.append("productId", row.original.id);
-                    formData.append("quantity", (amount-1).toString());
-                    updateCarts(formData);
+                    handleChaneAmount(amount - 1);
                 }
             }
 
@@ -96,15 +105,6 @@ export const columns: ColumnDef<Cart>[] = [
                 <Button className="bg-amber-500 hover:bg-red-500 w-8 h-8"
                     onClick={() => handleIncrease(amount)}>+</Button>
             </div>
-        },
-    },
-    {
-        id: "total",
-        header: () => <div className="w-36 text-center">Thành tiền</div>,
-        cell: ({ row }) => {
-            const cost = row.original.cost;
-            const amount = row.original.amount;
-            return <div className="text-center">{amount * cost}</div>
         },
     },
     {

@@ -21,16 +21,23 @@ import Link from "next/link"
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[]
   data: TData[]
+  onQuantityChange: (id: string, newQuantity: number) => void
 }
 
 export function DataTable<TData, TValue>({
   columns,
   data,
+  onQuantityChange
 }: DataTableProps<TData, TValue>) {
   const table = useReactTable({
     data,
     columns,
     getCoreRowModel: getCoreRowModel(),
+    meta: {
+      onQuantityChange: (id: string, newQuantity: number) => {
+        onQuantityChange(id, newQuantity);
+      },
+    },
   })
 
   return (
