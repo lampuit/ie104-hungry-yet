@@ -70,7 +70,7 @@ export function Summary() {
                             currentDate >= new Date(discount.fromDate ?? 0) && currentDate <= new Date(discount.toDate ?? 0) ? (
                                 <div key={discount.id} className="flex justify-between items-center gap-4 p-4 border-gray-300 border rounded-sm">
                                     <div className="flex flex-col justify-around">
-                                        <Label className="text-xl font-semibold">{discount.name}</Label>
+                                        <Label className="text-xl font-semibold">{discount.code}</Label>
                                         <div>Giảm {discount.discount?.toString()}%</div>
                                         <div>HSD: {discount.toDate?.toLocaleString('en-GB', {
                                             timeZone: 'Asia/Bangkok', // GMT+7 timezone

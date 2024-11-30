@@ -31,7 +31,7 @@ import { getUserById } from "@/lib/data";
 import useSWR from "swr";
 import { updateUser } from "@/lib/actions/user";
 import { genderEnum } from "@/drizzle/schema/auth";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import LoadingSpinner from "@/components/ui/loading-spinner"
 
@@ -73,6 +73,12 @@ export default function Account() {
     const userId = sessionStorage.getItem('userId');
 
     const { data: userInfo, isLoading, error } = useSWR(userId, getUser)
+    const [shortName, setShortName] = useState<string>("");
+
+    const splitName = (name: string) => {
+        const array = name.split(" ");
+        return (array[array.length - 2]?.at(0) || '') + (array[array.length - 1]?.at(0) || '');
+    }
 
     useEffect(() => {
         if (userInfo && userInfo[0]) {
@@ -90,9 +96,8 @@ export default function Account() {
                 address: user.address || "",
             });
         }
+        setShortName(userInfo && userInfo[0]?.name ? splitName(userInfo[0].name) : "");
     }, [userInfo, form]);
-
-    console.log("user info", userInfo?.[0]?.name);
 
     async function onSubmit(values: z.infer<typeof formSchema>) {
         try {
@@ -121,15 +126,15 @@ export default function Account() {
     return (
         isLoading ? <LoadingSpinner /> :
             <div className="grow flex flex-col gap-5 md:px-8">
-                <h2 className="font-semibold text-xl md:text-2xl">Tài khoản của tôi</h2>
-                <div className="flex flex-col md:flex-row gap-8 p-4 md:p-16 border-2 rounded-md bg-white">
+                <h2 className="font-semibold text-xl sm:text-2xl">Tài khoản của tôi</h2>
+                <div className="flex flex-wrap justify-center xl:justify-start gap-16 p-16 border-2 rounded-md bg-white">
                     {/* Avatar Section */}
-                    <div className="flex flex-col items-center gap-4 md:gap-6 w-full md:w-auto">
-                        <Avatar className="w-24 h-24 md:w-32 md:h-32">
+                    <div className="flex flex-col items-center gap-6 w-auto">
+                        <Avatar className="w-40 h-40">
                             <AvatarImage src={userInfo?.[0]?.imageUrl ?? undefined} />
-                            <AvatarFallback><Camera className="w-10 h-10" /></AvatarFallback>
+                            <AvatarFallback className="text-4xl">{shortName}</AvatarFallback>
                         </Avatar>
-                        <Button variant={"outline"} className="w-full md:w-5/6 h-11/12 border-amber-500 text-amber-500 text-sm md:text-xs hover:bg-amber-500 hover:bg-opacity-20 hover:text-amber-500">
+                        <Button variant={"outline"} className="w-full h-11/12 border-amber-500 text-amber-500 text-sm hover:bg-amber-500 hover:bg-opacity-20 hover:text-amber-500">
                             <SquarePen className="stroke-amber-500 w-4 h-4" /> Thay đổi ảnh
                         </Button>
                     </div>
@@ -137,7 +142,7 @@ export default function Account() {
                     <Form {...form}>
                         <form
                             onSubmit={form.handleSubmit(onSubmit)}
-                            className="flex flex-col justify-center space-y-8">
+                            className="flex flex-col justify-center space-y-8 w-full lg:max-w-[510px]">
 
                             <FormField
                                 control={form.control}
