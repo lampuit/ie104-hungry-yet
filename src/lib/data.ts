@@ -8,10 +8,11 @@ import {
   categories,
   ratings,
   shifts,
-  assigments
+  assigments,
+  discounts,
 } from "@/drizzle/schema/project";
 import { user } from "@/drizzle/schema/auth";
-import { eq, and, getTableColumns } from "drizzle-orm";
+import { eq, and, getTableColumns, lte, gte, isNull, or } from "drizzle-orm";
 import { unstable_noStore } from "next/cache";
 
 export async function fetchProducts() {
@@ -36,6 +37,22 @@ export async function fetchDiscounts() {
   }
 }
 
+export async function fetchValidDiscount(code: string) {
+  try {
+    const now = new Date();
+    const discount = await db.query.discounts.findFirst({
+      where: and(
+        eq(discounts.code, code),
+        or(isNull(discounts.fromDate), lte(discounts.fromDate, now)),
+        or(isNull(discounts.toDate), gte(discounts.toDate, now)),
+      ),
+    });
+    return discount;
+  } catch (error) {
+    throw new Error("Không thể lấy dữ liệu mã ưu đãi.");
+  }
+}
+
 export async function fetchProductId(id: string) {
   try {
     unstable_noStore();
@@ -50,6 +67,20 @@ export async function fetchProductId(id: string) {
   }
 }
 
+export async function fetchCarts() {
+  try {
+    return db.query.carts.findMany({
+      with: {
+        product: {
+          with: { category: true },
+        },
+      },
+    });
+  } catch (error) {
+    throw new Error("Không thể lấy dữ liệu mã ưu đãi.");
+  }
+}
+
 export async function getUserById(id: string) {
   return await db
     .select({
@@ -60,25 +91,19 @@ export async function getUserById(id: string) {
 }
 
 export async function getAllShift() {
-  return await db
-    .select()
-    .from(shifts);
+  return await db.select().from(shifts);
 }
 
 export async function getAllEmployee() {
-  return await db
-    .select()
-    .from(user)
-    .where(eq(user.role, "staff"));
+  return await db.select().from(user).where(eq(user.role, "staff"));
 }
 
 export async function getAllProducts() {
   return await db.query.products.findMany({
     with: {
       category: true,
-    }
+    },
   });
-    
 }
 
 export async function getProductById({ id }: { id: string }) {
@@ -103,7 +128,7 @@ export async function getAllCategory() {
 
 export async function getProductByCategoryId(
   id: string,
-  page : number,
+  page: number,
   pageSize: number,
 ) {
   // Count total records for the specified category ID
@@ -170,13 +195,13 @@ export async function getShoppingCartByUserId(userId: string) {
 
 export async function getAllRatings() {
   return await db.query.ratings.findMany({
-    with:{
-      product:{
+    with: {
+      product: {
         with: {
-          category: true
-        }
-      }
-    }
+          category: true,
+        },
+      },
+    },
   });
 }
 
@@ -194,7 +219,5 @@ export async function getRatingsByProductId(id: string) {
 }
 
 export async function getUserWorkShift() {
-  return await db
-    .select()
-    .from(assigments);
+  return await db.select().from(assigments);
 }

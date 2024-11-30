@@ -13,13 +13,25 @@ import { user } from "./auth";
 import { Relation, relations } from "drizzle-orm";
 import { createInsertSchema } from "drizzle-zod";
 
-// Định nghĩa Enum Status (Trạng thái đơn hàng)
-export const statusEnum = pgEnum("status", [
+// Định nghĩa Invoice Status (Trạng thái đơn hàng)
+export const invoiceStatusEnum = pgEnum("invoiceStatus", [
+  "pending",
+  "accepted",
   "cooking",
-  "cooked",
-  "shopping",
-  "shipped",
+  "ready",
+  "delivered",
+  "cancelled",
 ]);
+
+// Định nghĩa Payment Status (Trạng thái thanh toán)
+export const paymentStatusEnum = pgEnum("paymentStatus", [
+  "pending",
+  "failed",
+  "success",
+  "cancelled",
+]);
+
+export const methodEnum = pgEnum("method", ["momo", "paylater"]);
 
 // Relation: 1 user - n orders, 1 user - shifts, 1 user - n assigment, 1 user - n carts,
 export const userRelations = relations(user, ({ many }) => ({
@@ -102,25 +114,22 @@ export const invoices = pgTable("invoices", {
     .references(() => user.id, {
       onUpdate: "cascade",
     }), // Khóa ngoại
-  shipperId: text("shipperId").references(() => user.id, {
-    onUpdate: "cascade",
-  }), // Khóa ngoại
-  cookId: text("cookId").references(() => user.id, {
-    onUpdate: "cascade",
-  }), // Khóa ngoại
+  // shipperId: text("shipperId").references(() => user.id, {
+  //   onUpdate: "cascade",
+  // }), // Khóa ngoại
+  // cookId: text("cookId").references(() => user.id, {
+  //   onUpdate: "cascade",
+  // }), // Khóa ngoại
   paymentId: text("paymentId")
     .notNull()
     .references(() => payments.id, {
-      onUpdate: "cascade",
+      onDelete: "cascade",
     }), // Khóa ngoại
   totalAmount: real("totalAmount"),
-  status: statusEnum("status").default("shopping"),
-  orderDate: timestamp("orderDate").notNull(),
+  status: invoiceStatusEnum("status"),
   deliveryAddress: text("deliveryAddress"),
   deliveryTime: timestamp("deliveryTime"),
-  discountId: uuid("discountId").references(() => discounts.id, {
-    onUpdate: "cascade",
-  }), // Khóa ngoại
+  discountId: uuid("discountId").references(() => discounts.id), // Khóa ngoại
   createdAt: timestamp("createdAt").notNull().defaultNow(),
   updatedAt: timestamp("updatedAt")
     .notNull()
@@ -133,14 +142,14 @@ export const invoicesRelations = relations(invoices, ({ one }) => ({
     fields: [invoices.customerId],
     references: [user.id],
   }),
-  cook: one(user, {
-    fields: [invoices.cookId],
-    references: [user.id],
-  }),
-  shipper: one(user, {
-    fields: [invoices.shipperId],
-    references: [user.id],
-  }),
+  // cook: one(user, {
+  //   fields: [invoices.cookId],
+  //   references: [user.id],
+  // }),
+  // shipper: one(user, {
+  //   fields: [invoices.shipperId],
+  //   references: [user.id],
+  // }),
   discount: one(discounts, {
     fields: [invoices.discountId],
     references: [discounts.id],
@@ -181,8 +190,13 @@ export const ordersRelations = relations(orders, ({ one, many }) => ({
 
 // Bảng Payments (Thanh toán)
 export const payments = pgTable("payments", {
-  id: text("id").primaryKey(),
-  paymentName: text("paymentName").notNull(),
+  id: uuid("id").primaryKey().notNull().defaultRandom(),
+  method: methodEnum("method"),
+  status: paymentStatusEnum("status"),
+  createdAt: timestamp("createdAt").notNull().defaultNow(),
+  updatedAt: timestamp("updatedAt")
+    .notNull()
+    .$onUpdate(() => new Date()),
 });
 
 // Relation: 1 payment - n invoices
@@ -193,7 +207,7 @@ export const paymentsRelations = relations(payments, ({ many }) => ({
 // Bảng Discounts (Giám giá)
 export const discounts = pgTable("discounts", {
   id: uuid("id").primaryKey().notNull().defaultRandom(),
-  name: text("name"),
+  code: text("code"),
   discount: integer("discount"),
   fromDate: timestamp("fromDate"),
   toDate: timestamp("toDate"),
@@ -290,7 +304,12 @@ export const favorites = pgTable(
     productId: uuid("productId")
       .notNull()
       .references(() => products.id, { onDelete: "cascade" }), // Khóa ngoại
+    createdAt: timestamp("createdAt").notNull().defaultNow(),
+    updatedAt: timestamp("updatedAt")
+      .notNull()
+      .$onUpdate(() => new Date()),
   },
+
   (t) => [
     {
       pk: primaryKey({ columns: [t.userId, t.productId] }),
