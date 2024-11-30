@@ -15,13 +15,14 @@ import { Testimonials } from "@/components/home/testimonials";
 import { HorizontalLine } from "@/components/home/intro";
 import { FAQ } from "@/components/home/faq";
 import { Charm } from "next/font/google";
+import Footer from "@/components/ui/footer"
 export const charm = Charm({
   subsets: ["vietnamese"],
   weight: ["400", "700"],
 });
 
 export default function Homepage() {
- 
+
   return (
     <main>
       <header className="relative flex flex-col justify-between items-center h-[calc(100vh-80px)] w-screen overflow-hidden z-0 bg-black">
@@ -99,8 +100,7 @@ export default function Homepage() {
         </ScrollArea>
       </section>
 
-      <footer className="mt-10 h-80 w-screen bg-black">
-      </footer>
+      <Footer />
     </main>
   );
 }
