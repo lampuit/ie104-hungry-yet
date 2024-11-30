@@ -19,7 +19,6 @@ const categoriesFectcher = async () => {
 
 export function Menu() {
     const { data: categories, error } = useSWR("categories", categoriesFectcher);
-    // Truyền tên danh mục vào URL khi click vào món ăn (chuyển qua menu)
     const router = useRouter();
     const handleCategoryClick = (categoryId: string) => {
         sessionStorage.setItem("clickedIndex", categoryId);
