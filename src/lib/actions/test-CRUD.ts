@@ -14,6 +14,8 @@ import {
   getUserWorkShift
 } from "@/lib/data";
 
+import { updateUser } from "./user";
+
 //sucessfull SHOPPING CART
 async function testcreateCart() {
   const formData = new FormData();
@@ -91,23 +93,36 @@ async function testDeleteFavorite() {
 
 // testGetProductByCategoryId('58f8a47c-c295-4e70-8482-ba02444155fc');
 
-async function testGetAllCategory(){
+async function testGetAllCategory() {
   const response = await getAllCategory();
   console.log("All Category Data:", response);
 }
 
 // testGetAllCategory()
 
-async function testGetUserById (id: string){
+async function testGetUserById(id: string) {
   const response = await getUserById(id);
   console.log("User Data:", response);
 }
 
-testGetUserById('_RDKyc9nUb-HmT9Y1jebj')
+// testGetUserById('_RDKyc9nUb-HmT9Y1jebj')
 
-async function testGetAllUserWorkShift(){
+async function testGetAllUserWorkShift() {
   const response = await getUserWorkShift();
   console.log("All User Work Shift Data:", response);
 }
 
 // testGetAllUserWorkShift();
+
+async function testUpdateUserInfo() {
+  const formData = new FormData();
+  formData.append("userId", "ECiCT6IsnmOi7hm3zUBZe");
+  formData.append("name", "Phạm Thành Lam");
+  formData.append("phone", "123456789");
+  formData.append("address", "Hà Nội");
+  formData.append("imageUrl", "https://www.google.com");
+  formData.append("gender", "Nam");
+  updateUser(formData);
+}
+
+// testUpdateUserInfo();

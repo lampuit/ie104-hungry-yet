@@ -23,7 +23,7 @@ export async function submitPayment(
     const [invoice] = await db
       .insert(invoices)
       .values({
-        customerId: "1",
+        customerId: sessionStorage.getItem("userId") as string,
         paymentId: payment.id,
         discountId,
         totalAmount,

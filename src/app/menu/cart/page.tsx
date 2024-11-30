@@ -9,15 +9,78 @@ import {
   BreadcrumbPage,
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
-import { ProductList } from "@/components/menu/cart/product-list";
 import { Summary } from "@/components/menu/cart/summary";
 import { redirect } from "next/navigation";
+import { columns } from "@/components/menu/cart/columns";
+import { DataTable } from "@/components/menu/cart/data-table";
+import { getShoppingCartByUserId, fetchDiscounts } from "@/lib/data";
+import useSWR from "swr";
+import React, { useState, useEffect } from "react";
+import LoadingSpinner from "@/components/ui/loading-spinner";
+
+//get shopping cart by userId
+const fetcher = async (userId: string) => {
+  return getShoppingCartByUserId(userId);
+};
 
 export default function CartPage() {
   const userId = sessionStorage.getItem("userId");
-    if (!userId) {
-      redirect("/login");
+  const { data: listDish, isLoading, error } = useSWR(userId, fetcher, {
+    revalidateIfStale: true,
+    revalidateOnFocus: false,
+    revalidateOnReconnect: true,
+  });
+
+  const [dishes, setDishes] = useState<any[]>([]);
+  const [totalAmount, setTotalAmount] = useState(0);
+
+  useEffect(() => {
+    if (listDish) {
+      const formattedData = listDish.map((item: any) => ({
+        id: item.productId || undefined,
+        img: item.image || "/images/fallback.jpg",
+        name: item.name,
+        des: item.description || "",
+        cost: item.price,
+        amount: item.quantity,
+        isFavorite: item.isFavorite || false,
+      }));
+      setDishes(formattedData);
+      setTotalAmount(listDish.reduce(
+        (acc, item) => acc + item.price * item.quantity,
+        0
+      ))
     }
+  }, [listDish]);
+
+
+  const handleQuantityChange = (id: string, newQuantity: number) => {
+    const updatedDishes = dishes.map((dish) =>
+      dish.id === id ? { ...dish, amount: newQuantity } : dish
+    );
+    setDishes(updatedDishes);
+
+    // recalculate total amount
+    const newTotalAmount = updatedDishes.reduce(
+      (acc, item) => acc + item.amount * item.cost,
+      0
+    );
+    setTotalAmount(newTotalAmount);
+  };
+
+
+
+  const formattedTotalAmount = new Intl.NumberFormat("vi-VN", {
+    style: "currency",
+    currency: "VND",
+  }).format(totalAmount);
+
+  console.log(formattedTotalAmount);
+
+  if (error) return <div>Error loading data.</div>;
+  if (isLoading) {
+    return <LoadingSpinner />;
+  }
 
   return (
     <main>
@@ -39,10 +102,12 @@ export default function CartPage() {
         </Breadcrumb>
       </section>
       <section>
-        <ProductList />
+        <div className="flex flex-col justify-center items-center">
+          <DataTable columns={columns} data={dishes} onQuantityChange={handleQuantityChange}></DataTable>
+        </div>
       </section>
       <section className="mx-10 py-5">
-        <Summary />
+        <Summary totalAmount={formattedTotalAmount} />
       </section>
       <footer className="mt-10 h-80 bg-black"></footer>
     </main>
