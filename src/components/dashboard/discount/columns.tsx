@@ -42,11 +42,20 @@ export type Discount = z.infer<typeof insertDiscountSchema>;
 
 export const columns: ColumnDef<Discount>[] = [
   {
-    accessorKey: "name",
+    accessorKey: "code",
     header: () => <div>Mã</div>,
     cell: ({ row }) => {
-      const name = row.getValue("name") as string;
-      return <div className="font-semibold">{name}</div>;
+      const code = row.getValue("code") as string;
+      return <div className="font-semibold">{code}</div>;
+    },
+  },
+  {
+    accessorKey: "discount",
+    header: () => <div>Giảm giá</div>,
+    cell: ({ row }) => {
+      const discount = parseFloat(row.getValue("discount")).toFixed(2) + "%";
+
+      return <div>{discount}</div>;
     },
   },
   {
@@ -71,15 +80,6 @@ export const columns: ColumnDef<Discount>[] = [
     meta: {
       headerClassName: "hidden md:table-cell",
       cellClassName: "hidden md:table-cell",
-    },
-  },
-  {
-    accessorKey: "discount",
-    header: () => <div>Giảm giá</div>,
-    cell: ({ row }) => {
-      const discount = parseFloat(row.getValue("discount")).toFixed(2) + "%";
-
-      return <div>{discount}</div>;
     },
   },
   {
@@ -148,7 +148,7 @@ export const columns: ColumnDef<Discount>[] = [
                       deleteDiscount(discount.id!);
                       toast({
                         title: "Xóa thành công mã",
-                        description: `Tên mã: ${discount.name}`,
+                        description: `Tên mã: ${discount.code}`,
                       });
                     } catch (error) {
                       if (error instanceof Error) {

@@ -82,12 +82,12 @@ async function testDeleteFavorite() {
 
 // testDeleteFavorite()
 
-async function testGetProductByCategoryId(id: string) {
-  const response = await getProductByCategoryId(
-    id
-  );
-  console.log("Product Data:", response);
-}
+// async function testGetProductByCategoryId(id: string) {
+//   const response = await getProductByCategoryId(
+//     id
+//   );
+//   console.log("Product Data:", response);
+// }
 
 // testGetProductByCategoryId('58f8a47c-c295-4e70-8482-ba02444155fc');
 
