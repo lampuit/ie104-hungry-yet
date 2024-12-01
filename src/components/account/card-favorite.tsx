@@ -5,16 +5,13 @@ import { Button } from "../ui/button";
 import { Eye, ShoppingCart, X } from "lucide-react";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import LoadingSpinner from "../ui/loading-spinner";
-import { redirect } from "next/navigation";
 import { createCart } from "@/lib/actions/shopping-cart";
 import { toast } from "sonner";
 import { useRouter } from 'next/navigation';
 import { deleteFavorite } from "@/lib/actions/favorite";
-import { useState } from "react";
 
 export function AccountFavorite({ listFavorite, isLoading, mutate }: { listFavorite: any, isLoading: boolean, mutate: any }) {
     const router = useRouter();
-    const [isDeleting, setIsDeleting] = useState(false);
     const convertToVND = (price: number) => {
         return new Intl.NumberFormat("vi-VN", {
             style: "currency",
@@ -23,17 +20,14 @@ export function AccountFavorite({ listFavorite, isLoading, mutate }: { listFavor
     }
 
     const handleDeleteFavorite = async (userId: string, productId: string) => {
-        setIsDeleting(true);
         try {
             await deleteFavorite(userId, productId);
             toast.success("Xóa yêu thích thành công");
             // router.push("/account/favorite");
-            mutate(); 
+            mutate();
         } catch (error) {
             console.error("Error deleting favorite:", error);
             toast("Xóa yêu thích thất bại");
-        } finally {
-            setIsDeleting(false);
         }
     };
     return (
@@ -108,7 +102,6 @@ export function AccountFavorite({ listFavorite, isLoading, mutate }: { listFavor
                                         size="icon"
                                         className="text-white bg-gray-200 hover:bg-red-500"
                                         onClick={() => handleDeleteFavorite(item?.userId, item?.productId)}
-                                        disabled={isDeleting}
                                     >
                                         <X className="h-4 w-4" />
                                     </Button>
