@@ -66,14 +66,18 @@ export const DishList = ({ dishesList }: DishListProps) => {
             {dishesList?.map((dish: any, index: any) => (
                 dish.published ? (
                     <div key={index} className="shadow-md rounded-3xl flex flex-col items-center group">
-                        <img src={dish.image} alt={dish.name} className="w-full h-80 rounded-3xl object-cover" />
+                        <img src={dish.image} alt={dish.name}
+                            onClick={() => handleProductOnClick(dish.id)}
+                            className="w-full h-80 rounded-3xl object-cover" />
                         <div className='flex flex-col justify-center items-center gap-3 py-4 w-full px-3'>
                             <div className='flex flex-col justify-between items-start gap-1 w-full'>
                                 <div className='flex justify-between items-center w-full'>
-                                    <p className='font-semibold text-xl'>{dish.name}</p>
+                                    <p className='font-semibold text-xl' onClick={() => handleProductOnClick(dish.id)}>{dish.name}</p>
                                     <Bookmark onClick={() => handleBookmarkOnClick(dish.id, dish.name)} />
                                 </div>
-                                <p className='font-normal'>{`${dish.des.substr(0, 31)}${(dish.des.length > 32) ? "..." : ""}`}</p>
+                                <p className='font-normal' onClick={() => handleProductOnClick(dish.id)}>
+                                    {`${dish.des.substr(0, 31)}${(dish.des.length > 32) ? "..." : ""}`}
+                                </p>
                             </div>
                             <div className='flex justify-between items-center w-full'>
                                 <div className='flex justify-center items-center gap-1'>
