@@ -4,34 +4,23 @@ import Image from "next/image";
 import { Button } from "../ui/button";
 import { Eye, ShoppingCart, X } from "lucide-react";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
-import { getFavoriteByUserId } from "@/lib/data";
-import useSWR from "swr";
 import LoadingSpinner from "../ui/loading-spinner";
 
-export const favoriteFetcher = async (userId: string) => {
-    return await getFavoriteByUserId(userId);
-}
-
-export function AccountFavorite() {
-    const userId = sessionStorage.getItem("userId");
-
-    const { data, isLoading, error } = useSWR(userId, favoriteFetcher);
-
+export function AccountFavorite({ listFavorite, isLoading }: { listFavorite: any, isLoading: boolean }) {
     const convertToVND = (price: number) => {
         return new Intl.NumberFormat("vi-VN", {
             style: "currency",
             currency: "VND",
         }).format(price);
     }
-
     return (
-        isLoading ? <LoadingSpinner /> :
-            data?.map((item: any, index: any) => (
+        listFavorite?.map((item: any, index: any) => (
+            isLoading ? <LoadingSpinner /> :
                 <div key={index} className="bg-white rounded shadow-md border-b-2 relative p-4">
                     <div className="flex flex-col md:flex-row gap-4 md:gap-7 items-start md:items-end">
                         <Image
                             className="rounded w-full md:w-auto"
-                            src={item.productImageUrl}
+                            src={item?.productImageUrl}
                             alt="review"
                             width={120}
                             height={180}
@@ -43,12 +32,12 @@ export function AccountFavorite() {
                             <div className="flex flex-col gap-2">
                                 <div className="flex flex-col">
                                     <div className="flex justify-between">
-                                        <p className="text-lg font-semibold">{item.productName}</p>
+                                        <p className="text-lg font-semibold">{item?.productName}</p>
                                     </div>
                                     <p className="text-amber-500">Phân loại</p>
                                 </div>
                                 <p className="text-lg flex gap-2 items-center">
-                                    Giá: <span className="text-red-500 font-semibold text-2xl">{convertToVND(item.productPrice)}</span>
+                                    Giá: <span className="text-red-500 font-semibold text-2xl">{convertToVND(item?.productPrice) || '0'}</span>
                                 </p>
                             </div>
 
@@ -82,6 +71,6 @@ export function AccountFavorite() {
                         </TooltipProvider>
                     </div>
                 </div>
-            ))
+        ))
     );
 }

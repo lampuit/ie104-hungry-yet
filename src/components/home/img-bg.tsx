@@ -49,7 +49,7 @@ const imgList = [
 
 export function ImgBg() {
   return (
-    <div className="absolute grid grid-rows-3 grid-cols-6 w-screen h-full gap-y-16 z-0">
+    <div className="absolute grid grid-rows-3 grid-cols-6 w-screen h-full gap-y-8 gap-x-8 z-0">
       {imgList.map((img) => (
         <div key={img.name} className="rounded-lg opacity-30 hover:opacity-70">
           <Image 

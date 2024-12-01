@@ -45,7 +45,7 @@ export default function Layout({
     useEffect(() => {
         setShortName(user && user[0]?.name ? splitName(user[0].name) : "");
         setName(user && user[0]?.name ? user[0].name : "");
-    }, [session, user]);
+    }, [user]);
 
     const handleLogout = async () => {
         try {
