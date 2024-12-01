@@ -59,7 +59,7 @@ export default function Favorite() {
                     ) : error ? (
                         <div>Error loading favorites. Please try again.</div>
                     ) : listFavorite && listFavorite.length > 0 ? (
-                        <AccountFavorite listFavorite={listFavorite} isLoading={isLoading} />
+                        <AccountFavorite listFavorite={listFavorite} isLoading={isLoading} mutate={mutate} />
                     ) : (
                         <div>Không có món ăn nào trong danh mục yêu thích.</div>
                     )}

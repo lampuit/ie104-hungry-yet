@@ -26,7 +26,7 @@ const fetcher = async (userId: string) => {
 
 export default function CartPage() {
   const userId = sessionStorage.getItem("userId");
-  const { data: listDish, isLoading, error } = useSWR(userId, fetcher, {
+  const { data: listDish, isLoading, error, mutate } = useSWR(userId, fetcher, {
     revalidateIfStale: true,
     revalidateOnFocus: false,
     revalidateOnReconnect: true,
@@ -54,6 +54,13 @@ export default function CartPage() {
     }
   }, [listDish]);
 
+  // useEffect(() => {
+  //   if (error) {
+  //     console.error("SWR error:", error);
+  //     mutate(); // Retry on error
+  //   }
+  // }, [error, mutate]);
+
 
   const handleQuantityChange = (id: string, newQuantity: number) => {
     const updatedDishes = dishes.map((dish) =>
@@ -75,8 +82,6 @@ export default function CartPage() {
     style: "currency",
     currency: "VND",
   }).format(totalAmount);
-
-  console.log(formattedTotalAmount);
 
   if (error) return <div>Error loading data.</div>;
   if (isLoading) {

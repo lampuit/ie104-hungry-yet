@@ -14,6 +14,7 @@ import {
 import { user } from "@/drizzle/schema/auth";
 import { eq, and, getTableColumns, lte, gte, isNull, or } from "drizzle-orm";
 import { unstable_noStore } from "next/cache";
+import { ca } from "date-fns/locale";
 
 export async function fetchProducts() {
   try {
@@ -147,19 +148,32 @@ export async function getProductByCategoryId(
   return { totalRecords, records };
 }
 
+// export async function getFavoriteByUserId(userId: string) {
+//   const response = await db
+//     .select({
+//       userId: favorites.userId,
+//       productId: favorites.productId,
+//       productName: products.name,
+//       productPrice: products.price,
+//       productImageUrl: products.imageUrl,
+//     })
+//     .from(favorites)
+//     .innerJoin(products, eq(favorites.productId, products.id))
+//     .where(eq(favorites.userId, userId));
+//   return response;
+// }
+
 export async function getFavoriteByUserId(userId: string) {
-  const response = await db
-    .select({
-      userId: favorites.userId,
-      productId: favorites.productId,
-      productName: products.name,
-      productPrice: products.price,
-      productImageUrl: products.imageUrl,
-    })
-    .from(favorites)
-    .innerJoin(products, eq(favorites.productId, products.id))
-    .where(eq(favorites.userId, userId));
-  return response;
+  return await db.query.favorites.findMany({
+    where: eq(favorites.userId, userId),
+    with: {
+      products: {
+        with: {
+          category: true,
+        },
+      },
+    },
+  });
 }
 
 export async function getShoppingCartByUserId(userId: string) {
