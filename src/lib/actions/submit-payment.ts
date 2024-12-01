@@ -4,6 +4,7 @@ import { db } from "@/drizzle/db";
 import { invoices, orders, payments } from "@/drizzle/schema/project";
 import { createMomoPayment } from "@/lib/actions/payment";
 import { eq } from "drizzle-orm";
+import { clearCart } from "./cart";
 
 export async function submitPayment(
   carts: any[],
@@ -83,7 +84,7 @@ export async function submitPayment(
         .set({ status: "success" })
         .where(eq(payments.id, payment.id));
 
-      // await clearCart();
+      await clearCart(userId);
 
       return { success: true };
     }

@@ -76,3 +76,13 @@ export async function deletecarts(productId: string, userId: string) {
   revalidatePath("/menu/cart");
   redirect("/menu/cart");
 }
+
+export async function clearCart(userId: string) {
+  try {
+    // Xóa tất cả các mục trong giỏ hàng có userId trùng với giá trị truyền vào
+    await db.delete(carts).where(eq(carts.userId, userId));
+    console.log('Giỏ hàng đã được xóa thành công');
+  } catch (error) {
+    console.error('Lỗi khi xóa giỏ hàng:', error);
+  }
+}

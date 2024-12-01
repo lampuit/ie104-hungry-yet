@@ -14,6 +14,8 @@ import {
   getUserWorkShift
 } from "@/lib/data";
 
+import { clearCart } from "./cart";
+
 import { updateUser } from "./user";
 
 //sucessfull SHOPPING CART
@@ -126,3 +128,10 @@ async function testUpdateUserInfo() {
 }
 
 // testUpdateUserInfo();
+
+
+async function testClearCart() {
+  await clearCart("ECiCT6IsnmOi7hm3zUBZe");
+}
+
+// testClearCart();
