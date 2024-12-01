@@ -90,7 +90,7 @@ export default function Homepage() {
 
       </section>
 
-      <section className="mx-10 px-10 mb-16 flex justify-center items-start gap-40">
+      <section className="mx-10 px-10 mb-16 flex flex-col md:flex-row justify-center items-center md:items-start gap-10 md:gap-20 lg:gap-40">
         <div className="flex flex-col justify-center gap-4">
           <h2 className="italic font-semibold text-5xl">FAQ</h2>
           <HorizontalLine />
