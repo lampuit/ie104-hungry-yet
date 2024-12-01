@@ -138,35 +138,35 @@ export default function Account() {
 
     return (
         isLoading ? <LoadingSpinner /> :
-            <div className="grow flex flex-col gap-5 md:px-8">
+            <div className="grow flex flex-col gap-5 px-4">
                 <h2 className="font-semibold text-xl sm:text-2xl">Tài khoản của tôi</h2>
                 <Form {...form}>
-                    <div className="flex flex-wrap justify-center xl:justify-start gap-16 p-16 border-2 rounded-md bg-white">
-                        <form
-                            onSubmit={form.handleSubmit(onSubmit)}
-                            className="flex flex-col justify-center space-y-8 w-full lg:max-w-[510px]">
-                            {/* Avatar Section */}
-                            <div className="flex flex-col items-center gap-6 w-auto">
-                                <Avatar className="w-40 h-40">
-                                    <AvatarImage src={selectedFile ? URL.createObjectURL(selectedFile) : userInfo?.[0]?.imageUrl ?? undefined} />
-                                    <AvatarFallback className="text-4xl">{shortName}</AvatarFallback>
-                                </Avatar>
-                                <Label htmlFor="avatar-upload" className="cursor-pointer">
-                                    <div className="flex items-center gap-2 px-4 py-2 border border-amber-500 rounded-md text-amber-500 text-sm hover:bg-amber-500 hover:bg-opacity-20">
-                                        <SquarePen className="stroke-amber-500 w-4 h-4" />
-                                        Thay đổi ảnh
-                                    </div>
-                                </Label>
-                                <Input
-                                    id="avatar-upload"
-                                    type="file"
-                                    accept="image/*"
-                                    className="hidden"
-                                    onChange={handleFileChange}
-                                />
-                            </div>
+                    <form
+                        onSubmit={form.handleSubmit(onSubmit)}
+                        className="flex flex-col items-center lg:items-start lg:flex-row lg:justify-start w-full gap-16 p-16 border-2 rounded-md bg-white">
+                        {/* Avatar Section */}
+                        <div className="flex flex-col items-center gap-6 w-1/2 lg:w-1/4">
+                            <Avatar className="w-32 h-32">
+                                <AvatarImage src={selectedFile ? URL.createObjectURL(selectedFile) : userInfo?.[0]?.imageUrl ?? undefined} />
+                                <AvatarFallback className="text-4xl">{shortName}</AvatarFallback>
+                            </Avatar>
+                            <Label htmlFor="avatar-upload" className="cursor-pointer">
+                                <div className="flex items-center gap-2 px-4 py-2 border border-amber-500 rounded-md text-amber-500 text-sm hover:bg-amber-500 hover:bg-opacity-20">
+                                    <SquarePen className="stroke-amber-500 w-4 h-4" />
+                                    Thay đổi ảnh
+                                </div>
+                            </Label>
+                            <Input
+                                id="avatar-upload"
+                                type="file"
+                                accept="image/*"
+                                className="hidden"
+                                onChange={handleFileChange}
+                            />
+                        </div>
 
-                            {/* Form Section */}
+                        {/* Form Section */}
+                        <div className="flex flex-col w-full lg:w-3/4 gap-6">
                             <FormField
                                 control={form.control}
                                 name="name"
@@ -251,7 +251,7 @@ export default function Account() {
                             <FormField
                                 control={form.control}
                                 name="birthday"
-                                render={({ field }) => (
+                                render={() => (
                                     <FormItem className="flex flex-col">
                                         <FormLabel className="font-medium">Ngày sinh</FormLabel>
                                         <div className="flex space-x-2">
@@ -329,8 +329,8 @@ export default function Account() {
                                 )} />
 
                             <Button disabled={isPending} type="submit" className="w-full">Lưu thay đổi</Button>
-                        </form>
-                    </div>
+                        </div>
+                    </form>
                 </Form>
             </div>
     );
