@@ -1,17 +1,14 @@
 import Link from 'next/link'
 import { Facebook, Instagram, Twitter } from 'lucide-react'
+import { Truck } from "lucide-react";
 
 export default function Footer() {
     return (
-        <footer className="bg-amber-100 text-amber-900">
+        <footer className="bg-black text-white">
             <div className="max-w-7xl mx-auto py-12 px-4 sm:px-6 lg:py-16 lg:px-8">
                 <div className="xl:grid xl:grid-cols-3 xl:gap-8">
                     <div className="space-y-8 xl:col-span-1">
-                        <img
-                            className="h-10"
-                            src="/placeholder.svg?height=40&width=120"
-                            alt="Logo Công ty"
-                        />
+                        <Truck />
                         <p className="text-base">
                             Mang hương vị Việt Nam đến từng bữa ăn của bạn.
                         </p>
@@ -137,7 +134,7 @@ export default function Footer() {
                 </div>
                 <div className="mt-12 border-t border-amber-200 pt-8">
                     <p className="text-base text-center">
-                        &copy; 2023 Công ty TNHH Dịch vụ Ẩm thực Việt Nam. Tất cả các quyền được bảo lưu.
+                        &copy; 2024 Công ty TNHH IE104 Ẩm thực UIT.
                     </p>
                 </div>
             </div>

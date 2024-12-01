@@ -10,6 +10,7 @@ export async function submitPayment(
   totalAmount: number,
   discountId: string | undefined,
   paymentMethod: any,
+  userId: string,
 ) {
   try {
     const [payment] = await db
@@ -23,7 +24,7 @@ export async function submitPayment(
     const [invoice] = await db
       .insert(invoices)
       .values({
-        customerId: sessionStorage.getItem("userId") as string,
+        customerId: userId,
         paymentId: payment.id,
         discountId,
         totalAmount,
