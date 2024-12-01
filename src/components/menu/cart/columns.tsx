@@ -1,6 +1,6 @@
 import { Button } from "@/components/ui/button"
 import { createFavorite, deleteFavorite } from "@/lib/actions/favorite"
-import { deletecarts, updateCarts } from "@/lib/actions/shopping-cart"
+import { deletecarts, updateCarts } from "@/lib/actions/cart"
 import { ColumnDef } from "@tanstack/react-table"
 import { Heart, Trash } from "lucide-react"
 import Image from "next/image"

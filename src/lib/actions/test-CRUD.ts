@@ -2,7 +2,7 @@ import {
   createCart,
   deletecarts,
   updateCarts,
-} from "./shopping-cart";
+} from "./cart";
 
 import { createFavorite, deleteFavorite } from "./favorite";
 import {

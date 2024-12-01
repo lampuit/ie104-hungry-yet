@@ -1,7 +1,7 @@
 import { toast } from "sonner";
 import { Button } from "../ui/button"
 import { ShoppingCart } from "lucide-react";
-import { createCart } from "@/lib/actions/shopping-cart";
+import { createCart } from "@/lib/actions/cart";
 import { redirect, useRouter } from "next/navigation";
 
 interface Dish {
