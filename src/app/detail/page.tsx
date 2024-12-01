@@ -86,7 +86,7 @@ export default function Detail() {
         name: data[0]?.name,
     };
 
-    const handleBookmarkOnClick = async (productId: string, productName: string) => {
+    const handleFavoriteOnClick = async (productId: string, productName: string) => {
         if (!userId) {
             router.push("/login");
         }
@@ -196,7 +196,7 @@ export default function Detail() {
                                     <h1 className="font-semibold text-4xl">{dish.name}</h1>
                                     <Badge variant="outline" className="rounded-md bg-amber-400">{dish.categoryName}</Badge>
                                 </div>
-                                <Heart size={28} onClick={() => handleBookmarkOnClick(dish.id, dish.name)}
+                                <Heart size={28} onClick={() => handleFavoriteOnClick(dish.id, dish.name)}
                                     className={`stroke-amber-500 ${favorite ? "fill-amber-500" : ""}`} />
                             </div>
                             <div className="space-x-24">
