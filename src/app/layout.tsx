@@ -34,7 +34,15 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   const { data: userId, error } = useSWR('userId', fetcher);
-  sessionStorage.setItem('userId', userId ?? '');
+
+  useEffect(() => {
+    if (userId !== undefined && userId !== null) {
+      sessionStorage.setItem('userId', userId);
+    } else if (error) {
+      console.error("Failed to fetch user session:", error);
+    }
+  }, [userId]);
+
   const pathname = usePathname();
 
   const isDashboardPath = pathname.startsWith("/dashboard");
