@@ -1,37 +1,87 @@
-import Image from 'next/image';
-import React from 'react';
+"use client"
 
-const category = [
-    { name: 'img32', src: '/images/food/img32.jpg', alt: 'food img32' },
-    { name: 'img33', src: '/images/food/img33.jpg', alt: 'food img33' },
-    { name: 'img34', src: '/images/food/img34.jpg', alt: 'food img34' },
-    { name: 'img35', src: '/images/food/img35.jpg', alt: 'food img35' },
-    { name: 'img36', src: '/images/food/img36.jpg', alt: 'food img36' },
-    { name: 'img38', src: '/images/food/img38.jpg', alt: 'food img38' },
-    { name: 'img39', src: '/images/food/img39.jpg', alt: 'food img39' },
-    { name: 'img40', src: '/images/food/img40.jpg', alt: 'food img40' },
-    { name: 'img41', src: '/images/food/img41.jpg', alt: 'food img41' },
-    { name: 'img42', src: '/images/food/img42.jpg', alt: 'food img42' },
-];
+import Image from 'next/image';
+import React, { useRef, useEffect, useState } from 'react';
+import { motion, useMotionValue, useAnimation } from 'framer-motion';
+import { getAllProducts } from '@/lib/data';
+import { useRouter } from "next/navigation";
 
 export function Categories() {
+    const [products, setProducts] = useState<any[]>([]);
+    const containerRef = useRef<HTMLDivElement>(null);
+    const x = useMotionValue(0);
+    const controls = useAnimation();
+    const [isHovered, setIsHovered] = useState(false);
+    const router = useRouter();
+
+    useEffect(() => {
+        getAllProducts().then(data => {
+            console.log("Fetched products:", data);
+            setProducts([...data, ...data]); // Duplicate the list for infinite scroll
+        }).catch(error => {
+            console.error("Error fetching products:", error);
+        });
+    }, []);
+
+    // Auto-scroll logic
+    useEffect(() => {
+        const autoScroll = setInterval(() => {
+            if (!isHovered) {
+                const currentX = x.get();
+                const maxScroll = -(products.length / 2) * 120; // Half the products' width
+
+                if (currentX <= maxScroll) {
+                    x.set(0); // Reset position when reaching the end
+                } else {
+                    controls.start({
+                        x: currentX - 10, // Move left by 10px
+                        transition: { ease: "linear", duration: 0.1 },
+                    });
+                }
+            }
+        }, 50); // Adjust the speed of scrolling
+
+        return () => clearInterval(autoScroll);
+    }, [isHovered, x, controls, products]);
+
     return (
-        <div className="grid grid-rows-1 grid-cols-10 gap-x-8 w-screen z-0">
-            {category.map((cate) => (
-                <div className='flex flex-col items-start hover:scale-125'>
-                    <div key={cate.name} className="rounded-lg">
-                        <Image
-                            src={cate.src}
-                            alt={cate.alt}
-                            width={120}
-                            height={80}
-                            className="object-cover rounded-lg"
-                        />
-                    </div>
-                    <p className='text-xs text-black font-semibold'>Tên món ăn</p>
-                </div>
-            ))}
+        <div
+            className="overflow-hidden w-full"
+            ref={containerRef}
+            onMouseEnter={() => setIsHovered(true)} // Pause auto-scroll on hover
+            onMouseLeave={() => setIsHovered(false)} // Resume auto-scroll when not hovering
+        >
+            <motion.div
+                className="flex space-x-4 py-4"
+                style={{ x }}
+                animate={controls}
+                drag="x"
+                dragConstraints={containerRef}
+                transition={{ type: "spring", stiffness: 300, damping: 30 }}
+            >
+                {products?.map((product, index) => (
+                    <motion.div
+                        key={`${product.id}-${index}`} // Ensure unique keys for duplicated products
+                        className="flex-shrink-0 w-28"
+                        whileHover={{ scale: 1.1 }}
+                        whileTap={{ scale: 0.95 }}
+                    >
+                        <div className="rounded-lg overflow-hidden">
+                            <Image
+                                src={product.imageUrl || "/placeholder-image.jpg"}
+                                alt={product.name || "No image"}
+                                width={120}
+                                height={80}
+                                className="object-cover w-full h-28"
+                                onClick={() => {
+                                    router.push(`/detail?id=${product?.id}`)
+                                }}
+                            />
+                        </div>
+                        <p className='mt-2 text-xs text-black font-semibold truncate'>{product?.name}</p>
+                    </motion.div>
+                ))}
+            </motion.div>
         </div>
     );
 }
-
