@@ -50,14 +50,14 @@ export function FAQ() {
         </AccordionContent>
       </AccordionItem>
 
-      <AccordionItem value="item-6" className="border-2 border-[#99BD76] shadow-md shadow-[#99BD7680] rounded-3xl px-6">
+      <AccordionItem value="item-7" className="border-2 border-[#99BD76] shadow-md shadow-[#99BD7680] rounded-3xl px-6">
         <AccordionTrigger>Làm thế nào để tôi sử dụng mã giảm giá?</AccordionTrigger>
         <AccordionContent>
           Khi thanh toán, nhập mã giảm giá của bạn vào ô "Mã khuyến mãi" và nhấn "Áp dụng". Mức giảm giá sẽ tự động được trừ vào tổng hóa đơn.
         </AccordionContent>
       </AccordionItem>
 
-      <AccordionItem value="item-6" className="border-2 border-[#99BD76] shadow-md shadow-[#99BD7680] rounded-3xl px-6">
+      <AccordionItem value="item-8" className="border-2 border-[#99BD76] shadow-md shadow-[#99BD7680] rounded-3xl px-6">
         <AccordionTrigger>Có thể đổi địa chỉ giao hàng sau khi đặt không?</AccordionTrigger>
         <AccordionContent>
           Có, bạn có thể thay đổi địa chỉ giao hàng nếu đơn hàng chưa được được hoàn thành đặt hàng.
