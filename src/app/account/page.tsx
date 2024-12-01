@@ -328,7 +328,7 @@ export default function Account() {
                                     </FormItem>
                                 )} />
 
-                            <Button disabled={isPending} type="submit" className="w-full">Lưu thay đổi</Button>
+                            <Button type="submit" className="w-full">Lưu thay đổi</Button>
                         </div>
                     </form>
                 </Form>
