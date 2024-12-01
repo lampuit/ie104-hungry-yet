@@ -41,6 +41,7 @@ const getUser = async (id: string) => {
 };
 
 const formSchema = z.object({
+    imageUrl: z.string().optional(),
     email: z.string().email("Email không hợp lệ"),
     name: z.string().min(1, "Tên người dùng không hợp lệ!"),
     gender: z.enum(genderEnum.enumValues as [string, ...string[]]),
@@ -57,6 +58,7 @@ export default function Account() {
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
         defaultValues: {
+            imageUrl: "",
             name: "",
             email: "",
             phone: "",
@@ -84,6 +86,7 @@ export default function Account() {
         if (userInfo && userInfo[0]) {
             const user = userInfo[0];
             form.reset({
+                imageUrl: user.imageUrl || "",
                 name: user.name || "",
                 email: user.email || "",
                 phone: user.phone || "",
@@ -102,6 +105,7 @@ export default function Account() {
     async function onSubmit(values: z.infer<typeof formSchema>) {
         try {
             const data = new FormData();
+            // data.append("imageUrl", values.imageUrl);
             data.append("userId", userId?.toString() ?? "");
             data.append("name", values.name);
             data.append("email", values.email);
@@ -122,30 +126,31 @@ export default function Account() {
             console.log(error);
             toast({ description: "Cập nhật thông tin thất bại!" });
         }
-        
+
     }
 
     return (
         isLoading ? <LoadingSpinner /> :
             <div className="grow flex flex-col gap-5 md:px-8">
                 <h2 className="font-semibold text-xl sm:text-2xl">Tài khoản của tôi</h2>
-                <div className="flex flex-wrap justify-center xl:justify-start gap-16 p-16 border-2 rounded-md bg-white">
-                    {/* Avatar Section */}
-                    <div className="flex flex-col items-center gap-6 w-auto">
-                        <Avatar className="w-40 h-40">
-                            <AvatarImage src={userInfo?.[0]?.imageUrl ?? undefined} />
-                            <AvatarFallback className="text-4xl">{shortName}</AvatarFallback>
-                        </Avatar>
-                        <Button variant={"outline"} className="w-full h-11/12 border-amber-500 text-amber-500 text-sm hover:bg-amber-500 hover:bg-opacity-20 hover:text-amber-500">
-                            <SquarePen className="stroke-amber-500 w-4 h-4" /> Thay đổi ảnh
-                        </Button>
-                    </div>
-
-                    <Form {...form}>
+                <Form {...form}>
+                    <div className="flex flex-wrap justify-center xl:justify-start gap-16 p-16 border-2 rounded-md bg-white">
                         <form
                             onSubmit={form.handleSubmit(onSubmit)}
                             className="flex flex-col justify-center space-y-8 w-full lg:max-w-[510px]">
 
+                            {/* Avatar Section */}
+                            <div className="flex flex-col items-center gap-6 w-auto">
+                                <Avatar className="w-40 h-40">
+                                    <AvatarImage src={userInfo?.[0]?.imageUrl ?? undefined} />
+                                    <AvatarFallback className="text-4xl">{shortName}</AvatarFallback>
+                                </Avatar>
+                                <Button variant={"outline"} className="w-full h-11/12 border-amber-500 text-amber-500 text-sm hover:bg-amber-500 hover:bg-opacity-20 hover:text-amber-500">
+                                    <SquarePen className="stroke-amber-500 w-4 h-4" /> Thay đổi ảnh
+                                </Button>
+                            </div>
+
+                            {/* Form Section */}
                             <FormField
                                 control={form.control}
                                 name="name"
@@ -309,9 +314,8 @@ export default function Account() {
 
                             <Button type="submit" className="w-full">Lưu thay đổi</Button>
                         </form>
-                    </Form>
-
-                </div>
+                    </div>
+                </Form>
             </div>
     );
 }
