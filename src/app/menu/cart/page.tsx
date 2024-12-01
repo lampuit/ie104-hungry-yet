@@ -17,6 +17,7 @@ import { getShoppingCartByUserId, fetchDiscounts } from "@/lib/data";
 import useSWR from "swr";
 import React, { useState, useEffect } from "react";
 import LoadingSpinner from "@/components/ui/loading-spinner";
+import Footer from "@/components/ui/footer";
 
 //get shopping cart by userId
 const fetcher = async (userId: string) => {
@@ -109,7 +110,7 @@ export default function CartPage() {
       <section className="mx-10 py-5">
         <Summary totalAmount={formattedTotalAmount} />
       </section>
-      <footer className="mt-10 h-80 bg-black"></footer>
+      <Footer />
     </main>
   );
 }

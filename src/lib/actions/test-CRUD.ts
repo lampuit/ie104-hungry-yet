@@ -30,7 +30,7 @@ async function testcreateCart() {
 
 //successfull
 async function testGetShoppingCartByUserId() {
-  const result = await getShoppingCartByUserId("PqEEV28ZywjNXbhRsZ-r_");
+  const result = await getShoppingCartByUserId("ECiCT6IsnmOi7hm3zUBZe");
   console.log("Shopping Cart Data:", result);
 }
 // testGetShoppingCartByUserId();

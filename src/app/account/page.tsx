@@ -1,32 +1,23 @@
 "use client"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Button } from "@/components/ui/button";
-import { Camera, ClipboardList, Heart, LogOut, SquarePen, UserIcon } from 'lucide-react';
+import { SquarePen } from 'lucide-react';
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { format } from "date-fns"
-import { CalendarIcon } from 'lucide-react'
 import { useForm } from "react-hook-form"
 import { z } from "zod"
-import { cn } from "@/lib/utils"
 import { toast } from "@/hooks/use-toast";
-import { Calendar } from "@/components/ui/calendar"
 import {
     Form,
     FormControl,
-    FormDescription,
     FormField,
     FormItem,
     FormLabel,
     FormMessage,
 } from "@/components/ui/form"
-import {
-    Popover,
-    PopoverContent,
-    PopoverTrigger,
-} from "@/components/ui/popover"
 import { getUserById } from "@/lib/data";
 import useSWR from "swr";
 import { updateUser } from "@/lib/actions/user";
@@ -34,6 +25,7 @@ import { genderEnum } from "@/drizzle/schema/auth";
 import { useEffect, useState } from "react";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import LoadingSpinner from "@/components/ui/loading-spinner"
+import { upload } from "@vercel/blob/client";
 
 const getUser = async (id: string) => {
     const user = await getUserById(id);
@@ -41,6 +33,7 @@ const getUser = async (id: string) => {
 };
 
 const formSchema = z.object({
+    imageUrl: z.string().optional(),
     email: z.string().email("Email không hợp lệ"),
     name: z.string().min(1, "Tên người dùng không hợp lệ!"),
     gender: z.enum(genderEnum.enumValues as [string, ...string[]]),
@@ -54,9 +47,16 @@ const formSchema = z.object({
 });
 
 export default function Account() {
+    const userId = sessionStorage.getItem('userId');
+    const { data: userInfo, isLoading, error } = useSWR(userId, getUser)
+    const [shortName, setShortName] = useState<string>("");
+    const [isPending, setIsPending] = useState(false);
+    const [selectedFile, setSelectedFile] = useState<File | null>(null);
+
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
         defaultValues: {
+            imageUrl: "",
             name: "",
             email: "",
             phone: "",
@@ -70,20 +70,16 @@ export default function Account() {
         },
     });
 
-    const userId = sessionStorage.getItem('userId');
-
-    const { data: userInfo, isLoading, error } = useSWR(userId, getUser)
-    const [shortName, setShortName] = useState<string>("");
-
     const splitName = (name: string) => {
         const array = name.split(" ");
         return (array[array.length - 2]?.at(0) || '') + (array[array.length - 1]?.at(0) || '');
     }
 
     useEffect(() => {
-        if (userInfo && userInfo[0]) {
+        if (userInfo && userInfo[0] && !error) {
             const user = userInfo[0];
             form.reset({
+                imageUrl: user.imageUrl || "",
                 name: user.name || "",
                 email: user.email || "",
                 phone: user.phone || "",
@@ -99,8 +95,22 @@ export default function Account() {
         setShortName(userInfo && userInfo[0]?.name ? splitName(userInfo[0].name) : "");
     }, [userInfo, form]);
 
+    const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        const file = event.target.files?.[0];
+        if (file) {
+            setSelectedFile(file);
+        }
+    };
+
     async function onSubmit(values: z.infer<typeof formSchema>) {
         try {
+            setIsPending(true);
+            if (!selectedFile) throw new Error("Vui lòng chọn ảnh");
+            const newBlob = await upload(values.name, selectedFile, {
+                access: "public",
+                handleUploadUrl: "/api/image/upload",
+            });
+
             const data = new FormData();
             data.append("userId", userId?.toString() ?? "");
             data.append("name", values.name);
@@ -114,6 +124,7 @@ export default function Account() {
             );
             data.append("birthday", birthday.toISOString());
             data.append("address", values.address);
+            data.append("imageUrl", newBlob.url);
 
             await updateUser(data);
             toast({ description: "Cập nhật thông tin thành công!" });
@@ -122,30 +133,40 @@ export default function Account() {
             console.log(error);
             toast({ description: "Cập nhật thông tin thất bại!" });
         }
-        
+
     }
 
     return (
         isLoading ? <LoadingSpinner /> :
             <div className="grow flex flex-col gap-5 md:px-8">
                 <h2 className="font-semibold text-xl sm:text-2xl">Tài khoản của tôi</h2>
-                <div className="flex flex-wrap justify-center xl:justify-start gap-16 p-16 border-2 rounded-md bg-white">
-                    {/* Avatar Section */}
-                    <div className="flex flex-col items-center gap-6 w-auto">
-                        <Avatar className="w-40 h-40">
-                            <AvatarImage src={userInfo?.[0]?.imageUrl ?? undefined} />
-                            <AvatarFallback className="text-4xl">{shortName}</AvatarFallback>
-                        </Avatar>
-                        <Button variant={"outline"} className="w-full h-11/12 border-amber-500 text-amber-500 text-sm hover:bg-amber-500 hover:bg-opacity-20 hover:text-amber-500">
-                            <SquarePen className="stroke-amber-500 w-4 h-4" /> Thay đổi ảnh
-                        </Button>
-                    </div>
-
-                    <Form {...form}>
+                <Form {...form}>
+                    <div className="flex flex-wrap justify-center xl:justify-start gap-16 p-16 border-2 rounded-md bg-white">
                         <form
                             onSubmit={form.handleSubmit(onSubmit)}
                             className="flex flex-col justify-center space-y-8 w-full lg:max-w-[510px]">
+                            {/* Avatar Section */}
+                            <div className="flex flex-col items-center gap-6 w-auto">
+                                <Avatar className="w-40 h-40">
+                                    <AvatarImage src={selectedFile ? URL.createObjectURL(selectedFile) : userInfo?.[0]?.imageUrl ?? undefined} />
+                                    <AvatarFallback className="text-4xl">{shortName}</AvatarFallback>
+                                </Avatar>
+                                <Label htmlFor="avatar-upload" className="cursor-pointer">
+                                    <div className="flex items-center gap-2 px-4 py-2 border border-amber-500 rounded-md text-amber-500 text-sm hover:bg-amber-500 hover:bg-opacity-20">
+                                        <SquarePen className="stroke-amber-500 w-4 h-4" />
+                                        Thay đổi ảnh
+                                    </div>
+                                </Label>
+                                <Input
+                                    id="avatar-upload"
+                                    type="file"
+                                    accept="image/*"
+                                    className="hidden"
+                                    onChange={handleFileChange}
+                                />
+                            </div>
 
+                            {/* Form Section */}
                             <FormField
                                 control={form.control}
                                 name="name"
@@ -307,11 +328,10 @@ export default function Account() {
                                     </FormItem>
                                 )} />
 
-                            <Button type="submit" className="w-full">Lưu thay đổi</Button>
+                            <Button disabled={isPending} type="submit" className="w-full">Lưu thay đổi</Button>
                         </form>
-                    </Form>
-
-                </div>
+                    </div>
+                </Form>
             </div>
     );
 }
