@@ -31,13 +31,11 @@ export const AddToCartButton: React.FC<{ dish: Dish }> = ({ dish }) => {
             await createCart(data);
 
             const currentDateTime = new Date().toLocaleString("en-US", {
-                weekday: "long",
                 year: "numeric",
                 month: "long",
                 day: "numeric",
                 hour: "numeric",
                 minute: "numeric",
-                second: "numeric",
                 hour12: true,
             });
 
@@ -50,7 +48,6 @@ export const AddToCartButton: React.FC<{ dish: Dish }> = ({ dish }) => {
                 },
             });
         }
-
     };
     return (
         <Button onClick={() => handleAddToCartOnClick(dish.id)}
