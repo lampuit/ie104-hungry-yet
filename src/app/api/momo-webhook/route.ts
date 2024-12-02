@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { invoices, payments } from "@/drizzle/schema/project";
+import { invoices, payments, carts } from "@/drizzle/schema/project";
 import { eq } from "drizzle-orm";
 import crypto from "crypto";
 import { db } from "@/drizzle/db";
@@ -32,9 +32,12 @@ export async function POST(req: NextRequest) {
       case 0:
         paymentStatus = "success";
         invoiceStatus = "accepted";
-
-        // await clearCart();
-
+        const userId = sessionStorage.getItem("userId");
+        if (userId) {
+          await db.delete(carts).where(eq(carts.userId, userId));;
+        } else {
+          console.error("No userId found in sessionStorage");
+        }
         break;
       case 9000:
         paymentStatus = "pending";

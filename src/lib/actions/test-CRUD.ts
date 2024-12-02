@@ -2,17 +2,19 @@ import {
   createCart,
   deletecarts,
   updateCarts,
-} from "./shopping-cart";
+} from "./cart";
 
 import { createFavorite, deleteFavorite } from "./favorite";
 import {
   getFavoriteByUserId,
-  getShoppingCartByUserId,
   getProductByCategoryId,
   getAllCategory,
   getUserById,
-  getUserWorkShift
+  getUserWorkShift,
+  getCartsByUserId
 } from "@/lib/data";
+
+import { clearCart } from "./cart";
 
 import { updateUser } from "./user";
 
@@ -29,10 +31,10 @@ async function testcreateCart() {
 // testcreateCart()
 
 //successfull
-async function testGetShoppingCartByUserId() {
-  const result = await getShoppingCartByUserId("ECiCT6IsnmOi7hm3zUBZe");
-  console.log("Shopping Cart Data:", result);
-}
+// async function testGetShoppingCartByUserId() {
+//   const result = await getShoppingCartByUserId("ECiCT6IsnmOi7hm3zUBZe");
+//   console.log("Shopping Cart Data:", result);
+// }
 // testGetShoppingCartByUserId();
 
 //successfull
@@ -126,3 +128,20 @@ async function testUpdateUserInfo() {
 }
 
 // testUpdateUserInfo();
+
+
+async function testClearCart() {
+  await clearCart("ECiCT6IsnmOi7hm3zUBZe");
+}
+
+// testClearCart();
+
+
+async function testGetCartByUserId() {
+  const response = await getCartsByUserId("ECiCT6IsnmOi7hm3zUBZe");
+  response.forEach(cart => {
+    console.log("Cart Data:", cart);
+  });
+}
+
+testGetCartByUserId();

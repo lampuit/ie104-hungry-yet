@@ -1,6 +1,6 @@
 import { Button } from "@/components/ui/button"
 import { createFavorite, deleteFavorite } from "@/lib/actions/favorite"
-import { deletecarts, updateCarts } from "@/lib/actions/shopping-cart"
+import { deletecarts, updateCarts } from "@/lib/actions/cart"
 import { ColumnDef } from "@tanstack/react-table"
 import { Heart, Trash } from "lucide-react"
 import Image from "next/image"
@@ -111,16 +111,18 @@ export const columns: ColumnDef<Cart>[] = [
         id: "favorite",
         cell: ({ row }) => {
             const [isFavorite, setIsFavorite] = useState(row.original.isFavorite);
+
+            const userId = sessionStorage.getItem("userId") as string;
             // Function handle when favorite btn is clicked
             const handleDeleteFavorite = async () => {
                 const id = row.original.id;
-                await deleteFavorite(sessionStorage.getItem("userId") as string, id)
+                await deleteFavorite(userId, id)
                 setIsFavorite(false);
             };
             const handleUpdateFavorite = async () => {
                 const data = new FormData();
                 data.append("productId", row.original.id);
-                data.append("userId", sessionStorage.getItem("userId") as string);
+                data.append("userId", userId);
                 await createFavorite(data);
                 setIsFavorite(true);
             }

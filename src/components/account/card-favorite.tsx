@@ -5,7 +5,7 @@ import { Button } from "../ui/button";
 import { Eye, ShoppingCart, X } from "lucide-react";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import LoadingSpinner from "../ui/loading-spinner";
-import { createCart } from "@/lib/actions/shopping-cart";
+import { createCart } from "@/lib/actions/cart";
 import { toast } from "sonner";
 import { useRouter } from 'next/navigation';
 import { deleteFavorite } from "@/lib/actions/favorite";

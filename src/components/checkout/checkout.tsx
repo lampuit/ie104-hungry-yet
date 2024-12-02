@@ -52,6 +52,8 @@ export function Checkout({ carts }: { carts: any[] }) {
 
   const total = subtotal;
 
+  const userId = sessionStorage.getItem("userId") as string;
+
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
   });
@@ -92,6 +94,7 @@ export function Checkout({ carts }: { carts: any[] }) {
         total,
         discountId,
         paymentMethod,
+        userId
       );
 
       if (result.success) {
