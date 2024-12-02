@@ -187,16 +187,16 @@ export default function Detail() {
                 </Breadcrumb>
             </section>
             <section className="w-full flex justify-center">
-                <div className="flex border p-5 gap-12 items-center justify-between w-4/5 rounded-md">
+                <div className="flex border p-5 gap-12 items-center justify-between w-4/5 max-w-5xl rounded-md">
                     <img src={dish.imageUrl} alt={dish.name} className="w-80 h-80" />
-                    <div className="grow space-y-8">
-                        <div className="space-y-2">
-                            <div className="flex justify-between items-center">
+                    <div className="grow flex flex-col justify-start gap-16 p-5 h-full">
+                        <div className="space-y-2 ">
+                            <div className="flex justify-between items-center gap-7">
                                 <div className="grow flex gap-7 items-center">
                                     <h1 className="font-semibold text-4xl">{dish.name}</h1>
                                     <Badge variant="outline" className="rounded-md bg-amber-400">{dish.categoryName}</Badge>
                                 </div>
-                                <Heart size={28} onClick={() => handleFavoriteOnClick(dish.id, dish.name)}
+                                <Heart size={40} onClick={() => handleFavoriteOnClick(dish.id, dish.name)}
                                     className={`stroke-amber-500 ${favorite ? "fill-amber-500" : ""}`} />
                             </div>
                             <div className="space-x-24">
@@ -227,8 +227,8 @@ export default function Detail() {
                     </div>
                 </div>
             </section>
-            <section className="flex my-10 mx-10 px-5">
-                <div className="space-y-3 max-w-5xl">
+            <section className="w-full flex justify-center my-10">
+                <div className="space-y-3 w-4/5 max-w-5xl p-5">
                     <h1 className="font-semibold text-2xl">Mô tả món ăn</h1>
                     <p>{dish.des}</p>
                 </div>
