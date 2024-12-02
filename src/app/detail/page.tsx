@@ -10,7 +10,7 @@ import {
 } from "@/components/ui/breadcrumb"
 
 import { Badge } from "@/components/ui/badge"
-import { Bookmark, MessageCircle, MessageCircleMore, ShoppingCart, Star } from "lucide-react"
+import { Heart, MessageCircleMore, ShoppingCart, Star } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { DetailReview } from "@/components/detail/review"
 import {
@@ -26,12 +26,12 @@ import useSWR from "swr";
 import { getFavoriteByUserId, getProductById } from "@/lib/data"
 import { useEffect, useState } from "react";
 import LoadingSpinner from "@/components/ui/loading-spinner";
-import { useRouter, useSearchParams } from "next/navigation";
-import { TbCurrencyDong } from "react-icons/tb";
-import { get } from "http";
+import { useSearchParams } from "next/navigation";
 import { createFavorite, deleteFavorite } from "@/lib/actions/favorite";
 import { toast } from "@/hooks/use-toast";
-import { set } from "date-fns";
+import router from "next/router";
+import { createCart } from "@/lib/actions/shopping-cart";
+
 
 const fetcher = async (id: string) => {
     return await getProductById({ id });
@@ -54,81 +54,118 @@ interface Dish {
 
 export default function Detail() {
     const searchParams = useSearchParams();
-  const id = searchParams.get("id") || "";
-  const userId = sessionStorage.getItem("userId") || "";
-  const { data, error } = useSWR(id, fetcher);
-  const { data: favoriteData, error: favoriteError } = useSWR(userId, favoriteFetcher);
-  const [favorite, setFavorite] = useState<boolean>(false);
+    const id = searchParams.get("id") || "";
+    const userId = sessionStorage.getItem("userId") || "";
+    const { data, error } = useSWR(id, fetcher);
+    const { data: favoriteData, error: favoriteError } = useSWR(userId, favoriteFetcher);
+    const [favorite, setFavorite] = useState<boolean>(false);
 
-  useEffect(() => {
-    if (data && favoriteData) {
-      const checkFavorite = (productId: string) => {
-        return favoriteData.some((item: any) => item.productId === productId);
-      };
+    useEffect(() => {
+        if (data && favoriteData) {
+            const checkFavorite = (productId: string) => {
+                return favoriteData.some((item: any) => item.productId === productId);
+            };
 
-      setFavorite(checkFavorite(data[0]?.id));
+            setFavorite(checkFavorite(data[0]?.id));
+        }
+    }, [data, favoriteData]);
+
+    if (error || favoriteError) return <div>Error loading data.</div>;
+    if (!data || !favoriteData) {
+        return <LoadingSpinner />;
     }
-  }, [data, favoriteData]);
 
-  if (error || favoriteError) return <div>Error loading data.</div>;
-  if (!data || !favoriteData) {
-    return <LoadingSpinner />;
-  }
+    const dish: Dish = {
+        categoryId: data[0]?.categoryId || "",
+        categoryName: data[0]?.categoryName || "/images/fallback.jpg",
+        createdAt: data[0]?.createdAt || undefined,
+        des: data[0]?.description || "",
+        id: data[0]?.id,
+        imageUrl: data[0]?.imageUrl,
+        price: data[0]?.price,
+        name: data[0]?.name,
+    };
 
-  const dish: Dish = {
-    categoryId: data[0]?.categoryId || "",
-    categoryName: data[0]?.categoryName || "/images/fallback.jpg",
-    createdAt: data[0]?.createdAt || undefined,
-    des: data[0]?.description || "",
-    id: data[0]?.id,
-    imageUrl: data[0]?.imageUrl,
-    price: data[0]?.price,
-    name: data[0]?.name,
-  };
+    const handleFavoriteOnClick = async (productId: string, productName: string) => {
+        if (!userId) {
+            router.push("/login");
+        }
+        if (!favorite) {
+            const formData = new FormData();
+            formData.append("userId", userId);
+            formData.append("productId", productId);
+            try {
+                await createFavorite(formData);
+                console.log("Favorite added");
+                toast({
+                    description: `Đã thêm ${productName.toLowerCase()} vào mục yêu thích`,
+                });
+                setFavorite(true);
+            } catch (error) {
+                toast({
+                    variant: "destructive",
+                    title: `KHÔNG THỂ THÊM ${productName.toUpperCase()}.`,
+                    description: "Có lỗi gì đó đã xảy ra",
+                });
+            }
+        } else {
+            try {
+                await deleteFavorite(userId, productId);
+                console.log("Favorite removed");
+                toast({
+                    description: `Đã xóa ${productName.toLowerCase()} khỏi mục yêu thích`,
+                });
+                setFavorite(false);
+            } catch (error) {
+                toast({
+                    variant: "destructive",
+                    title: `KHÔNG THỂ XÓA ${productName.toUpperCase()}.`,
+                    description: "Có lỗi gì đó đã xảy ra",
+                });
+            }
+        }
+    };
 
-  const handleBookmarkOnClick = async (productId: string, productName: string) => {
-    if (!favorite) {
-      const formData = new FormData();
-      formData.append("userId", userId);
-      formData.append("productId", productId);
-      try {
-        await createFavorite(formData);
-        console.log("Favorite added");
-        toast({
-          description: `Đã thêm ${productName.toLowerCase()} vào mục yêu thích`,
-        });
-        setFavorite(true);
-      } catch (error) {
-        toast({
-          variant: "destructive",
-          title: `KHÔNG THỂ THÊM ${productName.toUpperCase()}.`,
-          description: "Có lỗi gì đó đã xảy ra",
-        });
-      }
-    } else {
-      try {
-        await deleteFavorite(userId, productId);
-        console.log("Favorite removed");
-        toast({
-          description: `Đã xóa ${productName.toLowerCase()} khỏi mục yêu thích`,
-        });
-        setFavorite(false);
-      } catch (error) {
-        toast({
-          variant: "destructive",
-          title: `KHÔNG THỂ XÓA ${productName.toUpperCase()}.`,
-          description: "Có lỗi gì đó đã xảy ra",
-        });
-      }
+    const convertToVND = (price: number) => {
+        return new Intl.NumberFormat("vi-VN", {
+            style: "currency",
+            currency: "VND",
+        }).format(price);
+    };
+
+    const handleAddToCartOnClick = async () => {
+        const data = new FormData();
+        if (!userId) {
+            router.push("/login");
+        }
+        else {
+            data.append('userId', userId as string);
+            data.append('productId', dish.id);
+            data.append('quantity', '1');
+
+            try {
+                await createCart(data);
+                toast({
+                    description: `Đã thêm ${dish.name.toLowerCase()} vào giỏ hàng`,
+                });
+            }
+            catch (error) {
+                toast({
+                    variant: "destructive",
+                    title: `KHÔNG THỂ THÊM ${dish.name.toUpperCase()}.`,
+                    description: "Có lỗi gì đó đã xảy ra",
+                });
+            }
+        }
+    };
+
+    const handleBuyNowOnClick = async () => {
+        if (!userId) {
+            router.push("/login");
+        }
+        handleAddToCartOnClick();
+        router.push("/checkout");
     }
-  };
-
-  const convertToVND = (price: number) => {
-    return new Intl.NumberFormat("vi-VN", {
-      style: "currency",
-      currency: "VND",
-    }).format(price);
-  };
 
     return (
         <main>
@@ -149,49 +186,51 @@ export default function Detail() {
                     </BreadcrumbList>
                 </Breadcrumb>
             </section>
-            <section className="flex justify-center">
-                <div className="flex border p-5 gap-24 items-center justify-between max-w-5xl rounded-md">
+            <section className="w-full flex justify-center">
+                <div className="flex border p-5 gap-12 items-center justify-between w-4/5 max-w-5xl rounded-md">
                     <img src={dish.imageUrl} alt={dish.name} className="w-80 h-80" />
-                    <div>
-                        <div className="space-y-8">
-                            <div className="space-y-2">
-                                <div className="flex gap-52 items-center">
-                                    <div className="flex gap-7 items-center">
-                                        <h1 className="font-semibold text-4xl">{dish.name}</h1>
-                                        <Badge variant="outline" className="rounded-md bg-amber-400">{dish.categoryName}</Badge>
-                                    </div>
-                                    <Bookmark size={28} onClick={() => handleBookmarkOnClick(dish.id, userId)}
-                                        className={`stroke-amber-500 ${favorite ? "fill-amber-500" : ""}`} />
+                    <div className="grow flex flex-col justify-start gap-16 p-5 h-full">
+                        <div className="space-y-2 ">
+                            <div className="flex justify-between items-center gap-7">
+                                <div className="grow flex gap-7 items-center">
+                                    <h1 className="font-semibold text-4xl">{dish.name}</h1>
+                                    <Badge variant="outline" className="rounded-md bg-amber-400">{dish.categoryName}</Badge>
                                 </div>
-                                <div className="space-x-24">
-                                    <div className="inline-flex gap-2">
-                                        <Star className="fill-amber-400 stroke-amber-400 size-5" />
-                                        <span>4.9</span>
-                                    </div>
-                                    <div className="inline-flex gap-2">
-                                        <MessageCircleMore className="stroke-red-500 size-5" />
-                                        <span>50</span>
-                                    </div>
+                                <Heart size={40} onClick={() => handleFavoriteOnClick(dish.id, dish.name)}
+                                    className={`stroke-amber-500 ${favorite ? "fill-amber-500" : ""}`} />
+                            </div>
+                            <div className="space-x-24">
+                                <div className="inline-flex gap-2">
+                                    <Star className="fill-amber-400 stroke-amber-400 size-5" />
+                                    <span>4.9</span>
                                 </div>
-                                <div className="flex items-center font-bold text-4xl text-red-500">{convertToVND(dish.price)}</div>
+                                <div className="inline-flex gap-2">
+                                    <MessageCircleMore className="stroke-red-500 size-5" />
+                                    <span>50</span>
+                                </div>
                             </div>
-                            <div className="flex items-center gap-8">
-                                <Button variant={"outline"}
-                                    className="font-semibold border-amber-500 border-2 text-amber-500 
-                                    hover:bg-amber-500 hover:bg-opacity-20 hover:text-amber-500 gap-2">
-                                    <ShoppingCart /> <span>Thêm giỏ hàng</span>
-                                </Button>
-                                <Button className="font-semibold border-red-500 bg-red-500 border-2
-                                    hover:bg-red-500 hover:shadow-md hover:text-white">Mua ngay</Button>
-                            </div>
+                            <div className="flex items-center font-bold text-4xl text-red-500">{convertToVND(dish.price)}</div>
+                        </div>
+                        <div className="flex items-center gap-8">
+                            <Button variant={"outline"}
+                                className="font-semibold border-amber-500 border-2 text-amber-500 
+                                    hover:bg-amber-500 hover:bg-opacity-20 hover:text-amber-500 gap-2"
+                                onClick={() => handleAddToCartOnClick()}>
+                                <ShoppingCart /> <span>Thêm giỏ hàng</span>
+                            </Button>
+                            <Button className="font-semibold border-red-500 bg-red-500 border-2
+                                    hover:bg-red-500 hover:shadow-md hover:text-white"
+                                onClick={() => handleBuyNowOnClick()}>
+                                Mua ngay
+                            </Button>
                         </div>
                     </div>
                 </div>
             </section>
-            <section className="flex justify-center my-10">
-                <div className="p-5 gap-3 max-w-5xl">
+            <section className="w-full flex justify-center my-10">
+                <div className="space-y-3 w-4/5 max-w-5xl p-5">
                     <h1 className="font-semibold text-2xl">Mô tả món ăn</h1>
-                    <p className="max-w-5xl">{dish.des}</p>
+                    <p>{dish.des}</p>
                 </div>
             </section>
             <section className="space-y-10 mx-10 px-5">
@@ -249,3 +288,4 @@ export default function Detail() {
         </main>
     )
 }
+

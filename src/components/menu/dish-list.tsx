@@ -2,10 +2,9 @@ import React, { useState } from 'react';
 import { Button } from '../ui/button';
 import { useRouter } from 'next/navigation';
 import { AddToCartButton } from './add-to-cart-btn';
-import { Bookmark, Star } from 'lucide-react';
+import { Heart, Star } from 'lucide-react';
 import { FaCoins } from "react-icons/fa6";
 import { createFavorite, deleteFavorite } from '@/lib/actions/favorite';
-import { ToastAction } from '../ui/toast';
 import { toast } from '@/hooks/use-toast';
 
 interface Dish {
@@ -23,36 +22,56 @@ interface DishListProps {
 
 export const DishList = ({ dishesList }: DishListProps) => {
     const router = useRouter();
+    const userId = sessionStorage.getItem("userId") || "";
+    const [favorites, setFavorites] = useState<boolean[]>(new Array(dishesList.length).fill(false));
 
     const handleProductOnClick = (productId: string) => {
         router.push(`/detail?id=${productId}`);
     };
 
-    const handleBookmarkOnClick = async (productId: string, productName: string) => {
-        const userId = sessionStorage.getItem("userId");
-        if (userId) {
-            const data = new FormData();
-            data.append("productId", productId);
-            data.append("userId", userId as string);
+    const handleFavoriteOnClick = async (index: number, productId: string, productName: string) => {
+        if (!userId) {
+            router.push("/login");
+            return;
+        }
+        const newFavorites = [...favorites];
+        if (!favorites[index]) {
+            const formData = new FormData();
+            formData.append("userId", userId);
+            formData.append("productId", productId);
             try {
-                await createFavorite(data);
+                await createFavorite(formData);
+                console.log("Favorite added");
                 toast({
                     description: `Đã thêm ${productName.toLowerCase()} vào mục yêu thích`,
-                  })
-            }
-            catch (e) {
-                console.log(`Add product ${productId} to cart`);
+                });
+                newFavorites[index] = true;
+                setFavorites(newFavorites);
+            } catch (error) {
                 toast({
                     variant: "destructive",
                     title: `KHÔNG THỂ THÊM ${productName.toUpperCase()}.`,
-                    description: "Món này đã được thêm vào danh mục yêu thích rồi.",
-                  })
+                    description: "Có lỗi gì đó đã xảy ra",
+                });
+            }
+        } else {
+            try {
+                await deleteFavorite(userId, productId);
+                console.log("Favorite removed");
+                toast({
+                    description: `Đã xóa ${productName.toLowerCase()} khỏi mục yêu thích`,
+                });
+                newFavorites[index] = false;
+                setFavorites(newFavorites);
+            } catch (error) {
+                toast({
+                    variant: "destructive",
+                    title: `KHÔNG THỂ XÓA ${productName.toUpperCase()}.`,
+                    description: "Có lỗi gì đó đã xảy ra",
+                });
             }
         }
-        else {
-            router.push("/login");
-        }
-    }
+    };
 
     const convertToVND = (price: number) => {
         return new Intl.NumberFormat("vi-VN", {
@@ -73,7 +92,8 @@ export const DishList = ({ dishesList }: DishListProps) => {
                             <div className='flex flex-col justify-between items-start gap-1 w-full'>
                                 <div className='flex justify-between items-center w-full'>
                                     <p className='font-semibold text-xl' onClick={() => handleProductOnClick(dish.id)}>{dish.name}</p>
-                                    <Bookmark onClick={() => handleBookmarkOnClick(dish.id, dish.name)} />
+                                    <Heart onClick={() => handleFavoriteOnClick(index, dish.id, dish.name)}
+                                        className={`stroke-amber-500 ${favorites[index] ? "fill-amber-500" : ""}`} />
                                 </div>
                                 <p className='font-normal' onClick={() => handleProductOnClick(dish.id)}>
                                     {`${dish.des.substr(0, 31)}${(dish.des.length > 32) ? "..." : ""}`}
@@ -100,4 +120,3 @@ export const DishList = ({ dishesList }: DishListProps) => {
         </div>
     );
 };
-
