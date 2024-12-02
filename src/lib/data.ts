@@ -235,17 +235,31 @@ export async function getAllRatings() {
   });
 }
 
+// export async function getRatingsByProductId(id: string) {
+//   return await db
+//     .select({
+//       ...getTableColumns(ratings),
+//       productName: products.name,
+//       productPrice: products.price,
+//       productImageUrl: products.imageUrl,
+//     })
+//     .from(ratings)
+//     .leftJoin(products, eq(ratings.productId, products.id))
+//     .where(eq(ratings.productId, id));
+// }
+
 export async function getRatingsByProductId(id: string) {
-  return await db
-    .select({
-      ...getTableColumns(ratings),
-      productName: products.name,
-      productPrice: products.price,
-      productImageUrl: products.imageUrl,
-    })
-    .from(ratings)
-    .leftJoin(products, eq(ratings.productId, products.id))
-    .where(eq(ratings.productId, id));
+  return await db.query.ratings.findMany({
+    where: eq(ratings.productId, id),
+    with: {
+      user: true,
+      product: {
+        with: {
+          category: true,
+        },
+      },
+    },
+  })
 }
 
 export async function getUserWorkShift() {
