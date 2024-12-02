@@ -17,6 +17,7 @@ import {
 import { clearCart } from "./cart";
 
 import { updateUser } from "./user";
+import { createRatings, updateRating } from "./rating";
 
 //sucessfull SHOPPING CART
 async function testcreateCart() {
@@ -144,4 +145,16 @@ async function testGetCartByUserId() {
   });
 }
 
-testGetCartByUserId();
+// testGetCartByUserId();
+
+
+async function testUpdateRating() {
+  const data = new FormData();
+  data.append("userId", "2twIpHSepp6aENGIF-Zfq");
+  data.append("productId", "ba959b90-66c9-4313-a97d-43818851f7b7");
+  data.append("star", "4");
+  data.append("review", "Good product updated");
+  await updateRating(data);
+}
+
+testUpdateRating()
