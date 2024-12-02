@@ -15,6 +15,7 @@ import {
 } from "@/lib/data";
 
 import { updateUser } from "./user";
+import { createRatings, updateRating } from "./rating";
 
 //sucessfull SHOPPING CART
 async function testcreateCart() {
@@ -126,3 +127,18 @@ async function testUpdateUserInfo() {
 }
 
 // testUpdateUserInfo();
+
+
+async function testCreateRatings() {
+  const formData = new FormData();
+  formData.append("userId", "2twIpHSepp6aENGIF-Zfq");
+  formData.append("productId", "28369597-8449-4f13-b92f-d307c9851564")
+  formData.append("star", "5");
+  formData.append("review", "Good");
+  console.log(formData);
+  await createRatings(formData);
+}
+
+testCreateRatings();
+
+

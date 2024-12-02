@@ -1,4 +1,4 @@
-import { getFavoriteByUserId, getProductById } from "@/lib/data";
+import { getFavoriteByUserId, getProductById, getRatingsByProductId } from "@/lib/data";
 import { useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import useSWR from "swr";
@@ -19,6 +19,10 @@ const favoriteFetcher = async (userId: string) => {
     return await getFavoriteByUserId(userId);
 }
 
+export const ratingFetcher = async (productId: string) => {
+    return await getRatingsByProductId(productId);
+}
+
 interface Dish {
     categoryId: string;
     categoryName: string;
@@ -36,6 +40,8 @@ export const ProductDetail = () => {
     const userId = sessionStorage.getItem("userId") || "";
     const { data, error } = useSWR(id, fetcher);
     const { data: favoriteData, error: favoriteError } = useSWR(userId, favoriteFetcher);
+    console.log("Product ID", id);
+    const { data: ratingData, error: ratingError } = useSWR(id, ratingFetcher);
     const [favorite, setFavorite] = useState<boolean>(false);
 
     useEffect(() => {
@@ -48,10 +54,15 @@ export const ProductDetail = () => {
         }
     }, [data, favoriteData]);
 
-    if (error || favoriteError) return <div>Error loading data.</div>;
-    if (!data || !favoriteData) {
+    if (error || favoriteError || ratingError) return <div>Error loading data.</div>;
+    if (!data || !favoriteData || !ratingData) {
         return <LoadingSpinner />;
     }
+
+    console.log("Rating Data:", ratingData);
+    const averageRating = ratingData.length > 0
+        ? ratingData.reduce((acc: number, item: any) => acc + (item.star || 0), 0) / ratingData.length
+        : 0;
 
     const dish: Dish = {
         categoryId: data[0]?.categoryId || "",
@@ -163,7 +174,7 @@ export const ProductDetail = () => {
                             <div className="space-x-24">
                                 <div className="inline-flex gap-2">
                                     <Star className="fill-amber-400 stroke-amber-400 size-5" />
-                                    <span>4.9</span>
+                                    <span>{averageRating}</span>
                                 </div>
                                 <div className="inline-flex gap-2">
                                     <MessageCircleMore className="stroke-red-500 size-5" />
@@ -195,6 +206,5 @@ export const ProductDetail = () => {
                 </div>
             </section>
         </section>
-
     )
 }
