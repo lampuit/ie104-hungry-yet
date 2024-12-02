@@ -55,6 +55,7 @@ export default function Layout({
             }
             setIsLoggingOut(true); // Start logout spinner
             const response = await revokeSession({ id: session });
+            sessionStorage.removeItem("userId");
 
             if (response && response?.error?.status === 200) {
                 console.log("Session successfully revoked", response);
