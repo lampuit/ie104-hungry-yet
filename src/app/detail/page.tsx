@@ -29,8 +29,8 @@ import LoadingSpinner from "@/components/ui/loading-spinner";
 import { useSearchParams } from "next/navigation";
 import { createFavorite, deleteFavorite } from "@/lib/actions/favorite";
 import { toast } from "@/hooks/use-toast";
-import router from "next/router";
-import { createCart } from "@/lib/actions/shopping-cart";
+import {useRouter} from "next/navigation";
+import { createCart } from "@/lib/actions/cart";
 
 
 const fetcher = async (id: string) => {
@@ -53,6 +53,7 @@ interface Dish {
 }
 
 export default function Detail() {
+    const router = useRouter();
     const searchParams = useSearchParams();
     const id = searchParams.get("id") || "";
     const userId = sessionStorage.getItem("userId") || "";
@@ -164,7 +165,7 @@ export default function Detail() {
             router.push("/login");
         }
         handleAddToCartOnClick();
-        router.push("/checkout");
+        router.push(`/checkout?userId=${userId}`);
     }
 
     return (
