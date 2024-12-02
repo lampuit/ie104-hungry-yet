@@ -13,7 +13,7 @@ import { Summary } from "@/components/menu/cart/summary";
 import { redirect } from "next/navigation";
 import { columns } from "@/components/menu/cart/columns";
 import { DataTable } from "@/components/menu/cart/data-table";
-import { getShoppingCartByUserId, fetchDiscounts } from "@/lib/data";
+import { getCartsByUserId, fetchDiscounts } from "@/lib/data";
 import useSWR from "swr";
 import React, { useState, useEffect } from "react";
 import LoadingSpinner from "@/components/ui/loading-spinner";
@@ -21,7 +21,7 @@ import Footer from "@/components/ui/footer";
 
 //get shopping cart by userId
 const fetcher = async (userId: string) => {
-  return getShoppingCartByUserId(userId);
+  return getCartsByUserId(userId);
 };
 
 export default function CartPage() {
@@ -39,28 +39,20 @@ export default function CartPage() {
     if (listDish) {
       const formattedData = listDish.map((item: any) => ({
         id: item.productId || undefined,
-        img: item.image || "/images/fallback.jpg",
-        name: item.name,
-        des: item.description || "",
-        cost: item.price,
-        amount: item.quantity,
-        isFavorite: item.isFavorite || false,
+        img: item.product?.imageUrl || "/images/fallback.jpg",
+        name: item.product?.name,
+        des: item.product?.description || "",
+        cost: item.product?.price,
+        amount: item?.quantity,
+        isFavorite: item.product?.favorites.length === 0 ? false : true,
       }));
       setDishes(formattedData);
       setTotalAmount(listDish.reduce(
-        (acc, item) => acc + item.price * item.quantity,
+        (acc, item) => acc + item.product?.price * item.quantity,
         0
       ))
     }
   }, [listDish]);
-
-  // useEffect(() => {
-  //   if (error) {
-  //     console.error("SWR error:", error);
-  //     mutate(); // Retry on error
-  //   }
-  // }, [error, mutate]);
-
 
   const handleQuantityChange = (id: string, newQuantity: number) => {
     const updatedDishes = dishes.map((dish) =>

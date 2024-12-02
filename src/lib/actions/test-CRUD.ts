@@ -7,11 +7,11 @@ import {
 import { createFavorite, deleteFavorite } from "./favorite";
 import {
   getFavoriteByUserId,
-  getShoppingCartByUserId,
   getProductByCategoryId,
   getAllCategory,
   getUserById,
-  getUserWorkShift
+  getUserWorkShift,
+  getCartsByUserId
 } from "@/lib/data";
 
 import { clearCart } from "./cart";
@@ -31,10 +31,10 @@ async function testcreateCart() {
 // testcreateCart()
 
 //successfull
-async function testGetShoppingCartByUserId() {
-  const result = await getShoppingCartByUserId("ECiCT6IsnmOi7hm3zUBZe");
-  console.log("Shopping Cart Data:", result);
-}
+// async function testGetShoppingCartByUserId() {
+//   const result = await getShoppingCartByUserId("ECiCT6IsnmOi7hm3zUBZe");
+//   console.log("Shopping Cart Data:", result);
+// }
 // testGetShoppingCartByUserId();
 
 //successfull
@@ -135,3 +135,13 @@ async function testClearCart() {
 }
 
 // testClearCart();
+
+
+async function testGetCartByUserId() {
+  const response = await getCartsByUserId("ECiCT6IsnmOi7hm3zUBZe");
+  response.forEach(cart => {
+    console.log("Cart Data:", cart);
+  });
+}
+
+testGetCartByUserId();
