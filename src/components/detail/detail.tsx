@@ -1,9 +1,10 @@
+"use client";
+
 import { getFavoriteByUserId, getProductById, getRatingsByProductId } from "@/lib/data";
-import { useSearchParams } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useSearchParams, useRouter } from "next/navigation";
+import { use, useEffect, useState } from "react";
 import useSWR from "swr";
 import LoadingSpinner from "../ui/loading-spinner";
-import router from "next/router";
 import { createFavorite, deleteFavorite } from "@/lib/actions/favorite";
 import { toast } from "@/hooks/use-toast";
 import { createCart } from "@/lib/actions/cart";
@@ -42,6 +43,7 @@ export const ProductDetail = () => {
     const { data: productData, error: productError } = useSWR(id, fetcher);
     const { data: favoriteData, error: favoriteError } = useSWR(userId, favoriteFetcher);
     const [favorite, setFavorite] = useState<boolean>(false);
+    const router = useRouter();
 
     console.log("ID", id, "Rating Data:", ratingData);
 
@@ -175,7 +177,7 @@ export const ProductDetail = () => {
                             <div className="space-x-24">
                                 <div className="inline-flex gap-2">
                                     <Star className="fill-amber-400 stroke-amber-400 size-5" />
-                                    <span>{averageRating.toFixed(2)}</span>
+                                    <span>{averageRating.toFixed(1)}</span>
                                 </div>
                                 <div className="inline-flex gap-2">
                                     <MessageCircleMore className="stroke-red-500 size-5" />

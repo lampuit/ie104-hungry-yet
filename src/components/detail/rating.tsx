@@ -22,7 +22,7 @@ export const Rating = () => {
         <h1 className="font-semibold text-2xl">Nhận xét & Đánh giá</h1>
         <div className="flex gap-32 justify-center items-center bg-amber-400 bg-opacity-20 rounded-md px-20 py-16">
             <div className="gap-4">
-                <h1 className="font-semibold text-5xl text-red-500">{averageRating.toFixed(2)}</h1>
+                <h1 className="font-semibold text-5xl text-red-500">{averageRating.toFixed(1)}</h1>
                 <div className="flex gap-2"><Star className="fill-red-500 stroke-red-500 size-8" />
                     <Star className="fill-red-500 stroke-red-500 size-8" />
                     <Star className="fill-red-500 stroke-red-500 size-8" />
