@@ -1,8 +1,14 @@
+"use client";
 import { Checkout } from "@/components/checkout/checkout";
-import { fetchCarts } from "@/lib/data";
+import { getCartsByUserId } from "@/lib/data";
+import { useSearchParams } from "next/navigation";
+
+const searchParams = useSearchParams();
 
 export default async function CheckoutPage() {
-  const carts = await fetchCarts();
+
+  const userId = searchParams.get("userId") || "";
+  const carts = await getCartsByUserId(userId);
 
   return (
     <div className="container mx-auto px-4 py-8">

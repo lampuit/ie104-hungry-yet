@@ -77,6 +77,7 @@ export const productRelations = relations(products, ({ one, many }) => ({
   orders: many(orders),
   carts: many(carts),
   ratings: many(ratings),
+  favorites: many(favorites),
 }));
 
 // Bảng Ratings (Đánh giá)
@@ -101,7 +102,7 @@ export const ratingsRelations = relations(ratings, ({ one }) => ({
     references: [products.id],
   }),
   user: one(user, {
-    fields: [ratings.productId],
+    fields: [ratings.userId],
     references: [user.id],
   }),
 }));

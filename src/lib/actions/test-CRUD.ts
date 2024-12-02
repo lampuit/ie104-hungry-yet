@@ -2,17 +2,20 @@ import {
   createCart,
   deletecarts,
   updateCarts,
-} from "./shopping-cart";
+} from "./cart";
 
 import { createFavorite, deleteFavorite } from "./favorite";
 import {
   getFavoriteByUserId,
-  getShoppingCartByUserId,
   getProductByCategoryId,
   getAllCategory,
   getUserById,
-  getUserWorkShift
+  getUserWorkShift,
+  getCartsByUserId,
+  getRatingsByProductId
 } from "@/lib/data";
+
+import { clearCart } from "./cart";
 
 import { updateUser } from "./user";
 import { createRatings, updateRating } from "./rating";
@@ -30,10 +33,10 @@ async function testcreateCart() {
 // testcreateCart()
 
 //successfull
-async function testGetShoppingCartByUserId() {
-  const result = await getShoppingCartByUserId("ECiCT6IsnmOi7hm3zUBZe");
-  console.log("Shopping Cart Data:", result);
-}
+// async function testGetShoppingCartByUserId() {
+//   const result = await getShoppingCartByUserId("ECiCT6IsnmOi7hm3zUBZe");
+//   console.log("Shopping Cart Data:", result);
+// }
 // testGetShoppingCartByUserId();
 
 //successfull
@@ -129,16 +132,37 @@ async function testUpdateUserInfo() {
 // testUpdateUserInfo();
 
 
-async function testCreateRatings() {
-  const formData = new FormData();
-  formData.append("userId", "2twIpHSepp6aENGIF-Zfq");
-  formData.append("productId", "28369597-8449-4f13-b92f-d307c9851564")
-  formData.append("star", "5");
-  formData.append("review", "Good");
-  console.log(formData);
-  await createRatings(formData);
+async function testClearCart() {
+  await clearCart("ECiCT6IsnmOi7hm3zUBZe");
 }
 
-testCreateRatings();
+// testClearCart();
 
+
+async function testGetCartByUserId() {
+  const response = await getCartsByUserId("ECiCT6IsnmOi7hm3zUBZe");
+  response.forEach(cart => {
+    console.log("Cart Data:", cart);
+  });
+}
+
+// testGetCartByUserId();
+
+
+async function testUpdateRating() {
+  const data = new FormData();
+  data.append("userId", "2twIpHSepp6aENGIF-Zfq");
+  data.append("productId", "ba959b90-66c9-4313-a97d-43818851f7b7");
+  data.append("star", "4");
+  data.append("review", "Good product updated");
+  await updateRating(data);
+}
+
+// testUpdateRating()
+
+async function testGetRatingByProduct(){
+  const response= await getRatingsByProductId("ba959b90-66c9-4313-a97d-43818851f7b7");
+  console.log("Rating Data:", response);
+}
+testGetRatingByProduct();
 

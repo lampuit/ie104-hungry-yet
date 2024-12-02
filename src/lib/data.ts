@@ -176,35 +176,51 @@ export async function getFavoriteByUserId(userId: string) {
   });
 }
 
-export async function getShoppingCartByUserId(userId: string) {
-  const response = await db
-    .select({
-      userId: carts.userId,
-      productId: carts.productId,
-      quantity: carts.quantity,
-      name: products.name,
-      image: products.imageUrl,
-      price: products.price,
-      favoriteProductId: favorites.productId, // Temporarily select favorite product ID to check later
-    })
-    .from(carts)
-    .innerJoin(products, eq(carts.productId, products.id))
-    .leftJoin(
-      favorites,
-      and(
-        eq(carts.productId, favorites.productId),
-        eq(carts.userId, favorites.userId),
-      ),
-    )
-    .where(eq(carts.userId, userId));
+// export async function getShoppingCartByUserId(userId: string) {
+//   const response = await db
+//     .select({
+//       userId: carts.userId,
+//       productId: carts.productId,
+//       quantity: carts.quantity,
+//       name: products.name,
+//       image: products.imageUrl,
+//       price: products.price,
+//       favoriteProductId: favorites.productId, // Temporarily select favorite product ID to check later
+//     })
+//     .from(carts)
+//     .innerJoin(products, eq(carts.productId, products.id))
+//     .leftJoin(
+//       favorites,
+//       and(
+//         eq(carts.productId, favorites.productId),
+//         eq(carts.userId, favorites.userId),
+//       ),
+//     )
+//     .where(eq(carts.userId, userId));
 
-  // Map the result to add `isFavorite` based on the presence of `favoriteProductId`
-  const updatedResponse = response.map((item) => ({
-    ...item,
-    isFavorite: item.favoriteProductId != null,
-  }));
+//   // Map the result to add `isFavorite` based on the presence of `favoriteProductId`
+//   const updatedResponse = response.map((item) => ({
+//     ...item,
+//     isFavorite: item.favoriteProductId != null,
+//   }));
 
-  return updatedResponse;
+//   return updatedResponse;
+// }
+
+export async function getCartsByUserId(userId: string) {
+  return await db.query.carts.findMany({
+    where: eq(carts.userId, userId),
+    with: {
+      product: {
+        with: {
+          category: true,
+          favorites: {
+            where: eq(favorites.userId, userId)
+          }
+        },
+      },
+    },
+  });
 }
 
 export async function getAllRatings() {
@@ -219,17 +235,31 @@ export async function getAllRatings() {
   });
 }
 
+// export async function getRatingsByProductId(id: string) {
+//   return await db
+//     .select({
+//       ...getTableColumns(ratings),
+//       productName: products.name,
+//       productPrice: products.price,
+//       productImageUrl: products.imageUrl,
+//     })
+//     .from(ratings)
+//     .leftJoin(products, eq(ratings.productId, products.id))
+//     .where(eq(ratings.productId, id));
+// }
+
 export async function getRatingsByProductId(id: string) {
-  return await db
-    .select({
-      ...getTableColumns(ratings),
-      productName: products.name,
-      productPrice: products.price,
-      productImageUrl: products.imageUrl,
-    })
-    .from(ratings)
-    .leftJoin(products, eq(ratings.productId, products.id))
-    .where(eq(ratings.productId, id));
+  return await db.query.ratings.findMany({
+    where: eq(ratings.productId, id),
+    with: {
+      user: true,
+      product: {
+        with: {
+          category: true,
+        },
+      },
+    },
+  })
 }
 
 export async function getUserWorkShift() {
