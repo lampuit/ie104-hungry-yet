@@ -1,12 +1,15 @@
 "use client";
 import { Button } from "@/components/ui/button"
 import { ShoppingCart, Tag } from "lucide-react"
+import { useRouter } from "next/navigation";
 import Link from "next/link"
 interface MoneyProps {
     totalAmount: string
 }
 
 export function Summary({ totalAmount }: MoneyProps) {
+    const router = useRouter();
+    const userId = sessionStorage.getItem('userId');
 
     return (
         <div className="flex flex-col">
@@ -45,11 +48,13 @@ export function Summary({ totalAmount }: MoneyProps) {
                         <p className="font-semibold text-2xl">Tổng thanh toán: </p>
                         <p className="font-semibold text-3xl text-red-500">{totalAmount}</p>
                     </div>
-                    <Link href="/checkout">
-                        <Button className="font-bold text-xl px-5 py-3 bg-red-500 hover:bg-red-500 hover:drop-shadow-lg">
-                            Thanh toán
-                        </Button>
-                    </Link>
+
+                    <Button onClick={() => {
+                        router.push(`/checkout?userId=${userId}`)
+                    }} className="font-bold text-xl px-5 py-3 bg-red-500 hover:bg-red-500 hover:drop-shadow-lg">
+                        Thanh toán
+                    </Button>
+
                 </div>
             </div>
         </div>
