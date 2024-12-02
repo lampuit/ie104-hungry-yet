@@ -45,7 +45,6 @@ export const ProductDetail = () => {
     const [favorite, setFavorite] = useState<boolean>(false);
     const router = useRouter();
 
-    console.log("ID", id, "Rating Data:", ratingData);
 
     useEffect(() => {
         if (productData && favoriteData) {
@@ -62,7 +61,6 @@ export const ProductDetail = () => {
         return <LoadingSpinner />;
     }
 
-    console.log("ID", id, "Rating Data:", ratingData);
     const averageRating = ratingData.length > 0
         ? ratingData.reduce((acc: number, item: any) => acc + (item.star || 0), 0) / ratingData.length
         : 0;
