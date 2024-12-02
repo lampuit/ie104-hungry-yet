@@ -6,7 +6,7 @@ import LoadingSpinner from "../ui/loading-spinner";
 import router from "next/router";
 import { createFavorite, deleteFavorite } from "@/lib/actions/favorite";
 import { toast } from "@/hooks/use-toast";
-import { createCart } from "@/lib/actions/shopping-cart";
+import { createCart } from "@/lib/actions/cart";
 import { Heart, MessageCircleMore, ShoppingCart, Star } from "lucide-react";
 import { Badge } from "@/components/ui/badge"
 import { Button } from "../ui/button";
@@ -40,7 +40,6 @@ export const ProductDetail = () => {
     const userId = sessionStorage.getItem("userId") || "";
     const { data, error } = useSWR(id, fetcher);
     const { data: favoriteData, error: favoriteError } = useSWR(userId, favoriteFetcher);
-    console.log("Product ID", id);
     const { data: ratingData, error: ratingError } = useSWR(id, ratingFetcher);
     const [favorite, setFavorite] = useState<boolean>(false);
 
@@ -59,7 +58,7 @@ export const ProductDetail = () => {
         return <LoadingSpinner />;
     }
 
-    console.log("Rating Data:", ratingData);
+    console.log("ID", id, "Rating Data:", ratingData);
     const averageRating = ratingData.length > 0
         ? ratingData.reduce((acc: number, item: any) => acc + (item.star || 0), 0) / ratingData.length
         : 0;
