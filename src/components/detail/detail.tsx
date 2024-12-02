@@ -1,9 +1,10 @@
+"use client";
+
 import { getFavoriteByUserId, getProductById, getRatingsByProductId } from "@/lib/data";
-import { useSearchParams } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useSearchParams, useRouter } from "next/navigation";
+import { use, useEffect, useState } from "react";
 import useSWR from "swr";
 import LoadingSpinner from "../ui/loading-spinner";
-import router from "next/router";
 import { createFavorite, deleteFavorite } from "@/lib/actions/favorite";
 import { toast } from "@/hooks/use-toast";
 import { createCart } from "@/lib/actions/cart";
@@ -19,8 +20,8 @@ const favoriteFetcher = async (userId: string) => {
     return await getFavoriteByUserId(userId);
 }
 
-export const ratingFetcher = async (productId: string) => {
-    return await getRatingsByProductId(productId);
+export const ratingFetcher = async (id: string) => {
+    return await getRatingsByProductId(id);
 }
 
 interface Dish {
@@ -38,40 +39,41 @@ export const ProductDetail = () => {
     const searchParams = useSearchParams();
     const id = searchParams.get("id") || "";
     const userId = sessionStorage.getItem("userId") || "";
-    const { data, error } = useSWR(id, fetcher);
+    const { data: ratingData, error: ratingError } = useSWR(`product-${id}`, () => ratingFetcher(id));
+    const { data: productData, error: productError } = useSWR(id, fetcher);
     const { data: favoriteData, error: favoriteError } = useSWR(userId, favoriteFetcher);
-    const { data: ratingData, error: ratingError } = useSWR(id, ratingFetcher);
     const [favorite, setFavorite] = useState<boolean>(false);
+    const router = useRouter();
+
 
     useEffect(() => {
-        if (data && favoriteData) {
+        if (productData && favoriteData) {
             const checkFavorite = (productId: string) => {
                 return favoriteData.some((item: any) => item.productId === productId);
             };
 
-            setFavorite(checkFavorite(data[0]?.id));
+            setFavorite(checkFavorite(productData[0]?.id));
         }
-    }, [data, favoriteData]);
+    }, [productData, favoriteData]);
 
-    if (error || favoriteError || ratingError) return <div>Error loading data.</div>;
-    if (!data || !favoriteData || !ratingData) {
+    if (productError || favoriteError || ratingError) return <div>Error loading data.</div>;
+    if (!productData || !favoriteData || !ratingData) {
         return <LoadingSpinner />;
     }
 
-    console.log("ID", id, "Rating Data:", ratingData);
     const averageRating = ratingData.length > 0
         ? ratingData.reduce((acc: number, item: any) => acc + (item.star || 0), 0) / ratingData.length
         : 0;
 
     const dish: Dish = {
-        categoryId: data[0]?.categoryId || "",
-        categoryName: data[0]?.categoryName || "/images/fallback.jpg",
-        createdAt: data[0]?.createdAt || undefined,
-        des: data[0]?.description || "",
-        id: data[0]?.id,
-        imageUrl: data[0]?.imageUrl,
-        price: data[0]?.price,
-        name: data[0]?.name,
+        categoryId: productData[0]?.categoryId || "",
+        categoryName: productData[0]?.categoryName || "/images/fallback.jpg",
+        createdAt: productData[0]?.createdAt || undefined,
+        des: productData[0]?.description || "",
+        id: productData[0]?.id,
+        imageUrl: productData[0]?.imageUrl,
+        price: productData[0]?.price,
+        name: productData[0]?.name,
     };
 
     const handleFavoriteOnClick = async (productId: string, productName: string) => {
@@ -173,7 +175,7 @@ export const ProductDetail = () => {
                             <div className="space-x-24">
                                 <div className="inline-flex gap-2">
                                     <Star className="fill-amber-400 stroke-amber-400 size-5" />
-                                    <span>{averageRating}</span>
+                                    <span>{averageRating.toFixed(1)}</span>
                                 </div>
                                 <div className="inline-flex gap-2">
                                     <MessageCircleMore className="stroke-red-500 size-5" />
