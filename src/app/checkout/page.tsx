@@ -1,10 +1,10 @@
-"use client";
 import { Checkout } from "@/components/checkout/checkout";
 import { getCartsByUserId } from "@/lib/data";
 import { useSearchParams } from "next/navigation";
 import useSWR from "swr";
 import LoadingSpinner from "@/components/ui/loading-spinner";
 
+<<<<<<< HEAD
 const fetcher = async (userId: string) => {
   return getCartsByUserId(userId);
 }
@@ -17,6 +17,10 @@ export default function CheckoutPage() {
     revalidateOnFocus: false,
     revalidateOnReconnect: true,
   });
+=======
+export default async function CheckoutPage() {
+  const carts = await getCartsByUserId("2twIpHSepp6aENGIF-Zfq");
+>>>>>>> dba852a (feat: add discount remove form)
 
   return (
     isLoading ? <LoadingSpinner /> :
