@@ -25,9 +25,15 @@ const fetcher = async (userId: string) => {
   return getCartsByUserId(userId);
 };
 
-export default async function CartPage() {
-  const session = await getSession();
-  const userId = session?.data?.user?.id as string;
+export default function CartPage() {
+  const [userId, setUserId] = useState<string | null>(null)
+  useEffect(() => {
+    const fetchSession = async () => {
+      const sessionData = await getSession();
+      setUserId(sessionData?.data?.user?.id as string);
+    };
+    fetchSession();
+  }, []);
   const { data: listDish, isLoading, error, mutate } = useSWR(userId, fetcher, {
     revalidateIfStale: true,
     revalidateOnFocus: false,

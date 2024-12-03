@@ -14,7 +14,7 @@ const favoriteFetcher = async (userId: string) => {
     return data;
 }
 
-export default async function Favorite() {
+export default  function Favorite() {
     const [userId, setUserId] = useState<string | null>(null);
 
     useEffect(() => {

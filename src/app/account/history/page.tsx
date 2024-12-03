@@ -11,7 +11,7 @@ const fetcherInvoicePending = async (userId: string) => {
     return getInvoiceByUserId(userId, "pending");
 }
 
-export default async function History() {
+export default function History() {
 
     const [userId, setUserId] = useState<string | null>(null);
 
