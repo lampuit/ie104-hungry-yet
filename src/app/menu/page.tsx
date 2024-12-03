@@ -15,7 +15,6 @@ import { getProductByCategoryId } from "@/lib/data";
 import { CategoryFetcher } from "@/components/menu/category";
 import useSWR from "swr";
 
-// Đối tượng mô tả một món ăn
 interface Dish {
   id: string;
   name: string;
@@ -25,7 +24,6 @@ interface Dish {
   published: boolean;
 }
 
-// Lấy session
 const fetcherCategory = async (): Promise<
   { id: string; name: string; imageUrl: string | null }[]
 > => {
@@ -33,16 +31,11 @@ const fetcherCategory = async (): Promise<
 };
 
 export default function MenuPage() {
-  // Kiểm tra session
   const { data, isLoading, error } = useSWR("fetcherKey", fetcherCategory);
-
-  // ID của danh mục được chọn
   const [clickedIndex, setClickedIndex] = useState<string>("");
-  const [dishesList, setDishesList] = useState<Dish[]>([]); // Danh sách món ăn được lưu trữ dưới dạng 1 mảng các đối tượng Dish
-  const sessionClickIndex = sessionStorage.getItem("clickedIndex");
+  const [dishesList, setDishesList] = useState<Dish[]>([]);
   const categories = data || [];
 
-  // Hàm lấy danh sách món ăn theo danh mục cụ thể (clickedIndex)
   const getDishesByCategoryId = async (clickedIndex: string) => {
     try {
       const response = await getProductByCategoryId(clickedIndex, 1, 6);
@@ -61,29 +54,31 @@ export default function MenuPage() {
     }
   };
 
-  // Tự động gọi API khi trang được tải - khi người dùng chọn danh mục khác (clickedIndex thay đổi)
   useEffect(() => {
-    if (data) {
-      // Gán danh mục mặc định là "Khai vị" hoặc danh mục được chọn từ trang Homepage
+    if (typeof window !== 'undefined' && data) {
+      const sessionClickIndex = sessionStorage.getItem("clickedIndex");
       if (sessionClickIndex) {
         setClickedIndex(sessionClickIndex);
       } else {
         setClickedIndex(data[0]?.id);
       }
     }
+  }, [data]);
 
+  useEffect(() => {
     if (clickedIndex) {
       getDishesByCategoryId(clickedIndex);
-      sessionStorage.setItem("clickedIndex", clickedIndex); // Persist clickedIndex
+      if (typeof window !== 'undefined') {
+        sessionStorage.setItem("clickedIndex", clickedIndex);
+      }
     }
+  }, [clickedIndex]);
 
-  }, [data, clickedIndex]);
-
-
-  // Hàm xử lý khi người dùng click vào một danh mục khác
   const handleCategoryClick = (categoryId: string) => {
     setClickedIndex(categoryId);
-    sessionStorage.setItem("clickedIndex", categoryId);
+    if (typeof window !== 'undefined') {
+      sessionStorage.setItem("clickedIndex", categoryId);
+    }
   };
 
   return (

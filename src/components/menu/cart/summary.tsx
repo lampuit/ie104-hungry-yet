@@ -1,15 +1,24 @@
 "use client";
 import { Button } from "@/components/ui/button"
-import { ShoppingCart, Tag } from "lucide-react"
+import { ShoppingCart } from "lucide-react"
 import { useRouter } from "next/navigation";
-import Link from "next/link"
+import useSWR from "swr";
+import { getSession } from "@/lib/auth-client";
+
+// Lấy userId từ session
+const fetcherUserId = async () => {
+    const response = await getSession();
+    const userId = response?.data?.user?.id as string;
+    return userId;
+};
+
 interface MoneyProps {
     totalAmount: string
 }
 
 export function Summary({ totalAmount }: MoneyProps) {
     const router = useRouter();
-    const userId = sessionStorage.getItem('userId');
+    const { data: userId, error: userIdError } = useSWR("userId", fetcherUserId);
 
     return (
         <div className="flex flex-col">

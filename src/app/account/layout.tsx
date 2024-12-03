@@ -8,11 +8,17 @@ import { ReactNode, useEffect, useState } from "react";
 import { revokeSession } from "@/lib/auth-client";
 import useSWR from "swr";
 import { getUserById } from "@/lib/data";
-
+import { getSession } from "@/lib/auth-client";
 
 const userFetcher = async (id: string) => {
     return await getUserById(id);
 }
+// Lấy userId từ session
+const fetcherUserId = async () => {
+    const response = await getSession();
+    const userId = response?.data?.user?.id as string;
+    return userId;
+};
 
 interface LayoutProps {
     children: ReactNode
@@ -32,17 +38,11 @@ export default function Layout({
         router.push(path);
     };
 
-    const [uid, setUid] = useState<string | null>(null);
+    const { data: userId } = useSWR('userId', fetcherUserId);
 
-    useEffect(() => {
-        const fetchSession = async () => {
-            const sessionData = sessionStorage.getItem("userId");
-            setUid(sessionData);
-        };
-        fetchSession();
-    }, []);
+    const { data: user, error: userError } = useSWR(userId, userFetcher, { shouldRetryOnError: false });
 
-    const { data: user, error: userError } = useSWR(uid, userFetcher, { shouldRetryOnError: false });
+
 
     useEffect(() => {
         setShortName(user && user[0]?.name ? splitName(user[0].name) : "");
@@ -51,13 +51,12 @@ export default function Layout({
 
     const handleLogout = async () => {
         try {
-            if (!uid) {
+            if (!userId) {
                 console.error("Session ID is undefined");
                 return;
             }
             setIsLoggingOut(true); // Start logout spinner
-            const response = await revokeSession({ id: uid });
-            sessionStorage.removeItem("userId");
+            const response = await revokeSession({ id: userId });
 
             if (response && response?.error?.status === 200) {
                 console.log("Session successfully revoked", response);

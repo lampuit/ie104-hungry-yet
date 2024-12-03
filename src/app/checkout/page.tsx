@@ -4,20 +4,25 @@ import { getCartsByUserId } from "@/lib/data";
 import { useSearchParams } from "next/navigation";
 import useSWR from "swr";
 import LoadingSpinner from "@/components/ui/loading-spinner";
+import { Suspense } from "react";
 
 const fetcher = async (userId: string) => {
   return getCartsByUserId(userId);
 }
 
-export default function CheckoutPage() {
+function SearchParamsProvider({ children }: { children: (params: { userId: string | null }) => React.ReactNode }) {
   const searchParams = useSearchParams();
-  const userId = searchParams.get("userId") || "";
+  const userId = searchParams.get("userId");
+  return children({ userId });
+}
+
+function CheckoutPageContent({ userId }: { userId: string }) {
+
   const { data: carts, isLoading, error } = useSWR(userId, fetcher, {
     revalidateIfStale: true,
     revalidateOnFocus: false,
     revalidateOnReconnect: true,
   });
-
 
   return (
     isLoading ? <LoadingSpinner /> :
@@ -26,4 +31,23 @@ export default function CheckoutPage() {
         <Checkout carts={carts || []} />
       </div>
   );
+
+}
+
+export default function CheckoutPage() {
+
+  return (
+    <Suspense fallback={<LoadingSpinner />}>
+      <SearchParamsProvider>
+        {({ userId }: { userId: string | null }) =>
+          userId ? (
+            <CheckoutPageContent userId={userId} />
+          ) : (
+            <p>No invoice ID provided</p>
+          )
+        }
+      </SearchParamsProvider>
+    </Suspense>
+  )
+
 }

@@ -9,6 +9,14 @@ import { toast } from '@/hooks/use-toast';
 import useSWR from 'swr';
 import { getAllProducts, getFavoriteByUserId } from '@/lib/data';
 import LoadingSpinner from '../ui/loading-spinner';
+import { getSession } from "@/lib/auth-client";
+
+// Lấy userId từ session
+const fetcherUserId = async () => {
+    const response = await getSession();
+    const userId = response?.data?.user?.id as string;
+    return userId;
+};
 
 interface Dish {
     id: string;
@@ -39,7 +47,7 @@ const productsFetcher = async () => {
 
 export const DishList = ({ dishesList }: DishListProps) => {
     const router = useRouter();
-    const userId = sessionStorage.getItem("userId") || "";
+    const { data: userId, error: userIdError } = useSWR("userId", fetcherUserId);
     const { data: productsData, error: productsError } = useSWR("products", productsFetcher);
     const { data: favoriteData, error: favoriteError } = useSWR(userId, favoriteFetcher);
     const [favorites, setFavorites] = useState<IsFavorite[]>([]);
@@ -65,7 +73,7 @@ export const DishList = ({ dishesList }: DishListProps) => {
     if (!productsData || !favoriteData || favorites.length === 0) return <LoadingSpinner />;
 
     const handleProductOnClick = (productId: string) => {
-        router.push(`/detail?id=${productId}`);
+        router.push(`/product-detail?id=${productId}`);
     };
 
     const handleFavoriteOnClick = async (productId: string, productName: string) => {

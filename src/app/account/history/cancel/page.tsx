@@ -5,23 +5,21 @@ import { getInvoiceByUserId } from "@/lib/data";
 import useSWR from "swr";
 import LoadingSpinner from "@/components/ui/loading-spinner";
 import { useEffect, useState } from "react";
+import { getSession } from "@/lib/auth-client";
 
 const fetcherInvoiceCancel = async (userId: string) => {
     return getInvoiceByUserId(userId, "cancelled");
 }
 
+// Lấy userId từ session
+const fetcherUserId = async () => {
+    const response = await getSession();
+    const userId = response?.data?.user?.id as string;
+    return userId;
+};
+
 export default function Cancel() {
-    const [userId, setUserId] = useState<string | null>(null);
-
-    useEffect(() => {
-        const storedUserId = sessionStorage.getItem("userId");
-        if (storedUserId) {
-            setUserId(storedUserId);
-        } else {
-            console.error("No userId found in localStorage");
-        }
-    }, []);
-
+    const { data: userId } = useSWR('userId', fetcherUserId)
     const { data: listInvoices, isLoading, error, mutate } = useSWR(userId ? `invoice-${userId}` : null, () => fetcherInvoiceCancel(userId as string),
         {
             revalidateOnFocus: false,
