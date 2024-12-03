@@ -25,7 +25,7 @@ interface LayoutProps {
     children: ReactNode
 }
 
-export default function Layout({
+export default async function Layout({
     children
 }: LayoutProps) {
     const router = useRouter();
@@ -40,7 +40,8 @@ export default function Layout({
     };
 
     const { data: session, isLoading: isSessionLoading, error } = useSWR("session", sessionFetcher);
-    const uid = sessionStorage.getItem("userId");
+    const sessionData = await getSession();
+    const uid = sessionData?.data?.user?.id as string;
     const { data: user, error: userError } = useSWR(uid, userFetcher);
 
     useEffect(() => {
