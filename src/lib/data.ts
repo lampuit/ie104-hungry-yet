@@ -10,11 +10,14 @@ import {
   shifts,
   assigments,
   discounts,
+  invoices,
+  orders
 } from "@/drizzle/schema/project";
 import { user } from "@/drizzle/schema/auth";
 import { eq, and, getTableColumns, lte, gte, isNull, or } from "drizzle-orm";
 import { unstable_noStore } from "next/cache";
 import { ca } from "date-fns/locale";
+import { truncate } from "fs/promises";
 
 export async function fetchProducts() {
   try {
@@ -264,4 +267,28 @@ export async function getRatingsByProductId(id: string) {
 
 export async function getUserWorkShift() {
   return await db.select().from(assigments);
+}
+
+export async function getInvoiceByUserId(userId: string, status: string) {
+  return await db.select().from(invoices).where(and(eq(invoices.customerId, userId), eq(invoices.status, status as 'pending' | 'accepted' | 'cooking' | 'ready' | 'delivered' | 'cancelled')));
+}
+
+export async function getInvoiceDetail(id: string) {
+  return await db.query.invoices.findFirst({
+    where: eq(invoices.id, id),
+    with: {
+      orders: {
+        where: eq(orders.invoiceId, id),
+        with: {
+          products: {
+            with: {
+              category: true,
+            },
+          }
+        }
+      },
+      discount: true,
+    }
+  })
+
 }

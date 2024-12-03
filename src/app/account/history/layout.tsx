@@ -15,16 +15,6 @@ export default function Layout({
     const router = useRouter();
     const [activeButton, setActiveButton] = useState<string>("Đang giao");
 
-    // useEffect(() => {
-    //     if (pathname === "/account/history/complete") {
-    //         setActiveButton("Hoàn thành");
-    //     } else if (pathname === "/account/history/cancel") {
-    //         setActiveButton("Đã hủy");
-    //     } else {
-    //         setActiveButton("Đang giao");
-    //     }
-    // }, [pathname]);
-
     const handleButtonClick = (buttonName: string, path: string) => {
         setActiveButton(buttonName);
         router.push(path);
