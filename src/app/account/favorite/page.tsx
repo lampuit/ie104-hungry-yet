@@ -3,7 +3,6 @@
 import { AccountFavorite } from "@/components/account/card-favorite";
 import { getFavoriteByUserId } from "@/lib/data";
 import useSWR from "swr";
-import { getSession } from "@/lib/auth-client";
 import { useEffect, useState } from "react";
 import LoadingSpinner from "@/components/ui/loading-spinner";
 
@@ -14,20 +13,16 @@ const favoriteFetcher = async (userId: string) => {
     return data;
 }
 
-export default  function Favorite() {
+export default function Favorite() {
     const [userId, setUserId] = useState<string | null>(null);
 
     useEffect(() => {
-        const fetchSession = async () => {
-            const session = await getSession();
-            const storedUserId = session?.data?.user?.id as string;
-            if (storedUserId) {
-                setUserId(storedUserId);
-            } else {
-                console.error("No userId found in localStorage");
-            }
-        };
-        fetchSession();
+        const storedUserId = sessionStorage.getItem("userId");
+        if (storedUserId) {
+            setUserId(storedUserId);
+        } else {
+            console.error("No userId found in localStorage");
+        }
     }, []);
 
     const { data: listFavorite, isLoading, error, mutate } = useSWR(

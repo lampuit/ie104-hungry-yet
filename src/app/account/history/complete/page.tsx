@@ -5,7 +5,6 @@ import { getInvoiceByUserId } from "@/lib/data";
 import useSWR from "swr";
 import LoadingSpinner from "@/components/ui/loading-spinner";
 import { useEffect, useState} from "react";
-import { getSession } from "@/lib/auth-client";
 
 const fetcherInvoiceAccepted = async (userId: string) => {
     return getInvoiceByUserId(userId, "accepted");
@@ -15,16 +14,12 @@ export default function Complete() {
     const [userId, setUserId] = useState<string | null>(null);
 
     useEffect(() => {
-        const fetchUserId = async () => {
-            const session = await getSession();
-            const storedUserId = session?.data?.user?.id as string;
-            if (storedUserId) {
-                setUserId(storedUserId);
-            } else {
-                console.error("No userId found in localStorage");
-            }
-        };
-        fetchUserId();
+        const storedUserId = sessionStorage.getItem("userId");
+        if (storedUserId) {
+            setUserId(storedUserId);
+        } else {
+            console.error("No userId found in localStorage");
+        }
     }, []);
 
     const { data: listInvoices, isLoading, error, mutate } = useSWR(userId ? `invoice-${userId}` : null, () => fetcherInvoiceAccepted(userId as string),
