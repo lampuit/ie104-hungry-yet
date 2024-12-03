@@ -328,7 +328,7 @@ export default function Account() {
                                     </FormItem>
                                 )} />
 
-                            <Button type="submit" className="w-full">Lưu thay đổi</Button>
+                            <Button type="submit" className="w-1/2 bg-amber-500 hover:bg-red-500">Lưu thay đổi</Button>
                         </div>
                     </form>
                 </Form>
