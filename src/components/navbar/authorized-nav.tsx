@@ -27,7 +27,7 @@ export function AuthorizedNavbar() {
         <Link href={"/menu/cart"} className="hover:text-amber-500">Giỏ hàng</Link>
         <Link href={"/about"} className="hover:text-amber-500">Về chúng tôi</Link>
       </div>
-      <Link href={"/account"}>
+      <Link href={"/account/history"}>
         <CircleUserRound size={32} />
       </Link>
 

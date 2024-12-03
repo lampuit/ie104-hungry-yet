@@ -51,7 +51,7 @@ export const AddToCartButton: React.FC<{ dish: Dish }> = ({ dish }) => {
     };
     return (
         <Button onClick={() => handleAddToCartOnClick(dish.id)}
-            className='rounded-3xl bg-amber-500 hover:bg-red-500 hidden group-hover:flex transition-all duration-300 ease-in-out'>
+            className='rounded-3xl bg-amber-500 hover:bg-red-500'>
             <ShoppingCart /> <span>Thêm giỏ hàng</span>
         </Button>
     );
