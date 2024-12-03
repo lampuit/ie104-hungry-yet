@@ -12,7 +12,6 @@ import { use, useEffect, useState } from "react";
 import { metadata } from "./metadata";
 import { usePathname } from "next/navigation";
 import useSWR from "swr";
-import { se } from "date-fns/locale";
 
 // Font chữ chính cho toàn bộ trang web
 export const montserrat = Montserrat({
