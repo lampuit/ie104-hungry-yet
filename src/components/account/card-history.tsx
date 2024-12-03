@@ -2,6 +2,19 @@ import { usePathname } from "next/navigation";
 import { Button } from "../ui/button";
 import { Eye, PhoneCall, RefreshCcw, Star, Truck, X } from "lucide-react";
 import { useRouter } from "next/navigation";
+import {
+    Dialog,
+    DialogContent,
+    DialogDescription,
+    DialogFooter,
+    DialogHeader,
+    DialogTitle,
+    DialogTrigger,
+} from "@/components/ui/dialog"
+import { Checkbox } from "@/components/ui/checkbox"
+import { AccountRating } from "./card-rating";
+import { ScrollArea } from "@/components/ui/scroll-area"
+
 
 interface Invoice {
     id: string;
@@ -72,10 +85,38 @@ export function CardHistory({ invoice }: { invoice: Invoice }) {
                 {/* Các nút hành động */}
                 {isCompletePage ? (
                     <div className="flex justify-start md:justify-end gap-2 md:gap-4 mt-2">
-                        <Button variant={"outline"} className="w-auto text-xs">
+                        <Dialog>
+                            <DialogTrigger className="flex text-xs font-semibold gap-2 justify-center items-center border-black border p-3 rounded-md hover:bg-gray-100">
+                                <Star className="w-4 h-4" /> Đánh giá
+                            </DialogTrigger>
+                            <DialogContent className="flex flex-col gap-4">
+                                <DialogHeader>
+                                    <DialogTitle className="text-lg font-semibold">Đánh giá sản phẩm</DialogTitle>
+                                </DialogHeader>
+                                <ScrollArea className="h-[360px] pr-2">
+                                    <AccountRating />
+                                    <AccountRating />
+                                    <AccountRating />
+                                    <div className="flex items-center space-x-2 mt-4">
+                                        <Checkbox id="terms" />
+                                        <label
+                                            htmlFor="terms"
+                                            className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                                        >
+                                            Đánh giá ẩn danh
+                                        </label>
+                                    </div>
+                                </ScrollArea>
+                                <DialogFooter>
+                                    <Button type="submit" className="bg-amber-500">Đánh giá</Button>
+                                </DialogFooter>
+                            </DialogContent>
+                        </Dialog>
+
+                        {/* <Button variant={"outline"} className="w-auto text-xs">
                             <Star />
                             Đánh giá
-                        </Button>
+                        </Button> */}
                         <Button className="bg-amber-500 w-auto text-xs">
                             <RefreshCcw />
                             Mua lại
