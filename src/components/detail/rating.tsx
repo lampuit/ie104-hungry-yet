@@ -7,11 +7,14 @@ import LoadingSpinner from "../ui/loading-spinner"
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar"
 import Image from "next/image"
 import { Pagination, PaginationContent, PaginationItem, PaginationLink, PaginationNext, PaginationPrevious } from "../ui/pagination"
+import { use, useState } from "react"
+import { set } from "date-fns"
 
 export const Rating = () => {
     const searchParams = useSearchParams();
     const id = searchParams.get("id") || "";
     const { data: ratingData, error: ratingError } = useSWR(`product-${id}`, () => ratingFetcher(id));
+    const [starFilter, setStarFilter] = useState(0);
 
     if (ratingError) return <div>Error loading data.</div>;
     if (!ratingData) {
@@ -26,7 +29,17 @@ export const Rating = () => {
     }
 
     const handleStarFilterOnClick = (star: number) => {
+        setStarFilter(star);
+    }
 
+    const handleFilter = (star: number, ratingData: any) => {
+        if (star === 0) {
+            return ratingData;
+        }
+        else {
+            const filtered = ratingData.filter((review: {star: number}) => review.star === star);
+            return filtered;
+        }
     }
 
     return (
@@ -44,22 +57,52 @@ export const Rating = () => {
                     </div>
                 </div>
                 <div className="flex gap-8">
-                    <Button className="bg-white text-black border-2 border-black hover:bg-amber-500 hover:bg-opacity-20">Tất cả</Button>
-                    <Button className="bg-white text-black border-2 border-black
-                 hover:bg-amber-500 hover:bg-opacity-20">5  <Star className="fill-amber-400 stroke-amber-400 size-5" /></Button>
-                    <Button className="bg-white text-black border-2 border-black
-                 hover:bg-amber-500 hover:bg-opacity-20">4  <Star className="fill-amber-400 stroke-amber-400 size-5" /></Button>
-                    <Button className="bg-white text-black border-2 border-black
-                 hover:bg-amber-500 hover:bg-opacity-20">3  <Star className="fill-amber-400 stroke-amber-400 size-5" /></Button>
-                    <Button className="bg-white text-black border-2 border-black
-                 hover:bg-amber-500 hover:bg-opacity-20">2  <Star className="fill-amber-400 stroke-amber-400 size-5" /></Button>
-                    <Button className="bg-white text-black border-2 border-black
-                 hover:bg-amber-500 hover:bg-opacity-20">1  <Star className="fill-amber-400 stroke-amber-400 size-5" /></Button>
+                    <Button className={`bg-white text-black border-2 border-black 
+                        ${starFilter === 0 ? "border-amber-500 text-amber-500 shadow hover:bg-white"
+                            : "hover:bg-amber-500 hover:bg-opacity-20"}`}
+                        onClick={() => handleStarFilterOnClick(0)}>
+                        Tất cả
+                    </Button>
+
+                    <Button className={`bg-white text-black border-2 border-black 
+                        ${starFilter === 5 ? "border-amber-500 text-amber-500 shadow hover:bg-white"
+                            : "hover:bg-amber-500 hover:bg-opacity-20"}`}
+                        onClick={() => handleStarFilterOnClick(5)}>5
+                        <Star className="fill-amber-400 stroke-amber-400 size-5" />
+                    </Button>
+
+                    <Button className={`bg-white text-black border-2 border-black 
+                        ${starFilter === 4 ? "border-amber-500 text-amber-500 shadow hover:bg-white"
+                            : "hover:bg-amber-500 hover:bg-opacity-20"}`}
+                        onClick={() => handleStarFilterOnClick(4)}>4
+                        <Star className="fill-amber-400 stroke-amber-400 size-5" />
+                    </Button>
+
+                    <Button className={`bg-white text-black border-2 border-black 
+                        ${starFilter === 3 ? "border-amber-500 text-amber-500 shadow hover:bg-white"
+                            : "hover:bg-amber-500 hover:bg-opacity-20"}`}
+                        onClick={() => handleStarFilterOnClick(3)}>3
+                        <Star className="fill-amber-400 stroke-amber-400 size-5" />
+                    </Button>
+
+                    <Button className={`bg-white text-black border-2 border-black 
+                        ${starFilter === 2 ? "border-amber-500 text-amber-500 shadow hover:bg-white"
+                            : "hover:bg-amber-500 hover:bg-opacity-20"}`}
+                        onClick={() => handleStarFilterOnClick(2)}>2
+                        <Star className="fill-amber-400 stroke-amber-400 size-5" />
+                    </Button>
+
+                    <Button className={`bg-white text-black border-2 border-black 
+                        ${starFilter === 1 ? "border-amber-500 text-amber-500 shadow hover:bg-white"
+                            : "hover:bg-amber-500 hover:bg-opacity-20"}`}
+                        onClick={() => handleStarFilterOnClick(1)}>1
+                        <Star className="fill-amber-400 stroke-amber-400 size-5" />
+                    </Button>
                 </div>
             </div>
             <div className="flex flex-col items-center justify-center">
                 <div className="w-full max-w-5xl space-y-6">
-                    {ratingData?.map((review: any, index: any) => (
+                    {handleFilter(starFilter, ratingData)?.map((review: any, index: any) => (
                         <div className="space-y-6 px-2 py-3 border-b border-b-gray-400 w-full">
                             <div className="flex gap-2 items-center">
                                 <Avatar className="w-14 h-14">
@@ -87,25 +130,25 @@ export const Rating = () => {
                             </div>
                         </div>
                     ))}
-                <Pagination>
-                    <PaginationContent>
-                        <PaginationItem>
-                            <PaginationPrevious href="#" />
-                        </PaginationItem>
-                        <PaginationItem>
-                            <PaginationLink href="#">1</PaginationLink>
-                        </PaginationItem>
-                        <PaginationItem>
-                            <PaginationLink href="#">2</PaginationLink>
-                        </PaginationItem>
-                        <PaginationItem>
-                            <PaginationLink href="#">3</PaginationLink>
-                        </PaginationItem>
-                        <PaginationItem>
-                            <PaginationNext href="#" />
-                        </PaginationItem>
-                    </PaginationContent>
-                </Pagination>
+                    <Pagination>
+                        <PaginationContent>
+                            <PaginationItem>
+                                <PaginationPrevious href="#" />
+                            </PaginationItem>
+                            <PaginationItem>
+                                <PaginationLink href="#">1</PaginationLink>
+                            </PaginationItem>
+                            <PaginationItem>
+                                <PaginationLink href="#">2</PaginationLink>
+                            </PaginationItem>
+                            <PaginationItem>
+                                <PaginationLink href="#">3</PaginationLink>
+                            </PaginationItem>
+                            <PaginationItem>
+                                <PaginationNext href="#" />
+                            </PaginationItem>
+                        </PaginationContent>
+                    </Pagination>
                 </div>
             </div>
         </section>
