@@ -35,13 +35,15 @@ export function AccountFavorite({ listFavorite, isLoading, mutate }: { listFavor
             isLoading ? <LoadingSpinner /> :
                 <div key={index} className="bg-white rounded shadow-md border-b-2 relative p-4">
                     <div className="flex flex-col md:flex-row gap-4 md:gap-7 items-start md:items-end">
-                        <Image
-                            className="rounded w-full md:w-auto"
-                            src={item?.products.imageUrl}
-                            alt="review"
-                            width={120}
-                            height={180}
-                        />
+                        <div className="flex flex-col h-full justify-center">
+                            <Image
+                                className="rounded w-full md:w-auto"
+                                src={item?.products.imageUrl}
+                                alt="review"
+                                width={120}
+                                height={180}
+                            />
+                        </div>
 
                         {/* Nội dung */}
                         <div className="flex flex-col gap-4 md:gap-6 flex-1">
@@ -100,7 +102,7 @@ export function AccountFavorite({ listFavorite, isLoading, mutate }: { listFavor
                                     <Button
                                         variant="ghost"
                                         size="icon"
-                                        className="text-white bg-gray-200 hover:bg-red-500"
+                                        className="w-6 h-6 text-white bg-gray-200 hover:bg-red-500 hover:text-white"
                                         onClick={() => handleDeleteFavorite(item?.userId, item?.productId)}
                                     >
                                         <X className="h-4 w-4" />

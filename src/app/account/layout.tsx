@@ -28,7 +28,7 @@ export default function Layout({
     modal: ReactNode;
 }) {
     const router = useRouter();
-    const [activePath, setActivePath] = useState<string>("Thông tin tài khoản"); // Track active path
+    const [activePath, setActivePath] = useState<string>("Thông tin đơn hàng"); // Track active path
     const [isLoggingOut, setIsLoggingOut] = useState(false); // Track logout state
     const [shortName, setShortName] = useState<string>("");
     const [name, setName] = useState<string>("");
