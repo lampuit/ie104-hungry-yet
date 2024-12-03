@@ -1,10 +1,18 @@
 "use client"
 import { Button } from "@/components/ui/button"
 import Image from "next/image"
+import { getSession } from "@/lib/auth-client";
+import useSWR from "swr";
 
+// Lấy userId từ session
+const fetcherUserId = async () => {
+    const response = await getSession();
+    const userId = response?.data?.user?.id as string;
+    return userId;
+};
 
 export function OrderOnline() {
-    const userId = sessionStorage.getItem("userId");
+    const { data: userId, error: userIdError } = useSWR("userId", fetcherUserId);
 
     return (
         <div className="relative flex justify-center items-center w-screen py-16 bg-black">

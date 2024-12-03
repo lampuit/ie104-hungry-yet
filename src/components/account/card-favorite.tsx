@@ -9,9 +9,20 @@ import { createCart } from "@/lib/actions/cart";
 import { toast } from "sonner";
 import { useRouter } from 'next/navigation';
 import { deleteFavorite } from "@/lib/actions/favorite";
+import { getSession } from "@/lib/auth-client";
+import useSWR from "swr";
+
+// Lấy userId từ session
+const fetcherUserId = async () => {
+    const response = await getSession();
+    const userId = response?.data?.user?.id as string;
+    return userId;
+};
 
 export function AccountFavorite({ listFavorite, isLoading, mutate }: { listFavorite: any, isLoading: boolean, mutate: any }) {
     const router = useRouter();
+    const { data: userId } = useSWR("userId", fetcherUserId);
+
     const convertToVND = (price: number) => {
         return new Intl.NumberFormat("vi-VN", {
             style: "currency",
@@ -77,7 +88,7 @@ export function AccountFavorite({ listFavorite, isLoading, mutate }: { listFavor
                                     onClick={async () => {
                                         try {
                                             const data = new FormData();
-                                            data.append("userId", sessionStorage.getItem("userId") || '');
+                                            data.append("userId", userId || '');
                                             data.append("productId", item?.productId);
                                             data.append("quantity", '1');
                                             await createCart(data);
