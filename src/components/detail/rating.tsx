@@ -21,7 +21,9 @@ export const Rating = () => {
         return <LoadingSpinner />;
     }
 
-    const averageRating = ratingData.reduce((acc: number, item: any) => acc + item.star, 0) / ratingData.length;
+    const averageRating = ratingData.length > 0
+        ? ratingData.reduce((acc: number, item: any) => acc + (item.star || 0), 0) / ratingData.length
+        : 0;
 
     const splitName = (name: string) => {
         const array = name.split(" ");
@@ -49,11 +51,11 @@ export const Rating = () => {
                 <div className="gap-4">
                     <h1 className="font-semibold text-5xl text-red-500">{averageRating.toFixed(1)}</h1>
                     <div className="flex gap-2">
-                        <Star className={`fill-red-500 stroke-red-500 size-8 ${averageRating < 0.5 ? "hidden" : ""}`} />
-                        <Star className={`fill-red-500 stroke-red-500 size-8 ${averageRating < 1.5 ? "hidden" : ""}`} />
-                        <Star className={`fill-red-500 stroke-red-500 size-8 ${averageRating < 2.5 ? "hidden" : ""}`} />
-                        <Star className={`fill-red-500 stroke-red-500 size-8 ${averageRating < 3.5 ? "hidden" : ""}`} />
-                        <Star className={`fill-red-500 stroke-red-500 size-8 ${averageRating < 4.5 ? "hidden" : ""}`} />
+                        <Star className={` stroke-red-500 size-8 ${averageRating < 0.5 ? "" : "fill-red-500"}`} />
+                        <Star className={` stroke-red-500 size-8 ${averageRating < 1.5 ? "" : "fill-red-500"}`} />
+                        <Star className={` stroke-red-500 size-8 ${averageRating < 2.5 ? "" : "fill-red-500"}`} />
+                        <Star className={` stroke-red-500 size-8 ${averageRating < 3.5 ? "" : "fill-red-500"}`} />
+                        <Star className={` stroke-red-500 size-8 ${averageRating < 4.5 ? "" : "fill-red-500"}`} />
                     </div>
                 </div>
                 <div className="flex gap-8">
