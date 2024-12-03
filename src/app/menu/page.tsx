@@ -26,18 +26,15 @@ interface Dish {
 }
 
 // Lấy session
-export const fetcher = async () => {
-  const category = CategoryFetcher();
-  return category;
+const fetcherCategory = async (): Promise<
+  { id: string; name: string; imageUrl: string | null }[]
+> => {
+  return CategoryFetcher();
 };
 
 export default function MenuPage() {
   // Kiểm tra session
-  const { data, isLoading, error } = useSWR("fetcherKey", fetcher, {
-    revalidateIfStale: true,
-    revalidateOnFocus: false,
-    revalidateOnReconnect: true
-  });
+  const { data, isLoading, error } = useSWR("fetcherKey", fetcherCategory);
 
   // ID của danh mục được chọn
   const [clickedIndex, setClickedIndex] = useState<string>("");
