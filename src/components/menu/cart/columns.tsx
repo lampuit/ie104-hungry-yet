@@ -42,9 +42,10 @@ type CartTableMeta = {
     onQuantityChange: (id: string, newQuantity: number) => void
 }
 
+const { data: userId, error: userIdError } = useSWR("userId", fetcherUserId);
+
 const AmountCell = ({ row, table }: { row: any; table: any }) => {
     const [amount, setAmount] = useState(row.original.amount);
-    const { data: userId, error: userIdError } = useSWR("userId", fetcherUserId);
 
     const handleChangeAmount = (quantity: number) => {
         const formData = new FormData();
@@ -89,7 +90,6 @@ const AmountCell = ({ row, table }: { row: any; table: any }) => {
 
 const FavoriteCell = ({ row }: { row: any }) => {
     const [isFavorite, setIsFavorite] = useState(row.original.isFavorite);
-    const { data: userId, error: userIdError } = useSWR("userId", fetcherUserId);
 
     const handleDeleteFavorite = async () => {
         const id = row.original.id;
@@ -157,7 +157,6 @@ export const columns: ColumnDef<Cart>[] = [
         cell: ({ row }) => {
             const handleDeleteItem = async () => {
                 const id = row.original.id;
-                const { data: userId, error: userIdError } = useSWR("userId", fetcherUserId);
                 await deletecarts(id, userId || "");
                 mutate(userId);
                 toast("Xoá thành công")

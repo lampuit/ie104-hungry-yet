@@ -13,6 +13,8 @@ const fetcherUserId = async () => {
   return userId;
 };
 
+const { data: userId } = useSWR('userId', fetcherUserId);
+
 export async function POST(req: NextRequest) {
   try {
     const body = await req.json();
@@ -41,7 +43,7 @@ export async function POST(req: NextRequest) {
       case 0:
         paymentStatus = "success";
         invoiceStatus = "accepted";
-        const { data: userId } = useSWR('userId', fetcherUserId);
+
         if (userId) {
           await db.delete(carts).where(eq(carts.userId, userId));;
         } else {
