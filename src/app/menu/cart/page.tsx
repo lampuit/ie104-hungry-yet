@@ -13,7 +13,7 @@ import { Summary } from "@/components/menu/cart/summary";
 import { redirect } from "next/navigation";
 import { columns } from "@/components/menu/cart/columns";
 import { DataTable } from "@/components/menu/cart/data-table";
-import { getCartsByUserId, fetchDiscounts } from "@/lib/data";
+import { getCartsByUserId } from "@/lib/data";
 import useSWR from "swr";
 import React, { useState, useEffect } from "react";
 import LoadingSpinner from "@/components/ui/loading-spinner";
