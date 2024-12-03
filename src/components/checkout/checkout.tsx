@@ -27,11 +27,12 @@ import { useForm } from "react-hook-form";
 import z from "zod";
 import { getSession } from "@/lib/auth-client";
 import useSWR from "swr";
-// Lấy session
+
+// Lấy userId từ session
 const fetcherUserId = async () => {
-  const response = await getSession();
-  const userId = response?.data?.user?.id as string;
-  return userId;
+    const response = await getSession();
+    const userId = response?.data?.user?.id as string;
+    return userId;
 };
 
 const formSchema = z.object({
@@ -77,7 +78,7 @@ export function Checkout({ carts }: { carts: any[] }) {
         total,
         discountId,
         paymentMethod,
-        userId,
+        userId || "",
       );
 
       if (result.success) {

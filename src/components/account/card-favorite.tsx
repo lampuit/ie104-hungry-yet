@@ -12,7 +12,7 @@ import { deleteFavorite } from "@/lib/actions/favorite";
 import { getSession } from "@/lib/auth-client";
 import useSWR from "swr";
 
-// Lấy session
+//get userId from session
 const fetcherUserId = async () => {
     const response = await getSession();
     const userId = response?.data?.user?.id as string;
@@ -22,6 +22,7 @@ const fetcherUserId = async () => {
 export function AccountFavorite({ listFavorite, isLoading, mutate }: { listFavorite: any, isLoading: boolean, mutate: any }) {
     const { data: userId } = useSWR('userId', fetcherUserId);
     const router = useRouter();
+
     const convertToVND = (price: number) => {
         return new Intl.NumberFormat("vi-VN", {
             style: "currency",

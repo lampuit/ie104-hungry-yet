@@ -11,6 +11,14 @@ import { createCart } from "@/lib/actions/cart";
 import { Heart, MessageCircleMore, ShoppingCart, Star } from "lucide-react";
 import { Badge } from "@/components/ui/badge"
 import { Button } from "../ui/button";
+import { getSession } from "@/lib/auth-client";
+
+// Lấy userId từ session
+const fetcherUserId = async () => {
+    const response = await getSession();
+    const userId = response?.data?.user?.id as string;
+    return userId;
+};
 
 const fetcher = async (id: string) => {
     return await getProductById({ id });
@@ -38,7 +46,7 @@ interface Dish {
 export const ProductDetail = () => {
     const searchParams = useSearchParams();
     const id = searchParams.get("id") || "";
-    const userId = sessionStorage.getItem("userId") || "";
+    const { data: userId, error: userIdError } = useSWR("userId", fetcherUserId);
     const { data: ratingData, error: ratingError } = useSWR(`product-${id}`, () => ratingFetcher(id));
     const { data: productData, error: productError } = useSWR(id, fetcher);
     const { data: favoriteData, error: favoriteError } = useSWR(userId, favoriteFetcher);
@@ -82,7 +90,7 @@ export const ProductDetail = () => {
         }
         if (!favorite) {
             const formData = new FormData();
-            formData.append("userId", userId);
+            formData.append("userId", userId || "");
             formData.append("productId", productId);
             try {
                 await createFavorite(formData);
@@ -100,7 +108,7 @@ export const ProductDetail = () => {
             }
         } else {
             try {
-                await deleteFavorite(userId, productId);
+                await deleteFavorite(userId || "", productId);
                 console.log("Favorite removed");
                 toast({
                     description: `Đã xóa ${productName.toLowerCase()} khỏi mục yêu thích`,

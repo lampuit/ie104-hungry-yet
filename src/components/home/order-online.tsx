@@ -4,7 +4,9 @@ import Image from "next/image"
 import { getSession } from "@/lib/auth-client"
 import useSWR from "swr"
 
-// Lấy session
+
+
+// Lấy userId từ session
 const fetcherUserId = async () => {
     const response = await getSession();
     const userId = response?.data?.user?.id as string;
@@ -12,7 +14,7 @@ const fetcherUserId = async () => {
 };
 
 export function OrderOnline() {
-    const { data: userId } = useSWR('userId', fetcherUserId);
+    const { data: userId, error: userIdError } = useSWR("userId", fetcherUserId);
 
     return (
         <div className="relative flex justify-center items-center w-screen py-16 bg-black">
