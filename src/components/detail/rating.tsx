@@ -1,6 +1,5 @@
 import { ChevronRight, Star } from "lucide-react"
 import { Button } from "../ui/button"
-import { ratingFetcher } from "./detail"
 import { useSearchParams } from "next/navigation"
 import useSWR from "swr"
 import LoadingSpinner from "../ui/loading-spinner"
@@ -9,6 +8,12 @@ import Image from "next/image"
 import { Pagination, PaginationContent, PaginationItem, PaginationLink, PaginationNext, PaginationPrevious } from "../ui/pagination"
 import { use, useState } from "react"
 import { set } from "date-fns"
+import { getRatingsByProductId } from "@/lib/data"
+
+const ratingFetcher = async (id: string) => {
+    return await getRatingsByProductId(id);
+};
+
 
 export const Rating = () => {
     const searchParams = useSearchParams();
@@ -39,7 +44,7 @@ export const Rating = () => {
             return ratingData;
         }
         else {
-            const filtered = ratingData.filter((review: {star: number}) => review.star === star);
+            const filtered = ratingData.filter((review: { star: number }) => review.star === star);
             return filtered;
         }
     }
