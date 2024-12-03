@@ -118,17 +118,17 @@ export default function OrderDetail() {
                                 <div className={`border-2 rounded p-4 flex flex-col ${invoiceStatus === 'accepted' ? 'bg-yellow-100' : ''}`}>
                                     <CookingPot />
                                     <p>Đang chuẩn bị</p>
-                                    {invoiceStatus === 'accepted' && <CircleCheck />}
+                                    {invoiceStatus === 'accepted' && <CircleCheck className="stroke-green-600 fill-green-300" />}
                                 </div>
                                 <div className={`border-2 rounded p-4 flex flex-col ${invoiceStatus === 'cooking' ? 'bg-yellow-100' : ''}`}>
                                     <Package />
                                     <p>Chờ giao hàng</p>
-                                    {invoiceStatus === 'cooking' && <CircleCheck />}
+                                    {invoiceStatus === 'cooking' && <CircleCheck className="stroke-green-600 fill-green-300" />}
                                 </div>
                                 <div className={`border-2 rounded p-4 flex flex-col ${invoiceStatus === 'delivered' ? 'bg-yellow-100' : ''}`}>
                                     <Truck />
                                     <p>Giao thành công</p>
-                                    {invoiceStatus === 'ready' && <CircleCheck />}
+                                    {invoiceStatus === 'ready' && <CircleCheck className="stroke-green-600 fill-green-300" />}
                                 </div>
                             </div>
                             <Progress className="mt-4 h-2" value={progressValue} />
