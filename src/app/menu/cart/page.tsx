@@ -13,19 +13,21 @@ import { Summary } from "@/components/menu/cart/summary";
 import { redirect } from "next/navigation";
 import { columns } from "@/components/menu/cart/columns";
 import { DataTable } from "@/components/menu/cart/data-table";
-import { getCartsByUserId, fetchDiscounts } from "@/lib/data";
+import { getCartsByUserId } from "@/lib/data";
 import useSWR from "swr";
 import React, { useState, useEffect } from "react";
 import LoadingSpinner from "@/components/ui/loading-spinner";
 import Footer from "@/components/ui/footer";
+import { getSession } from "@/lib/auth-client";
 
 //get shopping cart by userId
 const fetcher = async (userId: string) => {
   return getCartsByUserId(userId);
 };
 
-export default function CartPage() {
-  const userId = sessionStorage.getItem("userId");
+export default async function CartPage() {
+  const session = await getSession();
+  const userId = session?.data?.user?.id as string;
   const { data: listDish, isLoading, error, mutate } = useSWR(userId, fetcher, {
     revalidateIfStale: true,
     revalidateOnFocus: false,

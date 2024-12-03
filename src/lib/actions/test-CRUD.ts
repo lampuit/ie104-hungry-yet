@@ -12,7 +12,9 @@ import {
   getUserById,
   getUserWorkShift,
   getCartsByUserId,
-  getRatingsByProductId
+  getRatingsByProductId,
+  getInvoiceByUserId,
+  getInvoiceDetail
 } from "@/lib/data";
 
 import { clearCart } from "./cart";
@@ -160,9 +162,23 @@ async function testUpdateRating() {
 
 // testUpdateRating()
 
-async function testGetRatingByProduct(){
-  const response= await getRatingsByProductId("ba959b90-66c9-4313-a97d-43818851f7b7");
+async function testGetRatingByProduct() {
+  const response = await getRatingsByProductId("ba959b90-66c9-4313-a97d-43818851f7b7");
   console.log("Rating Data:", response);
 }
-testGetRatingByProduct();
+// testGetRatingByProduct();
+
+async function testGetInvoiceByUserId() {
+  const response = await getInvoiceByUserId("2twIpHSepp6aENGIF-Zfq", "pending");
+  console.log("Invoice Data:", response);
+}
+
+// testGetInvoiceByUserId();
+
+async function testGetInvoiceDetail() {
+  const response = await getInvoiceDetail("28c7ece9-05b1-4cbe-a0a4-4175f8670265");
+  console.log("Invoice Detail Data:", response?.orders);
+}
+
+testGetInvoiceDetail()
 

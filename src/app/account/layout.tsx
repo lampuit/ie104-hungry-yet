@@ -21,12 +21,13 @@ const userFetcher = async (id: string) => {
     return await getUserById(id);
 }
 
-export default function Layout({
-    children,
-}: {
-    children: ReactNode;
-    modal: ReactNode;
-}) {
+interface LayoutProps {
+    children: ReactNode
+}
+
+export default async function Layout({
+    children
+}: LayoutProps) {
     const router = useRouter();
     const [activePath, setActivePath] = useState<string>("Thông tin đơn hàng"); // Track active path
     const [isLoggingOut, setIsLoggingOut] = useState(false); // Track logout state
@@ -39,7 +40,8 @@ export default function Layout({
     };
 
     const { data: session, isLoading: isSessionLoading, error } = useSWR("session", sessionFetcher);
-    const uid = sessionStorage.getItem("userId");
+    const sessionData = await getSession();
+    const uid = sessionData?.data?.user?.id as string;
     const { data: user, error: userError } = useSWR(uid, userFetcher);
 
     useEffect(() => {
@@ -81,38 +83,31 @@ export default function Layout({
                 <div className="flex flex-col gap-6 bg-white rounded p-6 shadow-md w-72">
                     <div className="flex mb-4 gap-2 items-center w-full border-b-2 px-4 pb-4">
                         <Avatar>
-                            <AvatarImage src={user?.[0].imageUrl ?? undefined} />
+                            <AvatarImage src={user?.[0]?.imageUrl ?? undefined} />
                             <AvatarFallback>{shortName}</AvatarFallback>
                         </Avatar>
                         <p className="text-sm font-semibold">{name}</p>
                     </div>
                     <div
                         onClick={() => handleClick("Thông tin tài khoản", "/account")}
-                        className={activePath === "Thông tin tài khoản" ? "flex gap-3 shadow p-2 rounded-md" : "flex gap-3"}
+                        className={activePath === "Thông tin tài khoản" ? "flex gap-3 shadow p-2 rounded-md bg-slate-200" : "flex gap-3"}
                     >
                         <UserIcon className="stroke-amber-500" />
                         <p>Thông tin tài khoản</p>
                     </div>
                     <div
                         onClick={() => handleClick("Thông tin đơn hàng", "/account/history")}
-                        className={activePath === "Thông tin đơn hàng" ? "flex gap-3 shadow p-2 rounded-md" : "flex gap-3"}
+                        className={activePath === "Thông tin đơn hàng" ? "flex gap-3 shadow p-2 rounded-md bg-slate-200" : "flex gap-3"}
                     >
                         <ClipboardList className="stroke-blue-500" />
                         <p>Thông tin đơn hàng</p>
                     </div>
                     <div
                         onClick={() => handleClick("Danh mục yêu thích", "/account/favorite")}
-                        className={activePath === "Danh mục yêu thích" ? "flex gap-3 shadow p-2 rounded-md" : "flex gap-3"}
+                        className={activePath === "Danh mục yêu thích" ? "flex gap-3 shadow p-2 rounded-md bg-slate-200" : "flex gap-3"}
                     >
                         <Heart className="stroke-red-500" />
                         <p>Danh mục yêu thích</p>
-                    </div>
-                    <div
-                        onClick={() => handleClick("Cài đặt", "/account/setting")}
-                        className={activePath === "Cài đặt" ? "flex gap-3 shadow p-2 rounded-md" : "flex gap-3"}
-                    >
-                        <Settings className="stroke-gray-500" />
-                        <p>Cài đặt</p>
                     </div>
                     <Button
                         variant={"outline"}

@@ -105,7 +105,7 @@ export const Rating = () => {
             <div className="flex flex-col items-center justify-center">
                 <div className="w-full max-w-5xl space-y-6">
                     {handleFilter(starFilter, ratingData)?.map((review: any, index: any) => (
-                        <div className="space-y-6 px-2 py-3 border-b border-b-gray-400 w-full">
+                        <div key={index} className="space-y-6 px-2 py-3 border-b border-b-gray-400 w-full">
                             <div className="flex gap-2 items-center">
                                 <Avatar className="w-14 h-14">
                                     <AvatarImage src={review.user.imageUrl} />
