@@ -1,11 +1,10 @@
 "use client"
 import { Button } from "@/components/ui/button"
 import Image from "next/image"
-import { getSession } from "@/lib/auth-client"
 
-export async function OrderOnline() {
-    const session = await getSession();
-    const userId = session?.data?.user?.id as string;
+
+export function OrderOnline() {
+    const userId = sessionStorage.getItem("userId");
 
     return (
         <div className="relative flex justify-center items-center w-screen py-16 bg-black">

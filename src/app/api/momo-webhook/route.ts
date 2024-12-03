@@ -3,7 +3,6 @@ import { invoices, payments, carts } from "@/drizzle/schema/project";
 import { eq } from "drizzle-orm";
 import crypto from "crypto";
 import { db } from "@/drizzle/db";
-import { getSession } from "@/lib/auth-client";
 
 export async function POST(req: NextRequest) {
   try {
@@ -33,8 +32,7 @@ export async function POST(req: NextRequest) {
       case 0:
         paymentStatus = "success";
         invoiceStatus = "accepted";
-        const session = await getSession();
-        const userId = session?.data?.user?.id as string;
+        const userId = sessionStorage.getItem("userId");
         if (userId) {
           await db.delete(carts).where(eq(carts.userId, userId));;
         } else {

@@ -18,16 +18,14 @@ import useSWR from "swr";
 import React, { useState, useEffect } from "react";
 import LoadingSpinner from "@/components/ui/loading-spinner";
 import Footer from "@/components/ui/footer";
-import { getSession } from "@/lib/auth-client";
 
 //get shopping cart by userId
 const fetcher = async (userId: string) => {
   return getCartsByUserId(userId);
 };
 
-export default async function CartPage() {
-  const session = await getSession();
-  const userId = session?.data?.user?.id as string;
+export default function CartPage() {
+  const userId = sessionStorage.getItem("userId");
   const { data: listDish, isLoading, error, mutate } = useSWR(userId, fetcher, {
     revalidateIfStale: true,
     revalidateOnFocus: false,
