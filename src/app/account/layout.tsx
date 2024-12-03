@@ -40,8 +40,17 @@ export default function Layout({
     };
 
     const { data: session, isLoading: isSessionLoading, error } = useSWR("session", sessionFetcher);
-    const uid = sessionStorage.getItem("userId");
-    const { data: user, error: userError } = useSWR(uid, userFetcher);
+    const [uid, setUid] = useState<string | null>(null);
+
+    useEffect(() => {
+        const fetchSession = async () => {
+            const sessionData = await getSession();
+            setUid(sessionData?.data?.user?.id as string);
+        };
+        fetchSession();
+    }, []);
+
+    const { data: user, error: userError } = useSWR(uid, userFetcher, { shouldRetryOnError: false });
 
     useEffect(() => {
         setShortName(user && user[0]?.name ? splitName(user[0].name) : "");

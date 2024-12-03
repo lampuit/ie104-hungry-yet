@@ -41,7 +41,7 @@ export default function RootLayout({
     } else if (error) {
       console.error("Failed to fetch user session:", error);
     }
-  }, [userId]);
+  }, []);
 
   const pathname = usePathname();
 

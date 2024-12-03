@@ -5,6 +5,7 @@ import { getInvoiceByUserId } from "@/lib/data";
 import useSWR from "swr";
 import LoadingSpinner from "@/components/ui/loading-spinner";
 import { useEffect, useState } from "react";
+import { getSession } from "@/lib/auth-client";
 
 const fetcherInvoicePending = async (userId: string) => {
     return getInvoiceByUserId(userId, "pending");
@@ -15,12 +16,16 @@ export default function History() {
     const [userId, setUserId] = useState<string | null>(null);
 
     useEffect(() => {
-        const storedUserId = sessionStorage.getItem("userId");
-        if (storedUserId) {
-            setUserId(storedUserId);
-        } else {
-            console.error("No userId found in localStorage");
-        }
+        const fetchSessionData = async () => {
+            const sessionData = await getSession();
+            const storedUserId = sessionData?.data?.user?.id as string;
+            if (storedUserId) {
+                setUserId(storedUserId);
+            } else {
+                console.error("No userId found in localStorage");
+            }
+        };
+        fetchSessionData();
     }, []);
 
     const { data: listInvoices, isLoading, error, mutate } = useSWR(userId ? `invoice-${userId}` : null, () => fetcherInvoicePending(userId as string),
