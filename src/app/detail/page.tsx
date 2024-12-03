@@ -8,10 +8,8 @@ import {
     BreadcrumbPage,
     BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb"
-import { ProductDetail } from "@/components/detail/detail";
+import ProductDetail from "@/components/detail/detail";
 import { Rating } from "@/components/detail/rating";
-
-
 
 export default function Detail() {
     return (

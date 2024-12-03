@@ -12,6 +12,7 @@ import { Heart, MessageCircleMore, ShoppingCart, Star } from "lucide-react";
 import { Badge } from "@/components/ui/badge"
 import { Button } from "../ui/button";
 import { getSession } from "@/lib/auth-client";
+import { Suspense } from "react";
 
 // Lấy userId từ session
 const fetcherUserId = async () => {
@@ -43,9 +44,16 @@ interface Dish {
     name: string;
 }
 
-export const ProductDetail = () => {
+
+
+function SearchParamsProvider({ children }: { children: (params: { id: string | null }) => React.ReactNode }) {
     const searchParams = useSearchParams();
-    const id = searchParams.get("id") || "";
+    const id = searchParams.get("id");
+    return children({ id });
+}
+
+
+function ProductDetailContent({ id }: { id: string }) { //id: productId
     const { data: userId, error: userIdError } = useSWR("userId", fetcherUserId);
     const { data: ratingData, error: ratingError } = useSWR(`product-${id}`, () => ratingFetcher(id));
     const { data: productData, error: productError } = useSWR(id, fetcher);
@@ -215,5 +223,21 @@ export const ProductDetail = () => {
                 </div>
             </section>
         </section>
+    )
+}
+
+export default function ProductDetail(): JSX.Element {
+    return (
+        <Suspense fallback={<LoadingSpinner />}>
+            <SearchParamsProvider>
+                {({ id }: { id: string | null }) =>
+                    id ? (
+                        <ProductDetailContent id={id} />
+                    ) : (
+                        <p>No invoice ID provided</p>
+                    )
+                }
+            </SearchParamsProvider>
+        </Suspense>
     )
 }
