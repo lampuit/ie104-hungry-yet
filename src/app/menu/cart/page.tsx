@@ -18,7 +18,6 @@ import useSWR from "swr";
 import React, { useState, useEffect } from "react";
 import LoadingSpinner from "@/components/ui/loading-spinner";
 import Footer from "@/components/ui/footer";
-import { getSession } from "@/lib/auth-client";
 
 //get shopping cart by userId
 const fetcher = async (userId: string) => {
@@ -26,14 +25,7 @@ const fetcher = async (userId: string) => {
 };
 
 export default function CartPage() {
-  const [userId, setUserId] = useState<string | null>(null)
-  useEffect(() => {
-    const fetchSession = async () => {
-      const sessionData = await getSession();
-      setUserId(sessionData?.data?.user?.id as string);
-    };
-    fetchSession();
-  }, []);
+  const userId = sessionStorage.getItem("userId");
   const { data: listDish, isLoading, error, mutate } = useSWR(userId, fetcher, {
     revalidateIfStale: true,
     revalidateOnFocus: false,

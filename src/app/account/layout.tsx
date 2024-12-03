@@ -7,15 +7,8 @@ import { usePathname, useRouter } from "next/navigation";
 import { ReactNode, useEffect, useState } from "react";
 import { revokeSession } from "@/lib/auth-client";
 import useSWR from "swr";
-import { getSession } from "@/lib/auth-client";
 import { getUserById } from "@/lib/data";
 
-// Fetch session data
-const sessionFetcher = async () => {
-    const response = await getSession();
-    const session = response?.data?.session?.id as string;
-    return session;
-};
 
 const userFetcher = async (id: string) => {
     return await getUserById(id);
@@ -39,13 +32,12 @@ export default function Layout({
         router.push(path);
     };
 
-    const { data: session, isLoading: isSessionLoading, error } = useSWR("session", sessionFetcher);
     const [uid, setUid] = useState<string | null>(null);
 
     useEffect(() => {
         const fetchSession = async () => {
-            const sessionData = await getSession();
-            setUid(sessionData?.data?.user?.id as string);
+            const sessionData = sessionStorage.getItem("userId");
+            setUid(sessionData);
         };
         fetchSession();
     }, []);
@@ -59,12 +51,12 @@ export default function Layout({
 
     const handleLogout = async () => {
         try {
-            if (!session) {
+            if (!uid) {
                 console.error("Session ID is undefined");
                 return;
             }
             setIsLoggingOut(true); // Start logout spinner
-            const response = await revokeSession({ id: session });
+            const response = await revokeSession({ id: uid });
             sessionStorage.removeItem("userId");
 
             if (response && response?.error?.status === 200) {
@@ -120,13 +112,13 @@ export default function Layout({
                     <Button
                         variant={"outline"}
                         onClick={handleLogout}
-                        disabled={isLoggingOut || isSessionLoading} // Disable button while logging out or session is loading
-                        className={`mt-6 border-gray-400 text-gray-400 ${isLoggingOut || isSessionLoading
+                        disabled={isLoggingOut} // Disable button while logging out
+                        className={`mt-6 border-gray-400 text-gray-400 ${isLoggingOut
                             ? "cursor-not-allowed opacity-50"
                             : "hover:bg-gray-400 hover:bg-opacity-20 hover:text-gray-400"
                             }`}
                     >
-                        {isLoggingOut || isSessionLoading ? (
+                        {isLoggingOut ? (
                             <div className="flex items-center gap-2">
                                 <Loader2 className="animate-spin" />
                                 <span>Đang đăng xuất</span>
