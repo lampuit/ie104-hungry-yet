@@ -21,12 +21,13 @@ const userFetcher = async (id: string) => {
     return await getUserById(id);
 }
 
+interface LayoutProps {
+    children: ReactNode
+}
+
 export default function Layout({
-    children,
-}: {
-    children: ReactNode;
-    modal: ReactNode;
-}) {
+    children
+}: LayoutProps) {
     const router = useRouter();
     const [activePath, setActivePath] = useState<string>("Thông tin tài khoản"); // Track active path
     const [isLoggingOut, setIsLoggingOut] = useState(false); // Track logout state
@@ -88,21 +89,21 @@ export default function Layout({
                     </div>
                     <div
                         onClick={() => handleClick("Thông tin tài khoản", "/account")}
-                        className={activePath === "Thông tin tài khoản" ? "flex gap-3 shadow p-2 rounded-md" : "flex gap-3"}
+                        className={activePath === "Thông tin tài khoản" ? "flex gap-3 shadow p-2 rounded-md bg-slate-200" : "flex gap-3"}
                     >
                         <UserIcon className="stroke-amber-500" />
                         <p>Thông tin tài khoản</p>
                     </div>
                     <div
                         onClick={() => handleClick("Thông tin đơn hàng", "/account/history")}
-                        className={activePath === "Thông tin đơn hàng" ? "flex gap-3 shadow p-2 rounded-md" : "flex gap-3"}
+                        className={activePath === "Thông tin đơn hàng" ? "flex gap-3 shadow p-2 rounded-md bg-slate-200" : "flex gap-3"}
                     >
                         <ClipboardList className="stroke-blue-500" />
                         <p>Thông tin đơn hàng</p>
                     </div>
                     <div
                         onClick={() => handleClick("Danh mục yêu thích", "/account/favorite")}
-                        className={activePath === "Danh mục yêu thích" ? "flex gap-3 shadow p-2 rounded-md" : "flex gap-3"}
+                        className={activePath === "Danh mục yêu thích" ? "flex gap-3 shadow p-2 rounded-md bg-slate-200" : "flex gap-3"}
                     >
                         <Heart className="stroke-red-500" />
                         <p>Danh mục yêu thích</p>
