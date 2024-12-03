@@ -39,7 +39,7 @@ export default function MenuPage() {
   // ID của danh mục được chọn
   const [clickedIndex, setClickedIndex] = useState<string>("");
   const [dishesList, setDishesList] = useState<Dish[]>([]); // Danh sách món ăn được lưu trữ dưới dạng 1 mảng các đối tượng Dish
-  const sessionClickIndex = sessionStorage.getItem("clickedIndex");
+  const sessionClickIndex = localStorage.getItem("clickedIndex") ? (localStorage.getItem("clickedIndex")) : "";
   const categories = data || [];
 
   // Hàm lấy danh sách món ăn theo danh mục cụ thể (clickedIndex)
@@ -74,7 +74,7 @@ export default function MenuPage() {
 
     if (clickedIndex) {
       getDishesByCategoryId(clickedIndex);
-      sessionStorage.setItem("clickedIndex", clickedIndex); // Persist clickedIndex
+      localStorage.setItem("clickedIndex", clickedIndex); // Persist clickedIndex
     }
 
   }, [data, clickedIndex]);
@@ -83,7 +83,7 @@ export default function MenuPage() {
   // Hàm xử lý khi người dùng click vào một danh mục khác
   const handleCategoryClick = (categoryId: string) => {
     setClickedIndex(categoryId);
-    sessionStorage.setItem("clickedIndex", categoryId);
+    localStorage.setItem("clickedIndex", categoryId);
   };
 
   return (

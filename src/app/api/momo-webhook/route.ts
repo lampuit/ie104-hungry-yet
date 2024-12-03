@@ -6,14 +6,16 @@ import { db } from "@/drizzle/db";
 import { getSession } from "@/lib/auth-client"
 import useSWR from "swr"
 
-// Lấy session
+// // Lấy session
 const fetcherUserId = async () => {
   const response = await getSession();
   const userId = response?.data?.user?.id as string;
   return userId;
 };
 
-const { data: userId } = useSWR('userId', fetcherUserId);
+// const { data: userId } = useSWR('userId', fetcherUserId);
+
+const userIdPromise = fetcherUserId();
 
 export async function POST(req: NextRequest) {
   try {
@@ -44,8 +46,9 @@ export async function POST(req: NextRequest) {
         paymentStatus = "success";
         invoiceStatus = "accepted";
 
+        const userId = await userIdPromise;
         if (userId) {
-          await db.delete(carts).where(eq(carts.userId, userId));;
+          await db.delete(carts).where(eq(carts.userId, userId));
         } else {
           console.error("No userId found in session");
         }

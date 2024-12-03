@@ -25,7 +25,7 @@ export function Category({ clickedIndex, setClickedIndex }: CategoryProps) {
                 return priorityOrder.indexOf(a.name) - priorityOrder.indexOf(b.name);
             });
             setCate(sortedCategories);
-            setClickedIndex(sessionStorage.getItem('clickedIndex') || sortedCategories[0].id);
+            setClickedIndex(localStorage.getItem('clickedIndex') ? (localStorage.getItem('clickedIndex')) || sortedCategories[0].id : "");
         }
     }, [data]);
 

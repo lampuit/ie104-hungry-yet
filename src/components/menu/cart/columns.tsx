@@ -28,6 +28,8 @@ const fetcherUserId = async () => {
     return userId;
 };
 
+let userId: string | undefined;
+
 export type Cart = {
     id: string
     img: string
@@ -42,14 +44,19 @@ type CartTableMeta = {
     onQuantityChange: (id: string, newQuantity: number) => void
 }
 
-const { data: userId, error: userIdError } = useSWR("userId", fetcherUserId);
 
 const AmountCell = ({ row, table }: { row: any; table: any }) => {
+
+    const { data } = useSWR('userId', fetcherUserId);
+    userId = data;
     const [amount, setAmount] = useState(row.original.amount);
 
-    const handleChangeAmount = (quantity: number) => {
+    const handleChangeAmount = async (quantity: number) => {
         const formData = new FormData();
-        formData.append("userId", userId || "");
+        const resolvedUserId = await userId;
+        if (resolvedUserId) {
+            formData.append("userId", resolvedUserId);
+        }
         formData.append("productId", row.original.id);
         formData.append("quantity", quantity.toString());
         updateCarts(formData);

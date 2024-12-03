@@ -25,11 +25,18 @@ import { useSearchParams } from "next/navigation";
 import { getInvoiceDetail } from "@/lib/data";
 import { useEffect, useState } from "react";
 import useSWR from "swr";
+import { Suspense } from 'react'
 
 const fetcherInvoiceDetail = async (invoiceId: string) => {
     const data = await getInvoiceDetail(invoiceId);
     return data;
 }
+
+// function getInvoiceIdFromParam() {
+//     const searchParams = useSearchParams()
+//     const invoiceId = searchParams.get("invoiceId");
+//     return invoiceId
+// }
 
 function formatDate(date: Date) {
     const d = new Date(date);
