@@ -74,7 +74,7 @@ export function Categories() {
                                 height={80}
                                 className="object-cover w-full h-28"
                                 onClick={() => {
-                                    router.push(`/detail?id=${product?.id}`)
+                                    router.push(`/product-detail?id=${product?.id}`)
                                 }}
                             />
                         </div>

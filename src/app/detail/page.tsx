@@ -1,5 +1,4 @@
-"use client";
-
+import { Suspense } from 'react';
 import {
     Breadcrumb,
     BreadcrumbItem,
@@ -8,8 +7,9 @@ import {
     BreadcrumbPage,
     BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb"
-import ProductDetail from "@/components/detail/detail";
+import ProductDetail from "@/components/detail/product-detail";
 import { Rating } from "@/components/detail/rating";
+import LoadingSpinner from "@/components/ui/loading-spinner";
 
 export default function Detail() {
     return (
@@ -32,9 +32,13 @@ export default function Detail() {
                 </Breadcrumb>
             </section>
 
-            <ProductDetail />
-            <Rating />
-            
+            <Suspense fallback={<LoadingSpinner />}>
+                <ProductDetail />
+            </Suspense>
+
+            <Suspense fallback={<LoadingSpinner />}>
+                <Rating />
+            </Suspense>
         </main>
     )
 }

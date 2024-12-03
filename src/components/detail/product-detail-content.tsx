@@ -5,7 +5,6 @@ import {
     getProductById,
     getRatingsByProductId,
 } from "@/lib/data";
-import { useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import useSWR from "swr";
 import LoadingSpinner from "../ui/loading-spinner";
@@ -21,8 +20,18 @@ import {
 import { Badge } from "@/components/ui/badge";
 import { Button } from "../ui/button";
 import { getSession } from "@/lib/auth-client";
-import { Suspense } from "react";
 import { useRouter } from "next/navigation";
+
+interface Dish {
+    categoryId: string;
+    categoryName: string;
+    createdAt: Date;
+    des: string;
+    id: string;
+    imageUrl: string;
+    price: number;
+    name: string;
+}
 
 // Lấy userId từ session
 const fetcherUserId = async () => {
@@ -42,30 +51,7 @@ const favoriteFetcher = async (userId: string) => {
 const ratingFetcher = async (id: string) => {
     return await getRatingsByProductId(id);
 };
-
-interface Dish {
-    categoryId: string;
-    categoryName: string;
-    createdAt: Date;
-    des: string;
-    id: string;
-    imageUrl: string;
-    price: number;
-    name: string;
-}
-
-export function SearchParamsProvider() {
-    const searchParams = useSearchParams();
-    const id = searchParams.get("id");
-
-    if (!id) {
-        return <p>No product ID provided</p>;
-    }
-
-    return <ProductDetailContent id={id} />;
-}
-
-function ProductDetailContent({ id }: { id: string }) {
+export function ProductDetailContent({ id }: { id: string }) {
     const { data: userId } = useSWR("userId", fetcherUserId);
     const { data: ratingData } = useSWR(`product-${id}`, () =>
         ratingFetcher(id)
@@ -242,12 +228,4 @@ function ProductDetailContent({ id }: { id: string }) {
             </section>
         </section>
     )
-}
-
-export default function ProductDetail(): JSX.Element {
-    return (
-        <Suspense fallback={<LoadingSpinner />}>
-            <SearchParamsProvider />
-        </Suspense>
-    );
 }

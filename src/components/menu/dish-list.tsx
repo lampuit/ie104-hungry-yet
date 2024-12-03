@@ -73,7 +73,7 @@ export const DishList = ({ dishesList }: DishListProps) => {
     if (!productsData || !favoriteData || favorites.length === 0) return <LoadingSpinner />;
 
     const handleProductOnClick = (productId: string) => {
-        router.push(`/detail?id=${productId}`);
+        router.push(`/product-detail?id=${productId}`);
     };
 
     const handleFavoriteOnClick = async (productId: string, productName: string) => {

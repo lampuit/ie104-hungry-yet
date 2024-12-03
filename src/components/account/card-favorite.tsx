@@ -76,7 +76,7 @@ export function AccountFavorite({ listFavorite, isLoading, mutate }: { listFavor
                                 <Button
                                     onClick={() => {
                                         console.log("Xem chi tiết");
-                                        router.push(`/detail?id=${item?.productId}`);
+                                        router.push(`/product-detail?id=${item?.productId}`);
                                     }}
                                     variant={"outline"}
                                     className="text-xs flex-grow md:flex-grow-0"

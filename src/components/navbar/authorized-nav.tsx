@@ -6,7 +6,7 @@ export function AuthorizedNavbar() {
   const pathname = usePathname();
   const isCartPage = pathname.startsWith("/menu/cart");
   const isCheckoutPage = pathname.startsWith("/checkout");
-  const isDetail = pathname.startsWith("/detail");
+  const isDetail = pathname.startsWith("/product-detail");
   return (
     <nav className="flex flex-row px-10 py-5 justify-between items-center h-20 w-full max-w-screen-2xl text-white">
       <Link href={"/"} className="grow flex flex-row justify-start min-w-52 items-center">

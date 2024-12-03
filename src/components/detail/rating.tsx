@@ -1,3 +1,4 @@
+"use client";
 import { ChevronRight, Star } from "lucide-react"
 import { Button } from "../ui/button"
 import { useSearchParams } from "next/navigation"
@@ -6,8 +7,7 @@ import LoadingSpinner from "../ui/loading-spinner"
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar"
 import Image from "next/image"
 import { Pagination, PaginationContent, PaginationItem, PaginationLink, PaginationNext, PaginationPrevious } from "../ui/pagination"
-import { use, useState } from "react"
-import { set } from "date-fns"
+import {  useState } from "react"
 import { getRatingsByProductId } from "@/lib/data"
 
 const ratingFetcher = async (id: string) => {
