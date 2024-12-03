@@ -16,7 +16,8 @@ import { HorizontalLine } from "@/components/home/intro";
 import { FAQ } from "@/components/home/faq";
 import { Charm } from "next/font/google";
 import Footer from "@/components/ui/footer"
-export const charm = Charm({
+
+const charm = Charm({
   subsets: ["vietnamese"],
   weight: ["400", "700"],
 });

@@ -31,9 +31,9 @@ export function AccountFavorite({ listFavorite, isLoading, mutate }: { listFavor
         }
     };
     return (
-        listFavorite?.map((item: any, index: any) => (
-            isLoading ? <LoadingSpinner /> :
-                <div key={index} className="bg-white rounded shadow-md border-b-2 relative p-4">
+        listFavorite?.map((item: any) => (
+            isLoading ? <LoadingSpinner key={item.id} /> :
+                <div key={item.id} className="bg-white rounded shadow-md border-b-2 relative p-4">
                     <div className="flex flex-col md:flex-row gap-4 md:gap-7 items-start md:items-end">
                         <Image
                             className="rounded w-full md:w-auto"

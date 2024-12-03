@@ -1,3 +1,4 @@
+"use client";
 import { Checkout } from "@/components/checkout/checkout";
 import { getCartsByUserId } from "@/lib/data";
 import { useSearchParams } from "next/navigation";

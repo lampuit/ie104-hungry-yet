@@ -21,12 +21,13 @@ const userFetcher = async (id: string) => {
     return await getUserById(id);
 }
 
+interface LayoutProps {
+    children: ReactNode
+}
+
 export default function Layout({
-    children,
-}: {
-    children: ReactNode;
-    modal: ReactNode;
-}) {
+    children
+}: LayoutProps) {
     const router = useRouter();
     const [activePath, setActivePath] = useState<string>("Thông tin tài khoản"); // Track active path
     const [isLoggingOut, setIsLoggingOut] = useState(false); // Track logout state
