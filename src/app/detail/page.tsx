@@ -35,8 +35,8 @@ export default function Detail() {
             </section>
 
             <ProductDetail />
-
             <Rating />
+            
         </main>
     )
 }
