@@ -3,6 +3,8 @@ import { Checkout } from "@/components/checkout/checkout";
 import { getCartsByUserId } from "@/lib/data";
 import { useSearchParams } from "next/navigation";
 
+
+
 export default async function CheckoutPage() {
   const searchParams = useSearchParams();
   const userId = searchParams.get("userId") || "";

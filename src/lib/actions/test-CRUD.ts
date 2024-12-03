@@ -11,7 +11,8 @@ import {
   getAllCategory,
   getUserById,
   getUserWorkShift,
-  getCartsByUserId
+  getCartsByUserId,
+  getRatingsByProductId
 } from "@/lib/data";
 
 import { clearCart } from "./cart";
@@ -157,4 +158,11 @@ async function testUpdateRating() {
   await updateRating(data);
 }
 
-testUpdateRating()
+// testUpdateRating()
+
+async function testGetRatingByProduct(){
+  const response= await getRatingsByProductId("ba959b90-66c9-4313-a97d-43818851f7b7");
+  console.log("Rating Data:", response);
+}
+testGetRatingByProduct();
+

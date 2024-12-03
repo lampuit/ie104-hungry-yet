@@ -102,7 +102,7 @@ export const ratingsRelations = relations(ratings, ({ one }) => ({
     references: [products.id],
   }),
   user: one(user, {
-    fields: [ratings.productId],
+    fields: [ratings.userId],
     references: [user.id],
   }),
 }));

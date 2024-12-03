@@ -28,7 +28,7 @@ export default function Layout({
     modal: ReactNode;
 }) {
     const router = useRouter();
-    const [activePath, setActivePath] = useState<string>("Thông tin tài khoản"); // Track active path
+    const [activePath, setActivePath] = useState<string>("Thông tin đơn hàng"); // Track active path
     const [isLoggingOut, setIsLoggingOut] = useState(false); // Track logout state
     const [shortName, setShortName] = useState<string>("");
     const [name, setName] = useState<string>("");
@@ -55,6 +55,7 @@ export default function Layout({
             }
             setIsLoggingOut(true); // Start logout spinner
             const response = await revokeSession({ id: session });
+            sessionStorage.removeItem("userId");
 
             if (response && response?.error?.status === 200) {
                 console.log("Session successfully revoked", response);
@@ -71,7 +72,7 @@ export default function Layout({
 
     const splitName = (name: string) => {
         const array = name.split(" ");
-        return (array[array.length - 2]?.at(0) || '') + (array[array.length - 1]?.at(0) || '');
+        return (array[array.length - 2]?.at(0) || '').toUpperCase() + (array[array.length - 1]?.at(0) || '').toUpperCase();
     }
 
     return (

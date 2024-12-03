@@ -51,7 +51,7 @@ export function Summary({ totalAmount }: MoneyProps) {
 
                     <Button onClick={() => {
                         router.push(`/checkout?userId=${userId}`)
-                    }} className="font-bold text-xl px-5 py-3 bg-red-500 hover:bg-red-500 hover:drop-shadow-lg">
+                    }} className="font-bold text-xl p-6 bg-red-500 hover:bg-red-500 hover:drop-shadow-lg">
                         Thanh toán
                     </Button>
 

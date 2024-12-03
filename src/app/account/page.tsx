@@ -72,7 +72,7 @@ export default function Account() {
 
     const splitName = (name: string) => {
         const array = name.split(" ");
-        return (array[array.length - 2]?.at(0) || '') + (array[array.length - 1]?.at(0) || '');
+        return (array[array.length - 2]?.at(0) || '').toUpperCase() + (array[array.length - 1]?.at(0) || '').toUpperCase();
     }
 
     useEffect(() => {
@@ -328,7 +328,7 @@ export default function Account() {
                                     </FormItem>
                                 )} />
 
-                            <Button type="submit" className="w-full">Lưu thay đổi</Button>
+                            <Button type="submit" className="w-1/2 bg-amber-500 hover:bg-red-500">Lưu thay đổi</Button>
                         </div>
                     </form>
                 </Form>
