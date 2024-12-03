@@ -72,7 +72,7 @@ export default function Account() {
 
     const splitName = (name: string) => {
         const array = name.split(" ");
-        return (array[array.length - 2]?.at(0) || '') + (array[array.length - 1]?.at(0) || '');
+        return (array[array.length - 2]?.at(0) || '').toUpperCase() + (array[array.length - 1]?.at(0) || '').toUpperCase();
     }
 
     useEffect(() => {
