@@ -60,13 +60,14 @@ export function Checkout({ carts }: { carts: any[] }) {
   };
 
   const handlePayment = async () => {
+    const userId = sessionStorage.getItem("userId") || "";
     try {
       const result = await submitPayment(
         carts,
         total,
         discountId,
         paymentMethod,
-        "TEST",
+        userId,
       );
 
       if (result.success) {
