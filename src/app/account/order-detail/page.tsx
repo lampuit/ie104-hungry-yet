@@ -21,16 +21,62 @@ import {
 import Image from "next/image";
 import { Progress } from "@/components/ui/progress";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { useSearchParams } from "next/navigation";
+import { getInvoiceDetail } from "@/lib/data";
+import { useEffect, useState } from "react";
+import useSWR from "swr";
+
+const fetcherInvoiceDetail = async (invoiceId: string) => {
+    const data = await getInvoiceDetail(invoiceId);
+    return data;
+}
+
+function formatDate(date: Date) {
+    const d = new Date(date);
+    const day = String(d.getDate()).padStart(2, '0');  // Adds leading zero if day is single digit
+    const month = String(d.getMonth() + 1).padStart(2, '0');  // getMonth() is zero-indexed, so add 1
+    const year = d.getFullYear();
+
+    return `${day}/${month}/${year}`;
+}
 
 
 export default function OrderDetail() {
+    const searchParams = useSearchParams();
+    const invoiceId = searchParams.get("invoiceId");
+    const { data: invoice, error } = useSWR(invoiceId, fetcherInvoiceDetail);
+    console.log(invoice);
+    const splitInvoidId = (invoiceId: string) => invoiceId?.split("-").join("").substr(0, 15);
+
+    const convertToVND = (price: number) => {
+        return new Intl.NumberFormat("vi-VN", {
+            style: "currency",
+            currency: "VND",
+        }).format(price);
+    }
+
+    const totalMoney = invoice?.orders?.reduce((total, order) => total + order.products.price * order.quantity, 0);
+    let progressValue = 0;
+    const invoiceStatus = invoice?.status;
+    if (invoiceStatus === 'pending') {
+        progressValue = 23;
+    } else if (invoiceStatus === 'accepted') {
+        progressValue = 49;
+    } else if (invoiceStatus === 'cooking') {
+        progressValue = 74;
+    } else if (invoiceStatus === 'ready') {
+        progressValue = 74;
+    } else if (invoiceStatus === 'delivered') {
+        progressValue = 100;
+    }
+
     return (
         <div className="grow flex flex-col lg:px-8 gap-8 max-w-screen-lg mx-auto">
             <div className="flex flex-col gap-1">
                 <div className="flex flex-wrap gap-4 items-center">
                     <Button variant={"outline"}><Undo2 /></Button>
                     <h1 className="font-bold text-2xl">
-                        Mã đơn hàng: <span>xxxxxx</span>
+                        Mã đơn hàng: <span>{splitInvoidId(invoice?.id || '')}</span>
                     </h1>
                 </div>
                 <Breadcrumb>
@@ -49,9 +95,9 @@ export default function OrderDetail() {
                     </BreadcrumbList>
                 </Breadcrumb>
                 <div className="flex flex-wrap gap-4">
-                    <p className="text-gray-500 text-sm">Ngày đặt hàng: 22/12/2024</p>
+                    <p className="text-gray-500 text-sm">Ngày đặt hàng: {formatDate(invoice?.createdAt || new Date())}</p>
                     <p className="text-gray-500 text-sm">-</p>
-                    <p className="text-gray-500 text-sm">Trạng thái: Đang giao</p>
+                    <p className="text-gray-500 text-sm">Trạng thái: {invoice?.status === 'pending' ? "Đang giao" : invoice?.status === 'accepted' ? "Hoàn thành" : invoice?.status === 'cancelled' ? "Đã hủy" : "unknown"}</p>
                 </div>
             </div>
             <div className="flex flex-col lg:flex-row gap-4">
@@ -64,28 +110,28 @@ export default function OrderDetail() {
                         </CardHeader>
                         <CardContent>
                             <div className="grid gap-4 grid-cols-2 md:grid-cols-4">
-                                <div className="border-2 rounded p-4 flex flex-col">
+                                <div className={`border-2 rounded p-4 flex flex-col ${invoiceStatus === 'pending' ? 'bg-yellow-100' : ''}`}>
                                     <WalletCards />
                                     <p>Chờ xác nhận</p>
-                                    <CircleCheck className="stroke-green-600 fill-green-300" />
+                                    {invoiceStatus === 'pending' && <CircleCheck className="stroke-green-600 fill-green-300" />}
                                 </div>
-                                <div className="border-2 rounded p-4 flex flex-col">
+                                <div className={`border-2 rounded p-4 flex flex-col ${invoiceStatus === 'accepted' ? 'bg-yellow-100' : ''}`}>
                                     <CookingPot />
                                     <p>Đang chuẩn bị</p>
-                                    <CircleCheck />
+                                    {invoiceStatus === 'accepted' && <CircleCheck />}
                                 </div>
-                                <div className="border-2 rounded p-4 flex flex-col">
+                                <div className={`border-2 rounded p-4 flex flex-col ${invoiceStatus === 'cooking' ? 'bg-yellow-100' : ''}`}>
                                     <Package />
                                     <p>Chờ giao hàng</p>
-                                    <CircleCheck />
+                                    {invoiceStatus === 'cooking' && <CircleCheck />}
                                 </div>
-                                <div className="border-2 rounded p-4 flex flex-col">
+                                <div className={`border-2 rounded p-4 flex flex-col ${invoiceStatus === 'delivered' ? 'bg-yellow-100' : ''}`}>
                                     <Truck />
                                     <p>Giao thành công</p>
-                                    <CircleCheck />
+                                    {invoiceStatus === 'ready' && <CircleCheck />}
                                 </div>
                             </div>
-                            <Progress className="mt-4 h-2" value={23} />
+                            <Progress className="mt-4 h-2" value={progressValue} />
                         </CardContent>
                     </Card>
                     {/* Chi tiết đơn hàng */}
@@ -104,18 +150,18 @@ export default function OrderDetail() {
                                     </TableRow>
                                 </TableHeader>
                                 <TableBody>
-                                    {[...Array(4)].map((_, index) => (
+                                    {invoice?.orders?.map((order, index) => (
                                         <TableRow key={index}>
                                             <TableCell className="font-medium">
                                                 <div className="flex gap-4 justify-center items-center">
-                                                    <Image src={"/images/square.jpg"} alt="" width={100} height={100} className="rounded" />
+                                                    <Image src={order?.products?.imageUrl} alt="" width={100} height={100} className="rounded" />
                                                 </div>
                                             </TableCell>
                                             <TableCell className="font-semibold">
-                                                Cơm chiên dương châu
+                                                {order?.products.name}
                                             </TableCell>
-                                            <TableCell className="text-center">x1</TableCell>
-                                            <TableCell className="text-center">45000đ</TableCell>
+                                            <TableCell className="text-center">x{order?.quantity}</TableCell>
+                                            <TableCell className="text-center">{convertToVND(order?.quantity * order?.products?.price)}</TableCell>
                                         </TableRow>
                                     ))}
                                 </TableBody>
@@ -131,11 +177,11 @@ export default function OrderDetail() {
                     <CardContent className="py-4">
                         <div className="bg-gray-100 grid grid-cols-2 p-4 rounded">
                             <div>Tạm tính:</div>
-                            <div className="flex justify-end font-semibold">100000đ</div>
+                            <div className="flex justify-end font-semibold">{convertToVND(totalMoney ?? 0)}</div>
                             <div>Giảm giá:</div>
-                            <div className="flex justify-end font-semibold">10000đ</div>
+                            <div className="flex justify-end font-semibold">{convertToVND((invoice?.discount?.discount ?? 0) * ((invoice?.totalAmount ?? 0) / 100))}</div>
                             <div className="mt-4 border-t-2 h-8 font-semibold">Tổng cộng: </div>
-                            <div className="flex justify-end font-semibold mt-4 border-t-2 h-8">90000đ</div>
+                            <div className="flex justify-end font-semibold mt-4 border-t-2 h-8">{convertToVND(invoice?.totalAmount ?? 0)}</div>
                             <div>(Đã bao gồm VAT)</div>
                         </div>
                     </CardContent>

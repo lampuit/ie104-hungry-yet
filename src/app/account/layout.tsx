@@ -81,7 +81,7 @@ export default function Layout({
                 <div className="flex flex-col gap-6 bg-white rounded p-6 shadow-md w-72">
                     <div className="flex mb-4 gap-2 items-center w-full border-b-2 px-4 pb-4">
                         <Avatar>
-                            <AvatarImage src={user?.[0].imageUrl ?? undefined} />
+                            <AvatarImage src={user?.[0]?.imageUrl ?? undefined} />
                             <AvatarFallback>{shortName}</AvatarFallback>
                         </Avatar>
                         <p className="text-sm font-semibold">{name}</p>
@@ -106,13 +106,6 @@ export default function Layout({
                     >
                         <Heart className="stroke-red-500" />
                         <p>Danh mục yêu thích</p>
-                    </div>
-                    <div
-                        onClick={() => handleClick("Cài đặt", "/account/setting")}
-                        className={activePath === "Cài đặt" ? "flex gap-3 shadow p-2 rounded-md" : "flex gap-3"}
-                    >
-                        <Settings className="stroke-gray-500" />
-                        <p>Cài đặt</p>
                     </div>
                     <Button
                         variant={"outline"}

@@ -1,13 +1,55 @@
 "use client";
 
-import { AccountCardHistory } from "@/components/account/card-history";
+import { CardHistory } from "@/components/account/card-history";
+import { getInvoiceByUserId } from "@/lib/data";
+import useSWR from "swr";
+import LoadingSpinner from "@/components/ui/loading-spinner";
+import { useEffect, useState} from "react";
+
+const fetcherInvoiceAccepted = async (userId: string) => {
+    return getInvoiceByUserId(userId, "accepted");
+}
 
 export default function Complete() {
+    const [userId, setUserId] = useState<string | null>(null);
+
+    useEffect(() => {
+        const storedUserId = sessionStorage.getItem("userId");
+        if (storedUserId) {
+            setUserId(storedUserId);
+        } else {
+            console.error("No userId found in localStorage");
+        }
+    }, []);
+
+    const { data: listInvoices, isLoading, error, mutate } = useSWR(userId ? `invoice-${userId}` : null, () => fetcherInvoiceAccepted(userId as string),
+        {
+            revalidateOnFocus: false,
+            revalidateOnReconnect: false,
+            refreshInterval: 0,
+            onError: (err) => {
+                console.error("Error fetching favorite data", err);
+            }
+        });
+
+    if (error) {
+        console.error("Error loading data", error);
+    }
+
+    useEffect(() => {
+        if (error) {
+            console.error("SWR error:", error);
+            mutate(); // Retry on error
+        }
+    }, [error, mutate]);
     return (
-        <div className="bg-white rounded-lg shadow-md flex flex-col gap-2">
-            <AccountCardHistory />
-            <AccountCardHistory />
-            <AccountCardHistory />
-        </div>
+        isLoading ? <LoadingSpinner /> :
+            <div className="bg-white rounded-lg shadow-md flex flex-col gap-2">
+                {
+                    listInvoices?.map((invoice: any) => {
+                        return <CardHistory key={invoice.id} invoice={invoice} />
+                    })
+                }
+            </div>
     )
 }
