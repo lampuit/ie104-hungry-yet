@@ -138,7 +138,7 @@ export const invoices = pgTable("invoices", {
 });
 
 // Relation: 1 invoice - 1 shipper,1 invoices - 1 customer, 1 invoice - payment, 1 invoice - discount, 1 invoice -> 1 cook
-export const invoicesRelations = relations(invoices, ({ one }) => ({
+export const invoicesRelations = relations(invoices, ({ one, many }) => ({
   customer: one(user, {
     fields: [invoices.customerId],
     references: [user.id],
@@ -159,6 +159,7 @@ export const invoicesRelations = relations(invoices, ({ one }) => ({
     fields: [invoices.discountId],
     references: [payments.id],
   }),
+  orders: many(orders),
 }));
 
 // Bảng Orders (Đặt hàng)
@@ -174,7 +175,7 @@ export const orders = pgTable("orders", {
   updatedAt: timestamp("updatedAt")
     .notNull()
     .$onUpdate(() => new Date()),
-});
+},);
 
 // Relation: 1 user -> 1 order
 export const ordersRelations = relations(orders, ({ one, many }) => ({
@@ -182,11 +183,14 @@ export const ordersRelations = relations(orders, ({ one, many }) => ({
     fields: [orders.invoiceId],
     references: [invoices.id],
   }),
-  products: one(invoices, {
-    fields: [orders.invoiceId],
-    references: [invoices.id],
-  }),
-  invoices: many(invoices),
+  // invoices: one(invoices, {
+  //   fields: [orders.invoiceId],
+  //   references: [invoices.id],
+  // }),
+  products: one(products, {
+    fields: [orders.productId],
+    references: [products.id],
+  }), // 1 order - 1 product
 }));
 
 // Bảng Payments (Thanh toán)

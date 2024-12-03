@@ -30,7 +30,6 @@ export async function submitPayment(
         discountId,
         totalAmount,
         status: "pending",
-        deliveryAddress: "",
       })
       .returning();
 

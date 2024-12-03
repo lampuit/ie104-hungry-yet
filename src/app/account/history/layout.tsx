@@ -15,16 +15,6 @@ export default function Layout({
     const router = useRouter();
     const [activeButton, setActiveButton] = useState<string>("Đang giao");
 
-    // useEffect(() => {
-    //     if (pathname === "/account/history/complete") {
-    //         setActiveButton("Hoàn thành");
-    //     } else if (pathname === "/account/history/cancel") {
-    //         setActiveButton("Đã hủy");
-    //     } else {
-    //         setActiveButton("Đang giao");
-    //     }
-    // }, [pathname]);
-
     const handleButtonClick = (buttonName: string, path: string) => {
         setActiveButton(buttonName);
         router.push(path);
@@ -36,18 +26,21 @@ export default function Layout({
                 <div className="flex flex-col gap-5 w-full">
                     <div className="flex gap-4 justify-around bg-white rounded-lg p-2 shadow-md">
                         <Button
+                            className={activeButton === "Đang giao" ? "bg-slate-200" : ""}
                             variant={activeButton === "Đang giao" ? "secondary" : "ghost"}
                             onClick={() => handleButtonClick("Đang giao", "/account/history")}
                         >
                             <Package /> Đang giao
                         </Button>
                         <Button
+                            className={activeButton === "Hoàn thành" ? "bg-slate-200" : ""}
                             variant={activeButton === "Hoàn thành" ? "secondary" : "ghost"}
                             onClick={() => handleButtonClick("Hoàn thành", "/account/history/complete")}
                         >
                             <PackageCheck /> Hoàn thành
                         </Button>
                         <Button
+                            className={activeButton === "Đã hủy" ? "bg-slate-200" : ""}
                             variant={activeButton === "Đã hủy" ? "secondary" : "ghost"}
                             onClick={() => handleButtonClick("Đã hủy", "/account/history/cancel")}
                         >

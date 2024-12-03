@@ -2,6 +2,7 @@
 
 import { columns } from "@/components/checkout/columns";
 import { DataTable } from "@/components/checkout/data-table";
+import { DiscountForm } from "@/components/checkout/discount-form";
 import { InformationForm } from "@/components/checkout/information-form";
 import { OrderSummary } from "@/components/checkout/order-summary";
 import { PaymentForm } from "@/components/checkout/payment-form";
@@ -15,6 +16,7 @@ import {
 } from "@/components/ui/card";
 import { Form } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import { ToastAction } from "@/components/ui/toast";
 import { useToast } from "@/hooks/use-toast";
 import { submitPayment } from "@/lib/actions/submit-payment";
 import { fetchValidDiscount } from "@/lib/data";
@@ -38,12 +40,9 @@ export function Checkout({ carts }: { carts: any[] }) {
   const router = useRouter();
   const { toast } = useToast();
 
-  const [isPending, setIsPending] = useState(true);
   const [paymentMethod, setPaymentMethod] = useState("momo");
-  const [discountCode, setDiscountCode] = useState("");
   const [discount, setDiscount] = useState(0);
   const [discountId, setDiscountId] = useState<string | undefined>();
-  const [submitting, setSubmitting] = useState(false);
 
   const subtotal: number = carts.reduce(
     (acc, cart) => acc + cart.product.price * cart.quantity,
@@ -51,8 +50,6 @@ export function Checkout({ carts }: { carts: any[] }) {
   );
 
   const total = subtotal;
-
-  const userId = sessionStorage.getItem("userId") as string;
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -62,31 +59,6 @@ export function Checkout({ carts }: { carts: any[] }) {
     // TEST
   };
 
-  const applyDiscount = async () => {
-    try {
-      const discountResult = await fetchValidDiscount(discountCode);
-      if (discountResult?.discount) {
-        setDiscount((discountResult.discount / 100) * subtotal);
-        setDiscountId(discountResult.id);
-        toast({
-          title: "Thành Công",
-          description: "Mã giảm giá áp dụng thành công!",
-        });
-      } else {
-        setDiscount(0);
-        setDiscountId(undefined);
-        toast({
-          title: "Mã Không Hợp Lệ",
-          description: "Mã giảm giá không hợp lệ hoặc hết hạn.",
-          variant: "destructive",
-        });
-      }
-    } catch (error) {
-      setDiscount(0);
-      setDiscountId(undefined);
-    }
-  };
-
   const handlePayment = async () => {
     try {
       const result = await submitPayment(
@@ -94,7 +66,7 @@ export function Checkout({ carts }: { carts: any[] }) {
         total,
         discountId,
         paymentMethod,
-        userId
+        "TEST",
       );
 
       if (result.success) {
@@ -110,7 +82,16 @@ export function Checkout({ carts }: { carts: any[] }) {
       } else {
         throw new Error(result.error || "Payment failed");
       }
-    } catch (error) {}
+    } catch (error) {
+      if (error instanceof Error) {
+        toast({
+          variant: "destructive",
+          title: "Thanh Toán Lỗi",
+          description: error.message,
+          action: <ToastAction altText="Thử lại">Thử lại</ToastAction>,
+        });
+      }
+    }
   };
 
   return (
@@ -135,23 +116,12 @@ export function Checkout({ carts }: { carts: any[] }) {
                 total={total}
               />
             </CardContent>
-            <CardFooter className="flex-col space-y-2">
-              <div className="flex w-full space-x-2">
-                <Input
-                  placeholder="Nhập mã giảm giá"
-                  value={discountCode}
-                  onChange={(e) => setDiscountCode(e.target.value)}
-                />
-                <Button type="button" onClick={applyDiscount}>
-                  Áp dụng
-                </Button>
-              </div>
-              {discount > 0 && (
-                <p className="text-sm text-green-600">
-                  Áp dụng mã &quot;{discountCode}&quot; thành công!
-                </p>
-              )}
-            </CardFooter>
+            <DiscountForm
+              subtotal={subtotal}
+              discount={discount}
+              onDiscountChange={setDiscount}
+              onDiscountIdChange={setDiscountId}
+            />
           </Card>
           <PaymentForm
             paymentMethod={paymentMethod}
