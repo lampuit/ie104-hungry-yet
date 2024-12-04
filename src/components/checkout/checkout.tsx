@@ -30,9 +30,9 @@ import useSWR from "swr";
 
 // Lấy userId từ session
 const fetcherUserId = async () => {
-    const response = await getSession();
-    const userId = response?.data?.user?.id as string;
-    return userId;
+  const response = await getSession();
+  const userId = response?.data?.user?.id as string;
+  return userId;
 };
 
 const formSchema = z.object({
@@ -53,7 +53,7 @@ export function Checkout({ carts }: { carts: any[] }) {
   const [discountId, setDiscountId] = useState<string | undefined>();
 
   const subtotal: number = carts.reduce(
-    (acc, cart) => acc + cart.product.price * cart.quantity,
+    (acc, cart) => acc + cart?.product?.price * cart?.quantity,
     0,
   );
 
@@ -63,11 +63,7 @@ export function Checkout({ carts }: { carts: any[] }) {
     resolver: zodResolver(formSchema),
   });
 
-  const onSubmit = (values: z.infer<typeof formSchema>) => {
-    // TEST
-  };
-
-  const handlePayment = async () => {
+  const onSubmit = async (values: z.infer<typeof formSchema>) => {
     try {
       if (!userId) {
         throw new Error("User ID is required for payment");
@@ -79,6 +75,8 @@ export function Checkout({ carts }: { carts: any[] }) {
         discountId,
         paymentMethod,
         userId || "",
+        `${values.street} ${values.ward || ''} ${values.district || ''} ${values.province || ''}`,
+        40
       );
 
       if (result.success) {
@@ -138,7 +136,7 @@ export function Checkout({ carts }: { carts: any[] }) {
           <PaymentForm
             paymentMethod={paymentMethod}
             onPaymentMethodChange={setPaymentMethod}
-            onSubmit={handlePayment}
+            onSubmit={form.handleSubmit(onSubmit)}
           />
         </div>
       </form>
