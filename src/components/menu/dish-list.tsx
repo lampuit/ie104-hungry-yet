@@ -10,6 +10,7 @@ import useSWR from 'swr';
 import { getAllProducts, getFavoriteByUserId } from '@/lib/data';
 import LoadingSpinner from '../ui/loading-spinner';
 import { getSession } from "@/lib/auth-client";
+import Image from 'next/image';
 
 // Lấy userId từ session
 const fetcherUserId = async () => {
@@ -147,12 +148,16 @@ export const DishList = ({ dishesList }: DishListProps) => {
                             )
                         }
                     >
-                        <img
-                            src={dish.image}
-                            alt={dish.name}
-                            onClick={() => handleProductOnClick(dish.id)}
-                            className="w-full h-80 rounded-3xl object-cover"
-                        />
+                        <div className='w-80 h-80 relative'>
+                            <Image src={dish.image}
+                                alt={dish.name}
+                                layout="fill"
+                                objectFit='cover'
+                                objectPosition='center'
+                                className='rounded-3xl p-2'
+                                onClick={() => handleProductOnClick(dish.id)}>
+                            </Image>
+                        </div>
                         <div
                             className={`flex flex-col ${favorites.find(fav => fav.productId === dish.id)?.isHovered
                                     ? 'justify-start'

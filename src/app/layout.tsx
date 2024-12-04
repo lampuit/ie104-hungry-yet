@@ -12,6 +12,7 @@ import { use, useEffect, useState } from "react";
 import { metadata } from "./metadata";
 import { usePathname } from "next/navigation";
 import useSWR from "swr";
+import Footer from "@/components/ui/footer";
 
 // Font chữ chính cho toàn bộ trang web
 export const montserrat = Montserrat({
@@ -39,16 +40,22 @@ export default function RootLayout({
   const isDashboardPath = pathname.startsWith("/dashboard");
   const isLoginPath = pathname.startsWith("/login");
   const isRegisterPath = pathname.startsWith("/signup");
+  const isAccountPath = pathname.startsWith("/account");
 
   return (
     <html lang="en">
-      <body className={`${montserrat.className} overflow-x-hidden`}>
+      <body className={`${montserrat.className} overflow-x-clip min-h-screen flex flex-col`}>
         {!isDashboardPath && !isLoginPath && !isRegisterPath && (
           <div className="flex justify-center w-screen bg-black z-10">
             {userId ? <AuthorizedNavbar /> : <UnauthorizedNavbar />}
           </div>
         )}
-        {children}
+        <div className="grow">
+          {children}
+        </div>
+        {!isDashboardPath && !isLoginPath && !isRegisterPath && (
+          <Footer />
+        )}
         <Toaster />
         <Sonner />
       </body>

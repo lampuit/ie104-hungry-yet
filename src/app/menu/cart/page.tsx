@@ -16,7 +16,6 @@ import { getCartsByUserId } from "@/lib/data";
 import useSWR from "swr";
 import React, { useState, useEffect } from "react";
 import LoadingSpinner from "@/components/ui/loading-spinner";
-import Footer from "@/components/ui/footer";
 import { getSession } from "@/lib/auth-client";
 
 //get shopping cart by userId
@@ -88,7 +87,7 @@ export default function CartPage() {
   }
 
   return (
-    <main>
+    <main className="grow flex flex-col h-full">
       <section className="my-10 mx-10 w-72 text-base font-semibold">
         <Breadcrumb>
           <BreadcrumbList>
@@ -106,15 +105,12 @@ export default function CartPage() {
           </BreadcrumbList>
         </Breadcrumb>
       </section>
-      <section>
-        <div className="flex flex-col justify-center items-center">
-          <DataTable columns={columns} data={dishes} onQuantityChange={handleQuantityChange}></DataTable>
-        </div>
+      <section className="flex flex-col justify-center items-center">
+        <DataTable columns={columns} data={dishes} onQuantityChange={handleQuantityChange}></DataTable>
       </section>
-      <section className="mx-10 py-5">
+      <section className="grow flex flex-col justify-end mx-10 py-5">
         <Summary totalAmount={formattedTotalAmount} />
       </section>
-      <Footer />
     </main>
   );
 }
