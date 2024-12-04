@@ -112,11 +112,6 @@ export function CardHistory({ invoice }: { invoice: Invoice }) {
                                 </DialogFooter>
                             </DialogContent>
                         </Dialog>
-
-                        {/* <Button variant={"outline"} className="w-auto text-xs">
-                            <Star />
-                            Đánh giá
-                        </Button> */}
                         <Button className="bg-amber-500 w-auto text-xs">
                             <RefreshCcw />
                             Mua lại

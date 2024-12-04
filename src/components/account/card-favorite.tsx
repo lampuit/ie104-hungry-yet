@@ -94,7 +94,7 @@ export function AccountFavorite({ listFavorite, isLoading, mutate }: { listFavor
                     </div >
                     {/* Nút xóa yêu thích */}
                     <div className="absolute top-1 right-1">
-                        <TooltipProvider>
+                        <TooltipProvider delayDuration={200} skipDelayDuration={500}>
                             <Tooltip>
                                 <TooltipTrigger asChild>
                                     <Button
