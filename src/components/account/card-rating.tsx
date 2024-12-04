@@ -1,13 +1,21 @@
 import { Camera, Star } from "lucide-react";
 import { Input } from "../ui/input";
 import { Button } from "../ui/button";
+import Image from "next/image";
 
 
 export function AccountRating() {
     return (
         <div className="flex flex-col gap-3 px-3 py-6">
             <div className="flex gap-4 items-center">
-                <img src="/images/appetizers.jpg" alt="" className="w-20 h-20" />
+                <div className="relative w-20 h-20">
+                    <Image src={"/images/appetizers.jpg"}
+                        alt="..."
+                        layout="fill"
+                        objectFit="cover"
+                        objectPosition="center">
+                    </Image>
+                </div>
                 <p>Tên món ăn</p>
             </div>
             <div className="flex gap-6">

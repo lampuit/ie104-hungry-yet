@@ -15,7 +15,6 @@ import { Testimonials } from "@/components/home/testimonials";
 import { HorizontalLine } from "@/components/home/intro";
 import { FAQ } from "@/components/home/faq";
 import { Charm } from "next/font/google";
-import Footer from "@/components/ui/footer"
 
 const charm = Charm({
   subsets: ["vietnamese"],
@@ -74,7 +73,7 @@ export default function Homepage() {
             <HorizontalLine />
           </div>
           <Button asChild className="bg-black hover:bg-red-500 rounded-3xl">
-            <Link href={"#"}>Xem triển lãm</Link>
+            <Link href={"/exhibition"}>Xem triển lãm</Link>
           </Button>
         </div>
         <div className="flex justify-center">
@@ -100,8 +99,6 @@ export default function Homepage() {
           <FAQ />
         </ScrollArea>
       </section>
-
-      <Footer />
     </main>
   );
 }
