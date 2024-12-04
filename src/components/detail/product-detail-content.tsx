@@ -21,6 +21,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "../ui/button";
 import { getSession } from "@/lib/auth-client";
 import { useRouter } from "next/navigation";
+import Image from "next/image";
 
 interface Dish {
     categoryId: string;
@@ -181,7 +182,15 @@ export function ProductDetailContent({ id }: { id: string }) {
         <section>
             <section className="w-full flex justify-center">
                 <div className="flex border p-5 gap-12 items-center justify-between w-4/5 max-w-5xl rounded-md">
-                    <img src={dish.imageUrl} alt={dish.name} className="w-80 h-80" />
+                    <div className="w-80 h-80 relative">
+                        <Image
+                            src={dish.imageUrl}
+                            alt={dish.name}
+                            layout="fill"
+                            objectFit="cover"
+                            objectPosition="center"
+                        />
+                    </div>
                     <div className="grow flex flex-col justify-start gap-16 p-5 h-full">
                         <div className="space-y-2 ">
                             <div className="flex justify-between items-center gap-7">

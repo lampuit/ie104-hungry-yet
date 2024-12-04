@@ -131,7 +131,6 @@ export default function Layout({
                 </div>
                 {children}
             </div>
-            <footer className="bg-black h-64"></footer>
         </main>
     );
 }
