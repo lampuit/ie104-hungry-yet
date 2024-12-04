@@ -13,8 +13,44 @@ import { Input } from "@/components/ui/input";
 import { PhoneInput } from "@/components/ui/phone-input";
 import { Textarea } from "@/components/ui/textarea";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { getUserById } from "@/lib/data";
+import useSWR from "swr";
+import { getSession } from "@/lib/auth-client";
+import LoadingSpinner from "../ui/loading-spinner";
+import { useEffect } from "react";
+
+const fetcherUserId = async () => {
+  const response = await getSession();
+  const userId = response?.data?.user?.id as string;
+  return userId;
+}
+
+const fetcherUser = async (userId: string) => {
+  return await getUserById(userId);
+}
 
 export function InformationForm({ form }: { form: any }) {
+  const { data: userId, error: errorGetUserId } = useSWR("userId", fetcherUserId);
+  if (errorGetUserId) {
+    return <div>Có lỗi xảy ra khi lấy userId</div>
+  }
+  const { data: user, isLoading } = useSWR(userId, fetcherUser);
+  if (isLoading || !user) {
+    return <LoadingSpinner />
+  }
+
+  useEffect(() => {
+    if (user) {
+      form.reset({
+        street: user[0]?.address || "",
+        province: "",
+        district: "",
+        ward: "",
+        phone: user[0]?.phone || "",
+        note: "",
+      });
+    }
+  }, [user, form]);
   return (
     <Card>
       <CardHeader>

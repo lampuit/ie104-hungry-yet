@@ -16,7 +16,6 @@ export function Categories() {
 
     useEffect(() => {
         getAllProducts().then(data => {
-            console.log("Fetched products:", data);
             setProducts([...data, ...data]); // Duplicate the list for infinite scroll
         }).catch(error => {
             console.error("Error fetching products:", error);
