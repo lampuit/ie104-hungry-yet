@@ -18,7 +18,17 @@ import {
     AlertDialogTrigger,
 } from "@/components/ui/alert-dialog"
 import { toast } from "sonner"
-import { mutate } from "swr"
+import useSWR, { mutate } from "swr"
+import { getSession } from "@/lib/auth-client";
+
+// Lấy userId từ session
+const fetcherUserId = async () => {
+    const response = await getSession();
+    const userId = response?.data?.user?.id as string;
+    return userId;
+};
+
+let userId: string | undefined;
 
 export type Cart = {
     id: string
@@ -34,12 +44,19 @@ type CartTableMeta = {
     onQuantityChange: (id: string, newQuantity: number) => void
 }
 
+
 const AmountCell = ({ row, table }: { row: any; table: any }) => {
+
+    const { data } = useSWR('userId', fetcherUserId);
+    userId = data;
     const [amount, setAmount] = useState(row.original.amount);
 
-    const handleChangeAmount = (quantity: number) => {
+    const handleChangeAmount = async (quantity: number) => {
         const formData = new FormData();
-        formData.append("userId", sessionStorage.getItem("userId") as string);
+        const resolvedUserId = await userId;
+        if (resolvedUserId) {
+            formData.append("userId", resolvedUserId);
+        }
         formData.append("productId", row.original.id);
         formData.append("quantity", quantity.toString());
         updateCarts(formData);
@@ -80,18 +97,17 @@ const AmountCell = ({ row, table }: { row: any; table: any }) => {
 
 const FavoriteCell = ({ row }: { row: any }) => {
     const [isFavorite, setIsFavorite] = useState(row.original.isFavorite);
-    const userId = sessionStorage.getItem("userId") as string;
 
     const handleDeleteFavorite = async () => {
         const id = row.original.id;
-        await deleteFavorite(userId, id)
+        await deleteFavorite(userId || "", id)
         setIsFavorite(false);
     };
 
     const handleUpdateFavorite = async () => {
         const data = new FormData();
         data.append("productId", row.original.id);
-        data.append("userId", userId);
+        data.append("userId", userId || "");
         await createFavorite(data);
         setIsFavorite(true);
     }
@@ -148,8 +164,7 @@ export const columns: ColumnDef<Cart>[] = [
         cell: ({ row }) => {
             const handleDeleteItem = async () => {
                 const id = row.original.id;
-                const userId = sessionStorage.getItem("userId") as string;
-                await deletecarts(id, userId)
+                await deletecarts(id, userId || "");
                 mutate(userId);
                 toast("Xoá thành công")
             }

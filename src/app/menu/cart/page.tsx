@@ -10,7 +10,6 @@ import {
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
 import { Summary } from "@/components/menu/cart/summary";
-import { redirect } from "next/navigation";
 import { columns } from "@/components/menu/cart/columns";
 import { DataTable } from "@/components/menu/cart/data-table";
 import { getCartsByUserId } from "@/lib/data";
@@ -18,14 +17,22 @@ import useSWR from "swr";
 import React, { useState, useEffect } from "react";
 import LoadingSpinner from "@/components/ui/loading-spinner";
 import Footer from "@/components/ui/footer";
+import { getSession } from "@/lib/auth-client";
 
 //get shopping cart by userId
 const fetcher = async (userId: string) => {
   return getCartsByUserId(userId);
 };
 
+// Lấy session
+const fetcherUserId = async () => {
+  const response = await getSession();
+  const userId = response?.data?.user?.id as string;
+  return userId;
+};
+
 export default function CartPage() {
-  const userId = sessionStorage.getItem("userId");
+  const { data: userId } = useSWR('userId', fetcherUserId);
   const { data: listDish, isLoading, error, mutate } = useSWR(userId, fetcher, {
     revalidateIfStale: true,
     revalidateOnFocus: false,

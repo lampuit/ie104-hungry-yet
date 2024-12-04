@@ -74,7 +74,7 @@ export default function Homepage() {
             <HorizontalLine />
           </div>
           <Button asChild className="bg-black hover:bg-red-500 rounded-3xl">
-            <Link href={"#"}>Xem triển lãm</Link>
+            <Link href={"/exhibition"}>Xem triển lãm</Link>
           </Button>
         </div>
         <div className="flex justify-center">

@@ -12,7 +12,6 @@ import { use, useEffect, useState } from "react";
 import { metadata } from "./metadata";
 import { usePathname } from "next/navigation";
 import useSWR from "swr";
-import { se } from "date-fns/locale";
 
 // Font chữ chính cho toàn bộ trang web
 export const montserrat = Montserrat({
@@ -21,7 +20,7 @@ export const montserrat = Montserrat({
 });
 
 // Lấy session
-const fetcher = async () => {
+const fetcherUserId = async () => {
   const response = await getSession();
   const userId = response?.data?.user?.id as string;
   return userId;
@@ -33,15 +32,7 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const { data: userId, error } = useSWR('userId', fetcher);
-
-  useEffect(() => {
-    if (userId !== undefined && userId !== null) {
-      sessionStorage.setItem('userId', userId);
-    } else if (error) {
-      console.error("Failed to fetch user session:", error);
-    }
-  }, [userId]);
+  const { data: userId } = useSWR('userId', fetcherUserId);
 
   const pathname = usePathname();
 
