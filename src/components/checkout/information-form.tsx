@@ -31,16 +31,10 @@ const fetcherUser = async (userId: string) => {
 
 export function InformationForm({ form }: { form: any }) {
   const { data: userId, error: errorGetUserId } = useSWR("userId", fetcherUserId);
-  if (errorGetUserId) {
-    return <div>Có lỗi xảy ra khi lấy userId</div>
-  }
   const { data: user, isLoading } = useSWR(userId, fetcherUser);
-  if (isLoading || !user) {
-    return <LoadingSpinner />
-  }
 
   useEffect(() => {
-    if (user) {
+    if (userId && user) {
       form.reset({
         street: user[0]?.address || "",
         province: "",
@@ -51,6 +45,11 @@ export function InformationForm({ form }: { form: any }) {
       });
     }
   }, [user, form]);
+
+  if (isLoading || !user || errorGetUserId || !userId) {
+    return <LoadingSpinner />
+  }
+
   return (
     <Card>
       <CardHeader>
