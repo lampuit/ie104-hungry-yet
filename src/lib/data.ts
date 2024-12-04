@@ -11,7 +11,7 @@ import {
   assigments,
   discounts,
   invoices,
-  orders
+  orders,
 } from "@/drizzle/schema/project";
 import { user } from "@/drizzle/schema/auth";
 import { eq, and, getTableColumns, lte, gte, isNull, or } from "drizzle-orm";
@@ -218,8 +218,8 @@ export async function getCartsByUserId(userId: string) {
         with: {
           category: true,
           favorites: {
-            where: eq(favorites.userId, userId)
-          }
+            where: eq(favorites.userId, userId),
+          },
         },
       },
     },
@@ -262,7 +262,7 @@ export async function getRatingsByProductId(id: string) {
         },
       },
     },
-  })
+  });
 }
 
 export async function getUserWorkShift() {
@@ -270,7 +270,24 @@ export async function getUserWorkShift() {
 }
 
 export async function getInvoiceByUserId(userId: string, status: string) {
-  return await db.select().from(invoices).where(and(eq(invoices.customerId, userId), eq(invoices.status, status as 'pending' | 'accepted' | 'cooking' | 'ready' | 'delivered' | 'cancelled')));
+  return await db
+    .select()
+    .from(invoices)
+    .where(
+      and(
+        eq(invoices.customerId, userId),
+        eq(
+          invoices.status,
+          status as
+            | "pending"
+            | "accepted"
+            | "cooking"
+            | "ready"
+            | "delivered"
+            | "cancelled",
+        ),
+      ),
+    );
 }
 
 export async function getInvoiceDetail(id: string) {
@@ -284,11 +301,10 @@ export async function getInvoiceDetail(id: string) {
             with: {
               category: true,
             },
-          }
-        }
+          },
+        },
       },
       discount: true,
-    }
-  })
-
+    },
+  });
 }

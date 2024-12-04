@@ -1,28 +1,26 @@
 "use client";
 
-import { getFavoriteByUserId, getProductById, getRatingsByProductId } from "@/lib/data";
-import { useSearchParams, useRouter } from "next/navigation";
-import { use, useEffect, useState } from "react";
+import {
+    getFavoriteByUserId,
+    getProductById,
+    getRatingsByProductId,
+} from "@/lib/data";
+import { useEffect, useState } from "react";
 import useSWR from "swr";
 import LoadingSpinner from "../ui/loading-spinner";
 import { createFavorite, deleteFavorite } from "@/lib/actions/favorite";
 import { toast } from "@/hooks/use-toast";
 import { createCart } from "@/lib/actions/cart";
-import { Heart, MessageCircleMore, ShoppingCart, Star } from "lucide-react";
-import { Badge } from "@/components/ui/badge"
+import {
+    Heart,
+    MessageCircleMore,
+    ShoppingCart,
+    Star,
+} from "lucide-react";
+import { Badge } from "@/components/ui/badge";
 import { Button } from "../ui/button";
-
-const fetcher = async (id: string) => {
-    return await getProductById({ id });
-}
-
-const favoriteFetcher = async (userId: string) => {
-    return await getFavoriteByUserId(userId);
-}
-
-export const ratingFetcher = async (id: string) => {
-    return await getRatingsByProductId(id);
-}
+import { getSession } from "@/lib/auth-client";
+import { useRouter } from "next/navigation";
 
 interface Dish {
     categoryId: string;
@@ -35,35 +33,58 @@ interface Dish {
     name: string;
 }
 
-export const ProductDetail = () => {
-    const searchParams = useSearchParams();
-    const id = searchParams.get("id") || "";
-    const userId = sessionStorage.getItem("userId") || "";
-    const { data: ratingData, error: ratingError } = useSWR(`product-${id}`, () => ratingFetcher(id));
-    const { data: productData, error: productError } = useSWR(id, fetcher);
-    const { data: favoriteData, error: favoriteError } = useSWR(userId, favoriteFetcher);
+// Lấy userId từ session
+const fetcherUserId = async () => {
+    const response = await getSession();
+    const userId = response?.data?.user?.id as string;
+    return userId;
+};
+
+const fetcher = async (id: string) => {
+    return await getProductById({ id });
+};
+
+const favoriteFetcher = async (userId: string) => {
+    return await getFavoriteByUserId(userId);
+};
+
+const ratingFetcher = async (id: string) => {
+    return await getRatingsByProductId(id);
+};
+export function ProductDetailContent({ id }: { id: string }) {
+    const { data: userId } = useSWR("userId", fetcherUserId);
+    const { data: ratingData } = useSWR(`product-${id}`, () =>
+        ratingFetcher(id)
+    );
+    const { data: productData } = useSWR(id, fetcher);
+    const { data: favoriteData } = useSWR(userId, favoriteFetcher);
+
     const [favorite, setFavorite] = useState<boolean>(false);
     const router = useRouter();
-
 
     useEffect(() => {
         if (productData && favoriteData) {
             const checkFavorite = (productId: string) => {
-                return favoriteData.some((item: any) => item.productId === productId);
+                return favoriteData.some(
+                    (item: any) => item.productId === productId
+                );
             };
 
             setFavorite(checkFavorite(productData[0]?.id));
         }
     }, [productData, favoriteData]);
 
-    if (productError || favoriteError || ratingError) return <div>Error loading data.</div>;
     if (!productData || !favoriteData || !ratingData) {
         return <LoadingSpinner />;
     }
 
-    const averageRating = ratingData.length > 0
-        ? ratingData.reduce((acc: number, item: any) => acc + (item.star || 0), 0) / ratingData.length
-        : 0;
+    const averageRating =
+        ratingData.length > 0
+            ? ratingData.reduce(
+                (acc: number, item: any) => acc + (item.star || 0),
+                0
+            ) / ratingData.length
+            : 0;
 
     const dish: Dish = {
         categoryId: productData[0]?.categoryId || "",
@@ -76,17 +97,19 @@ export const ProductDetail = () => {
         name: productData[0]?.name,
     };
 
-    const handleFavoriteOnClick = async (productId: string, productName: string) => {
+    const handleFavoriteOnClick = async (
+        productId: string,
+        productName: string
+    ) => {
         if (!userId) {
             router.push("/login");
         }
         if (!favorite) {
             const formData = new FormData();
-            formData.append("userId", userId);
+            formData.append("userId", userId || "");
             formData.append("productId", productId);
             try {
                 await createFavorite(formData);
-                console.log("Favorite added");
                 toast({
                     description: `Đã thêm ${productName.toLowerCase()} vào mục yêu thích`,
                 });
@@ -100,8 +123,7 @@ export const ProductDetail = () => {
             }
         } else {
             try {
-                await deleteFavorite(userId, productId);
-                console.log("Favorite removed");
+                await deleteFavorite(userId || "", productId);
                 toast({
                     description: `Đã xóa ${productName.toLowerCase()} khỏi mục yêu thích`,
                 });
@@ -127,19 +149,17 @@ export const ProductDetail = () => {
         const data = new FormData();
         if (!userId) {
             router.push("/login");
-        }
-        else {
-            data.append('userId', userId as string);
-            data.append('productId', dish.id);
-            data.append('quantity', '1');
+        } else {
+            data.append("userId", userId as string);
+            data.append("productId", dish.id);
+            data.append("quantity", "1");
 
             try {
                 await createCart(data);
                 toast({
                     description: `Đã thêm ${dish.name.toLowerCase()} vào giỏ hàng`,
                 });
-            }
-            catch (error) {
+            } catch (error) {
                 toast({
                     variant: "destructive",
                     title: `KHÔNG THỂ THÊM ${dish.name.toUpperCase()}.`,
@@ -155,7 +175,7 @@ export const ProductDetail = () => {
         }
         handleAddToCartOnClick();
         router.push("/checkout");
-    }
+    };
 
     return (
         <section>

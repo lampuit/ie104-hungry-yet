@@ -3,6 +3,15 @@ import { Button } from "../ui/button"
 import { ShoppingCart } from "lucide-react";
 import { createCart } from "@/lib/actions/cart";
 import { redirect, useRouter } from "next/navigation";
+import { getSession } from "@/lib/auth-client";
+import useSWR from "swr";
+
+// Lấy userId từ session
+const fetcherUserId = async () => {
+    const response = await getSession();
+    const userId = response?.data?.user?.id as string;
+    return userId;
+};
 
 interface Dish {
     id: string;
@@ -16,11 +25,10 @@ interface Dish {
 
 export const AddToCartButton: React.FC<{ dish: Dish }> = ({ dish }) => {
     const router = useRouter();
-    const userId = sessionStorage.getItem('userId');
+    const { data: userId, error: userIdError } = useSWR("userId", fetcherUserId);
     const handleAddToCartOnClick = async (productId: string) => {
         const data = new FormData();
-        console.log(sessionStorage.getItem('userId'));
-        if (!sessionStorage.getItem('userId')) {
+        if (!userId) {
             router.push("/login");
         }
         else {
@@ -38,8 +46,6 @@ export const AddToCartButton: React.FC<{ dish: Dish }> = ({ dish }) => {
                 minute: "numeric",
                 hour12: true,
             });
-
-            console.log(`Add product ${productId} to cart`);
             toast(`Đã thêm ${dish.name} vào giỏ hàng`, {
                 description: currentDateTime,
                 action: {
@@ -51,7 +57,7 @@ export const AddToCartButton: React.FC<{ dish: Dish }> = ({ dish }) => {
     };
     return (
         <Button onClick={() => handleAddToCartOnClick(dish.id)}
-            className='rounded-3xl bg-amber-500 hover:bg-red-500 hidden group-hover:flex transition-all duration-300 ease-in-out'>
+            className='rounded-3xl bg-amber-500 hover:bg-red-500'>
             <ShoppingCart /> <span>Thêm giỏ hàng</span>
         </Button>
     );

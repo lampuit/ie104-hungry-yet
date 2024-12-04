@@ -26,10 +26,18 @@ import { useEffect, useState } from "react";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import LoadingSpinner from "@/components/ui/loading-spinner"
 import { upload } from "@vercel/blob/client";
+import { getSession } from "@/lib/auth-client";
 
 const getUser = async (id: string) => {
     const user = await getUserById(id);
     return user;
+};
+
+// Lấy userId từ session
+const fetcherUserId = async () => {
+    const response = await getSession();
+    const userId = response?.data?.user?.id as string;
+    return userId;
 };
 
 const formSchema = z.object({
@@ -47,7 +55,7 @@ const formSchema = z.object({
 });
 
 export default function Account() {
-    const userId = sessionStorage.getItem('userId');
+    const { data: userId } = useSWR('userId', fetcherUserId);
     const { data: userInfo, isLoading, error } = useSWR(userId, getUser)
     const [shortName, setShortName] = useState<string>("");
     const [isPending, setIsPending] = useState(false);
@@ -328,7 +336,7 @@ export default function Account() {
                                     </FormItem>
                                 )} />
 
-                            <Button type="submit" className="w-full">Lưu thay đổi</Button>
+                            <Button type="submit" className="w-1/2 bg-amber-500 hover:bg-red-500">Lưu thay đổi</Button>
                         </div>
                     </form>
                 </Form>

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { getAllCategory, getAllProducts } from '@/lib/data';
+import { getAllCategory } from '@/lib/data';
 import useSWR from "swr";
 
 // Lấy danh sách các danh mục món ăn
@@ -14,7 +14,7 @@ interface CategoryProps {
 
 export function Category({ clickedIndex, setClickedIndex }: CategoryProps) {
     const { data, error } = useSWR('category', CategoryFetcher);
-    const [ listCate, setCate ] = useState<any[]>([]);
+    const [listCate, setCate] = useState<any[]>([]);
 
     // Tự động gán dữ liệu vào listCate khi data được fetch
     useEffect(() => {
@@ -25,7 +25,7 @@ export function Category({ clickedIndex, setClickedIndex }: CategoryProps) {
                 return priorityOrder.indexOf(a.name) - priorityOrder.indexOf(b.name);
             });
             setCate(sortedCategories);
-            setClickedIndex(sessionStorage.getItem('clickedIndex') || sortedCategories[0].id);
+            setClickedIndex(localStorage.getItem('clickedIndex') ? (localStorage.getItem('clickedIndex')) || sortedCategories[0].id : "");
         }
     }, [data]);
 

@@ -29,7 +29,7 @@ export function PaymentForm({
       setIsLoading(true);
       await onSubmit();
     } catch (error) {
-      console.error("Payment error:", error);
+      console.error("Thanh toán lỗi: ", error);
     } finally {
       setIsLoading(false);
     }

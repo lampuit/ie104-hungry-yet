@@ -7,28 +7,28 @@ import { usePathname, useRouter } from "next/navigation";
 import { ReactNode, useEffect, useState } from "react";
 import { revokeSession } from "@/lib/auth-client";
 import useSWR from "swr";
-import { getSession } from "@/lib/auth-client";
 import { getUserById } from "@/lib/data";
-
-// Fetch session data
-const sessionFetcher = async () => {
-    const response = await getSession();
-    const session = response?.data?.session?.id as string;
-    return session;
-};
+import { getSession } from "@/lib/auth-client";
 
 const userFetcher = async (id: string) => {
     return await getUserById(id);
 }
+// Lấy userId từ session
+const fetcherUserId = async () => {
+    const response = await getSession();
+    const userId = response?.data?.user?.id as string;
+    return userId;
+};
+
+interface LayoutProps {
+    children: ReactNode
+}
 
 export default function Layout({
-    children,
-}: {
-    children: ReactNode;
-    modal: ReactNode;
-}) {
+    children
+}: LayoutProps) {
     const router = useRouter();
-    const [activePath, setActivePath] = useState<string>("Thông tin tài khoản"); // Track active path
+    const [activePath, setActivePath] = useState<string>("Thông tin đơn hàng"); // Track active path
     const [isLoggingOut, setIsLoggingOut] = useState(false); // Track logout state
     const [shortName, setShortName] = useState<string>("");
     const [name, setName] = useState<string>("");
@@ -38,9 +38,11 @@ export default function Layout({
         router.push(path);
     };
 
-    const { data: session, isLoading: isSessionLoading, error } = useSWR("session", sessionFetcher);
-    const uid = sessionStorage.getItem("userId");
-    const { data: user, error: userError } = useSWR(uid, userFetcher);
+    const { data: userId } = useSWR('userId', fetcherUserId);
+
+    const { data: user, error: userError } = useSWR(userId, userFetcher, { shouldRetryOnError: false });
+
+
 
     useEffect(() => {
         setShortName(user && user[0]?.name ? splitName(user[0].name) : "");
@@ -49,13 +51,12 @@ export default function Layout({
 
     const handleLogout = async () => {
         try {
-            if (!session) {
+            if (!userId) {
                 console.error("Session ID is undefined");
                 return;
             }
             setIsLoggingOut(true); // Start logout spinner
-            const response = await revokeSession({ id: session });
-            sessionStorage.removeItem("userId");
+            const response = await revokeSession({ id: userId });
 
             if (response && response?.error?.status === 200) {
                 console.log("Session successfully revoked", response);
@@ -88,21 +89,21 @@ export default function Layout({
                     </div>
                     <div
                         onClick={() => handleClick("Thông tin tài khoản", "/account")}
-                        className={activePath === "Thông tin tài khoản" ? "flex gap-3 shadow p-2 rounded-md" : "flex gap-3"}
+                        className={activePath === "Thông tin tài khoản" ? "flex gap-3 shadow p-2 rounded-md bg-slate-200" : "flex gap-3"}
                     >
                         <UserIcon className="stroke-amber-500" />
                         <p>Thông tin tài khoản</p>
                     </div>
                     <div
                         onClick={() => handleClick("Thông tin đơn hàng", "/account/history")}
-                        className={activePath === "Thông tin đơn hàng" ? "flex gap-3 shadow p-2 rounded-md" : "flex gap-3"}
+                        className={activePath === "Thông tin đơn hàng" ? "flex gap-3 shadow p-2 rounded-md bg-slate-200" : "flex gap-3"}
                     >
                         <ClipboardList className="stroke-blue-500" />
                         <p>Thông tin đơn hàng</p>
                     </div>
                     <div
                         onClick={() => handleClick("Danh mục yêu thích", "/account/favorite")}
-                        className={activePath === "Danh mục yêu thích" ? "flex gap-3 shadow p-2 rounded-md" : "flex gap-3"}
+                        className={activePath === "Danh mục yêu thích" ? "flex gap-3 shadow p-2 rounded-md bg-slate-200" : "flex gap-3"}
                     >
                         <Heart className="stroke-red-500" />
                         <p>Danh mục yêu thích</p>
@@ -110,13 +111,13 @@ export default function Layout({
                     <Button
                         variant={"outline"}
                         onClick={handleLogout}
-                        disabled={isLoggingOut || isSessionLoading} // Disable button while logging out or session is loading
-                        className={`mt-6 border-gray-400 text-gray-400 ${isLoggingOut || isSessionLoading
+                        disabled={isLoggingOut} // Disable button while logging out
+                        className={`mt-6 border-gray-400 text-gray-400 ${isLoggingOut
                             ? "cursor-not-allowed opacity-50"
                             : "hover:bg-gray-400 hover:bg-opacity-20 hover:text-gray-400"
                             }`}
                     >
-                        {isLoggingOut || isSessionLoading ? (
+                        {isLoggingOut ? (
                             <div className="flex items-center gap-2">
                                 <Loader2 className="animate-spin" />
                                 <span>Đang đăng xuất</span>

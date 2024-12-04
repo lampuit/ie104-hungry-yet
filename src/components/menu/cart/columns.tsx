@@ -1,10 +1,11 @@
+import React from "react"
 import { Button } from "@/components/ui/button"
 import { createFavorite, deleteFavorite } from "@/lib/actions/favorite"
 import { deletecarts, updateCarts } from "@/lib/actions/cart"
 import { ColumnDef } from "@tanstack/react-table"
-import { Heart, Trash } from "lucide-react"
+import { Heart, Trash } from 'lucide-react'
 import Image from "next/image"
-import { useEffect, useState } from "react"
+import { useState } from "react"
 import {
     AlertDialog,
     AlertDialogAction,
@@ -17,10 +18,18 @@ import {
     AlertDialogTrigger,
 } from "@/components/ui/alert-dialog"
 import { toast } from "sonner"
-import { mutate } from "swr";
+import useSWR, { mutate } from "swr"
+import { getSession } from "@/lib/auth-client";
 
-// This type is used to define the shape of our data.
-// You can use a Zod schema here if you want.
+// Lấy userId từ session
+const fetcherUserId = async () => {
+    const response = await getSession();
+    const userId = response?.data?.user?.id as string;
+    return userId;
+};
+
+let userId: string | undefined;
+
 export type Cart = {
     id: string
     img: string
@@ -31,9 +40,84 @@ export type Cart = {
     isFavorite: boolean
 }
 
-
 type CartTableMeta = {
     onQuantityChange: (id: string, newQuantity: number) => void
+}
+
+
+const AmountCell = ({ row, table }: { row: any; table: any }) => {
+
+    const { data } = useSWR('userId', fetcherUserId);
+    userId = data;
+    const [amount, setAmount] = useState(row.original.amount);
+
+    const handleChangeAmount = async (quantity: number) => {
+        const formData = new FormData();
+        const resolvedUserId = await userId;
+        if (resolvedUserId) {
+            formData.append("userId", resolvedUserId);
+        }
+        formData.append("productId", row.original.id);
+        formData.append("quantity", quantity.toString());
+        updateCarts(formData);
+        (table.options.meta as CartTableMeta).onQuantityChange(row.original.id, quantity);
+    }
+
+    const handleIncrease = () => {
+        setAmount((prev: any) => {
+            const newAmount = prev + 1;
+            handleChangeAmount(newAmount);
+            return newAmount;
+        });
+    }
+
+    const handleDecrease = () => {
+        setAmount((prev: any) => {
+            if (prev > 1) {
+                const newAmount = prev - 1;
+                handleChangeAmount(newAmount);
+                return newAmount;
+            }
+            return prev;
+        });
+    }
+
+    return (
+        <div className="flex flex-row justify-center items-center gap-4">
+            <Button variant={"outline"}
+                className={amount > 1 ? "border-amber-500 text-amber-500 hover:bg-orange-200 w-8 h-8"
+                    : "border-gray-300 text-gray-300 w-8 h-8 hover:text-gray-300 hover:border-gray-300 hover:bg-white"}
+                onClick={handleDecrease}>-</Button>
+            <div>{amount}</div>
+            <Button className="bg-amber-500 hover:bg-red-500 w-8 h-8"
+                onClick={handleIncrease}>+</Button>
+        </div>
+    );
+}
+
+const FavoriteCell = ({ row }: { row: any }) => {
+    const [isFavorite, setIsFavorite] = useState(row.original.isFavorite);
+
+    const handleDeleteFavorite = async () => {
+        const id = row.original.id;
+        await deleteFavorite(userId || "", id)
+        setIsFavorite(false);
+    };
+
+    const handleUpdateFavorite = async () => {
+        const data = new FormData();
+        data.append("productId", row.original.id);
+        data.append("userId", userId || "");
+        await createFavorite(data);
+        setIsFavorite(true);
+    }
+
+    return (
+        <div>
+            <Heart className={isFavorite ? "fill-amber-500 stroke-amber-500" : "stroke-amber-500 fill-none"}
+                onClick={isFavorite ? handleDeleteFavorite : handleUpdateFavorite} />
+        </div>
+    );
 }
 
 export const columns: ColumnDef<Cart>[] = [
@@ -69,77 +153,18 @@ export const columns: ColumnDef<Cart>[] = [
     {
         accessorKey: "amount",
         header: () => <div className="w-36 text-center">Số lượng</div>,
-        cell: ({ row, table }) => {
-            const [amount, setAmount] = useState(row.original.amount);
-
-
-            const handleChaneAmount = (quantity: number) => {
-                const formData = new FormData();
-                formData.append("userId", sessionStorage.getItem("userId") as string);
-                formData.append("productId", row.original.id);
-                formData.append("quantity", quantity.toString());
-                updateCarts(formData);
-                (table.options.meta as CartTableMeta).onQuantityChange(row.original.id, quantity);
-            }
-
-            // useEffect(() => {
-            // },)
-
-            const handleIncrease = (quantity: number) => {
-                setAmount(quantity + 1);
-                handleChaneAmount(amount + 1);
-            }
-            const handleDecrease = (quantity: number) => {
-                if (quantity > 1) {
-                    setAmount(quantity - 1);
-                    handleChaneAmount(amount - 1);
-                }
-            }
-
-            return <div className="flex flex-row justify-center items-center gap-4">
-                <Button variant={"outline"}
-                    className={amount > 1 ? "border-amber-500 text-amber-500 hover:bg-orange-200 w-8 h-8"
-                        : "border-gray-300 text-gray-300 w-8 h-8 hover:text-gray-300 hover:border-gray-300 hover:bg-white"}
-                    onClick={() => handleDecrease(amount)}>-</Button>
-                <div>{amount}</div>
-                <Button className="bg-amber-500 hover:bg-red-500 w-8 h-8"
-                    onClick={() => handleIncrease(amount)}>+</Button>
-            </div>
-        },
+        cell: ({ row, table }) => <AmountCell row={row} table={table} />,
     },
     {
         id: "favorite",
-        cell: ({ row }) => {
-            const [isFavorite, setIsFavorite] = useState(row.original.isFavorite);
-
-            const userId = sessionStorage.getItem("userId") as string;
-            // Function handle when favorite btn is clicked
-            const handleDeleteFavorite = async () => {
-                const id = row.original.id;
-                await deleteFavorite(userId, id)
-                setIsFavorite(false);
-            };
-            const handleUpdateFavorite = async () => {
-                const data = new FormData();
-                data.append("productId", row.original.id);
-                data.append("userId", userId);
-                await createFavorite(data);
-                setIsFavorite(true);
-            }
-
-            return <div>
-                <Heart className={isFavorite ? "fill-amber-500 stroke-amber-500" : "stroke-amber-500 fill-none"}
-                    onClick={isFavorite ? () => handleDeleteFavorite() : () => handleUpdateFavorite()} />
-            </div>
-        },
+        cell: ({ row }) => <FavoriteCell row={row} />,
     },
     {
         id: "delete",
         cell: ({ row }) => {
             const handleDeleteItem = async () => {
                 const id = row.original.id;
-                const userId = sessionStorage.getItem("userId") as string;
-                await deletecarts(id, userId as string)
+                await deletecarts(id, userId || "");
                 mutate(userId);
                 toast("Xoá thành công")
             }
