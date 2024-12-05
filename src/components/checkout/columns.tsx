@@ -64,7 +64,7 @@ export const columns: ColumnDef<Cart>[] = [
     accessorKey: "name",
     header: () => <div>Sản Phẩm</div>,
     cell: ({ row }) => {
-      const name = row.original.product.name;
+      const name = row.original?.product?.name;
       return <div>{name}</div>;
     },
   },
@@ -76,7 +76,7 @@ export const columns: ColumnDef<Cart>[] = [
     accessorKey: "products.price",
     header: () => <div>Giá</div>,
     cell: ({ row }) => {
-      const price = row.original.product.price;
+      const price = row.original?.product?.price;
 
       const formatted = new Intl.NumberFormat("vi-VN", {
         style: "currency",
@@ -90,9 +90,8 @@ export const columns: ColumnDef<Cart>[] = [
     id: "Tổng",
     header: () => <div>Tổng</div>,
     cell: ({ row }) => {
-      const price = row.original.product.price;
-      const quantity = row.original.quantity;
-
+      const price = row.original?.product?.price;
+      const quantity = row.original?.quantity;
       const formatted = new Intl.NumberFormat("vi-VN", {
         style: "currency",
         currency: "VND",
