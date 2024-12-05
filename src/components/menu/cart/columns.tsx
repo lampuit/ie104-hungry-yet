@@ -38,6 +38,7 @@ export type Cart = {
     cost: number
     amount: number
     isFavorite: boolean
+    category: string
 }
 
 type CartTableMeta = {
@@ -51,11 +52,14 @@ const AmountCell = ({ row, table }: { row: any; table: any }) => {
     userId = data;
     const [amount, setAmount] = useState(row.original.amount);
 
+    React.useEffect(() => {
+        setAmount(row.original.amount);
+    }, [row.original.amount]);
+
     const handleChangeAmount = async (quantity: number) => {
         const formData = new FormData();
-        const resolvedUserId = await userId;
-        if (resolvedUserId) {
-            formData.append("userId", resolvedUserId);
+        if (userId) {
+            formData.append("userId", userId);
         }
         formData.append("productId", row.original.id);
         formData.append("quantity", quantity.toString());
@@ -127,7 +131,8 @@ export const columns: ColumnDef<Cart>[] = [
         cell: ({ row }) => {
             const name = row.original.name;
             const img = row.original.img;
-            const des = row.original.des;
+            const des = row.original.category;
+
             return <div className="flex flex-row justify-start items-center w-96 text-start gap-4">
                 <Image
                     src={img}
@@ -146,8 +151,14 @@ export const columns: ColumnDef<Cart>[] = [
         accessorKey: "cost",
         header: () => <div className="w-36 text-center">Giá tiền</div>,
         cell: ({ row }) => {
-            const cost = row.original.cost;
-            return <div className="text-center">{cost}</div>
+            const cost = row.original.cost as number;
+            const convertToVND = (price: number) => {
+                return new Intl.NumberFormat("vi-VN", {
+                    style: "currency",
+                    currency: "VND",
+                }).format(price);
+            };
+            return <div className="text-center">{convertToVND(cost)}</div>
         },
     },
     {

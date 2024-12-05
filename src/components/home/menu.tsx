@@ -21,7 +21,7 @@ export function Menu() {
     const { data: categories, error } = useSWR("categories", categoriesFectcher);
     const router = useRouter();
     const handleCategoryClick = (categoryId: string) => {
-        localStorage.setItem("clickedIndex", categoryId);
+        localStorage.setItem("category", categoryId);
         router.push("/menu");
     };
 

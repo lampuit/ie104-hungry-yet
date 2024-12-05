@@ -47,7 +47,7 @@ export const columns: ColumnDef<Cart>[] = [
   {
     id: "image",
     cell: ({ row }) => {
-      const imageUrl = row.original.product.imageUrl;
+      const imageUrl = row.original?.product?.imageUrl;
       return (
         <Image
           priority

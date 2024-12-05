@@ -56,7 +56,7 @@ export default function MenuPage() {
 
   useEffect(() => {
     if (typeof window !== 'undefined' && data) {
-      const sessionClickIndex = sessionStorage.getItem("clickedIndex");
+      const sessionClickIndex = localStorage.getItem("category");
       if (sessionClickIndex) {
         setClickedIndex(sessionClickIndex);
       } else {
@@ -69,7 +69,7 @@ export default function MenuPage() {
     if (clickedIndex) {
       getDishesByCategoryId(clickedIndex);
       if (typeof window !== 'undefined') {
-        sessionStorage.setItem("clickedIndex", clickedIndex);
+        localStorage.setItem("category", clickedIndex);
       }
     }
   }, [clickedIndex]);
@@ -77,7 +77,7 @@ export default function MenuPage() {
   const handleCategoryClick = (categoryId: string) => {
     setClickedIndex(categoryId);
     if (typeof window !== 'undefined') {
-      sessionStorage.setItem("clickedIndex", categoryId);
+      localStorage.setItem("category", categoryId);
     }
   };
 
@@ -88,7 +88,7 @@ export default function MenuPage() {
       </header>
 
       <section className="flex flex-col items-center">
-        <section className="sticky top-0 bg-white w-full">
+        <section className="sticky top-0 bg-white w-full z-10">
           <Category
             clickedIndex={clickedIndex}
             setClickedIndex={(index) => {
@@ -129,7 +129,6 @@ export default function MenuPage() {
           </PaginationContent>
         </Pagination>
       </section>
-      <footer className="h-80 bg-black"></footer>
     </main>
   );
 }

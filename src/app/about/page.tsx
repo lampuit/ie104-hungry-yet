@@ -14,7 +14,15 @@ export default function AboutPage() {
                     kết nối bạn với những món ăn ngon, mà còn mong muốn trở thành người bạn đồng hành đáng tin cậy,
                     hiện diện trong từng bữa ăn của bạn.</p>
             </div>
-            <img src="/images/anananan2.png" alt="" />
+            <Image src="/images/anananan2.png"
+                alt="..."
+                layout="responsive"
+                width={1440}
+                height={1056}
+            >
+            </Image>
+
+
             <div className="flex justify-center items-center px-16">
                 <div className="flex flex-col gap-2 w-1/3">
                     <h1 className="font-bold text-3xl">WHAT WE DO</h1>
@@ -24,7 +32,12 @@ export default function AboutPage() {
                     từ món truyền thống đến hiện đại, với chất lượng và phong cách phục vụ chu đáo.
                     Mỗi lần chọn HungryYet? là một trải nghiệm tiện lợi và đáng nhớ.</p>
             </div>
-            <img src="/images/HungryYet1.png" alt="" />
+            <Image src="/images/HungryYet1.png"
+                alt="..."
+                layout="responsive"
+                width={1440}
+                height={480}>  
+            </Image>
         </div>
     );
 }

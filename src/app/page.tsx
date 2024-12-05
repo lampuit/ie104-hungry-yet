@@ -15,7 +15,6 @@ import { Testimonials } from "@/components/home/testimonials";
 import { HorizontalLine } from "@/components/home/intro";
 import { FAQ } from "@/components/home/faq";
 import { Charm } from "next/font/google";
-import Footer from "@/components/ui/footer"
 
 const charm = Charm({
   subsets: ["vietnamese"],
@@ -31,8 +30,8 @@ export default function Homepage() {
           <ImgBg />
         </div>
         <div className="relative top-1/3 flex flex-col justify-between items-center min-h-52 max-h-64 text-white z-10">
-          <h1 className={`${charm.className} sm:text-7xl md:text-8xl text-center`}>Hungry Yet?</h1>
-          <p className="sm:text-xl md:text-2xl text-center">Chọn hương vị, nhận yêu thương - chỉ từ một cú CLICK!</p>
+          <h1 className={`${charm.className} text-7xl md:text-8xl text-center`}>Hungry Yet?</h1>
+          <p className="text-xl md:text-2xl text-center">Chọn hương vị, nhận yêu thương - chỉ từ một cú CLICK!</p>
           <div className="flex justify-around min-w-72 gap-x-3">
             <Button asChild className="bg-amber-500 rounded-3xl hover:bg-red-500">
               <Link href={"/menu/cart"}>Đặt hàng ngay</Link>
@@ -74,7 +73,7 @@ export default function Homepage() {
             <HorizontalLine />
           </div>
           <Button asChild className="bg-black hover:bg-red-500 rounded-3xl">
-            <Link href={"#"}>Xem triển lãm</Link>
+            <Link href={"/exhibition"}>Xem triển lãm</Link>
           </Button>
         </div>
         <div className="flex justify-center">
@@ -100,8 +99,6 @@ export default function Homepage() {
           <FAQ />
         </ScrollArea>
       </section>
-
-      <Footer />
     </main>
   );
 }

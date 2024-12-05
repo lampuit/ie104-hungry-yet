@@ -16,11 +16,10 @@ import { getCartsByUserId } from "@/lib/data";
 import useSWR from "swr";
 import React, { useState, useEffect } from "react";
 import LoadingSpinner from "@/components/ui/loading-spinner";
-import Footer from "@/components/ui/footer";
 import { getSession } from "@/lib/auth-client";
 
 //get shopping cart by userId
-const fetcher = async (userId: string) => {
+const fetcherCarts = async (userId: string) => {
   return getCartsByUserId(userId);
 };
 
@@ -33,7 +32,7 @@ const fetcherUserId = async () => {
 
 export default function CartPage() {
   const { data: userId } = useSWR('userId', fetcherUserId);
-  const { data: listDish, isLoading, error, mutate } = useSWR(userId, fetcher, {
+  const { data: listDish, isLoading, error, mutate } = useSWR(userId, fetcherCarts, {
     revalidateIfStale: true,
     revalidateOnFocus: false,
     revalidateOnReconnect: true,
@@ -46,11 +45,12 @@ export default function CartPage() {
     if (listDish) {
       const formattedData = listDish.map((item: any) => ({
         id: item.productId || undefined,
-        img: item.product?.imageUrl || "/images/fallback.jpg",
+        img: item.product?.imageUrl || "",
         name: item.product?.name,
         des: item.product?.description || "",
         cost: item.product?.price,
         amount: item?.quantity,
+        category: item.product?.category?.name,
         isFavorite: item.product?.favorites.length === 0 ? false : true,
       }));
       setDishes(formattedData);
@@ -88,33 +88,30 @@ export default function CartPage() {
   }
 
   return (
-    <main>
+    <main className="grow flex flex-col h-full">
       <section className="my-10 mx-10 w-72 text-base font-semibold">
         <Breadcrumb>
           <BreadcrumbList>
             <BreadcrumbItem>
-              <BreadcrumbLink href="/">Trang chủ</BreadcrumbLink>
+              <BreadcrumbLink className="hover:text-amber-500" href="/">Trang chủ</BreadcrumbLink>
             </BreadcrumbItem>
             <BreadcrumbSeparator />
             <BreadcrumbItem>
-              <BreadcrumbLink href="/menu">Thực đơn</BreadcrumbLink>
+              <BreadcrumbLink className="hover:text-amber-500" href="/menu">Thực đơn</BreadcrumbLink>
             </BreadcrumbItem>
             <BreadcrumbSeparator />
             <BreadcrumbItem>
-              <BreadcrumbPage>Giỏ hàng</BreadcrumbPage>
+              <BreadcrumbPage className="font-semibold text-amber-500">Giỏ hàng</BreadcrumbPage>
             </BreadcrumbItem>
           </BreadcrumbList>
         </Breadcrumb>
       </section>
-      <section>
-        <div className="flex flex-col justify-center items-center">
-          <DataTable columns={columns} data={dishes} onQuantityChange={handleQuantityChange}></DataTable>
-        </div>
+      <section className="flex flex-col justify-center items-center">
+        <DataTable columns={columns} data={dishes} onQuantityChange={handleQuantityChange}></DataTable>
       </section>
-      <section className="mx-10 py-5">
+      <section className="grow flex flex-col justify-end mx-10 py-5">
         <Summary totalAmount={formattedTotalAmount} />
       </section>
-      <Footer />
     </main>
   );
 }

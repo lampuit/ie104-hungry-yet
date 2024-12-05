@@ -12,6 +12,8 @@ export async function submitPayment(
   discountId: string | undefined,
   paymentMethod: any,
   userId: string,
+  address: string,
+  time: number,
 ) {
   try {
     const [payment] = await db
@@ -29,6 +31,8 @@ export async function submitPayment(
         paymentId: payment.id,
         discountId,
         totalAmount,
+        deliveryAddress: address,
+        deliveryTime: time,
         status: "pending",
       })
       .returning();
