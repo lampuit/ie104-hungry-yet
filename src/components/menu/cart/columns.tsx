@@ -52,6 +52,10 @@ const AmountCell = ({ row, table }: { row: any; table: any }) => {
     userId = data;
     const [amount, setAmount] = useState(row.original.amount);
 
+    React.useEffect(() => {
+        setAmount(row.original.amount);
+    }, [row.original.amount]);
+
     const handleChangeAmount = async (quantity: number) => {
         const formData = new FormData();
         if (userId) {
