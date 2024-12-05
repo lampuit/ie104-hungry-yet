@@ -89,7 +89,7 @@ export function ProductDetailContent({ id }: { id: string }) {
 
     const dish: Dish = {
         categoryId: productData[0]?.categoryId || "",
-        categoryName: productData[0]?.categoryName || "/images/fallback.jpg",
+        categoryName: productData[0]?.categoryName || "",
         createdAt: productData[0]?.createdAt || undefined,
         des: productData[0]?.description || "",
         id: productData[0]?.id,

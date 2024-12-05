@@ -45,7 +45,7 @@ export default function CartPage() {
     if (listDish) {
       const formattedData = listDish.map((item: any) => ({
         id: item.productId || undefined,
-        img: item.product?.imageUrl || "/images/fallback.jpg",
+        img: item.product?.imageUrl || "",
         name: item.product?.name,
         des: item.product?.description || "",
         cost: item.product?.price,
