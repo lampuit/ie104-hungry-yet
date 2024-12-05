@@ -83,7 +83,7 @@ CREATE TABLE IF NOT EXISTS "invoices" (
 	"totalAmount" real,
 	"status" "invoiceStatus",
 	"deliveryAddress" text,
-	"deliveryTime" timestamp,
+	"deliveryTime" integer,
 	"discountId" uuid,
 	"createdAt" timestamp DEFAULT now() NOT NULL,
 	"updatedAt" timestamp NOT NULL

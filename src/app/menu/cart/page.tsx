@@ -19,7 +19,7 @@ import LoadingSpinner from "@/components/ui/loading-spinner";
 import { getSession } from "@/lib/auth-client";
 
 //get shopping cart by userId
-const fetcher = async (userId: string) => {
+const fetcherCarts = async (userId: string) => {
   return getCartsByUserId(userId);
 };
 
@@ -32,7 +32,7 @@ const fetcherUserId = async () => {
 
 export default function CartPage() {
   const { data: userId } = useSWR('userId', fetcherUserId);
-  const { data: listDish, isLoading, error, mutate } = useSWR(userId, fetcher, {
+  const { data: listDish, isLoading, error, mutate } = useSWR(userId, fetcherCarts, {
     revalidateIfStale: true,
     revalidateOnFocus: false,
     revalidateOnReconnect: true,
@@ -50,6 +50,7 @@ export default function CartPage() {
         des: item.product?.description || "",
         cost: item.product?.price,
         amount: item?.quantity,
+        category: item.product?.category?.name,
         isFavorite: item.product?.favorites.length === 0 ? false : true,
       }));
       setDishes(formattedData);
@@ -92,15 +93,15 @@ export default function CartPage() {
         <Breadcrumb>
           <BreadcrumbList>
             <BreadcrumbItem>
-              <BreadcrumbLink href="/">Trang chủ</BreadcrumbLink>
+              <BreadcrumbLink className="hover:text-amber-500" href="/">Trang chủ</BreadcrumbLink>
             </BreadcrumbItem>
             <BreadcrumbSeparator />
             <BreadcrumbItem>
-              <BreadcrumbLink href="/menu">Thực đơn</BreadcrumbLink>
+              <BreadcrumbLink className="hover:text-amber-500" href="/menu">Thực đơn</BreadcrumbLink>
             </BreadcrumbItem>
             <BreadcrumbSeparator />
             <BreadcrumbItem>
-              <BreadcrumbPage>Giỏ hàng</BreadcrumbPage>
+              <BreadcrumbPage className="font-semibold text-amber-500">Giỏ hàng</BreadcrumbPage>
             </BreadcrumbItem>
           </BreadcrumbList>
         </Breadcrumb>
