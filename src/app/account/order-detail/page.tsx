@@ -103,13 +103,13 @@ function OrderDetailContent({ invoiceId }: { invoiceId: string }) {
                 <Breadcrumb>
                     <BreadcrumbList>
                         <BreadcrumbItem>
-                            <BreadcrumbLink href="/account" className="hover:text-amber-500">
+                            <BreadcrumbLink href="/account/history" className="hover:text-amber-500">
                                 Lịch sử đặt hàng
                             </BreadcrumbLink>
                         </BreadcrumbItem>
                         <BreadcrumbSeparator />
                         <BreadcrumbItem>
-                            <BreadcrumbLink href="/account/order-detail" className="hover:text-amber-500">
+                            <BreadcrumbLink className="hover:text-amber-500 text-amber-500">
                                 Chi tiết đơn hàng
                             </BreadcrumbLink>
                         </BreadcrumbItem>
@@ -219,21 +219,23 @@ function OrderDetailContent({ invoiceId }: { invoiceId: string }) {
                         <CardTitle>Hóa đơn</CardTitle>
                     </CardHeader>
                     <CardContent className="py-4">
-                        <div className="bg-gray-100 grid grid-cols-2 p-4 rounded">
-                            <div>Tạm tính:</div>
-                            <div className="flex justify-end font-semibold">
-                                {convertToVND(totalMoney ?? 0)}
-                            </div>
-                            <div>Giảm giá:</div>
-                            <div className="flex justify-end font-semibold">
-                                {convertToVND(
-                                    (invoice.discount?.discount ?? 0) *
-                                    ((invoice.totalAmount ?? 0) / 100)
-                                )}
-                            </div>
-                            <div className="mt-4 border-t-2 h-8 font-semibold">Tổng cộng: </div>
-                            <div className="flex justify-end font-semibold mt-4 border-t-2 h-8">
-                                {convertToVND(invoice.totalAmount ?? 0)}
+                        <div className="bg-gray-100 p-4 rounded">
+                            <div className="grid grid-cols-2">
+                                <div>Tạm tính:</div>
+                                <div className="flex justify-end font-semibold">
+                                    {convertToVND(totalMoney ?? 0)}
+                                </div>
+                                <div>Giảm giá:</div>
+                                <div className="flex justify-end font-semibold">
+                                    {convertToVND(
+                                        (invoice.discount?.discount ?? 0) *
+                                        ((invoice.totalAmount ?? 0) / 100)
+                                    )}
+                                </div>
+                                <div className="mt-4 border-t-2 h-8 font-semibold">Tổng cộng: </div>
+                                <div className="flex justify-end font-semibold mt-4 border-t-2 h-8">
+                                    {convertToVND(invoice.totalAmount ?? 0)}
+                                </div>
                             </div>
                             <div>(Đã bao gồm VAT)</div>
                         </div>
