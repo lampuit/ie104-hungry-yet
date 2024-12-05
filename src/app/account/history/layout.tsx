@@ -20,7 +20,7 @@ export default function Layout({
         router.push(path);
     };
     return (
-        <div className="grow flex flex-col gap-4 px-20">
+        <div className="grow flex flex-col gap-4">
             <h1 className="text-2xl font-semibold">Đơn hàng của tôi</h1>
             <div className="flex flex-col lg:flex-row">
                 <div className="flex flex-col gap-5 w-full">

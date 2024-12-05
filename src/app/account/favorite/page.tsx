@@ -50,7 +50,7 @@ export default function Favorite() {
     }
 
     return (
-        <div className="grow flex flex-col gap-6 px-20">
+        <div className="grow flex flex-col gap-6">
             <h1 className="text-2xl font-semibold">Danh mục yêu thích</h1>
             <div className="grow flex justify-between">
                 <div className="flex flex-col w-full gap-3">

@@ -1,6 +1,6 @@
 import { usePathname } from "next/navigation";
 import { Button } from "../ui/button";
-import { Bike, Eye, PhoneCall, RefreshCcw, Star, Truck, X } from "lucide-react";
+import { Bike, BotMessageSquare, ChevronRight, Eye, PenLine, PhoneCall, RefreshCcw, Star, Truck, X } from "lucide-react";
 import { useRouter } from "next/navigation";
 import {
     Dialog,
@@ -14,7 +14,8 @@ import {
 import { Checkbox } from "@/components/ui/checkbox"
 import { AccountRating } from "./card-rating";
 import { ScrollArea } from "@/components/ui/scroll-area"
-
+import Image from "next/image";
+import React from "react";
 
 interface Invoice {
     id: string;
@@ -32,10 +33,19 @@ export function CardHistory({ invoice }: { invoice: Invoice }) {
     const isWaitingPage = pathname.includes("/account/history/waiting");
     const isPreparePage = pathname.includes("/account/history/preparing");
     const router = useRouter();
+    const convertToVND = (price: number) => {
+        return new Intl.NumberFormat("vi-VN", {
+            style: "currency",
+            currency: "VND",
+        }).format(price);
+    };
+    const [position, setPosition] = React.useState("bottom")
 
     return (
-        <section>
-            <div className="flex justify-between">
+        <section className="flex flex-col gap-2 p-5">
+
+            {/* Thông tin đơn hàng */}
+            <div className="flex justify-between mb-2">
                 {isWaitingPage || isDeliveryPage ? (
                     <div className="flex flex-col gap-1 text-xs">
                         <p className="flex gap-1 items-center">
@@ -47,12 +57,23 @@ export function CardHistory({ invoice }: { invoice: Invoice }) {
                             <span>0901429731</span>
                         </p>
                     </div>
-                ) : (
-                    <div className="flex gap-1 items-center text-xs">
-                        Mã đơn hàng:
-                        <span>ABCxyz12345678</span>
-                    </div>
-                )}
+                ) : isCancelPage ?
+                    (
+                        <div className="flex flex-col gap-1 text-xs">
+                            <div className="flex gap-1 items-center">
+                                Mã đơn hàng:
+                                <span className="font-semibold">ABCxyz12345678</span>
+                            </div>
+                            <div className="flex gap-1 items-center">
+                                Lý do hủy: <span className="font-semibold">Không có hàng</span>
+                            </div>
+                        </div>
+                        ) : (
+                            <div className="flex text-sm gap-1 items-center">
+                                Mã đơn hàng:
+                            <span className="font-semibold">ABCxyz12345678</span>
+                        </div>
+                    )}
                 <div className="flex flex-col gap-1 items-start md:items-end text-gray-500 text-xs">
                     {isCompletePage ? (
                         <p>
@@ -64,34 +85,160 @@ export function CardHistory({ invoice }: { invoice: Invoice }) {
                         </p>
                         ) : isDeliveryPage ? (
                             <p>
-                            Trạng thái: <span className="font-semibold text-green-500">Đang giao</span>
+                                    Trạng thái: <span className="font-semibold text-blue-400">Đang giao</span>
                         </p>
                             ) : isWaitingPage ? (
                                 <p>
-                                    Trạng thái: <span className="font-semibold text-green-500">Chờ giao hàng</span>
-                                </p>
-                            ) : isPreparePage ? (
-                                <p>
-                                    Trạng thái: <span className="font-semibold text-green-500">Đang chuẩn bị</span>
-                                </p>
-                            ) : (
-                                <p>
-                                    Trạng thái: <span className="font-semibold text-green-500">Chờ xác nhận</span>
-                                </p>
+                                        Trạng thái: <span className="font-semibold text-blue-400">Chờ giao hàng</span>
+                                    </p>
+                                ) : isPreparePage ? (
+                                    <p>
+                                            Trạng thái: <span className="font-semibold text-amber-500">Đang chuẩn bị</span>
+                                        </p>
+                                    ) : (
+                                        <p>
+                                                Trạng thái: <span className="font-semibold text-amber-500">Chờ xác nhận</span>
+                                            </p>
                     )}
                     <p className="text-gray-500 text-xs">
-                        Ngày đặt hàng: <span className="text-amber-500 font-semibold">{invoice?.createdAt.toLocaleDateString()}</span>
+                        Ngày đặt hàng: <span className="font-semibold">{invoice?.createdAt.toLocaleDateString()}</span>
                     </p>
                 </div>
             </div>
 
-            <div>
-
-
+            {/* Chi tiết đơn */}
+            <div className="flex flex-col gap-1 px-10">
+                <div className="flex gap-6 items-center p-2 rounded border-2">
+                    <div className="relative w-32 h-40">
+                        <Image src={"/images/appetizers.jpg"}
+                            alt="..."
+                            layout="fill"
+                            objectFit="cover"
+                            objectPosition="center"
+                            className="rounded shadow">
+                        </Image>
+                    </div>
+                    <div className="flex flex-col">
+                        <p className="text-lg font-semibold">Tên sản phẩm</p>
+                        <span className="flex gap-2">Số lượng: <span>x1</span></span>
+                        <span className="flex gap-2">Giá: <span>{convertToVND(45000)}</span></span>
+                    </div>
+                </div>
+                <div className="flex justify-center"> <Button variant={"ghost"}>Xem chi tiết <ChevronRight /></Button></div>
             </div>
 
-            <div>
-
+            {/* Trạng thái và nút hành động */}
+            <div className="flex flex-col gap-2 justify-end">
+                <p className="text-xl md:text-xl md:py-2 flex justify-end gap-2">
+                    Tổng tiền: <span className="font-bold text-red-500">{convertToVND(invoice?.totalAmount)}</span>
+                </p>
+                {isPreparePage || isWaitingPage || isDeliveryPage ? (
+                    <div></div>
+                    // <div className="flex justify-end gap-6">
+                    //     <Button className="bg-amber-500">
+                    //         <BotMessageSquare /> Chat
+                    //     </Button>
+                    // </div>
+                ) : isCompletePage ? (
+                    <div className="flex justify-end gap-6">
+                        <Dialog>
+                            <DialogTrigger className="flex text-xs font-semibold gap-2 justify-center items-center border-black border p-3 rounded-md hover:bg-gray-100">
+                                <Star className="w-4 h-4" /> Đánh giá
+                            </DialogTrigger>
+                            <DialogContent className="flex flex-col gap-4  w-[1024px]">
+                                <DialogHeader>
+                                    <DialogTitle className="text-lg font-semibold">Đánh giá sản phẩm</DialogTitle>
+                                </DialogHeader>
+                                <ScrollArea className="h-[360px] pr-4">
+                                    <div className="flex flex-col gap-4">
+                                        <AccountRating />
+                                        <AccountRating />
+                                        <AccountRating />
+                                        <div className="flex items-center space-x-2 mt-4">
+                                            <Checkbox id="terms" />
+                                            <label
+                                                htmlFor="terms"
+                                                className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                                            >
+                                                Đánh giá ẩn danh
+                                            </label>
+                                        </div>
+                                    </div>
+                                </ScrollArea>
+                                <DialogFooter>
+                                    <Button type="submit" className="bg-amber-500">Lưu đánh giá</Button>
+                                </DialogFooter>
+                            </DialogContent>
+                        </Dialog>
+                        <Button className="bg-amber-500">
+                            <RefreshCcw /> Mua lại
+                        </Button>
+                    </div>
+                ) : isCancelPage ? (
+                    <div className="flex justify-end gap-6">
+                        <Button className="bg-amber-500">
+                            <RefreshCcw /> Mua lại
+                        </Button>
+                    </div>
+                ) : (
+                    <div className="flex justify-end gap-6">
+                        <Dialog>
+                            <DialogTrigger>
+                                <Button variant={"outline"} className="hover:bg-red-500 hover:text-white text-gray-400">
+                                    <X className="hover:text-white" />Hủy đơn
+                                </Button>
+                            </DialogTrigger>
+                            <DialogContent>
+                                <DialogHeader>
+                                    <DialogTitle className="font-semibold">Lý do hủy đơn</DialogTitle>
+                                </DialogHeader>
+                                <div className="flex flex-col gap-2 p-2">
+                                    <div className="flex items-center space-x-2 mt-4">
+                                        <Checkbox id="terms" />
+                                        <label
+                                            htmlFor="terms"
+                                            className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                                        >
+                                            Tôi muốn thêm/thay đổi mã giảm giá
+                                        </label>
+                                    </div>
+                                    <div className="flex items-center space-x-2 mt-4">
+                                        <Checkbox id="terms" />
+                                        <label
+                                            htmlFor="terms"
+                                            className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                                        >
+                                            Tôi muốn thay đổi món ăn
+                                        </label>
+                                    </div>
+                                    <div className="flex items-center space-x-2 mt-4">
+                                        <Checkbox id="terms" />
+                                        <label
+                                            htmlFor="terms"
+                                            className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                                        >
+                                            Tôi không còn nhu cầu mua
+                                        </label>
+                                    </div>
+                                    <div className="flex items-center space-x-2 mt-4">
+                                        <Checkbox id="terms" />
+                                        <label
+                                            htmlFor="terms"
+                                            className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                                        >
+                                            Không tìm thấy lý do phù hợp
+                                        </label>
+                                    </div>
+                                </div>
+                                <DialogFooter>
+                                    <Button className="bg-red-500">Hủy đơn</Button>
+                                </DialogFooter>
+                            </DialogContent>
+                        </Dialog>
+                        <Button className="bg-amber-500">
+                            <PenLine /> Thay đổi thông tin
+                        </Button>
+                    </div>)}
             </div>
         </section>
     )
