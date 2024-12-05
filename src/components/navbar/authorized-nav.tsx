@@ -10,7 +10,7 @@ export function AuthorizedNavbar() {
   return (
     <nav className="flex flex-row px-10 py-5 justify-between items-center h-20 w-full max-w-screen-2xl text-white">
       <Link href={"/"} className="grow flex flex-row justify-start min-w-52 items-center">
-        <Truck />
+        <Truck className="stroke-2"/>
         <p className="sm:text-xl md:text-2xl font-bold px-2">Hungry Yet?</p>
         {isCartPage ?
           <span className="sm:text-xl md:text-xl font-medium"><span className="pr-2">|</span>Giỏ Hàng</span>
@@ -21,7 +21,7 @@ export function AuthorizedNavbar() {
               : null
         }
       </Link>
-      <div className="grow sm:text-xs sm:gap-1 md:text-base min-w-sm max-w-2xl flex flex-row justify-around items-center">
+      <div className="grow sm:text-xs sm:gap-1 md:text-base min-w-sm max-w-2xl flex flex-row justify-around items-center font-medium">
         <Link href={"/"} className="hover:text-amber-500 ">Trang chủ</Link>
         <Link href={"/menu"} className="hover:text-amber-500">Thực đơn</Link>
         <Link href={"/menu/cart"} className="hover:text-amber-500">Giỏ hàng</Link>
