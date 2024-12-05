@@ -20,9 +20,9 @@ const imgList = [
   { name: 'img16', src: '/images/food/img16.jpg', alt: 'food img16' },
   { name: 'img17', src: '/images/food/img17.jpg', alt: 'food img17' },
   { name: 'img18', src: '/images/food/img17.jpg', alt: 'food img18' },
-  // { name: 'img19', src: '/images/food/img19.jpg', alt: 'food img19' },
-  // { name: 'img20', src: '/images/food/img20.jpg', alt: 'food img20' },
-  // { name: 'img21', src: '/images/food/img21.jpg', alt: 'food img21' },
+  { name: 'img19', src: '/images/food/img19.jpg', alt: 'food img19' },
+  { name: 'img20', src: '/images/food/img20.jpg', alt: 'food img20' },
+  { name: 'img21', src: '/images/food/img21.jpg', alt: 'food img21' },
   // { name: 'img22', src: '/images/food/img22.jpg', alt: 'food img22' },
   // { name: 'img23', src: '/images/food/img23.jpg', alt: 'food img23' },
   // { name: 'img24', src: '/images/food/img24.jpg', alt: 'food img24' },
@@ -49,15 +49,14 @@ const imgList = [
 
 export function ImgBg() {
   return (
-    <div className="absolute grid grid-rows-3 grid-cols-6 w-screen h-full gap-y-8 gap-x-8 z-0">
+    <div className="absolute grid grid-rows-3 grid-cols-5 w-screen h-full gap-y-1 gap-x-1 z-0">
       {imgList.map((img) => (
-        <div key={img.name} className="rounded-lg opacity-30 hover:opacity-70">
+        <div key={img.name} className="w-[300] h-[200] opacity-30 hover:opacity-70 relative">
           <Image 
             src={img.src}
             alt={img.alt}
-            width={300}
-            height={200}
-            className="object-cover rounded-lg"
+            layout="fill"
+            objectFit="cover"
           />
         </div>
       ))}

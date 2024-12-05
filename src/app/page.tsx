@@ -26,7 +26,7 @@ export default function Homepage() {
   return (
     <main>
       <header className="relative flex flex-col justify-between items-center h-[calc(100vh-80px)] w-screen overflow-hidden z-0 bg-black">
-        <div className="absolute right-full h-5/6">
+        <div className="absolute right-full h-[calc(100vh-80px)]">
           <ImgBg />
         </div>
         <div className="relative top-1/3 flex flex-col justify-between items-center min-h-52 max-h-64 text-white z-10">
@@ -73,7 +73,7 @@ export default function Homepage() {
             <HorizontalLine />
           </div>
           <Button asChild className="bg-black hover:bg-red-500 rounded-3xl">
-            <Link href={"/exhibition"}>Xem triển lãm</Link>
+            <Link href={"/exhibition"}>Xem blog</Link>
           </Button>
         </div>
         <div className="flex justify-center">

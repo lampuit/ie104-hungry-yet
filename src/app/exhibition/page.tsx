@@ -33,7 +33,7 @@ export default function ExhibitionPage() {
                     className='absolute opacity-40'
                 >
                 </Image>
-                <div className="relative top-1/3 flex flex-col justify-between items-center min-h-52 max-h-64 text-white z-10">
+                <div className="relative top-1/3 flex flex-col justify-between items-center gap-8 max-h-64 text-white z-10">
                     <h1 className={`${charm.className} text-7xl md:text-8xl text-center`}>Hungry Yet?</h1>
                     <p className="text-2xl md:text-3xl text-center">Mang hương vị Việt Nam đến từng bữa ăn của bạn.</p>
                 </div>

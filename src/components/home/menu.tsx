@@ -42,7 +42,11 @@ export function Menu() {
                         <div className="overflow-hidden rounded-lg"
                             onClick={() => handleCategoryClick(category.id)}>
                             <Image
-                                src={category.imageUrl || "/images/appetizers.jpg"}
+                                src={category.name === "Khai vị" ? "/images/appetizers.jpg" :
+                                    category.name === "Món chính" ? "/images/main-dishes.jpg" :
+                                    category.name === "Tráng miệng" ? "/images/desserts.jpg" :
+                                    "/images/drinks.jpg"
+                                }
                                 alt={category.name}
                                 width={300}
                                 height={200}
@@ -53,7 +57,6 @@ export function Menu() {
                     </div>
                 ))}
             </div>
-
         </div>
     )
 }
