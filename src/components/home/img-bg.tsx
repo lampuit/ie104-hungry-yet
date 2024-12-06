@@ -1,7 +1,7 @@
 'use client';
 
 import Image from "next/image";
-import React, { useState, useEffect } from "react";
+import React from "react";
 import { motion, AnimatePresence } from "framer-motion";
 
 const imgList = [
@@ -30,13 +30,6 @@ const imgList = [
 const duplicatedImgList = [...imgList, ...imgList, ...imgList, ...imgList];
 
 export function ImgBg() {
-  const [isLoading, setIsLoading] = useState(true);
-
-  useEffect(() => {
-    const timer = setTimeout(() => setIsLoading(false), 100);
-    return () => clearTimeout(timer);
-  }, []);
-
   const getRowAnimationProps = (rowIndex: number) => {
     const direction = rowIndex % 2 === 0 ? 1 : -1;
     return {
@@ -56,14 +49,14 @@ export function ImgBg() {
   };
 
   return (
-    <div className="absolute w-screen h-full overflow-hidden z-0">
+    <div className="absolute w-screen h-full  z-0">
       <AnimatePresence>
+
         <div className="grid grid-rows-3 gap-4 h-full">
           {[0, 1, 2].map((rowIndex) => (
             <motion.div
               key={`row-${rowIndex}`}
               className="flex gap-4 overflow-hidden"
-
               {...getRowAnimationProps(rowIndex)}
             >
               {duplicatedImgList.map((img, imgIndex) => (
