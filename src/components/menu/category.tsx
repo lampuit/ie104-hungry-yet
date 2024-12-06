@@ -19,13 +19,8 @@ export function Category({ clickedIndex, setClickedIndex }: CategoryProps) {
     // Tự động gán dữ liệu vào listCate khi data được fetch
     useEffect(() => {
         if (data) {
-            // Sắp xếp danh mục theo thứ tự ưu tiên (cho hiển thị)
-            const priorityOrder = ["Khai vị", "Món chính", "Tráng miệng", "Đồ uống"];
-            const sortedCategories = data.sort((a, b) => {
-                return priorityOrder.indexOf(a.name) - priorityOrder.indexOf(b.name);
-            });
-            setCate(sortedCategories);
-            setClickedIndex(localStorage.getItem('clickedIndex') ? (localStorage.getItem('clickedIndex')) || sortedCategories[0].id : "");
+            setClickedIndex(localStorage.getItem('clickedIndex') ? (localStorage.getItem('clickedIndex')) || data[0].id : "");
+            setCate(data);
         }
     }, [data]);
 
