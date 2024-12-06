@@ -5,7 +5,7 @@ import React from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useEffect, useState } from "react";
 
-const imgList1 = [
+const imgList = [
   { name: 'img1', src: '/images/food/img1.jpg', alt: 'food img1' },
   { name: 'img2', src: '/images/food/img2.jpg', alt: 'food img2' },
   { name: 'img3', src: '/images/food/img3.jpg', alt: 'food img3' },
@@ -20,9 +20,6 @@ const imgList1 = [
   { name: 'img12', src: '/images/food/img12.jpg', alt: 'food img13' },
   { name: 'img13', src: '/images/food/img13.jpg', alt: 'food img13' },
   { name: 'img14', src: '/images/food/img14.jpg', alt: 'food img14' },
-];
-
-const imgList2 = [
   { name: 'img15', src: '/images/food/img15.jpg', alt: 'food img15' },
   { name: 'img16', src: '/images/food/img16.jpg', alt: 'food img16' },
   { name: 'img17', src: '/images/food/img17.jpg', alt: 'food img17' },
@@ -37,9 +34,6 @@ const imgList2 = [
   { name: 'img26', src: '/images/food/img26.jpg', alt: 'food img26' },
   { name: 'img27', src: '/images/food/img27.jpg', alt: 'food img27' },
   { name: 'img28', src: '/images/food/img28.jpg', alt: 'food img28' },
-];
-
-const imgList3 = [
   { name: 'img29', src: '/images/food/img29.jpg', alt: 'food img29' },
   { name: 'img30', src: '/images/food/img30.jpg', alt: 'food img30' },
   { name: 'img31', src: '/images/food/img31.jpg', alt: 'food img31' },
@@ -56,19 +50,27 @@ const imgList3 = [
   { name: 'img42', src: '/images/food/img42.jpg', alt: 'food img42' },
 ];
 
-const duplicatedImgList = [...imgList1, ...imgList2, ...imgList3];
+const duplicatedImgList = [...imgList, ...imgList, ...imgList];
 
 export function ImgBg() {
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    const timer = setTimeout(() => setIsLoading(false), 100);
+    return () => clearTimeout(timer);
+  }, []);
+
   const getRowAnimationProps = (rowIndex: number) => {
     const direction = rowIndex % 2 === 0 ? 1 : -1;
+    const totalWidth = duplicatedImgList.length * 256;
     return {
       animate: {
-        x: rowIndex % 2 === 0 ? [`0%`, `-${100 * direction}%`] : [`-${50 * direction}%`, `0%`],
+        x: direction === 1 ? [`0px`, `-${totalWidth}px`] : [`-${totalWidth - 1920}px`, `1920px`],
       },
       transition: {
         x: {
           repeat: Infinity,
-          duration: 100, // Adjust speed
+          duration: totalWidth / 50, // Adjust speed
           ease: "linear",
         },
       },
@@ -76,13 +78,14 @@ export function ImgBg() {
   };
 
   return (
-    <div className="absolute w-screen h-full  z-0">
+    <div className="absolute w-screen h-full overflow-clip z-0">
       <AnimatePresence>
-        <div className="grid grid-rows-3 gap-4 h-full">
+        <div className="grid grid-rows-3 gap-1 h-full">
           {[0, 1, 2].map((rowIndex) => (
             <motion.div
               key={`row-${rowIndex}`}
-              className="flex gap-4 overflow-hidden"
+              className="flex gap-4 overflow-clip"
+
               {...getRowAnimationProps(rowIndex)}
             >
               {duplicatedImgList.map((img, imgIndex) => (
@@ -116,6 +119,7 @@ export function ImgBg() {
   );
 }
 
+
 export function ImgBgHover() {
   const [isLoading, setIsLoading] = useState(true);
 
@@ -126,14 +130,15 @@ export function ImgBgHover() {
 
   const getRowAnimationProps = (rowIndex: number) => {
     const direction = rowIndex % 2 === 0 ? 1 : -1;
+    const totalWidth = duplicatedImgList.length * 256;
     return {
       animate: {
-        x: rowIndex % 2 === 0 ? [`0%`, `-${100 * direction}%`] : [`-${50 * direction}%`, `0%`],
+        x: direction === 1 ? [`0px`, `-${totalWidth}px`] : [`-${totalWidth - 1920}px`, `1920px`],
       },
       transition: {
         x: {
           repeat: Infinity,
-          duration: 100, // Adjust speed
+          duration: totalWidth / 50, // Adjust speed
           ease: "linear",
         },
       },
