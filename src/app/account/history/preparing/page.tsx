@@ -7,8 +7,8 @@ import LoadingSpinner from "@/components/ui/loading-spinner";
 import { useEffect, useState } from "react";
 import { getSession } from "@/lib/auth-client";
 
-const fetcherInvoiceCancel = async (userId: string) => {
-    return getInvoiceByUserId(userId, "cancelled");
+const fetcherInvoicePending = async (userId: string) => {
+    return getInvoiceByUserId(userId, "pending");
 }
 
 // Lấy userId từ session
@@ -18,9 +18,9 @@ const fetcherUserId = async () => {
     return userId;
 };
 
-export default function Cancel() {
+export default function Prepare() {
     const { data: userId } = useSWR('userId', fetcherUserId)
-    const { data: listInvoices, isLoading, error, mutate } = useSWR(userId ? `invoice-${userId}` : null, () => fetcherInvoiceCancel(userId as string),
+    const { data: listInvoices, isLoading, error, mutate } = useSWR(userId ? `invoice-${userId}` : null, () => fetcherInvoicePending(userId as string),
         {
             revalidateOnFocus: false,
             revalidateOnReconnect: false,
@@ -42,7 +42,7 @@ export default function Cancel() {
     }, [error, mutate]);
     return (
         isLoading ? <LoadingSpinner /> :
-            <div className="flex flex-col gap-4">
+            <div className="bg-white rounded-lg shadow-md flex flex-col gap-2">
                 {
                     listInvoices?.map((invoice: any) => {
                         return <CardHistory key={invoice.id} invoice={invoice} />

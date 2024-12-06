@@ -5,6 +5,7 @@ import {
     CircleCheck,
     CookingPot,
     Package,
+    PackageCheck,
     Truck,
     Undo2,
     WalletCards,
@@ -103,13 +104,13 @@ function OrderDetailContent({ invoiceId }: { invoiceId: string }) {
                 <Breadcrumb>
                     <BreadcrumbList>
                         <BreadcrumbItem>
-                            <BreadcrumbLink href="/account" className="hover:text-amber-500">
+                            <BreadcrumbLink href="/account/history" className="hover:text-amber-500">
                                 Lịch sử đặt hàng
                             </BreadcrumbLink>
                         </BreadcrumbItem>
                         <BreadcrumbSeparator />
                         <BreadcrumbItem>
-                            <BreadcrumbLink href="/account/order-detail" className="hover:text-amber-500">
+                            <BreadcrumbLink className="hover:text-amber-500 text-amber-500">
                                 Chi tiết đơn hàng
                             </BreadcrumbLink>
                         </BreadcrumbItem>
@@ -143,22 +144,23 @@ function OrderDetailContent({ invoiceId }: { invoiceId: string }) {
                             <CardDescription>Trạng thái giao hàng</CardDescription>
                         </CardHeader>
                         <CardContent>
-                            <div className="grid gap-4 grid-cols-2 md:grid-cols-4">
+                            <div className="grid gap-4 grid-cols-2 md:grid-cols-5 text-xs ">
                                 {[
                                     { status: "pending", label: "Chờ xác nhận", icon: WalletCards },
                                     { status: "accepted", label: "Đang chuẩn bị", icon: CookingPot },
                                     { status: "cooking", label: "Chờ giao hàng", icon: Package },
-                                    { status: "delivered", label: "Giao thành công", icon: Truck },
+                                    { status: "cooking", label: "Đang giao", icon: Truck },
+                                    { status: "delivered", label: "Thành công", icon: PackageCheck },
                                 ].map((step) => (
                                     <div
                                         key={step.status}
-                                        className={`border-2 rounded p-4 flex flex-col ${invoiceStatus === step.status ? "bg-yellow-100" : ""
+                                        className={`border-2 rounded py-2 px-1 flex flex-col items-center ${invoiceStatus === step.status ? "bg-yellow-100" : ""
                                             }`}
                                     >
                                         <step.icon />
-                                        <p>{step.label}</p>
+                                        <p className="pt-2">{step.label}</p>
                                         {invoiceStatus === step.status && (
-                                            <CircleCheck className="stroke-green-600 fill-green-300" />
+                                            <CircleCheck className="stroke-green-600 fill-green-300 pt-2" />
                                         )}
                                     </div>
                                 ))}
@@ -219,21 +221,23 @@ function OrderDetailContent({ invoiceId }: { invoiceId: string }) {
                         <CardTitle>Hóa đơn</CardTitle>
                     </CardHeader>
                     <CardContent className="py-4">
-                        <div className="bg-gray-100 grid grid-cols-2 p-4 rounded">
-                            <div>Tạm tính:</div>
-                            <div className="flex justify-end font-semibold">
-                                {convertToVND(totalMoney ?? 0)}
-                            </div>
-                            <div>Giảm giá:</div>
-                            <div className="flex justify-end font-semibold">
-                                {convertToVND(
-                                    (invoice.discount?.discount ?? 0) *
-                                    ((invoice.totalAmount ?? 0) / 100)
-                                )}
-                            </div>
-                            <div className="mt-4 border-t-2 h-8 font-semibold">Tổng cộng: </div>
-                            <div className="flex justify-end font-semibold mt-4 border-t-2 h-8">
-                                {convertToVND(invoice.totalAmount ?? 0)}
+                        <div className="bg-gray-100 p-4 rounded">
+                            <div className="grid grid-cols-2">
+                                <div>Tạm tính:</div>
+                                <div className="flex justify-end font-semibold">
+                                    {convertToVND(totalMoney ?? 0)}
+                                </div>
+                                <div>Giảm giá:</div>
+                                <div className="flex justify-end font-semibold">
+                                    {convertToVND(
+                                        (invoice.discount?.discount ?? 0) *
+                                        ((invoice.totalAmount ?? 0) / 100)
+                                    )}
+                                </div>
+                                <div className="mt-4 border-t-2 h-8 font-semibold">Tổng cộng: </div>
+                                <div className="flex justify-end font-semibold mt-4 border-t-2 h-8">
+                                    {convertToVND(invoice.totalAmount ?? 0)}
+                                </div>
                             </div>
                             <div>(Đã bao gồm VAT)</div>
                         </div>

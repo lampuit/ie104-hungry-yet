@@ -6,7 +6,7 @@ import Image from "next/image";
 
 export function AccountRating() {
     return (
-        <div className="flex flex-col gap-3 px-3 py-6">
+        <div className="flex flex-col gap-3 px-3 py-6 border-2">
             <div className="flex gap-4 items-center">
                 <div className="relative w-20 h-20">
                     <Image src={"/images/appetizers.jpg"}
