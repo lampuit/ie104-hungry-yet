@@ -46,13 +46,13 @@ export function AccountFavorite({ listFavorite, isLoading, mutate }: { listFavor
             isLoading ? <LoadingSpinner key={item.id} /> :
                 <div key={item.id} className="bg-white rounded shadow-md border-b-2 relative p-4">
                     <div className="flex flex-col md:flex-row gap-4 md:gap-7 items-start md:items-end">
-                        <div className="flex flex-col h-full justify-center">
+                        <div className="flex flex-col justify-center w-[120px] h-[180px] relative">
                             <Image
                                 className="rounded w-full md:w-auto"
                                 src={item?.products.imageUrl}
                                 alt="review"
-                                width={120}
-                                height={180}
+                                layout="fill"
+                                objectFit="cover"
                             />
                         </div>
 
@@ -109,7 +109,7 @@ export function AccountFavorite({ listFavorite, isLoading, mutate }: { listFavor
                     </div >
                     {/* Nút xóa yêu thích */}
                     <div className="absolute top-1 right-1">
-                        <TooltipProvider>
+                        <TooltipProvider delayDuration={200} skipDelayDuration={500}>
                             <Tooltip>
                                 <TooltipTrigger asChild>
                                     <Button
