@@ -87,12 +87,10 @@ export default function MenuPage() {
   }, [clickedIndex]);
 
   const handleCategoryClick = (categoryId: string) => {
-    localStorage.setItem("page", "1");
     setClickedIndex(categoryId);
     if (typeof window !== 'undefined') {
       localStorage.setItem("category", categoryId);
     }
-    router.push(`/menu?page=1&limit=6`);
   };
 
   return (

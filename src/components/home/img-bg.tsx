@@ -95,7 +95,73 @@ export function ImgBg() {
               {duplicatedImgList.map((img, imgIndex) => (
                 <motion.div
                   key={`${img.name}-${imgIndex}`}
-                  className="w-64 h-64 flex-shrink-0 opacity-30 hover:opacity-70 relative"
+                  className="w-64 h-64 flex-shrink-0 opacity-60 relative"
+                  initial={{ scale: 0 }}
+                  animate={{
+                    scale: 1,
+                    transition: { duration: 2.5 }
+                  }}
+                  transition={{
+                    delay: Math.random() * 0.5,
+                    duration: 0.5,
+                    ease: "easeOut",
+                  }}
+                >
+                  <Image
+                    src={img.src}
+                    alt={img.alt}
+                    layout="fill"
+                    objectFit="cover"
+                  />
+                </motion.div>
+              ))}
+            </motion.div>
+          ))}
+        </div>
+      </AnimatePresence>
+    </div>
+  );
+}
+
+export function ImgBgHover() {
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    const timer = setTimeout(() => setIsLoading(false), 100);
+    return () => clearTimeout(timer);
+  }, []);
+
+  const getRowAnimationProps = (rowIndex: number) => {
+    const direction = rowIndex % 2 === 0 ? 1 : -1;
+    return {
+      animate: {
+        x: rowIndex % 2 === 0 ? [`0%`, `-${100 * direction}%`] : [`-${50 * direction}%`, `0%`],
+      },
+      transition: {
+        x: {
+          repeat: Infinity,
+          duration: 100, // Adjust speed
+          ease: "linear",
+        },
+      },
+    };
+  };
+
+  return (
+    <div className="absolute w-screen h-full overflow-clip z-0">
+      <AnimatePresence>
+        <div className="grid grid-rows-3 gap-1 h-full">
+          {[0, 1, 2].map((rowIndex) => (
+            <motion.div
+              key={`row-${rowIndex}`}
+              className="flex gap-4 overflow-clip"
+
+              {...getRowAnimationProps(rowIndex)}
+            >
+              {duplicatedImgList.map((img, imgIndex) => (
+                <motion.div
+                  key={`${img.name}-${imgIndex}`}
+                  className="w-64 h-64 flex-shrink-0 opacity-0 hover:opacity-70 relative"
                   initial={{ scale: 0 }}
                   animate={{
                     scale: 1,
