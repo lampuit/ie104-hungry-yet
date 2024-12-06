@@ -14,6 +14,8 @@ import {
 import { getProductByCategoryId } from "@/lib/data";
 import { CategoryFetcher } from "@/components/menu/category";
 import useSWR from "swr";
+import { useSearchParams } from "next/navigation";
+import { useRouter } from "next/navigation";
 
 interface Dish {
   id: string;
@@ -31,14 +33,18 @@ const fetcherCategory = async (): Promise<
 };
 
 export default function MenuPage() {
+  const page = 1;
+  const limit = 6;
+
   const { data, isLoading, error } = useSWR("fetcherKey", fetcherCategory);
   const [clickedIndex, setClickedIndex] = useState<string>("");
   const [dishesList, setDishesList] = useState<Dish[]>([]);
+  const [totalCount, setTotalCount] = useState<number>(0);
   const categories = data || [];
 
   const getDishesByCategoryId = async (clickedIndex: string) => {
     try {
-      const response = await getProductByCategoryId(clickedIndex, 1, 6);
+      const response = await getProductByCategoryId(clickedIndex, page, limit);
       setDishesList(
         response?.records.map((item: any) => ({
           id: item.id,
@@ -49,6 +55,7 @@ export default function MenuPage() {
           des: item.description,
         }))
       );
+      setTotalCount(response.totalRecords);
     } catch (error) {
       console.error(error);
     }
@@ -107,27 +114,29 @@ export default function MenuPage() {
             <DishList dishesList={dishesList} />
           )}
         </section>
+        {(Math.ceil(totalCount / limit) > 1) && (
         <Pagination className="mb-20">
           <PaginationContent>
-            <PaginationItem>
-              <PaginationPrevious href="#" />
-            </PaginationItem>
-            <PaginationItem>
-              <PaginationLink href="#" isActive>
-                1
-              </PaginationLink>
-            </PaginationItem>
-            <PaginationItem>
-              <PaginationLink href="#">2</PaginationLink>
-            </PaginationItem>
-            <PaginationItem>
-              <PaginationLink href="#">3</PaginationLink>
-            </PaginationItem>
-            <PaginationItem>
-              <PaginationNext href="#" />
-            </PaginationItem>
+            {page > 1 && (
+              <PaginationItem>
+                <PaginationPrevious href={`/menu?page=${page - 1}&limit=${limit}`} />
+              </PaginationItem>
+            )}
+            {Array.from({ length: (Math.ceil(totalCount / limit)) }).map((_, index) => (
+              <PaginationItem key={index}>
+                <PaginationLink href={`/menu?page=${index + 1}&limit=${limit}`}>
+                  {index + 1}
+                </PaginationLink>
+              </PaginationItem>
+            ))}
+            {page < Math.ceil(totalCount / limit) && (
+              <PaginationItem>
+                <PaginationNext href={`/menu?page=${page + 1}&limit=${limit}`} />
+              </PaginationItem>
+            )}
           </PaginationContent>
         </Pagination>
+        )}
       </section>
     </main>
   );
