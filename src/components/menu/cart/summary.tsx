@@ -22,7 +22,7 @@ export function Summary({ totalAmount }: MoneyProps) {
 
     return (
         //
-        <div className="flex flex-col md:flex-row justify-between items-center py-4 px-2 md:px-8 bg-gray-100 rounded-lg shadow-md w-5/6">
+        <div className="flex flex-col md:flex-row justify-between items-center py-4 px-2 md:px-8 bg-white rounded-lg shadow-md w-3/4">
             {/* Shopping Cart Icon */}
             <div className="mb-4 md:mb-0">
                 <ShoppingCart size={32} className="stroke-red-500" />
