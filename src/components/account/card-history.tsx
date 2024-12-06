@@ -44,27 +44,6 @@ const fetcherInvoiceDetail = async (invoiceId: string) => {
 };
 
 
-// const fetcherInvoiceUserInfo = async (invoiceId: string) => {
-//     if (!invoiceId) return null;
-//     return await getInvoiceDetail(invoiceId);
-// };
-
-// function formatDate(date: Date | string | undefined) {
-//     if (!date) return "N/A";
-//     const d = new Date(date);
-//     const day = String(d.getDate()).padStart(2, "0");
-//     const month = String(d.getMonth() + 1).padStart(2, "0");
-//     const year = d.getFullYear();
-//     return `${day}/${month}/${year}`;
-// }
-
-
-// function SearchParamsProvider({ children }: { children: (params: { invoiceId: string | null }) => React.ReactNode }) {
-//     const searchParams = useSearchParams();
-//     const invoiceId = searchParams.get("invoiceId");
-//     return children({ invoiceId });
-// }
-
 
 export function CardHistory({ invoice }: { invoice: Invoice }) {
     const { data: invoiceData, error } = useSWR(invoice.id, fetcherInvoiceDetail);
@@ -109,7 +88,7 @@ export function CardHistory({ invoice }: { invoice: Invoice }) {
                                     <span className="font-semibold">{splitInvoiceId(invoiceData?.id || "").toUpperCase()}</span>
                             </div>
                             <div className="flex gap-1 items-center">
-                                Lý do hủy: <span className="font-semibold">Không có hàng</span>
+                                    Lý do hủy: <span className="font-semibold">Không còn nhu cầu</span>
                             </div>
                         </div>
                         ) : (

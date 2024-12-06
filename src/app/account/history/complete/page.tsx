@@ -42,7 +42,7 @@ export default function Complete() {
     }, [error, mutate]);
     return (
         isLoading ? <LoadingSpinner /> :
-            <div className="bg-white rounded-lg shadow-md flex flex-col gap-2">
+            <div className="flex flex-col gap-4">
                 {
                     listInvoices?.map((invoice: any) => {
                         return <CardHistory key={invoice.id} invoice={invoice} />
