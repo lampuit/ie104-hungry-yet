@@ -80,10 +80,10 @@ function OrderDetailContent({ invoiceId }: { invoiceId: string }) {
     const invoiceStatus = invoice.status;
     const progressValue =
         invoiceStatus === "pending"
-            ? 23
+            ? 18
             : invoiceStatus === "accepted"
                 ? 49
-                : invoiceStatus === "cooking"
+                : invoiceStatus === "ready"
                     ? 74
                     : invoiceStatus === "delivered"
                         ? 100
@@ -124,12 +124,17 @@ function OrderDetailContent({ invoiceId }: { invoiceId: string }) {
                     <p className="text-gray-500 text-sm">
                         Trạng thái:{" "}
                         {invoiceStatus === "pending"
-                            ? "Đang giao"
+                            ? "Đang chờ xác nhận"
                             : invoiceStatus === "accepted"
-                                ? "Hoàn thành"
-                                : invoiceStatus === "cancelled"
-                                    ? "Đã hủy"
-                                    : "unknown"}
+                                ? "Đã xác nhận"
+                                : invoiceStatus === "cooking" ? "Đang chuẩn bị"
+                                    : invoiceStatus === "ready"
+                                        ? "Đang giao hàng"
+                                        : invoiceStatus === "delivered"
+                                            ? "Hoàn thành"
+                                            : invoiceStatus === "cancelled"
+                                                ? "Đã hủy"
+                                                : "unknown"}
                     </p>
                 </div>
             </div>
