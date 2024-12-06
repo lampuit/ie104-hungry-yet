@@ -5,6 +5,7 @@ import {
     CircleCheck,
     CookingPot,
     Package,
+    PackageCheck,
     Truck,
     Undo2,
     WalletCards,
@@ -143,22 +144,23 @@ function OrderDetailContent({ invoiceId }: { invoiceId: string }) {
                             <CardDescription>Trạng thái giao hàng</CardDescription>
                         </CardHeader>
                         <CardContent>
-                            <div className="grid gap-4 grid-cols-2 md:grid-cols-4">
+                            <div className="grid gap-4 grid-cols-2 md:grid-cols-5 text-xs ">
                                 {[
                                     { status: "pending", label: "Chờ xác nhận", icon: WalletCards },
                                     { status: "accepted", label: "Đang chuẩn bị", icon: CookingPot },
                                     { status: "cooking", label: "Chờ giao hàng", icon: Package },
-                                    { status: "delivered", label: "Giao thành công", icon: Truck },
+                                    { status: "cooking", label: "Đang giao", icon: Truck },
+                                    { status: "delivered", label: "Thành công", icon: PackageCheck },
                                 ].map((step) => (
                                     <div
                                         key={step.status}
-                                        className={`border-2 rounded p-4 flex flex-col ${invoiceStatus === step.status ? "bg-yellow-100" : ""
+                                        className={`border-2 rounded py-2 px-1 flex flex-col items-center ${invoiceStatus === step.status ? "bg-yellow-100" : ""
                                             }`}
                                     >
                                         <step.icon />
-                                        <p>{step.label}</p>
+                                        <p className="pt-2">{step.label}</p>
                                         {invoiceStatus === step.status && (
-                                            <CircleCheck className="stroke-green-600 fill-green-300" />
+                                            <CircleCheck className="stroke-green-600 fill-green-300 pt-2" />
                                         )}
                                     </div>
                                 ))}

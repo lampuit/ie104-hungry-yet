@@ -180,7 +180,7 @@ export default function Account() {
                                 name="name"
                                 render={({ field }) => (
                                     <FormItem>
-                                        <div className="font-medium">Họ và tên</div>
+                                        <div className="font-semibold text-sm">Họ và tên:</div>
                                         <FormControl>
                                             <Input placeholder="Nhập họ và tên" {...field} />
                                         </FormControl>
@@ -192,7 +192,7 @@ export default function Account() {
                                 name="phone"
                                 render={({ field }) => (
                                     <FormItem>
-                                        <div className="font-medium">Số điện thoại</div>
+                                        <div className="font-semibold text-sm">Số điện thoại:</div>
                                         <FormControl>
                                             <Input placeholder="Nhập số điện thoại" {...field} />
                                         </FormControl>
@@ -205,7 +205,7 @@ export default function Account() {
                                 name="email"
                                 render={({ field }) => (
                                     <FormItem>
-                                        <div className="font-medium">Email</div>
+                                        <div className="font-semibold text-sm">Email:</div>
                                         <FormControl>
                                             <Input placeholder="Nhập email" {...field} />
                                         </FormControl>
@@ -218,7 +218,7 @@ export default function Account() {
                                 name="gender"
                                 render={({ field }) => (
                                     <FormItem className="space-y-3">
-                                        <FormLabel>Giới tính</FormLabel>
+                                        <FormLabel className="font-semibold text-sm">Giới tính:</FormLabel>
                                         <FormControl>
                                             <RadioGroup
                                                 onValueChange={field.onChange}
@@ -261,7 +261,7 @@ export default function Account() {
                                 name="birthday"
                                 render={() => (
                                     <FormItem className="flex flex-col">
-                                        <FormLabel className="font-medium">Ngày sinh</FormLabel>
+                                        <FormLabel className="font-semibold text-sm">Ngày sinh:</FormLabel>
                                         <div className="flex space-x-2">
                                             <FormField
                                                 control={form.control}
@@ -328,7 +328,7 @@ export default function Account() {
                                 name="address"
                                 render={({ field }) => (
                                     <FormItem>
-                                        <div className="font-medium">Địa chỉ</div>
+                                        <div className="font-semibold text-sm">Địa chỉ:</div>
                                         <FormControl>
                                             <Input placeholder="Nhập địa chỉ" {...field} />
                                         </FormControl>
