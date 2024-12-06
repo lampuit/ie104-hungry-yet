@@ -62,7 +62,7 @@ export function ImgBg() {
 
   const getRowAnimationProps = (rowIndex: number) => {
     const direction = rowIndex % 2 === 0 ? 1 : -1;
-    const totalWidth = duplicatedImgList.length * 256;
+    const totalWidth = duplicatedImgList.length * 320;
     return {
       animate: {
         x: direction === 1 ? [`0px`, `-${totalWidth}px`] : [`-${totalWidth - 1920}px`, `1920px`],
@@ -84,14 +84,14 @@ export function ImgBg() {
           {[0, 1, 2].map((rowIndex) => (
             <motion.div
               key={`row-${rowIndex}`}
-              className="flex gap-4 overflow-clip"
+              className="flex gap-1 overflow-clip"
 
               {...getRowAnimationProps(rowIndex)}
             >
               {duplicatedImgList.map((img, imgIndex) => (
                 <motion.div
                   key={`${img.name}-${imgIndex}`}
-                  className="w-64 h-64 flex-shrink-0 opacity-60 relative"
+                  className="w-80 h-64 flex-shrink-0 opacity-60 relative"
                   initial={{ scale: 0 }}
                   animate={{
                     scale: 1,
@@ -130,7 +130,7 @@ export function ImgBgHover() {
 
   const getRowAnimationProps = (rowIndex: number) => {
     const direction = rowIndex % 2 === 0 ? 1 : -1;
-    const totalWidth = duplicatedImgList.length * 256;
+    const totalWidth = duplicatedImgList.length * 320;
     return {
       animate: {
         x: direction === 1 ? [`0px`, `-${totalWidth}px`] : [`-${totalWidth - 1920}px`, `1920px`],
@@ -152,14 +152,14 @@ export function ImgBgHover() {
           {[0, 1, 2].map((rowIndex) => (
             <motion.div
               key={`row-${rowIndex}`}
-              className="flex gap-4 overflow-clip"
+              className="flex gap-1 overflow-clip"
 
               {...getRowAnimationProps(rowIndex)}
             >
               {duplicatedImgList.map((img, imgIndex) => (
                 <motion.div
                   key={`${img.name}-${imgIndex}`}
-                  className="w-64 h-64 flex-shrink-0 opacity-0 hover:opacity-70 relative"
+                  className="w-80 h-64 flex-shrink-0 opacity-0 hover:opacity-70 relative"
                   initial={{ scale: 0 }}
                   animate={{
                     scale: 1,

@@ -109,7 +109,7 @@ export default function CartPage() {
       <section className="flex flex-col justify-center items-center">
         <DataTable columns={columns} data={dishes} onQuantityChange={handleQuantityChange}></DataTable>
       </section>
-      <section className="grow flex flex-col justify-end mx-10 py-5">
+      <section className="sticky bottom-0 grow flex flex-col justify-end items-center">
         <Summary totalAmount={formattedTotalAmount} />
       </section>
     </main>
