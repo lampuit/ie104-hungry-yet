@@ -41,12 +41,13 @@ export default function RootLayout({
   const isLoginPath = pathname.startsWith("/login");
   const isRegisterPath = pathname.startsWith("/signup");
   const isAccountPath = pathname.startsWith("/account");
+  const isHomePath = pathname === "/";
 
   return (
     <html lang="en">
       <body className={`${montserrat.className} overflow-x-clip min-h-screen flex flex-col z-20`}>
         {!isDashboardPath && !isLoginPath && !isRegisterPath && (
-          <div className="flex justify-center w-screen bg-black z-10 sticky top-0">
+          <div className={`flex justify-center w-screen bg-black z-10 ${isHomePath ? "sticky top-0" : ""}`}>
             {userId ? <AuthorizedNavbar /> : <UnauthorizedNavbar />}
           </div>
         )}
