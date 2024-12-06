@@ -17,9 +17,6 @@ import useSWR from "swr";
 import { useSearchParams } from "next/navigation";
 import { useRouter } from "next/navigation";
 
-const DEFAULT_PAGE = 1;
-const DEFAULT_LIMIT = 6;
-
 interface Dish {
   id: string;
   name: string;
@@ -36,10 +33,8 @@ const fetcherCategory = async (): Promise<
 };
 
 export default function MenuPage() {
-  const router = useRouter();
-  const searchParams = useSearchParams();
-  const page = +(searchParams.get("page") || DEFAULT_PAGE);
-  const limit = +(searchParams.get("limit") || DEFAULT_LIMIT);
+  const page = 1;
+  const limit = 6;
 
   const { data, isLoading, error } = useSWR("fetcherKey", fetcherCategory);
   const [clickedIndex, setClickedIndex] = useState<string>("");
