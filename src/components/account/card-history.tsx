@@ -153,7 +153,7 @@ export function CardHistory({ invoice }: { invoice: Invoice }) {
             {/* Chi tiết đơn */}
             <div className="flex flex-col gap-1 px-10">
                 {invoiceData?.orders?.map((order, index) => (
-                    <div className="flex items-center p-2 justify-between rounded border-2">
+                    <div className="flex items-center p-2 justify-between rounded border-2" key={order.invoiceId}>
                         <div className="flex gap-6 items-center">
                             <div className="relative w-40 h-40">
                                 <Image src={order.products.imageUrl}
