@@ -14,10 +14,79 @@ import {
   orders,
 } from "@/drizzle/schema/project";
 import { user } from "@/drizzle/schema/auth";
-import { eq, and, getTableColumns, lte, gte, isNull, or } from "drizzle-orm";
+import {
+  eq,
+  and,
+  getTableColumns,
+  lte,
+  gte,
+  isNull,
+  or,
+  notInArray,
+} from "drizzle-orm";
 import { unstable_noStore } from "next/cache";
-import { ca } from "date-fns/locale";
-import { truncate } from "fs/promises";
+
+export async function getCategories() {
+  try {
+    return await db.query.categories.findMany();
+  } catch (error) {
+    throw new Error("Không thể lấy dữ liệu danh sách thể loại.");
+  }
+}
+
+export async function getPuslishProducts() {
+  try {
+    return await db.query.products.findMany({
+      columns: {
+        id: true,
+        name: true,
+        price: true,
+      },
+      where: eq(products.isPublish, true),
+    });
+  } catch (error) {
+    throw new Error("Không thể lấy dữ liệu danh sách sản phẩm.");
+  }
+}
+
+export async function getInvoicesIdByUserId(userId: string) {
+  try {
+    return await db.query.invoices.findMany({
+      columns: {
+        id: true,
+      },
+      where: and(
+        eq(invoices.customerId, userId),
+        notInArray(invoices.status, ["pending", "cancelled"]),
+      ),
+    });
+  } catch (error) {
+    throw new Error("Không thể lấy dữ liệu danh sách hóa đơn xác nhận.");
+  }
+}
+
+export async function getProductsByCategory(category_id: string) {
+  try {
+    return await db.query.categories.findFirst({
+      columns: {
+        name: true,
+      },
+      where: eq(categories.id, category_id),
+      with: {
+        products: {
+          columns: {
+            id: true,
+            name: true,
+            imageUrl: true,
+            price: true,
+          },
+        },
+      },
+    });
+  } catch (error) {
+    throw new Error("Không thể lấy dữ liệu danh sách sản phẩm theo thể loại.");
+  }
+}
 
 export async function fetchProducts() {
   try {
@@ -27,7 +96,8 @@ export async function fetchProducts() {
         categoryName: categories.name,
       })
       .from(products)
-      .leftJoin(categories, eq(products.categoryId, categories.id));
+      .leftJoin(categories, eq(products.categoryId, categories.id))
+      .limit(5);
   } catch (error) {
     throw new Error("Không thể lấy dữ liệu danh sách sản phẩm.");
   }
@@ -36,6 +106,26 @@ export async function fetchProducts() {
 export async function fetchDiscounts() {
   try {
     return await db.query.discounts.findMany();
+  } catch (error) {
+    throw new Error("Không thể lấy dữ liệu mã ưu đãi.");
+  }
+}
+
+export async function getValidDiscounts() {
+  try {
+    const now = new Date();
+    const discount = await db.query.discounts.findMany({
+      columns: {
+        id: true,
+        code: true,
+        discount: true,
+      },
+      where: and(
+        or(isNull(discounts.fromDate), lte(discounts.fromDate, now)),
+        or(isNull(discounts.toDate), gte(discounts.toDate, now)),
+      ),
+    });
+    return discount;
   } catch (error) {
     throw new Error("Không thể lấy dữ liệu mã ưu đãi.");
   }
@@ -217,9 +307,6 @@ export async function getCartsByUserId(userId: string) {
       product: {
         with: {
           category: true,
-          favorites: {
-            where: eq(favorites.userId, userId),
-          },
         },
       },
     },
