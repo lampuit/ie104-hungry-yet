@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Search } from "@/components/menu/search";
+import { SearchingArea } from "@/components/menu/search";
 import { Category } from "@/components/menu/category";
 import { DishList } from "@/components/menu/dish-list";
 import {
@@ -99,7 +99,7 @@ export default function MenuPage() {
     isLoading ? <LoadingSpinner /> :
       <main className="w-screen">
         <header className="mt-8">
-          <Search />
+          <SearchingArea />
         </header>
 
         <section className="flex flex-col items-center">
