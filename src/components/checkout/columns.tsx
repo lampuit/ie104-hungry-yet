@@ -53,8 +53,8 @@ export const columns: ColumnDef<Cart>[] = [
           priority
           alt="Product image"
           className="aspect-square rounded-md object-cover"
-          width="120"
-          height="120"
+          width="100"
+          height="100"
           src={imageUrl}
         />
       );
