@@ -17,6 +17,7 @@ import useSWR from "swr";
 import React, { useState, useEffect } from "react";
 import LoadingSpinner from "@/components/ui/loading-spinner";
 import { getSession } from "@/lib/auth-client";
+import { set } from "date-fns";
 
 //get shopping cart by userId
 const fetcherCarts = async (userId: string) => {
@@ -30,6 +31,12 @@ const fetcherUserId = async () => {
   return userId;
 };
 
+// Tổng số lượng và tổng giá tiền
+interface CartTotal {
+  totalAmount: number;
+  totalPrice: number;
+};
+
 export default function CartPage() {
   const { data: userId } = useSWR('userId', fetcherUserId);
   const { data: listDish, isLoading, error, mutate } = useSWR(userId, fetcherCarts, {
@@ -39,7 +46,7 @@ export default function CartPage() {
   });
 
   const [dishes, setDishes] = useState<any[]>([]);
-  const [totalAmount, setTotalAmount] = useState(0);
+  const [total, setTotal] = useState<CartTotal>({ totalAmount: 0, totalPrice: 0 });
 
   useEffect(() => {
     if (listDish) {
@@ -54,10 +61,16 @@ export default function CartPage() {
         isFavorite: item.product?.favorites.length === 0 ? false : true,
       }));
       setDishes(formattedData);
-      setTotalAmount(listDish.reduce(
-        (acc, item) => acc + item.product?.price * item.quantity,
-        0
-      ))
+      setTotal({
+        totalAmount: formattedData.reduce(
+          (acc, item) => acc + item.amount,
+          0
+        ),
+        totalPrice: formattedData.reduce(
+          (acc, item) => acc + item.cost * item.amount,
+          0
+        ),
+      });
     }
   }, [listDish]);
 
@@ -69,18 +82,15 @@ export default function CartPage() {
 
     // recalculate total amount
     const newTotalAmount = updatedDishes.reduce(
+      (acc, item) => acc + item.amount,
+      0
+    );
+    const newTotalPrice = updatedDishes.reduce(
       (acc, item) => acc + item.amount * item.cost,
       0
     );
-    setTotalAmount(newTotalAmount);
+    setTotal({ totalPrice: newTotalPrice, totalAmount: newTotalAmount });
   };
-
-
-
-  const formattedTotalAmount = new Intl.NumberFormat("vi-VN", {
-    style: "currency",
-    currency: "VND",
-  }).format(totalAmount);
 
   if (error) return <div>Error loading data.</div>;
   if (isLoading) {
@@ -110,7 +120,7 @@ export default function CartPage() {
         <DataTable columns={columns} data={dishes} onQuantityChange={handleQuantityChange}></DataTable>
       </section>
       <section className="sticky bottom-0 grow flex flex-col justify-end items-center shadow-lg mt-4">
-        <Summary totalAmount={formattedTotalAmount} />
+        <Summary total={total} />
       </section>
     </main>
   );
