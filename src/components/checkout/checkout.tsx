@@ -24,8 +24,16 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
-
 import z from "zod";
+import { getSession } from "@/lib/auth-client";
+import useSWR from "swr";
+
+// Lấy userId từ session
+const fetcherUserId = async () => {
+  const response = await getSession();
+  const userId = response?.data?.user?.id as string;
+  return userId;
+};
 
 const formSchema = z.object({
   street: z.string().min(1, "Địa chỉ không được để trống"), // Trường bắt buộc
@@ -39,13 +47,13 @@ const formSchema = z.object({
 export function Checkout({ carts }: { carts: any[] }) {
   const router = useRouter();
   const { toast } = useToast();
-
+  const { data: userId } = useSWR("userId", fetcherUserId);
   const [paymentMethod, setPaymentMethod] = useState("momo");
   const [discount, setDiscount] = useState(0);
   const [discountId, setDiscountId] = useState<string | undefined>();
 
   const subtotal: number = carts.reduce(
-    (acc, cart) => acc + cart.product.price * cart.quantity,
+    (acc, cart) => acc + cart?.product?.price * cart?.quantity,
     0,
   );
 
@@ -55,18 +63,20 @@ export function Checkout({ carts }: { carts: any[] }) {
     resolver: zodResolver(formSchema),
   });
 
-  const onSubmit = (values: z.infer<typeof formSchema>) => {
-    // TEST
-  };
-
-  const handlePayment = async () => {
+  const onSubmit = async (values: z.infer<typeof formSchema>) => {
     try {
+      if (!userId) {
+        throw new Error("User ID is required for payment");
+      }
+
       const result = await submitPayment(
         carts,
         total,
         discountId,
         paymentMethod,
-        "TEST",
+        userId || "",
+        `${values.street} ${values.ward || ''} ${values.district || ''} ${values.province || ''}`,
+        40
       );
 
       if (result.success) {
@@ -126,7 +136,7 @@ export function Checkout({ carts }: { carts: any[] }) {
           <PaymentForm
             paymentMethod={paymentMethod}
             onPaymentMethodChange={setPaymentMethod}
-            onSubmit={handlePayment}
+            onSubmit={form.handleSubmit(onSubmit)}
           />
         </div>
       </form>

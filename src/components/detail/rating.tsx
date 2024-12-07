@@ -1,14 +1,19 @@
+"use client";
 import { ChevronRight, Star } from "lucide-react"
 import { Button } from "../ui/button"
-import { ratingFetcher } from "./detail"
 import { useSearchParams } from "next/navigation"
 import useSWR from "swr"
 import LoadingSpinner from "../ui/loading-spinner"
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar"
 import Image from "next/image"
 import { Pagination, PaginationContent, PaginationItem, PaginationLink, PaginationNext, PaginationPrevious } from "../ui/pagination"
-import { use, useState } from "react"
-import { set } from "date-fns"
+import {  useState } from "react"
+import { getRatingsByProductId } from "@/lib/data"
+
+const ratingFetcher = async (id: string) => {
+    return await getRatingsByProductId(id);
+};
+
 
 export const Rating = () => {
     const searchParams = useSearchParams();
@@ -21,7 +26,9 @@ export const Rating = () => {
         return <LoadingSpinner />;
     }
 
-    const averageRating = ratingData.reduce((acc: number, item: any) => acc + item.star, 0) / ratingData.length;
+    const averageRating = ratingData.length > 0
+        ? ratingData.reduce((acc: number, item: any) => acc + (item.star || 0), 0) / ratingData.length
+        : 0;
 
     const splitName = (name: string) => {
         const array = name.split(" ");
@@ -37,7 +44,7 @@ export const Rating = () => {
             return ratingData;
         }
         else {
-            const filtered = ratingData.filter((review: {star: number}) => review.star === star);
+            const filtered = ratingData.filter((review: { star: number }) => review.star === star);
             return filtered;
         }
     }
@@ -49,11 +56,11 @@ export const Rating = () => {
                 <div className="gap-4">
                     <h1 className="font-semibold text-5xl text-red-500">{averageRating.toFixed(1)}</h1>
                     <div className="flex gap-2">
-                        <Star className={`fill-red-500 stroke-red-500 size-8 ${averageRating < 0.5 ? "hidden" : ""}`} />
-                        <Star className={`fill-red-500 stroke-red-500 size-8 ${averageRating < 1.5 ? "hidden" : ""}`} />
-                        <Star className={`fill-red-500 stroke-red-500 size-8 ${averageRating < 2.5 ? "hidden" : ""}`} />
-                        <Star className={`fill-red-500 stroke-red-500 size-8 ${averageRating < 3.5 ? "hidden" : ""}`} />
-                        <Star className={`fill-red-500 stroke-red-500 size-8 ${averageRating < 4.5 ? "hidden" : ""}`} />
+                        <Star className={` stroke-red-500 size-8 ${averageRating < 0.5 ? "" : "fill-red-500"}`} />
+                        <Star className={` stroke-red-500 size-8 ${averageRating < 1.5 ? "" : "fill-red-500"}`} />
+                        <Star className={` stroke-red-500 size-8 ${averageRating < 2.5 ? "" : "fill-red-500"}`} />
+                        <Star className={` stroke-red-500 size-8 ${averageRating < 3.5 ? "" : "fill-red-500"}`} />
+                        <Star className={` stroke-red-500 size-8 ${averageRating < 4.5 ? "" : "fill-red-500"}`} />
                     </div>
                 </div>
                 <div className="flex gap-8">
@@ -103,7 +110,7 @@ export const Rating = () => {
             <div className="flex flex-col items-center justify-center">
                 <div className="w-full max-w-5xl space-y-6">
                     {handleFilter(starFilter, ratingData)?.map((review: any, index: any) => (
-                        <div className="space-y-6 px-2 py-3 border-b border-b-gray-400 w-full">
+                        <div key={index} className="space-y-6 px-2 py-3 border-b border-b-gray-400 w-full">
                             <div className="flex gap-2 items-center">
                                 <Avatar className="w-14 h-14">
                                     <AvatarImage src={review.user.imageUrl} />

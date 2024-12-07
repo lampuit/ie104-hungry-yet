@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { TimeAndAddress } from "@/components/home/time-address";
 import { Categories } from "@/components/home/categories";
-import { ImgBg } from "@/components/home/img-bg";
+import { ImgBg, ImgBgHover } from "@/components/home/img-bg";
 import { Benefit } from "@/components/home/benefit";
 import { Intro } from "@/components/home/intro";
 import { Menu } from "@/components/home/menu";
@@ -15,8 +15,8 @@ import { Testimonials } from "@/components/home/testimonials";
 import { HorizontalLine } from "@/components/home/intro";
 import { FAQ } from "@/components/home/faq";
 import { Charm } from "next/font/google";
-import Footer from "@/components/ui/footer"
-export const charm = Charm({
+
+const charm = Charm({
   subsets: ["vietnamese"],
   weight: ["400", "700"],
 });
@@ -25,13 +25,17 @@ export default function Homepage() {
 
   return (
     <main>
-      <header className="relative flex flex-col justify-between items-center h-[calc(100vh-80px)] w-screen overflow-hidden z-0 bg-black">
-        <div className="absolute right-full h-5/6">
+      <header className="relative flex flex-col justify-between items-center h-[calc(100vh-80px)] w-screen overflow-hidden bg-black" >
+        <div className="absolute right-full h-[calc(100vh-80px)] z-0">
           <ImgBg />
         </div>
+        <div className="absolute right-full h-[calc(100vh-80px)] z-10">
+          <ImgBgHover />
+        </div>
+        <div className="absolute w-full h-[calc(100vh-80px)] bg-gradient-radial from-black to-transparent z-0"></div>
         <div className="relative top-1/3 flex flex-col justify-between items-center min-h-52 max-h-64 text-white z-10">
-          <h1 className={`${charm.className} sm:text-7xl md:text-8xl text-center`}>Hungry Yet?</h1>
-          <p className="sm:text-xl md:text-2xl text-center">Chọn hương vị, nhận yêu thương - chỉ từ một cú CLICK!</p>
+          <h1 className={`${charm.className} text-7xl md:text-8xl text-center`}>Hungry Yet?</h1>
+          <p className="text-xl md:text-2xl text-center">Chọn hương vị, nhận yêu thương - chỉ từ một cú CLICK!</p>
           <div className="flex justify-around min-w-72 gap-x-3">
             <Button asChild className="bg-amber-500 rounded-3xl hover:bg-red-500">
               <Link href={"/menu/cart"}>Đặt hàng ngay</Link>
@@ -41,7 +45,7 @@ export default function Homepage() {
             </Button>
           </div>
         </div>
-        <div className="relative end-1/3">
+        <div className="relative end-1/3 z-10">
           <TimeAndAddress />
         </div>
       </header>
@@ -73,7 +77,7 @@ export default function Homepage() {
             <HorizontalLine />
           </div>
           <Button asChild className="bg-black hover:bg-red-500 rounded-3xl">
-            <Link href={"#"}>Xem triển lãm</Link>
+            <Link href={"/exhibition"}>Xem blog</Link>
           </Button>
         </div>
         <div className="flex justify-center">
@@ -99,8 +103,6 @@ export default function Homepage() {
           <FAQ />
         </ScrollArea>
       </section>
-
-      <Footer />
     </main>
   );
 }

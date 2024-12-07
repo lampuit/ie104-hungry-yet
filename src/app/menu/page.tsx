@@ -1,4 +1,5 @@
 "use client";
+
 import { useEffect, useState } from "react";
 import { Search } from "@/components/menu/search";
 import { Category } from "@/components/menu/category";
@@ -14,8 +15,8 @@ import {
 import { getProductByCategoryId } from "@/lib/data";
 import { CategoryFetcher } from "@/components/menu/category";
 import useSWR from "swr";
+import LoadingSpinner from "@/components/ui/loading-spinner";
 
-// Đối tượng mô tả một món ăn
 interface Dish {
   id: string;
   name: string;
@@ -25,30 +26,29 @@ interface Dish {
   published: boolean;
 }
 
-// Lấy session
-export const fetcher = async () => {
-  const category = CategoryFetcher();
-  return category;
+const fetcherCategory = async (): Promise<
+  { id: string; name: string; imageUrl: string | null }[]
+> => {
+  return CategoryFetcher();
 };
 
 export default function MenuPage() {
-  // Kiểm tra session
-  const { data, isLoading, error } = useSWR("fetcherKey", fetcher, {
-    revalidateIfStale: true,
-    revalidateOnFocus: false,
-    revalidateOnReconnect: true
-  });
+  const [page, setPage] = useState<number>(1);
+  const limit = process.env.NEXT_PUBLIC_PAGE_SIZE ? parseInt(process.env.NEXT_PUBLIC_PAGE_SIZE) : 9;
 
-  // ID của danh mục được chọn
+  const { data, isLoading, error } = useSWR("fetcherCategory", fetcherCategory);
   const [clickedIndex, setClickedIndex] = useState<string>("");
-  const [dishesList, setDishesList] = useState<Dish[]>([]); // Danh sách món ăn được lưu trữ dưới dạng 1 mảng các đối tượng Dish
-  const sessionClickIndex = sessionStorage.getItem("clickedIndex");
+  const [dishesList, setDishesList] = useState<Dish[]>([]);
+  const [totalCount, setTotalCount] = useState<number>(0);
   const categories = data || [];
 
-  // Hàm lấy danh sách món ăn theo danh mục cụ thể (clickedIndex)
+  const handleChangePage = (newPage: number) => {
+    setPage(newPage);
+  };
+
   const getDishesByCategoryId = async (clickedIndex: string) => {
     try {
-      const response = await getProductByCategoryId(clickedIndex, 1, 6);
+      const response = await getProductByCategoryId(clickedIndex, page, limit);
       setDishesList(
         response?.records.map((item: any) => ({
           id: item.id,
@@ -59,85 +59,99 @@ export default function MenuPage() {
           des: item.description,
         }))
       );
+      setTotalCount(response.totalRecords);
     } catch (error) {
       console.error(error);
     }
   };
 
-  // Tự động gọi API khi trang được tải - khi người dùng chọn danh mục khác (clickedIndex thay đổi)
   useEffect(() => {
-    if (data) {
-      // Gán danh mục mặc định là "Khai vị" hoặc danh mục được chọn từ trang Homepage
+    if (typeof window !== 'undefined' && data) {
+      const sessionClickIndex = localStorage.getItem("category");
       if (sessionClickIndex) {
         setClickedIndex(sessionClickIndex);
       } else {
         setClickedIndex(data[0]?.id);
       }
     }
+  }, [data]);
 
+  useEffect(() => {
     if (clickedIndex) {
       getDishesByCategoryId(clickedIndex);
-      sessionStorage.setItem("clickedIndex", clickedIndex); // Persist clickedIndex
+      if (typeof window !== 'undefined') {
+        localStorage.setItem("category", clickedIndex);
+      }
     }
+  }, [clickedIndex, page]);
 
-  }, [data, clickedIndex]);
-
-
-  // Hàm xử lý khi người dùng click vào một danh mục khác
   const handleCategoryClick = (categoryId: string) => {
     setClickedIndex(categoryId);
-    sessionStorage.setItem("clickedIndex", categoryId);
+    setPage(1); // Reset page to 1 when changing category
+    if (typeof window !== 'undefined') {
+      localStorage.setItem("category", categoryId);
+    }
   };
 
+  const totalPages = Math.ceil(totalCount / limit);
+
   return (
-    <main className="w-screen">
-      <header className="mt-8">
-        <Search />
-      </header>
+    isLoading ? <LoadingSpinner /> :
+      <main className="w-screen">
+        <header className="mt-8">
+          <Search />
+        </header>
 
-      <section className="flex flex-col items-center">
-        <section className="sticky top-0 bg-white w-full">
-          <Category
-            clickedIndex={clickedIndex}
-            setClickedIndex={(index) => {
-              const category = Array.isArray(categories) ? categories.find((cat) => cat.id === index) : undefined;
-              if (category) {
-                handleCategoryClick(category.id);
-              }
-            }}
-          />
-        </section>
+        <section className="flex flex-col items-center">
+          <section className="sticky top-0 bg-white w-full z-10">
+            <Category
+              clickedIndex={clickedIndex}
+              setClickedIndex={(index) => {
+                const category = Array.isArray(categories) ? categories.find((cat) => cat.id === index) : undefined;
+                if (category) {
+                  handleCategoryClick(category.id);
+                }
+              }}
+            />
+          </section>
 
-        <section className="mb-10 max-w-screen-xl">
-          {dishesList.length === 0 || dishesList.every((dish) => !dish.published) ? (
-            <p>Không có sản phẩm nào</p>
-          ) : (
-            <DishList dishesList={dishesList} />
+          <section className="mb-10 max-w-screen-xl">
+            {dishesList.length === 0 || dishesList.every((dish) => !dish.published) ? (
+              <p>Không có sản phẩm nào</p>
+            ) : (
+              <DishList dishesList={dishesList} />
+            )}
+          </section>
+          {totalPages > 1 && (
+            <Pagination className="mb-20">
+              <PaginationContent>
+                <PaginationItem>
+                  <PaginationPrevious
+                    onClick={() => handleChangePage(Math.max(1, page - 1))}
+                    className={page === 1 ? 'pointer-events-none opacity-50' : ''}
+                  />
+                </PaginationItem>
+                {Array.from({ length: totalPages }).map((_, index) => (
+                  <PaginationItem key={index}>
+                    <PaginationLink
+                      onClick={() => handleChangePage(index + 1)}
+                      isActive={page === index + 1}
+                    >
+                      {index + 1}
+                    </PaginationLink>
+                  </PaginationItem>
+                ))}
+                <PaginationItem>
+                  <PaginationNext
+                    onClick={() => handleChangePage(Math.min(totalPages, page + 1))}
+                    className={page === totalPages ? 'pointer-events-none opacity-50' : ''}
+                  />
+                </PaginationItem>
+              </PaginationContent>
+            </Pagination>
           )}
         </section>
-        <Pagination className="mb-20">
-          <PaginationContent>
-            <PaginationItem>
-              <PaginationPrevious href="#" />
-            </PaginationItem>
-            <PaginationItem>
-              <PaginationLink href="#" isActive>
-                1
-              </PaginationLink>
-            </PaginationItem>
-            <PaginationItem>
-              <PaginationLink href="#">2</PaginationLink>
-            </PaginationItem>
-            <PaginationItem>
-              <PaginationLink href="#">3</PaginationLink>
-            </PaginationItem>
-            <PaginationItem>
-              <PaginationNext href="#" />
-            </PaginationItem>
-          </PaginationContent>
-        </Pagination>
-      </section>
-      <footer className="h-80 bg-black"></footer>
-    </main>
+      </main>
   );
 }
+

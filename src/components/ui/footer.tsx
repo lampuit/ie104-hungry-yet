@@ -1,14 +1,28 @@
 import Link from 'next/link'
 import { Facebook, Instagram, Twitter } from 'lucide-react'
 import { Truck } from "lucide-react";
+import { getAllCategory } from '@/lib/data';
+import useSWR from 'swr';
+
+const categoriesFectcher = async () => {
+    return getAllCategory();
+}
 
 export default function Footer() {
+    const { data: categories, error } = useSWR("categories", categoriesFectcher);
+    const handleCategoryClick = (categoryId: string) => {
+        localStorage.setItem("category", categoryId);
+    };
+
     return (
-        <footer className="bg-black text-white">
+        <footer className="bg-black text-white mt-16">
             <div className="max-w-7xl mx-auto py-12 px-4 sm:px-6 lg:py-16 lg:px-8">
                 <div className="xl:grid xl:grid-cols-3 xl:gap-8">
                     <div className="space-y-8 xl:col-span-1">
-                        <Truck />
+                        <div className='flex items-center gap-2'>
+                            <Truck />
+                            <h1 className="sm:text-xl md:text-2xl font-bold px-2">Hungry Yet?</h1>
+                        </div>
                         <p className="text-base">
                             Mang hương vị Việt Nam đến từng bữa ăn của bạn.
                         </p>
@@ -34,26 +48,14 @@ export default function Footer() {
                                     Thực đơn
                                 </h3>
                                 <ul className="mt-4 space-y-4">
-                                    <li>
-                                        <Link href="/menu" className="text-base hover:text-amber-700">
-                                            Món chính
-                                        </Link>
-                                    </li>
-                                    <li>
-                                        <Link href="/menu" className="text-base hover:text-amber-700">
-                                            Món phụ
-                                        </Link>
-                                    </li>
-                                    <li>
-                                        <Link href="/menu" className="text-base hover:text-amber-700">
-                                            Đồ uống
-                                        </Link>
-                                    </li>
-                                    <li>
-                                        <Link href="/menu" className="text-base hover:text-amber-700">
-                                            Tráng miệng
-                                        </Link>
-                                    </li>
+                                    {categories?.map((category) => (
+                                        <li key={category.id}>
+                                            <Link href={`/menu`} className="text-base hover:text-amber-500"
+                                                onClick={() => handleCategoryClick(category.id)}>
+                                                {category.name}
+                                            </Link>
+                                        </li>
+                                    ))}
                                 </ul>
                             </div>
                             <div className="mt-12 md:mt-0">
@@ -91,12 +93,12 @@ export default function Footer() {
                                 </h3>
                                 <ul className="mt-4 space-y-4">
                                     <li>
-                                        <Link href="#" className="text-base hover:text-amber-700">
+                                        <Link href="/about" className="text-base hover:text-amber-700">
                                             Về chúng tôi
                                         </Link>
                                     </li>
                                     <li>
-                                        <Link href="#" className="text-base hover:text-amber-700">
+                                        <Link href="/exhibition" className="text-base hover:text-amber-700">
                                             Blog
                                         </Link>
                                     </li>
@@ -134,7 +136,7 @@ export default function Footer() {
                 </div>
                 <div className="mt-12 border-t border-amber-200 pt-8">
                     <p className="text-base text-center">
-                        &copy; 2024 Công ty TNHH IE104 Ẩm thực UIT.
+                        &copy; 2024 Công ty TNHH IE104 ẩm thực UIT.
                     </p>
                 </div>
             </div>

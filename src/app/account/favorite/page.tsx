@@ -5,6 +5,7 @@ import { getFavoriteByUserId } from "@/lib/data";
 import useSWR from "swr";
 import { useEffect, useState } from "react";
 import LoadingSpinner from "@/components/ui/loading-spinner";
+import { getSession } from "@/lib/auth-client";
 
 const favoriteFetcher = async (userId: string) => {
     if (!userId) throw new Error("User ID is required");
@@ -13,17 +14,16 @@ const favoriteFetcher = async (userId: string) => {
     return data;
 }
 
-export default function Favorite() {
-    const [userId, setUserId] = useState<string | null>(null);
+// Lấy userId từ session
+const fetcherUserId = async () => {
+    const response = await getSession();
+    const userId = response?.data?.user?.id as string;
+    return userId;
+};
 
-    useEffect(() => {
-        const storedUserId = sessionStorage.getItem("userId");
-        if (storedUserId) {
-            setUserId(storedUserId);
-        } else {
-            console.error("No userId found in localStorage");
-        }
-    }, []);
+export default function Favorite() {
+
+    const { data: userId } = useSWR('userId', fetcherUserId);
 
     const { data: listFavorite, isLoading, error, mutate } = useSWR(
         userId ? `favorites-${userId}` : null,
@@ -50,7 +50,7 @@ export default function Favorite() {
     }
 
     return (
-        <div className="grow flex flex-col gap-6 px-20">
+        <div className="grow flex flex-col gap-6">
             <h1 className="text-2xl font-semibold">Danh mục yêu thích</h1>
             <div className="grow flex justify-between">
                 <div className="flex flex-col w-full gap-3">

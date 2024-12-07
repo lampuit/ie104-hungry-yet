@@ -5,23 +5,21 @@ import { getInvoiceByUserId } from "@/lib/data";
 import useSWR from "swr";
 import LoadingSpinner from "@/components/ui/loading-spinner";
 import { useEffect, useState } from "react";
+import { getSession } from "@/lib/auth-client";
 
 const fetcherInvoiceCancel = async (userId: string) => {
     return getInvoiceByUserId(userId, "cancelled");
 }
 
+// Lấy userId từ session
+const fetcherUserId = async () => {
+    const response = await getSession();
+    const userId = response?.data?.user?.id as string;
+    return userId;
+};
+
 export default function Cancel() {
-    const [userId, setUserId] = useState<string | null>(null);
-
-    useEffect(() => {
-        const storedUserId = sessionStorage.getItem("userId");
-        if (storedUserId) {
-            setUserId(storedUserId);
-        } else {
-            console.error("No userId found in localStorage");
-        }
-    }, []);
-
+    const { data: userId } = useSWR('userId', fetcherUserId)
     const { data: listInvoices, isLoading, error, mutate } = useSWR(userId ? `invoice-${userId}` : null, () => fetcherInvoiceCancel(userId as string),
         {
             revalidateOnFocus: false,
@@ -44,7 +42,7 @@ export default function Cancel() {
     }, [error, mutate]);
     return (
         isLoading ? <LoadingSpinner /> :
-            <div className="bg-white rounded-lg shadow-md flex flex-col gap-2">
+            <div className="flex flex-col gap-4">
                 {
                     listInvoices?.map((invoice: any) => {
                         return <CardHistory key={invoice.id} invoice={invoice} />

@@ -6,12 +6,14 @@ import { useRouter } from "next/navigation";
 import { getAllCategory } from "@/lib/data";
 import useSWR from "swr";
 
-// const categories = [
-//     { name: 'Khai vị', src: '/images/appetizers.jpg', alt: 'Appetizers Image' },
-//     { name: 'Món chính', src: '/images/main-dishes.jpg', alt: 'Main Dishes Image' },
-//     { name: 'Tráng miệng', src: '/images/desserts.jpg', alt: 'Deserts Image' },
-//     { name: 'Đồ uống', src: '/images/drinks.jpg', alt: 'Drinks Image' },
-// ];
+import {
+    Carousel,
+    CarouselContent,
+    CarouselItem,
+    CarouselNext,
+    CarouselPrevious,
+} from "@/components/ui/carousel"
+
 
 const categoriesFectcher = async () => {
     return getAllCategory();
@@ -21,7 +23,7 @@ export function Menu() {
     const { data: categories, error } = useSWR("categories", categoriesFectcher);
     const router = useRouter();
     const handleCategoryClick = (categoryId: string) => {
-        sessionStorage.setItem("clickedIndex", categoryId);
+        localStorage.setItem("category", categoryId);
         router.push("/menu");
     };
 
@@ -36,24 +38,38 @@ export function Menu() {
                     <Link href={"/menu"}>Xem thực đơn</Link>
                 </Button>
             </div>
-            <div className="grid grid-cols-4 gap-x-6">
-                {categories?.map((category) => (
-                    <div key={category.id} className="text-start">
-                        <div className="overflow-hidden rounded-lg"
-                            onClick={() => handleCategoryClick(category.id)}>
-                            <Image
-                                src={category.imageUrl || "/images/appetizers.jpg"}
-                                alt={category.name}
-                                width={300}
-                                height={200}
-                                className="object-cover rounded-lg hover:scale-125 transition"
-                            />
-                        </div>
-                        <p className="mt-2 text-2xl font-semibold">{category.name}</p>
-                    </div>
-                ))}
-            </div>
-
+            <Carousel
+                opts={{
+                    align: "start",
+                }}
+                className="w-full max-w-screen-2xl px-16"
+            >
+                <CarouselContent>
+                    {categories?.map((category) => (
+                        <CarouselItem key={category.id} className="text-start md:basis-1/3 lg:basis-1/4">
+                            <div className="overflow-clip w-[300px] h-[200px] relative"
+                                onClick={() => handleCategoryClick(category.id)}>
+                                <Image
+                                    src={category.name === "Cơm" ? "https://aw6zddwvvm1te20u.public.blob.vercel-storage.com/C%C6%A1m%20s%C6%B0%E1%BB%9Dn-Rhh9PxlZbTvaThevBJXUraS3Aqrvl2" :
+                                        category.name === "Món nước" ? "https://aw6zddwvvm1te20u.public.blob.vercel-storage.com/Ph%E1%BB%9F%20b%C3%B2-jE3qCxmz6FXq9U01SZ2zAyV83U4XnB" :
+                                        category.name === "Đồ uống" ? "https://aw6zddwvvm1te20u.public.blob.vercel-storage.com/C%C3%A0%20ph%C3%AA%20s%E1%BB%AFa%20%C4%91%C3%A1-PFARJLTrTEgr6UEFJeeKpA6jaMc4mK" :
+                                        category.name === "Bánh ngọt" ? "https://aw6zddwvvm1te20u.public.blob.vercel-storage.com/B%C3%A1nh%20b%C3%B2-ljJkUSP5kxOQtmEmjvwOKVkoOxeIgo" :
+                                        category.name === "Món lẩu" ? "https://aw6zddwvvm1te20u.public.blob.vercel-storage.com/L%E1%BA%A9u%20th%C3%A1i%20chua%20cay-doiXtZESEyMWNfB2cYi7957M8xTMXt" :
+                                            "https://aw6zddwvvm1te20u.public.blob.vercel-storage.com/B%C3%A1nh%20tr%C3%A1ng%20tr%E1%BB%99n-qvzjvOKGOjQrrD32G8t4VXhbKx4tNW"
+                                    }
+                                    alt={category.name}
+                                    layout="fill"
+                                    objectFit="cover"
+                                    className="rounded-lg hover:scale-125 transition"
+                                />
+                            </div>
+                            <p className="mt-2 text-2xl font-semibold">{category.name}</p>
+                        </CarouselItem>
+                    ))}
+                </CarouselContent>
+                <CarouselPrevious />
+                <CarouselNext />
+            </Carousel>
         </div>
     )
 }

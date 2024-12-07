@@ -1,9 +1,20 @@
 "use client"
 import { Button } from "@/components/ui/button"
 import Image from "next/image"
+import { getSession } from "@/lib/auth-client"
+import useSWR from "swr"
+
+
+
+// Lấy userId từ session
+const fetcherUserId = async () => {
+    const response = await getSession();
+    const userId = response?.data?.user?.id as string;
+    return userId;
+};
 
 export function OrderOnline() {
-    const userId = sessionStorage.getItem("userId");
+    const { data: userId, error: userIdError } = useSWR("userId", fetcherUserId);
 
     return (
         <div className="relative flex justify-center items-center w-screen py-16 bg-black">
@@ -15,7 +26,7 @@ export function OrderOnline() {
                     objectFit="cover">
                 </Image>
             </div>
-            <div className="flex flex-col justify-between items-center gap-y-7 w-64 py-4 px-2 bg-white rounded-3xl text-center z-10">
+            <div className="flex flex-col justify-between items-center gap-y-7 w-64 py-4 px-2 bg-white rounded-3xl text-center z-0">
                 <div className="flex flex-col justify-center items-center">
                     <h2 className='italic text-3xl text-black'>Order Online</h2>
                     <ShortHorizontalLine />

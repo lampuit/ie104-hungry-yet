@@ -3,10 +3,18 @@ import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import Image from "next/image";
 import useSWR from 'swr';
+import { getSession } from "@/lib/auth-client";
+
+// Lấy userId từ session
+const fetcherUserId = async () => {
+    const response = await getSession();
+    const userId = response?.data?.user?.id as string;
+    return userId;
+};
 
 
 export function Intro() {
-    const userId = sessionStorage.getItem('userId');
+    const { data: userId, error: userIdError } = useSWR("userId", fetcherUserId);
 
     return (
         <div className="flex flex-col justify-between items-center w-screen mx-10 py-10 gap-y-52">
