@@ -57,7 +57,7 @@ export function Checkout({ carts }: { carts: any[] }) {
     0,
   );
 
-  const total = subtotal;
+  const total = subtotal - discount;
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -75,8 +75,8 @@ export function Checkout({ carts }: { carts: any[] }) {
         discountId,
         paymentMethod,
         userId || "",
-        `${values.street} ${values.ward || ''} ${values.district || ''} ${values.province || ''}`,
-        40
+        `${values.street} ${values.ward || ""} ${values.district || ""} ${values.province || ""}`,
+        40,
       );
 
       if (result.success) {

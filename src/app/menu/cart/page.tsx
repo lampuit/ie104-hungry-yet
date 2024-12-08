@@ -40,7 +40,7 @@ interface CartTotal {
 
 export default function CartPage() {
   const { data: userId } = useSWR('userId', fetcherUserId);
-  const { data: listDish, isLoading, error, mutate } = useSWR(userId, fetcherCarts, {
+  const { data: listDish, isLoading, error } = useSWR(userId, fetcherCarts, {
     revalidateIfStale: true,
     revalidateOnFocus: false,
     revalidateOnReconnect: true,
@@ -63,10 +63,7 @@ export default function CartPage() {
       }));
       setDishes(formattedData);
       setTotal({
-        totalAmount: formattedData.reduce(
-          (acc:any, item: any) => acc + item.amount,
-          0
-        ),
+        totalAmount: formattedData.length,
         totalPrice: formattedData.reduce(
           (acc:any, item:any) => acc + item.cost * item.amount,
           0
@@ -82,10 +79,7 @@ export default function CartPage() {
     setDishes(updatedDishes);
 
     // recalculate total amount
-    const newTotalAmount = updatedDishes.reduce(
-      (acc, item) => acc + item.amount,
-      0
-    );
+    const newTotalAmount = updatedDishes.length;
     const newTotalPrice = updatedDishes.reduce(
       (acc, item) => acc + item.amount * item.cost,
       0

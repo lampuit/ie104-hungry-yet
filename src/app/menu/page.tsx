@@ -40,6 +40,7 @@ export default function MenuPage() {
   const [clickedIndex, setClickedIndex] = useState<string>("");
   const [dishesList, setDishesList] = useState<Dish[]>([]);
   const [totalCount, setTotalCount] = useState<number>(0);
+  const [totalAmount, setTotalAmount] = useState<number>(0);
   const categories = data || [];
 
   const handleChangePage = (newPage: number) => {
@@ -99,7 +100,7 @@ export default function MenuPage() {
     isLoading ? <LoadingSpinner /> :
       <main className="w-screen">
         <header className="mt-8">
-          <SearchingArea />
+        <SearchingArea totalAmount={totalAmount} />
         </header>
 
         <section className="flex flex-col items-center">
@@ -119,7 +120,7 @@ export default function MenuPage() {
             {dishesList.length === 0 || dishesList.every((dish) => !dish.published) ? (
               <p>Không có sản phẩm nào</p>
             ) : (
-              <DishList dishesList={dishesList} />
+              <DishList dishesList={dishesList} onTotalAmountChange={setTotalAmount} />
             )}
           </section>
           {totalPages > 1 && (

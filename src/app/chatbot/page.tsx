@@ -2,6 +2,7 @@
 
 import { ChatMessages } from "@/components/chatbot/chat-message";
 import { MessageList } from "@/components/chatbot/mesage-list";
+import { Button } from "@/components/ui/button";
 import { ChatContainer, ChatForm } from "@/components/ui/chat";
 import { MessageInput } from "@/components/ui/message-input";
 import {
@@ -12,10 +13,14 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet";
+import { useSession } from "@/lib/auth-client";
 
 import { useChat } from "ai/react";
+import Link from "next/link";
 
 export default function Page() {
+  const { data: session } = useSession();
+
   const {
     messages,
     input,
@@ -41,30 +46,39 @@ export default function Page() {
             Sử dụng hội thoại trực tuyến để đặt món ăn
           </SheetDescription>
         </SheetHeader>
-        <ChatContainer className="mt-8 min-h-0 flex-1">
-          <ChatMessages messages={messages}>
-            {!isEmpty && (
-              <MessageList
-                messages={messages}
-                isTyping={isTyping}
-                append={append}
-              />
-            )}
-          </ChatMessages>
-          <ChatForm
-            isPending={isLoading || isTyping}
-            handleSubmit={handleSubmit}
-          >
-            {() => (
-              <MessageInput
-                value={input}
-                onChange={handleInputChange}
-                isGenerating={isLoading || isTyping}
-                stop={stop}
-              />
-            )}
-          </ChatForm>
-        </ChatContainer>
+        {session ? (
+          <ChatContainer className="mt-8 min-h-0 flex-1">
+            <ChatMessages messages={messages}>
+              {!isEmpty && (
+                <MessageList
+                  messages={messages}
+                  isTyping={isTyping}
+                  append={append}
+                />
+              )}
+            </ChatMessages>
+            <ChatForm
+              isPending={isLoading || isTyping}
+              handleSubmit={handleSubmit}
+            >
+              {() => (
+                <MessageInput
+                  value={input}
+                  onChange={handleInputChange}
+                  isGenerating={isLoading || isTyping}
+                  stop={stop}
+                />
+              )}
+            </ChatForm>
+          </ChatContainer>
+        ) : (
+          <div className="flex flex-1 flex-col items-center justify-center space-y-4">
+            <span>Vui lòng đăng nhập để sử dụng chức năng này</span>
+            <Button asChild>
+              <Link href="/login">Đăng nhập</Link>
+            </Button>
+          </div>
+        )}
       </SheetContent>
     </Sheet>
   );
