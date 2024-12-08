@@ -17,6 +17,8 @@ import useSWR from "swr";
 import React, { useState, useEffect } from "react";
 import LoadingSpinner from "@/components/ui/loading-spinner";
 import { getSession } from "@/lib/auth-client";
+import { set } from "date-fns";
+import { AnyARecord } from "dns";
 
 //get shopping cart by userId
 const fetcherCarts = async (userId: string) => {
@@ -57,13 +59,13 @@ export default function CartPage() {
         cost: item.product?.price,
         amount: item?.quantity,
         category: item.product?.category?.name,
-        isFavorite: item.product?.favorites.length === 0 ? false : true,
+        isFavorite: item.product?.favorites?.length === 0 ? false : true,
       }));
       setDishes(formattedData);
       setTotal({
         totalAmount: formattedData.length,
         totalPrice: formattedData.reduce(
-          (acc, item) => acc + item.cost * item.amount,
+          (acc:any, item:any) => acc + item.cost * item.amount,
           0
         ),
       });

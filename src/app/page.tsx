@@ -15,6 +15,7 @@ import { Testimonials } from "@/components/home/testimonials";
 import { HorizontalLine } from "@/components/home/intro";
 import { FAQ } from "@/components/home/faq";
 import { Charm } from "next/font/google";
+import { motion } from "framer-motion";
 
 const charm = Charm({
   subsets: ["vietnamese"],
@@ -33,7 +34,10 @@ export default function Homepage() {
           <ImgBgHover />
         </div>
         <div className="absolute w-full h-[calc(100vh-80px)] bg-gradient-radial from-black to-transparent z-0"></div>
-        <div className="relative top-1/3 flex flex-col justify-between items-center min-h-52 max-h-64 text-white z-10">
+        <motion.div className="relative top-1/3 flex flex-col justify-between items-center min-h-52 max-h-64 text-white z-10"
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 2.5, ease: "easeOut" }}>
           <h1 className={`${charm.className} text-7xl md:text-8xl text-center`}>Hungry Yet?</h1>
           <p className="text-xl md:text-2xl text-center">Chọn hương vị, nhận yêu thương - chỉ từ một cú CLICK!</p>
           <div className="flex justify-around min-w-72 gap-x-3">
@@ -44,7 +48,7 @@ export default function Homepage() {
               <Link href={"/menu"}>Xem thực đơn</Link>
             </Button>
           </div>
-        </div>
+        </motion.div>
         <div className="relative end-1/3 z-10">
           <TimeAndAddress />
         </div>
