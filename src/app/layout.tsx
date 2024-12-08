@@ -8,7 +8,7 @@ import { Toaster as Sonner } from "@/components/ui/sonner";
 import { UnauthorizedNavbar } from "@/components/navbar/unauthorized-nav";
 import { AuthorizedNavbar } from "@/components/navbar/authorized-nav";
 import { getSession } from "@/lib/auth-client";
-import { use, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { metadata } from "./metadata";
 import { usePathname } from "next/navigation";
 import useSWR from "swr";
