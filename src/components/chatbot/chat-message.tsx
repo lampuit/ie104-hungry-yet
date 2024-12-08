@@ -1,4 +1,4 @@
-import { UIState } from "@/app/ai";
+
 import { Button } from "@/components/ui/button";
 import { useAutoScroll } from "@/hooks/use-auto-scroll";
 import { ArrowDown } from "lucide-react";
@@ -7,7 +7,7 @@ export function ChatMessages({
   messages,
   children,
 }: React.PropsWithChildren<{
-  messages: UIState;
+  messages: any;
 }>) {
   const {
     containerRef,

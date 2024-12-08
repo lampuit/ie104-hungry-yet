@@ -131,6 +131,7 @@ export const invoices = pgTable("invoices", {
   deliveryAddress: text("deliveryAddress"),
   deliveryTime: integer("deliveryTime"),
   discountId: uuid("discountId").references(() => discounts.id), // Khóa ngoại
+  note: text("note"),
   createdAt: timestamp("createdAt").notNull().defaultNow(),
   updatedAt: timestamp("updatedAt")
     .notNull()
