@@ -42,8 +42,8 @@ export function ProductList({
             className="z-50"
             onClick={async () =>
               append({
-                role: "assitant",
-                content: `Người dùng vừa thêm món ăn ${product.id}`,
+                role: "user",
+                content: `Tôi muốn gọi món ${product.name}`,
               })
             }
           >

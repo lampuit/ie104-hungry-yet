@@ -1,6 +1,7 @@
 import { CartSummary } from "@/components/chatbot/cart-summary";
 import { ProductList } from "@/components/chatbot/product-list";
 import { ChatMessage } from "@/components/ui/chat-message";
+import { Skeleton } from "@/components/ui/skeleton";
 import { TypingIndicator } from "@/components/ui/typing-indicator";
 import { ToolInvocation } from "ai";
 
@@ -23,6 +24,7 @@ export function MessageList({
               role={message.role}
               content={message.content}
               createdAt={new Date()}
+              showTimeStamp
               animation="none"
             />
           )}
@@ -42,16 +44,19 @@ export function MessageList({
                       {toolName === "displayCarts" ? (
                         <CartSummary {...result} />
                       ) : null}
+                      {toolName === "displayCarts" ? (
+                        <CartSummary {...result} />
+                      ) : null}
                     </div>
                   );
                 } else {
                   return (
                     <div key={toolCallId}>
                       {toolName === "displayProducts" ? (
-                        <div>Loading...</div>
+                        <Skeleton className="h-[200px] w-[500px]" />
                       ) : null}
                       {toolName === "displayCarts" ? (
-                        <div>Loading...</div>
+                        <Skeleton className="h-[200px] w-[650px]" />
                       ) : null}
                     </div>
                   );
