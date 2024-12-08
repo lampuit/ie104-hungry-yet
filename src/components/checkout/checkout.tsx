@@ -36,10 +36,7 @@ const fetcherUserId = async () => {
 };
 
 const formSchema = z.object({
-  street: z.string().min(1, "Địa chỉ không được để trống"), // Trường bắt buộc
-  province: z.string().min(1, "Tỉnh thành không được để trống"), // Trường bắt buộc
-  district: z.string().optional(), // Tùy chọn, không cần ràng buộc thêm
-  ward: z.string().optional(), // Tùy chọn, không cần ràng buộc thêm
+  addressDelivery: z.string().min(1, "Địa chỉ không được để trống"), // Trường bắt buộc
   phone: z.string().regex(/^(\+84|0)\d{9,10}$/, "Số điện thoại không hợp lệ"), // Validation cho số điện thoại Việt Nam
   note: z.string().max(200, "Ghi chú không được vượt quá 200 ký tự"), // Giới hạn độ dài ghi chú
 });
@@ -75,8 +72,10 @@ export function Checkout({ carts }: { carts: any[] }) {
         discountId,
         paymentMethod,
         userId || "",
-        `${values.street} ${values.ward || ""} ${values.district || ""} ${values.province || ""}`,
+        values.addressDelivery,
         40,
+        values.note,
+        values.phone
       );
 
       if (result.success) {

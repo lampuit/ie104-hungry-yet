@@ -130,6 +130,7 @@ export const invoices = pgTable("invoices", {
   status: invoiceStatusEnum("status"),
   deliveryAddress: text("deliveryAddress"),
   deliveryTime: integer("deliveryTime"),
+  phone: text("phone"),
   discountId: uuid("discountId").references(() => discounts.id), // Khóa ngoại
   note: text("note"),
   createdAt: timestamp("createdAt").notNull().defaultNow(),
