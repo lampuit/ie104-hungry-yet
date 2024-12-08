@@ -4,7 +4,7 @@ import Link from "next/link";
 
 export function UnauthorizedNavbar() {
   return (
-    <nav className="flex flex-row px-10 py-5 justify-between items-center h-20 w-full max-w-screen-2xl text-white">
+    <nav className="flex flex-row px-10 py-5 justify-between items-center h-20 w-full max-w-screen-2xl text-white z-40">
       <Link href={"/"} className="grow flex flex-row justify-start min-w-52 items-center">
         <Truck className="stroke-2"/>
         <p className="sm:text-xl md:text-2xl font-bold px-2">Hungry Yet?</p>

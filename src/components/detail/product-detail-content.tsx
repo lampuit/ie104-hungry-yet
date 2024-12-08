@@ -229,7 +229,7 @@ export function ProductDetailContent({ id }: { id: string }) {
                     </div>
                 </div>
             </section>
-            <section className="w-full flex justify-start my-10 mx-10 px-5">
+            <section className="flex justify-start my-10 mx-10 px-5">
                 <div className="space-y-3">
                     <h1 className="font-semibold text-2xl">Mô tả món ăn</h1>
                     <p>{dish.des}</p>
