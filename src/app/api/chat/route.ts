@@ -39,7 +39,7 @@ export async function POST(req: Request) {
     system: `
     - Bạn là một bot con bot của một tiệm bán đồ ăn tên Hungry Yet
     - Hãy phản hồi ngắn gọn
-    - Khi thanh toán yêu cầu người dùng nhập đầy đủ thông tin
+    - Yêu cầu đầy đủ thông tin khi thanh toán
     `,
     messages,
     maxSteps: 5,
@@ -55,7 +55,7 @@ export async function POST(req: Request) {
       displayProducts: {
         description: "Hiện danh sách các món ăn dựa theo thể loại",
         parameters: z.object({
-          category_id: z.string(),
+          category_id: z.string().describe("ID của thể loại món ăn"),
         }),
         execute: async function ({ category_id }) {
           const products = await getProductsByCategory(category_id);
@@ -87,8 +87,8 @@ export async function POST(req: Request) {
       addCart: {
         description: "Thêm món ăn vào giỏ hàng",
         parameters: z.object({
-          product_id: z.string(),
-          quantity: z.number(),
+          product_id: z.string().describe("ID của món ăn được thêm"),
+          quantity: z.number().describe("Số lượng món ăn"),
         }),
         execute: async function ({ product_id, quantity }) {
           const formData = new FormData();
@@ -102,8 +102,8 @@ export async function POST(req: Request) {
       updateCart: {
         description: "Cập nhập món ăn được chỉ định trong giỏ hàng",
         parameters: z.object({
-          product_id: z.string(),
-          quantity: z.number(),
+          product_id: z.string().describe("ID của món ăn được cập nhập"),
+          quantity: z.number().describe("Số lượng món ăn"),
         }),
         execute: async function ({ product_id, quantity }) {
           const formData = new FormData();
@@ -118,7 +118,7 @@ export async function POST(req: Request) {
       deleteCart: {
         description: "Xóa món ăn được chỉ định ra khỏi giỏ hàng",
         parameters: z.object({
-          product_id: z.string(),
+          product_id: z.string().describe("ID của món ăn được xóa"),
         }),
         execute: async function ({ product_id }) {
           const carts = await deletecarts(product_id, session.user.id);
@@ -141,8 +141,8 @@ export async function POST(req: Request) {
           return { discounts };
         },
       },
-      checkout: {
-        description: "Thanh toán hóa đơn",
+      disPlayment: {
+        description: "Thanh toán các món ăn trong giỏ hàng",
         parameters: z.object({
           street: z
             .string()
@@ -153,17 +153,23 @@ export async function POST(req: Request) {
           district: z
             .string()
             .describe("Tên quận/huyện nơi đơn hàng được giao."),
-          ward: z.string().describe("Tên phường/xã nơi đơn hàng được giao."),
+          ward: z
+            .string()
+            .describe("Tên phường/xã nơi đơn hàng được giao.")
+            .optional(),
           phone: z
             .string()
             .describe(
               "Số điện thoại của người nhận đơn hàng để liên hệ khi cần.",
-            ),
+            )
+            .optional(),
           note: z
             .string()
             .describe(
               "Ghi chú bổ sung cho người giao hàng, ví dụ: 'Gọi trước khi giao' hoặc 'Giao sau 18h'.",
             ),
+          discount: z.number().describe("Số tiền giảm giá").optional(),
+          discountCode: z.number().describe("Mã giảm giá").optional(),
         }),
         execute: async function ({
           street,
@@ -172,8 +178,25 @@ export async function POST(req: Request) {
           ward,
           phone,
           note,
+          discount,
+          discountCode,
         }) {
-          return { address: street + province + district + ward + phone, note };
+          const carts = await getCartsByUserId(session.user.id);
+
+          const subtotal: number = carts.reduce(
+            (acc, cart) => acc + cart?.product?.price * cart?.quantity,
+            0,
+          );
+
+          return {
+            carts,
+            address: { street, province, district, ward },
+            phone,
+            note,
+            discount,
+            discountCode,
+            subtotal,
+          };
         },
       },
     },
