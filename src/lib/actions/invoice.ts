@@ -16,9 +16,7 @@ export async function updateInvoices(formData: FormData) {
             phone: formData.get("phone") as string,
         })
         .where(
-            and(
-                eq(invoices.id, formData.get("id") as string),
-            ),
+            eq(invoices.id, formData.get("id") as string),
         )
         ;
 }

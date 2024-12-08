@@ -20,9 +20,24 @@ const fetcherInvoiceInf = async (invoiceId: string) => {
 }
 
 export function InformationForm({ form }: { form: any }) {
+
   const invoiceId = form.getValues("invoiceId");
 
-  const { data: invoice, isLoading } = useSWR(invoiceId, fetcherInvoiceInf);
+  const { data: invoice, isLoading, error } = useSWR(invoiceId, fetcherInvoiceInf);
+
+  if (error) {
+    console.error("Error fetching invoice data:", error);
+  }
+
+
+  useEffect(() => {
+    if (invoice) {
+      form.setValue("invoiceId", invoice.id);
+      form.setValue("addressDelivery", invoice.deliveryAddress || "");
+      form.setValue("phone", invoice.phone || "");
+      form.setValue("note", invoice.note || "");
+    }
+  }, [invoice]);
 
   return (
     <Card>

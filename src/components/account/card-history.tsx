@@ -1,3 +1,4 @@
+"use client"
 import { usePathname } from "next/navigation";
 import { Button } from "../ui/button";
 import { Bike, BotMessageSquare, ChevronRight, Eye, PenLine, PhoneCall, RefreshCcw, Star, Truck, X } from "lucide-react";
@@ -46,6 +47,8 @@ import { useState } from "react";
 import { useForm } from "react-hook-form";
 import z from "zod";
 import { getSession } from "@/lib/auth-client";
+import { updateInvoices } from "@/lib/actions/invoice";
+import { toast } from "sonner";
 
 interface Invoice {
     id: string;
@@ -56,47 +59,37 @@ interface Invoice {
 
 }
 
+// const fetcherInvoiceDetail = async (invoiceId: string) => {
+//     if (!invoiceId) return null;
+//     return await getInvoiceDetail(invoiceId);
+// };
+
 const fetcherInvoiceDetail = async (invoiceId: string) => {
     if (!invoiceId) return null;
-    return await getInvoiceDetail(invoiceId);
+    const data = await getInvoiceDetail(invoiceId);
+    return data ? {
+        ...data,
+        createdAt: new Date(data.createdAt).toISOString(), // Ensure createdAt is a string
+    } : null;
 };
 
 const formSchema = z.object({
+    invoiceId: z.string(),
     addressDelivery: z.string().min(1, "Địa chỉ không được để trống"), // Trường bắt buộc
     phone: z.string().regex(/^(\+84|0)\d{9,10}$/, "Số điện thoại không hợp lệ"), // Validation cho số điện thoại Việt Nam
     note: z.string().max(200, "Ghi chú không được vượt quá 200 ký tự"), // Giới hạn độ dài ghi chú
 });
 
-// const fetcherInvoiceUserInfo = async (invoiceId: string) => {
-//     if (!invoiceId) return null;
-//     return await getInvoiceDetail(invoiceId);
-// };
-
-// function formatDate(date: Date | string | undefined) {
-//     if (!date) return "N/A";
-//     const d = new Date(date);
-//     const day = String(d.getDate()).padStart(2, "0");
-//     const month = String(d.getMonth() + 1).padStart(2, "0");
-//     const year = d.getFullYear();
-//     return `${day}/${month}/${year}`;
-// }
-
-
-// function SearchParamsProvider({ children }: { children: (params: { invoiceId: string | null }) => React.ReactNode }) {
-//     const searchParams = useSearchParams();
-//     const invoiceId = searchParams.get("invoiceId");
-//     return children({ invoiceId });
-// }
-
 
 export function CardHistory({ invoice }: { invoice: Invoice }) {
-    const { data: invoiceData, error } = useSWR(invoice.id, fetcherInvoiceDetail);
+    const { data: invoiceData } = useSWR(invoice.id, fetcherInvoiceDetail);
     const pathname = usePathname();
     const isCompletePage = pathname.includes("/account/history/complete");
     const isCancelPage = pathname.includes("/account/history/cancel");
     const isDeliveryPage = pathname.includes("/account/history/delivery");
     const isWaitingPage = pathname.includes("/account/history/waiting");
     const isPreparePage = pathname.includes("/account/history/preparing");
+
     const router = useRouter();
     const convertToVND = (price: number) => {
         return new Intl.NumberFormat("vi-VN", {
@@ -104,13 +97,14 @@ export function CardHistory({ invoice }: { invoice: Invoice }) {
             currency: "VND",
         }).format(price);
     };
-    const [position, setPosition] = React.useState("bottom")
+
     const splitInvoiceId = (invoiceId: string) =>
         invoiceId?.split("-").join("").substr(0, 15);
 
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
         defaultValues: {
+            invoiceId: invoice.id,
             addressDelivery: "",
             phone: "",
             note: "",
@@ -118,7 +112,19 @@ export function CardHistory({ invoice }: { invoice: Invoice }) {
     });
 
     const onSubmit = async (values: z.infer<typeof formSchema>) => {
-        console.log(values);
+        try {
+            const data = new FormData();
+            data.append("addressDelivery", values.addressDelivery);
+            data.append("phone", values.phone);
+            data.append("note", values.note);
+            data.append("id", invoice.id);
+
+            await updateInvoices(data);
+            toast.success("Cập nhật thông tin đơn hàng thành công");
+        } catch (error) {
+            console.error("Error updating invoice:", error);
+            toast.error("Cập nhật thông tin đơn hàng thất bại");
+        }
     };
 
 
@@ -341,6 +347,11 @@ export function CardHistory({ invoice }: { invoice: Invoice }) {
                                 <Form {...form}>
                                     <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
                                         <InformationForm form={form} />
+                                        <div className="flex justify-center mt-4">
+                                            <Button className="align-center" type="submit">
+                                                Lưu thông tin
+                                            </Button>
+                                        </div>
                                     </form>
                                 </Form>
                             </DialogContent>
