@@ -169,10 +169,9 @@ export function CardHistory({ invoice }: { invoice: Invoice }) {
     };
 
     return (
-        <section className="flex flex-col gap-2 p-5 bg-white rounded shadow-md ">
-
+        <section className="flex flex-col gap-2 p-3 sm:p-5 bg-white rounded shadow-md">
             {/* Thông tin đơn hàng */}
-            <div className="flex justify-between mb-2">
+            <div className="flex flex-col gap-1 px-2 sm:px-10">
                 {isWaitingPage || isDeliveryPage ? (
                     <div className="flex flex-col gap-1 text-xs">
                         <p className="flex gap-1 items-center">
