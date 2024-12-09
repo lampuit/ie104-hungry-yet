@@ -11,6 +11,7 @@ import LoadingSpinner from '../ui/loading-spinner';
 import { getSession } from "@/lib/auth-client";
 import Image from 'next/image';
 import { createCart } from '@/lib/actions/cart';
+import { AddToCartButton } from './add-to-cart-btn';
 
 // Lấy userId từ session
 const fetcherUserId = async () => {
@@ -36,7 +37,7 @@ interface IsFavorite {
 
 interface DishListProps {
     dishesList: Dish[];
-    onTotalAmountChange: (totalAmount: number) => void;
+    // onTotalAmountChange: (totalAmount: number) => void;
 }
 
 const favoriteFetcher = async (userId: string) => {
@@ -47,26 +48,26 @@ const productsFetcher = async () => {
     return await getAllProducts();
 };
 
-//get shopping cart by userId
-const cartFetcher = async (userId: string) => {
-    return getCartsByUserId(userId);
-};
+// //get shopping cart by userId
+// const cartFetcher = async (userId: string) => {
+//     return getCartsByUserId(userId);
+// };
 
-export const DishList = ({ dishesList, onTotalAmountChange }: DishListProps) => {
+export const DishList = ({ dishesList }: DishListProps) => {
     const router = useRouter();
     const { data: userId, error: userIdError } = useSWR("userId", fetcherUserId);
     const { data: productsData, error: productsError } = useSWR("products", productsFetcher);
     const { data: favoriteData, error: favoriteError } = useSWR(`id-${userId}`, () => favoriteFetcher(userId || ""));
-    const { data: cartData, error: cartError } = useSWR(userId, cartFetcher);
-    const [totalAmount, setTotalAmount] = useState<number>(0);
+    // const { data: cartData, error: cartError } = useSWR(userId, cartFetcher);
+    // const [totalAmount, setTotalAmount] = useState<number>(0);
     const [favorites, setFavorites] = useState<IsFavorite[]>([]);
 
-    useEffect(() => {
-        if (cartData) {
-            setTotalAmount(cartData.length);
-            onTotalAmountChange(cartData.length); // Pass totalAmount to parent
-        }
-    }, [cartData]);
+    // useEffect(() => {
+    //     if (cartData) {
+    //         setTotalAmount(cartData.length);
+    //         onTotalAmountChange(cartData.length); // Pass totalAmount to parent
+    //     }
+    // }, [cartData]);
 
     useEffect(() => {
         if (productsData) {
@@ -134,26 +135,26 @@ export const DishList = ({ dishesList, onTotalAmountChange }: DishListProps) => 
         }
     };
 
-    const handleAddToCartOnClick = async (productId: string, productName: string) => {
-        const data = new FormData();
-        if (!userId) {
-            router.push("/login");
-        } else {
-            data.append('userId', userId as string);
-            data.append('productId', productId);
-            data.append('quantity', '1');
+    // const handleAddToCartOnClick = async (productId: string) => {
+    //     const data = new FormData();
+    //     if (!userId) {
+    //         router.push("/login");
+    //     } else {
+    //         data.append('userId', userId as string);
+    //         data.append('productId', productId);
+    //         data.append('quantity', '1');
     
-            await createCart(data);
+    //         await createCart(data);
     
-            setTotalAmount(prevTotal => {
-                const newTotal = prevTotal + 1;
-                onTotalAmountChange(newTotal); // Update parent with new total
-                return newTotal;
-            });
+    //         // setTotalAmount(prevTotal => {
+    //         //     const newTotal = prevTotal + 1;
+    //         //     onTotalAmountChange(newTotal); // Update parent with new total
+    //         //     return newTotal;
+    //         // });
     
-            toast({ description: `Đã thêm ${productName.toLowerCase()} vào giỏ hàng` });
-        }
-    };
+    //         toast({ description: `Đã thêm ${.toLowerCase()} vào giỏ hàng` });
+    //     }
+    // };
 
     const convertToVND = (price: number) => {
         return new Intl.NumberFormat("vi-VN", {
@@ -251,10 +252,11 @@ export const DishList = ({ dishesList, onTotalAmountChange }: DishListProps) => 
                             >
                                 Xem chi tiết
                             </Button>
-                            <Button onClick={() => handleAddToCartOnClick(dish.id, dish.name)}
+                            <AddToCartButton dish={dish}/>
+                            {/* <Button onClick={() => handleAddToCartOnClick(dish.id, dish.name)}
                                 className='rounded-3xl bg-amber-500 hover:bg-red-500'>
                                 <ShoppingCart /> <span>Thêm giỏ hàng</span>
-                            </Button>
+                            </Button> */}
                         </div>
                     </div>
                 ) : null
