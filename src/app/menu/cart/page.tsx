@@ -1,22 +1,21 @@
 "use client";
 
+import React, { useState, useEffect } from "react";
+import { DataTable } from "@/components/menu/cart/data-table";
+import { columns } from "@/components/menu/cart/columns";
+import { getCartsByUserId, getFavoriteByUserId } from "@/lib/data";
+import useSWR from "swr";
+import LoadingSpinner from "@/components/ui/loading-spinner";
+import { getSession } from "@/lib/auth-client";
+import { Summary } from "@/components/menu/cart/summary";
 import {
   Breadcrumb,
-  BreadcrumbEllipsis,
   BreadcrumbItem,
   BreadcrumbLink,
   BreadcrumbList,
   BreadcrumbPage,
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
-import { Summary } from "@/components/menu/cart/summary";
-import { columns } from "@/components/menu/cart/columns";
-import { DataTable } from "@/components/menu/cart/data-table";
-import { getCartsByUserId, getFavoriteByUserId } from "@/lib/data";
-import useSWR from "swr";
-import React, { useState, useEffect } from "react";
-import LoadingSpinner from "@/components/ui/loading-spinner";
-import { getSession } from "@/lib/auth-client";
 
 //get shopping cart by userId
 const fetcherCarts = async (userId: string) => {
@@ -37,7 +36,7 @@ const favoriteFetcher = async (userId: string) => {
 
 export default function CartPage() {
   const { data: userId } = useSWR('userId', fetcherUserId);
-  const { data: listDish, isLoading, error } = useSWR(`userId${userId}`, () => fetcherCarts(userId || ""), {
+  const { data: listDish, isLoading, error, mutate } = useSWR(`userId${userId}`, () => fetcherCarts(userId || ""), {
     revalidateIfStale: true,
     revalidateOnFocus: false,
     revalidateOnReconnect: true,
@@ -117,7 +116,7 @@ export default function CartPage() {
         </Breadcrumb>
       </section>
       <section className="flex flex-col justify-center items-center">
-        <DataTable columns={columns} data={dishes} onQuantityChange={handleQuantityChange}></DataTable>
+        <DataTable columns={columns(mutate)} data={dishes} onQuantityChange={handleQuantityChange}></DataTable>
       </section>
       <section className="sticky bottom-0 grow flex flex-col justify-end items-center mt-4">
         <Summary totalPrice={formattedTotalPrice} totalAmount={totalAmount} />

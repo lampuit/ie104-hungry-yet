@@ -1,11 +1,13 @@
-import React from "react"
-import { Button } from "@/components/ui/button"
-import { createFavorite, deleteFavorite } from "@/lib/actions/favorite"
-import { deletecarts, updateCarts } from "@/lib/actions/cart"
-import { ColumnDef } from "@tanstack/react-table"
-import { Heart, Trash } from 'lucide-react'
-import Image from "next/image"
-import { useState } from "react"
+"use client";
+
+import React from "react";
+import { Button } from "@/components/ui/button";
+import { createFavorite, deleteFavorite } from "@/lib/actions/favorite";
+import { deletecarts, updateCarts } from "@/lib/actions/cart";
+import { ColumnDef } from "@tanstack/react-table";
+import { Heart, Trash } from 'lucide-react';
+import Image from "next/image";
+import { useState } from "react";
 import {
     AlertDialog,
     AlertDialogAction,
@@ -16,9 +18,9 @@ import {
     AlertDialogHeader,
     AlertDialogTitle,
     AlertDialogTrigger,
-} from "@/components/ui/alert-dialog"
-import { toast } from "sonner"
-import useSWR, { mutate } from "swr"
+} from "@/components/ui/alert-dialog";
+import { toast } from "sonner";
+import useSWR, { mutate } from "swr";
 import { getSession } from "@/lib/auth-client";
 
 // Lấy userId từ session
@@ -31,23 +33,21 @@ const fetcherUserId = async () => {
 let userId: string | undefined;
 
 export type Cart = {
-    id: string
-    img: string
-    name: string
-    des: string
-    cost: number
-    amount: number
-    category: string
-    isFavorite: boolean
-}
+    id: string;
+    img: string;
+    name: string;
+    des: string;
+    cost: number;
+    amount: number;
+    category: string;
+    isFavorite: boolean;
+};
 
 type CartTableMeta = {
-    onQuantityChange: (id: string, newQuantity: number) => void
-}
-
+    onQuantityChange: (id: string, newQuantity: number) => void;
+};
 
 const AmountCell = ({ row, table }: { row: any; table: any }) => {
-
     const { data } = useSWR('userId', fetcherUserId);
     userId = data;
     const [amount, setAmount] = useState(row.original.amount);
@@ -65,7 +65,7 @@ const AmountCell = ({ row, table }: { row: any; table: any }) => {
         formData.append("quantity", quantity.toString());
         updateCarts(formData);
         (table.options.meta as CartTableMeta).onQuantityChange(row.original.id, quantity);
-    }
+    };
 
     const handleIncrease = () => {
         setAmount((prev: any) => {
@@ -73,7 +73,7 @@ const AmountCell = ({ row, table }: { row: any; table: any }) => {
             handleChangeAmount(newAmount);
             return newAmount;
         });
-    }
+    };
 
     const handleDecrease = () => {
         setAmount((prev: any) => {
@@ -84,7 +84,7 @@ const AmountCell = ({ row, table }: { row: any; table: any }) => {
             }
             return prev;
         });
-    }
+    };
 
     return (
         <div className="flex flex-row justify-center items-center gap-4">
@@ -97,14 +97,14 @@ const AmountCell = ({ row, table }: { row: any; table: any }) => {
                 onClick={handleIncrease}>+</Button>
         </div>
     );
-}
+};
 
 const FavoriteCell = ({ row }: { row: any }) => {
     const [isFavorite, setIsFavorite] = useState(row.original.isFavorite);
 
     const handleDeleteFavorite = async () => {
         const id = row.original.id;
-        await deleteFavorite(userId || "", id)
+        await deleteFavorite(userId || "", id);
         setIsFavorite(!isFavorite);
     };
 
@@ -114,7 +114,7 @@ const FavoriteCell = ({ row }: { row: any }) => {
         data.append("userId", userId || "");
         await createFavorite(data);
         setIsFavorite(!isFavorite);
-    }
+    };
 
     return (
         <div>
@@ -122,9 +122,34 @@ const FavoriteCell = ({ row }: { row: any }) => {
                 : <Heart className="stroke-amber-500" onClick={handleUpdateFavorite} />}
         </div>
     );
-}
+};
 
-export const columns: ColumnDef<Cart>[] = [
+const DeleteCell = ({ row, mutate }: { row: any, mutate: () => void }) => {
+    const handleDeleteItem = async () => {
+        const id = row.original.id;
+        await deletecarts(id, userId || "");
+        mutate(); // Update the table data immediately
+        toast("Xoá thành công");
+    };
+
+    return <AlertDialog>
+        <AlertDialogTrigger><Trash className="stroke-amber-500" /></AlertDialogTrigger>
+        <AlertDialogContent>
+            <AlertDialogHeader>
+                <AlertDialogTitle>Bạn có muốn xoá không?</AlertDialogTitle>
+                <AlertDialogDescription>
+                    Hành động này sẽ không thể hoàn tác.
+                </AlertDialogDescription>
+            </AlertDialogHeader>
+            <AlertDialogFooter>
+                <AlertDialogCancel>Không</AlertDialogCancel>
+                <AlertDialogAction className="bg-red-500" onClick={() => handleDeleteItem()}>Có</AlertDialogAction>
+            </AlertDialogFooter>
+        </AlertDialogContent>
+    </AlertDialog>;
+};
+
+export const columns: (mutate: () => void) => ColumnDef<Cart>[] = (mutate) => [
     {
         accessorKey: "name",
         header: () => <div className="text-center">Giỏ hàng</div>,
@@ -144,7 +169,7 @@ export const columns: ColumnDef<Cart>[] = [
                     <p className="font-bold">{name}</p>
                     <p>{des}</p>
                 </div>
-            </div>
+            </div>;
         },
     },
     {
@@ -158,7 +183,7 @@ export const columns: ColumnDef<Cart>[] = [
                     currency: "VND",
                 }).format(price);
             };
-            return <div className="text-center">{convertToVND(cost)}</div>
+            return <div className="text-center">{convertToVND(cost)}</div>;
         },
     },
     {
@@ -172,30 +197,6 @@ export const columns: ColumnDef<Cart>[] = [
     },
     {
         id: "delete",
-        cell: ({ row }) => {
-            const handleDeleteItem = async () => {
-                const id = row.original.id;
-                await deletecarts(id, userId || "");
-                mutate(userId);
-                toast("Xoá thành công")
-            }
-
-            return <AlertDialog>
-                <AlertDialogTrigger><Trash className="stroke-amber-500" /></AlertDialogTrigger>
-                <AlertDialogContent>
-                    <AlertDialogHeader>
-                        <AlertDialogTitle>Bạn có muốn xoá không?</AlertDialogTitle>
-                        <AlertDialogDescription>
-                            Hành động này sẽ không thể hoàn tác.
-                        </AlertDialogDescription>
-                    </AlertDialogHeader>
-                    <AlertDialogFooter>
-                        <AlertDialogCancel>Không</AlertDialogCancel>
-                        <AlertDialogAction className="bg-red-500" onClick={() => handleDeleteItem()}>Có</AlertDialogAction>
-                    </AlertDialogFooter>
-                </AlertDialogContent>
-            </AlertDialog>
-        },
+        cell: ({ row }) => <DeleteCell row={row} mutate={mutate} />,
     }
-]
-
+];
