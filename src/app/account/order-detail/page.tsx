@@ -1,15 +1,10 @@
 "use client";
 
+import React, { Suspense } from "react";
+import { useSearchParams } from "next/navigation";
+import Image from "next/image";
+import useSWR from "swr";
 import { Button } from "@/components/ui/button";
-import {
-    CircleCheck,
-    CookingPot,
-    Package,
-    PackageCheck,
-    Truck,
-    Undo2,
-    WalletCards,
-} from "lucide-react";
 import {
     Breadcrumb,
     BreadcrumbItem,
@@ -25,14 +20,11 @@ import {
     TableHeader,
     TableRow,
 } from "@/components/ui/table";
-import Image from "next/image";
 import { Progress } from "@/components/ui/progress";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { useSearchParams } from "next/navigation";
-import { getInvoiceDetail } from "@/lib/data";
-import useSWR from "swr";
-import { Suspense } from "react";
+import { CircleCheck, CookingPot, Package, PackageCheck, Truck, Undo2, WalletCards } from 'lucide-react';
 import LoadingSpinner from "@/components/ui/loading-spinner";
+import { getInvoiceDetail } from "@/lib/data";
 
 const fetcherInvoiceDetail = async (invoiceId: string) => {
     if (!invoiceId) return null;
@@ -48,13 +40,11 @@ function formatDate(date: Date | string | undefined) {
     return `${day}/${month}/${year}`;
 }
 
-
 function SearchParamsProvider({ children }: { children: (params: { invoiceId: string | null }) => React.ReactNode }) {
     const searchParams = useSearchParams();
     const invoiceId = searchParams.get("invoiceId");
     return children({ invoiceId });
 }
-
 
 function OrderDetailContent({ invoiceId }: { invoiceId: string }) {
     const { data: invoice, error } = useSWR(invoiceId, fetcherInvoiceDetail);
@@ -82,19 +72,23 @@ function OrderDetailContent({ invoiceId }: { invoiceId: string }) {
         invoiceStatus === "pending"
             ? 18
             : invoiceStatus === "accepted"
-                ? 49
-                : invoiceStatus === "ready"
-                    ? 74
-                    : invoiceStatus === "delivered"
-                        ? 100
-                        : 0;
+                ? 38
+                : invoiceStatus === "cooking"
+                    ? 58
+                    : invoiceStatus === "ready"
+                        ? 79
+                        : invoiceStatus === "delivered"
+                            ? 100
+                            : 0;
 
     return (
         <div className="grow flex flex-col lg:px-8 gap-8 max-w-screen-lg mx-auto">
             {/* Header and Breadcrumb */}
             <div className="flex flex-col gap-1">
                 <div className="flex flex-wrap gap-4 items-center">
-                    <Button variant={"outline"}>
+                    <Button onClick={() => {
+                        window.history.back();
+                    }} variant={"outline"}>
                         <Undo2 />
                     </Button>
                     <h1 className="font-bold text-2xl">
@@ -127,7 +121,8 @@ function OrderDetailContent({ invoiceId }: { invoiceId: string }) {
                             ? "Đang chờ xác nhận"
                             : invoiceStatus === "accepted"
                                 ? "Đã xác nhận"
-                                : invoiceStatus === "cooking" ? "Đang chuẩn bị"
+                                : invoiceStatus === "cooking"
+                                    ? "Đang chuẩn bị"
                                     : invoiceStatus === "ready"
                                         ? "Đang giao hàng"
                                         : invoiceStatus === "delivered"
@@ -152,9 +147,9 @@ function OrderDetailContent({ invoiceId }: { invoiceId: string }) {
                             <div className="grid gap-4 grid-cols-2 md:grid-cols-5 text-xs ">
                                 {[
                                     { status: "pending", label: "Chờ xác nhận", icon: WalletCards },
-                                    { status: "accepted", label: "Đang chuẩn bị", icon: CookingPot },
-                                    { status: "cooking", label: "Chờ giao hàng", icon: Package },
-                                    { status: "cooking", label: "Đang giao", icon: Truck },
+                                    { status: "accepted", label: "Đã xác nhận", icon: CircleCheck },
+                                    { status: "cooking", label: "Đang chuẩn bị", icon: CookingPot },
+                                    { status: "ready", label: "Đang giao", icon: Truck },
                                     { status: "delivered", label: "Thành công", icon: PackageCheck },
                                 ].map((step) => (
                                     <div
