@@ -49,6 +49,7 @@ import z from "zod";
 import { getSession } from "@/lib/auth-client";
 import { updateInvoices } from "@/lib/actions/invoice";
 import { toast } from "sonner";
+import { revalidatePath } from "next/cache";
 
 interface Invoice {
     id: string;
@@ -59,18 +60,9 @@ interface Invoice {
 
 }
 
-// const fetcherInvoiceDetail = async (invoiceId: string) => {
-//     if (!invoiceId) return null;
-//     return await getInvoiceDetail(invoiceId);
-// };
-
 const fetcherInvoiceDetail = async (invoiceId: string) => {
     if (!invoiceId) return null;
-    const data = await getInvoiceDetail(invoiceId);
-    return data ? {
-        ...data,
-        createdAt: new Date(data.createdAt).toISOString(), // Ensure createdAt is a string
-    } : null;
+    return await getInvoiceDetail(invoiceId);
 };
 
 const formSchema = z.object({
@@ -113,14 +105,20 @@ export function CardHistory({ invoice }: { invoice: Invoice }) {
 
     const onSubmit = async (values: z.infer<typeof formSchema>) => {
         try {
-            const data = new FormData();
-            data.append("addressDelivery", values.addressDelivery);
-            data.append("phone", values.phone);
-            data.append("note", values.note);
-            data.append("id", invoice.id);
+            const formData = new FormData();
+            formData.append("deliveryAddress", values.addressDelivery);
+            formData.append("phone", values.phone);
+            formData.append("note", values.note);
+            formData.append("id", invoice.id);
 
-            await updateInvoices(data);
-            toast.success("Cập nhật thông tin đơn hàng thành công");
+            const result = await updateInvoices(formData);
+            if (result.success) {
+                toast.success(result.message);
+                revalidatePath("/account/history");
+                
+            } else {
+                toast.error(result.message);
+            }
         } catch (error) {
             console.error("Error updating invoice:", error);
             toast.error("Cập nhật thông tin đơn hàng thất bại");
