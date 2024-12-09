@@ -57,6 +57,7 @@ export function CardHistory({ invoice }: { invoice: Invoice }) {
     const [confirmDelete, setConfirmDelete] = useState(false);
     const [ratings, setRatings] = useState<{ [key: string]: number }>({});
     const [reviews, setReviews] = useState<{ [key: string]: string }>({});
+    const [isAnonymous, setIsAnonymous] = useState(false);
 
     const pathname = usePathname();
     const isCompletePage = pathname.includes("/account/history/complete");
@@ -177,7 +178,7 @@ export function CardHistory({ invoice }: { invoice: Invoice }) {
                 formData.append("productId", productId);
                 formData.append("star", rating.toString());
                 formData.append("review", reviews[productId] || "");
-                console.log("formData", formData);
+                formData.append("isAnonymous", isAnonymous ? "1" : "0");
                 await createRatings(formData);
             }
             toast.success("Đánh giá đã được gửi thành công");
@@ -347,7 +348,7 @@ export function CardHistory({ invoice }: { invoice: Invoice }) {
                                             </div>
                                         ))}
                                         <div className="flex items-center space-x-2 mt-4">
-                                            <Checkbox id="anonymous" />
+                                            <Checkbox id="anonymous" onCheckedChange={(checked) => setIsAnonymous(checked === true)} />
                                             <label
                                                 htmlFor="anonymous"
                                                 className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"

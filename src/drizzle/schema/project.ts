@@ -91,6 +91,7 @@ export const ratings = pgTable("ratings", {
   star: integer("star").notNull(),
   review: text("review"),
   imageURL: text("imageURL"),
+  isAnonymous: boolean("isAnonymous").notNull(),
   createdAt: timestamp("createdAt").notNull().defaultNow(),
   updatedAt: timestamp("updatedAt").$onUpdate(() => new Date()),
 });
