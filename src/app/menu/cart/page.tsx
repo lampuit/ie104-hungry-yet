@@ -52,7 +52,7 @@ export default function CartPage() {
         cost: item.product?.price,
         amount: item?.quantity,
         category: item.product?.category?.name,
-        isFavorite: item.product?.favorites.length === 0 ? false : true,
+        isFavorite: item.product?.favorites?.length === 0 ? false : true,
       }));
       setDishes(formattedData);
       setTotalAmount(listDish.length);

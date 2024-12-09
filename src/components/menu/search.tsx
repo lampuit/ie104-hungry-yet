@@ -7,11 +7,11 @@ import { useState } from 'react';
 import { Filter, Search, ShoppingCart } from "lucide-react";
 import { useRouter } from 'next/navigation';
 
-// interface SearchingAreaProps {
-//     totalAmount: number;
-// }
+interface SearchingAreaProps {
+    totalAmount: number;
+}
 
-export function SearchingArea() {
+export function SearchingArea({ totalAmount }: SearchingAreaProps) {
     const router = useRouter();
     const inputRef = useRef<HTMLInputElement>(null);
     const [inputWidth, setInputWidth] = useState("w-1/4");
@@ -52,7 +52,7 @@ export function SearchingArea() {
                 <Link href={"/menu/cart"}>
                     <div className="relative">
                         <ShoppingCart size={24} onClick={() => handlleShoppingCartOnClick()}/>
-                        <p className="absolute text-center left-3/4 bottom-3/4 p-[2px] text-[0.5rem] font-semibold w-4 h-4 bg-red-500 text-white rounded-full">0</p>
+                        <p className="absolute text-center left-3/4 bottom-3/4 p-[2px] text-[0.5rem] font-semibold w-4 h-4 bg-red-500 text-white rounded-full">{totalAmount}</p>
                     </div>
                 </Link>
             </div>

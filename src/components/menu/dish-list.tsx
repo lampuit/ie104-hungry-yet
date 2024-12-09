@@ -48,7 +48,7 @@ const productsFetcher = async () => {
 };
 
 
-export const DishList = ({ dishesList }: DishListProps) => {
+export const DishList = ({ dishesList, onTotalAmountChange }: DishListProps) => {
     const router = useRouter();
     const { data: userId, error: userIdError } = useSWR("userId", fetcherUserId);
     const { data: productsData, error: productsError } = useSWR("products", productsFetcher);
