@@ -12,7 +12,7 @@ import {
 import { Summary } from "@/components/menu/cart/summary";
 import { columns } from "@/components/menu/cart/columns";
 import { DataTable } from "@/components/menu/cart/data-table";
-import { getCartsByUserId } from "@/lib/data";
+import { getCartsByUserId, getFavoriteByUserId } from "@/lib/data";
 import useSWR from "swr";
 import React, { useState, useEffect } from "react";
 import LoadingSpinner from "@/components/ui/loading-spinner";
@@ -30,20 +30,26 @@ const fetcherUserId = async () => {
   return userId;
 };
 
+// Lấy danh sách sản phẩm yêu thích
+const favoriteFetcher = async (userId: string) => {
+  return await getFavoriteByUserId(userId);
+}
+
 export default function CartPage() {
   const { data: userId } = useSWR('userId', fetcherUserId);
-  const { data: listDish, isLoading, error } = useSWR(userId, fetcherCarts, {
+  const { data: listDish, isLoading, error } = useSWR(`userId${userId}`, () => fetcherCarts(userId || ""), {
     revalidateIfStale: true,
     revalidateOnFocus: false,
     revalidateOnReconnect: true,
   });
+  const { data: favoriteList } = useSWR(`id${userId}`, () => favoriteFetcher(userId || ""));
 
   const [dishes, setDishes] = useState<any[]>([]);
   const [totalPrice, settotalPrice] = useState(0);
   const [totalAmount, setTotalAmount] = useState(0);
 
   useEffect(() => {
-    if (listDish) {
+    if (listDish && favoriteList) {
       const formattedData = listDish.map((item: any) => ({
         id: item.productId || undefined,
         img: item.product?.imageUrl || "",
@@ -52,7 +58,7 @@ export default function CartPage() {
         cost: item.product?.price,
         amount: item?.quantity,
         category: item.product?.category?.name,
-        isFavorite: item.product?.favorites?.length === 0 ? false : true,
+        isFavorite: favoriteList.some(favorite => favorite.productId === item.productId),
       }));
       setDishes(formattedData);
       setTotalAmount(listDish.length);
@@ -61,7 +67,9 @@ export default function CartPage() {
         0
       ));
     }
-  }, [listDish]);
+  }, [listDish, favoriteList]);
+
+  console.log("Dish", dishes);
 
   const handleQuantityChange = (id: string, newQuantity: number) => {
     const updatedDishes = dishes.map((dish) =>
