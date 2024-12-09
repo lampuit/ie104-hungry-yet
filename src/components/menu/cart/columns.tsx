@@ -37,8 +37,8 @@ export type Cart = {
     des: string
     cost: number
     amount: number
-    isFavorite: boolean
     category: string
+    isFavorite: boolean
 }
 
 type CartTableMeta = {
@@ -105,7 +105,7 @@ const FavoriteCell = ({ row }: { row: any }) => {
     const handleDeleteFavorite = async () => {
         const id = row.original.id;
         await deleteFavorite(userId || "", id)
-        setIsFavorite(false);
+        setIsFavorite(!isFavorite);
     };
 
     const handleUpdateFavorite = async () => {
@@ -113,13 +113,13 @@ const FavoriteCell = ({ row }: { row: any }) => {
         data.append("productId", row.original.id);
         data.append("userId", userId || "");
         await createFavorite(data);
-        setIsFavorite(true);
+        setIsFavorite(!isFavorite);
     }
 
     return (
         <div>
-            <Heart className={isFavorite ? "fill-amber-500 stroke-amber-500" : "stroke-amber-500 fill-none"}
-                onClick={isFavorite ? handleDeleteFavorite : handleUpdateFavorite} />
+            {isFavorite ? <Heart className="stroke-amber-500 fill-amber-500" onClick={handleDeleteFavorite} />
+                : <Heart className="stroke-amber-500" onClick={handleUpdateFavorite} />}
         </div>
     );
 }
