@@ -1,3 +1,5 @@
+"use client";
+
 import { Input } from "../ui/input";
 import React, { useRef } from 'react';
 import Link from 'next/link';
