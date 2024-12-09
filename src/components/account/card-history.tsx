@@ -1,25 +1,22 @@
 "use client"
+
 import { usePathname } from "next/navigation";
 import { Button } from "../ui/button";
-import { Bike, BotMessageSquare, ChevronRight, Eye, PenLine, PhoneCall, RefreshCcw, Star, Truck, X } from "lucide-react";
+import { Bike, ChevronRight, PenLine, PhoneCall, RefreshCcw, Star, X } from "lucide-react";
 import { useRouter } from "next/navigation";
 import {
     Dialog,
     DialogContent,
-    DialogDescription,
     DialogFooter,
     DialogHeader,
     DialogTitle,
     DialogTrigger,
 } from "@/components/ui/dialog"
 import { Checkbox } from "@/components/ui/checkbox"
-import { AccountRating } from "./card-rating";
 import { ScrollArea } from "@/components/ui/scroll-area"
 import Image from "next/image";
 import React, { useEffect } from "react";
-import {
-    Form
-} from "@/components/ui/form"
+import { Form } from "@/components/ui/form"
 import { getInvoiceDetail } from "@/lib/data";
 import useSWR from "swr";
 import { InformationForm } from "@/components/checkout/information-form";
@@ -29,7 +26,9 @@ import { useForm } from "react-hook-form";
 import z from "zod";
 import { updateInvoices, updateStatus } from "@/lib/actions/invoice";
 import { toast } from "sonner";
-import { createCart, updateCarts } from "@/lib/actions/cart";
+import { createCart } from "@/lib/actions/cart";
+import { Textarea } from "../ui/textarea";
+import { createRatings } from "@/lib/actions/rating";
 
 interface Invoice {
     id: string;
@@ -56,6 +55,17 @@ const formSchema = z.object({
 export function CardHistory({ invoice }: { invoice: Invoice }) {
     const [isDialogOpen, setIsDialogOpen] = useState(false);
     const [confirmDelete, setConfirmDelete] = useState(false);
+    const [ratings, setRatings] = useState<{ [key: string]: number }>({});
+    const [reviews, setReviews] = useState<{ [key: string]: string }>({});
+
+    const pathname = usePathname();
+    const isCompletePage = pathname.includes("/account/history/complete");
+    const isCancelPage = pathname.includes("/account/history/cancel");
+    const isDeliveryPage = pathname.includes("/account/history/delivery");
+    const isWaitingPage = pathname.includes("/account/history/waiting");
+    const isPreparePage = pathname.includes("/account/history/preparing");
+
+    const router = useRouter();
 
     // State for managing selected reasons
     const [selectedReasons, setSelectedReasons] = useState<string[]>([]);
@@ -69,14 +79,7 @@ export function CardHistory({ invoice }: { invoice: Invoice }) {
         }
     }, [error]);
 
-    const pathname = usePathname();
-    const isCompletePage = pathname.includes("/account/history/complete");
-    const isCancelPage = pathname.includes("/account/history/cancel");
-    const isDeliveryPage = pathname.includes("/account/history/delivery");
-    const isWaitingPage = pathname.includes("/account/history/waiting");
-    const isPreparePage = pathname.includes("/account/history/preparing");
 
-    const router = useRouter();
     const convertToVND = (price: number) => {
         return new Intl.NumberFormat("vi-VN", {
             style: "currency",
@@ -158,8 +161,6 @@ export function CardHistory({ invoice }: { invoice: Invoice }) {
         }
     };
 
-
-
     const handleCheckboxChange = (reason: string) => {
         setSelectedReasons((prev) =>
             prev.includes(reason)
@@ -167,6 +168,35 @@ export function CardHistory({ invoice }: { invoice: Invoice }) {
                 : [...prev, reason] // Add reason if not already selected
         );
     };
+
+    const handleSubmitRatings = async () => {
+        try {
+            for (const [productId, rating] of Object.entries(ratings)) {
+                const formData = new FormData();
+                formData.append("userId", invoice.customerId || "");
+                formData.append("productId", productId);
+                formData.append("star", rating.toString());
+                formData.append("review", reviews[productId] || "");
+                console.log("formData", formData);
+                await createRatings(formData);
+            }
+            toast.success("Đánh giá đã được gửi thành công");
+            setIsDialogOpen(false);
+        } catch (error) {
+            console.error("Error submitting ratings:", error);
+            toast.error("Có lỗi xảy ra khi gửi đánh giá");
+        }
+    };
+
+
+    const handleRating = (productId: string, rating: any) => {
+        setRatings(prev => ({ ...prev, [productId]: rating }));
+    };
+
+    const handleReviewChange = (productId: string, review: any) => {
+        setReviews(prev => ({ ...prev, [productId]: review }));
+    };
+
 
     return (
         <section className="flex flex-col gap-2 p-3 sm:p-5 bg-white rounded shadow-md">
@@ -271,31 +301,55 @@ export function CardHistory({ invoice }: { invoice: Invoice }) {
                     Tổng tiền: <span className="font-bold text-red-500">{convertToVND(invoice?.totalAmount)}</span>
                 </p>
                 {isPreparePage || isWaitingPage || isDeliveryPage ? (
-                    <div></div>
-                    // <div className="flex justify-end gap-6">
-                    //     <Button className="bg-amber-500">
-                    //         <BotMessageSquare /> Chat
-                    //     </Button>
-                    // </div>
+                    <></>
                 ) : isCompletePage ? (
                     <div className="flex justify-end gap-6">
-                        <Dialog>
-                            <DialogTrigger className="flex text-xs font-semibold gap-2 justify-center items-center border-black border p-3 rounded-md hover:bg-gray-100">
-                                <Star className="w-4 h-4" /> Đánh giá
-                            </DialogTrigger>
-                            <DialogContent className="flex flex-col gap-4  w-[1024px]">
+                        <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+                            <DialogContent className="flex flex-col gap-4 w-[1024px]">
                                 <DialogHeader>
                                     <DialogTitle className="text-lg font-semibold">Đánh giá sản phẩm</DialogTitle>
                                 </DialogHeader>
                                 <ScrollArea className="h-[360px] pr-4">
                                     <div className="flex flex-col gap-4">
-                                        <AccountRating />
-                                        <AccountRating />
-                                        <AccountRating />
+                                        {invoiceData?.orders?.map((order, index) => (
+                                            <div key={index} className="flex flex-col gap-2 p-4 border rounded-md">
+                                                <div className="flex items-center gap-4">
+                                                    <Image
+                                                        src={order.products.imageUrl}
+                                                        alt={order.products.name}
+                                                        width={80}
+                                                        height={80}
+                                                        className="rounded-md"
+                                                    />
+                                                    <div>
+                                                        <h3 className="font-semibold">{order.products.name}</h3>
+                                                        <p className="text-sm text-gray-500">{order.products.category?.name}</p>
+                                                    </div>
+                                                </div>
+                                                <div className="flex items-center gap-2">
+                                                    <span className="text-sm">Đánh giá:</span>
+                                                    <div className="flex">
+                                                        {[1, 2, 3, 4, 5].map((star) => (
+                                                            <Star
+                                                                key={star}
+                                                                className="w-5 h-5 cursor-pointer"
+                                                                fill={star <= (ratings[order.products.id] || 0) ? "gold" : "none"}
+                                                                onClick={() => handleRating(order.products.id, star)}
+                                                            />
+                                                        ))}
+                                                    </div>
+                                                </div>
+                                                <Textarea
+                                                    placeholder="Nhập đánh giá của bạn về sản phẩm này"
+                                                    value={reviews[order.products.id] || ""}
+                                                    onChange={(e: any) => handleReviewChange(order.products.id, e.target.value)}
+                                                />
+                                            </div>
+                                        ))}
                                         <div className="flex items-center space-x-2 mt-4">
-                                            <Checkbox id="terms" />
+                                            <Checkbox id="anonymous" />
                                             <label
-                                                htmlFor="terms"
+                                                htmlFor="anonymous"
                                                 className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
                                             >
                                                 Đánh giá ẩn danh
@@ -304,9 +358,14 @@ export function CardHistory({ invoice }: { invoice: Invoice }) {
                                     </div>
                                 </ScrollArea>
                                 <DialogFooter>
-                                    <Button type="submit" className="bg-amber-500">Lưu đánh giá</Button>
+                                    <Button type="submit" className="bg-amber-500" onClick={handleSubmitRatings}>
+                                        Lưu đánh giá
+                                    </Button>
                                 </DialogFooter>
                             </DialogContent>
+                            <DialogTrigger className="flex text-xs font-semibold gap-2 justify-center items-center border-black border p-3 rounded-md hover:bg-gray-100">
+                                <Star className="w-4 h-4" /> Đánh giá
+                            </DialogTrigger>
                         </Dialog>
                         <Button onClick={() => {
                             handleBuyAgain();
