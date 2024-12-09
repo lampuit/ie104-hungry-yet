@@ -29,6 +29,7 @@ import { useForm } from "react-hook-form";
 import z from "zod";
 import { updateInvoices, updateStatus } from "@/lib/actions/invoice";
 import { toast } from "sonner";
+import { createCart, updateCarts } from "@/lib/actions/cart";
 
 interface Invoice {
     id: string;
@@ -139,6 +140,24 @@ export function CardHistory({ invoice }: { invoice: Invoice }) {
             toast.error("Cập nhật thông tin đơn hàng thất bại");
         }
     }
+
+    const handleBuyAgain = async () => {
+        try {
+            for (const order of invoiceData?.orders || []) {
+                const formData = new FormData();
+                formData.append("userId", invoice.customerId || "");
+                formData.append("productId", order.products.id || "");
+                formData.append("quantity", order.quantity.toString() || "");
+                await createCart(formData);
+            }
+            toast.success("Tất cả sản phẩm đã được thêm vào giỏ hàng");
+            router.push("/menu/cart");
+        } catch (error) {
+            console.error("Error creating cart:", error);
+            toast.error("Thêm sản phẩm vào giỏ hàng thất bại");
+        }
+    };
+
 
 
     const handleCheckboxChange = (reason: string) => {
@@ -290,13 +309,15 @@ export function CardHistory({ invoice }: { invoice: Invoice }) {
                                 </DialogFooter>
                             </DialogContent>
                         </Dialog>
-                        <Button className="bg-amber-500">
+                        <Button onClick={() => {
+                            handleBuyAgain();
+                        }} className="bg-amber-500">
                             <RefreshCcw /> Mua lại
                         </Button>
                     </div>
                 ) : isCancelPage ? (
                     <div className="flex justify-end gap-6">
-                        <Button className="bg-amber-500">
+                        <Button className="bg-amber-500" onClick={() => handleBuyAgain()}>
                             <RefreshCcw /> Mua lại
                         </Button>
                     </div>
