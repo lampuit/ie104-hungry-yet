@@ -30,3 +30,29 @@ export async function updateInvoices(formData: FormData) {
     }
 }
 
+export async function updateStatus(formData: FormData) {
+    try {
+        await db
+            .update(invoices)
+            .set({
+                status: formData.get("status") as "pending" | "accepted" | "cooking" | "ready" | "delivered" | "cancelled" | null | undefined,
+                reason: formData.get("reason") as string,
+            })
+            .where(eq(invoices.id, formData.get("id") as string));
+
+        revalidatePath('/account/history');
+        let message;
+
+        if (formData.get("status") === "cancelled") {
+            message = "Hủy đơn hàng thành công!";
+        }
+
+        return { success: true, message: message ? message : "Cập nhập trạng thái đơn hàng thành công!" };
+    } catch (error) {
+        console.error("Error updating invoice status:", error);
+        return {
+            success: false, message: "Thất bại! Vui lòng thử lại!"
+        }
+    }
+}
+

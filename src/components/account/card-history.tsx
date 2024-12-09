@@ -16,40 +16,19 @@ import { Checkbox } from "@/components/ui/checkbox"
 import { AccountRating } from "./card-rating";
 import { ScrollArea } from "@/components/ui/scroll-area"
 import Image from "next/image";
-import React from "react";
+import React, { useEffect } from "react";
 import {
-    Form,
-    FormControl,
-    FormDescription,
-    FormField,
-    FormItem,
-    FormLabel,
-    FormMessage,
+    Form
 } from "@/components/ui/form"
 import { getInvoiceDetail } from "@/lib/data";
 import useSWR from "swr";
 import { InformationForm } from "@/components/checkout/information-form";
-import { OrderSummary } from "@/components/checkout/order-summary";
-import { PaymentForm } from "@/components/checkout/payment-form";
-import {
-    Card,
-    CardContent,
-    CardFooter,
-    CardHeader,
-    CardTitle,
-} from "@/components/ui/card";
-import { ToastAction } from "@/components/ui/toast";
-import { useToast } from "@/hooks/use-toast";
-import { submitPayment } from "@/lib/actions/submit-payment";
-import { fetchValidDiscount } from "@/lib/data";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import z from "zod";
-import { getSession } from "@/lib/auth-client";
-import { updateInvoices } from "@/lib/actions/invoice";
+import { updateInvoices, updateStatus } from "@/lib/actions/invoice";
 import { toast } from "sonner";
-import { revalidatePath } from "next/cache";
 
 interface Invoice {
     id: string;
@@ -74,7 +53,21 @@ const formSchema = z.object({
 
 
 export function CardHistory({ invoice }: { invoice: Invoice }) {
-    const { data: invoiceData } = useSWR(invoice.id, fetcherInvoiceDetail);
+    const [isDialogOpen, setIsDialogOpen] = useState(false);
+    const [confirmDelete, setConfirmDelete] = useState(false);
+
+    // State for managing selected reasons
+    const [selectedReasons, setSelectedReasons] = useState<string[]>([]);
+    const { data: invoiceData, error } = useSWR(invoice.id, fetcherInvoiceDetail, {
+        revalidateOnFocus: true,
+    });
+
+    useEffect(() => {
+        if (error) {
+            console.error("Error fetching invoice data:", error);
+        }
+    }, [error]);
+
     const pathname = usePathname();
     const isCompletePage = pathname.includes("/account/history/complete");
     const isCancelPage = pathname.includes("/account/history/cancel");
@@ -114,8 +107,8 @@ export function CardHistory({ invoice }: { invoice: Invoice }) {
             const result = await updateInvoices(formData);
             if (result.success) {
                 toast.success(result.message);
-                revalidatePath("/account/history");
-                
+                setIsDialogOpen(false);
+
             } else {
                 toast.error(result.message);
             }
@@ -125,6 +118,36 @@ export function CardHistory({ invoice }: { invoice: Invoice }) {
         }
     };
 
+    const cancelOrder = async () => {
+        try {
+            const formData = new FormData();
+            formData.append("id", invoice.id);
+            formData.append("status", "cancelled");
+            formData.append("reason", selectedReasons.join(", "));
+
+            const result = await updateStatus(formData);
+            if (result.success) {
+                toast.success(result.message);
+                setConfirmDelete(false);
+                router.push("/account/history/cancel");
+            } else {
+                toast.error(result.message);
+            }
+
+        } catch (error) {
+            console.error("Error updating invoice:", error);
+            toast.error("Cập nhật thông tin đơn hàng thất bại");
+        }
+    }
+
+
+    const handleCheckboxChange = (reason: string) => {
+        setSelectedReasons((prev) =>
+            prev.includes(reason)
+                ? prev.filter((item) => item !== reason) // Remove reason if already selected
+                : [...prev, reason] // Add reason if not already selected
+        );
+    };
 
     return (
         <section className="flex flex-col gap-2 p-5 bg-white rounded shadow-md ">
@@ -150,7 +173,7 @@ export function CardHistory({ invoice }: { invoice: Invoice }) {
                                 <span className="font-semibold">{splitInvoiceId(invoiceData?.id || "").toUpperCase()}</span>
                             </div>
                             <div className="flex gap-1 items-center">
-                                Lý do hủy: <span className="font-semibold">Không có hàng</span>
+                                Lý do hủy: <span className="font-semibold">{invoiceData?.reason}</span>
                             </div>
                         </div>
                     ) : (
@@ -279,7 +302,7 @@ export function CardHistory({ invoice }: { invoice: Invoice }) {
                     </div>
                 ) : (
                     <div className="flex justify-end gap-6">
-                        <Dialog>
+                        <Dialog open={confirmDelete} onOpenChange={setConfirmDelete}>
                             <DialogTrigger>
                                 <Button variant={"outline"} className="hover:bg-red-500 hover:text-white text-gray-400">
                                     <X className="hover:text-white" />Hủy đơn
@@ -290,49 +313,30 @@ export function CardHistory({ invoice }: { invoice: Invoice }) {
                                     <DialogTitle className="font-semibold">Lý do hủy đơn</DialogTitle>
                                 </DialogHeader>
                                 <div className="flex flex-col gap-2 p-2">
-                                    <div className="flex items-center space-x-2 mt-4">
-                                        <Checkbox id="terms" />
-                                        <label
-                                            htmlFor="terms"
-                                            className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-                                        >
-                                            Tôi muốn thêm/thay đổi mã giảm giá
-                                        </label>
-                                    </div>
-                                    <div className="flex items-center space-x-2 mt-4">
-                                        <Checkbox id="terms" />
-                                        <label
-                                            htmlFor="terms"
-                                            className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-                                        >
-                                            Tôi muốn thay đổi món ăn
-                                        </label>
-                                    </div>
-                                    <div className="flex items-center space-x-2 mt-4">
-                                        <Checkbox id="terms" />
-                                        <label
-                                            htmlFor="terms"
-                                            className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-                                        >
-                                            Tôi không còn nhu cầu mua
-                                        </label>
-                                    </div>
-                                    <div className="flex items-center space-x-2 mt-4">
-                                        <Checkbox id="terms" />
-                                        <label
-                                            htmlFor="terms"
-                                            className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-                                        >
-                                            Không tìm thấy lý do phù hợp
-                                        </label>
-                                    </div>
+                                    {["Tôi muốn thêm/thay đổi mã giảm giá", "Tôi muốn thay đổi món ăn", "Tôi không còn nhu cầu mua", "Không tìm thấy lý do phù hợp"].map(
+                                        (reason) => (
+                                            <div key={reason} className="flex items-center space-x-2 mt-4">
+                                                <Checkbox
+                                                    id={reason}
+                                                    checked={selectedReasons.includes(reason)}
+                                                    onCheckedChange={() => handleCheckboxChange(reason)}
+                                                />
+                                                <label
+                                                    htmlFor={reason}
+                                                    className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                                                >
+                                                    {reason}
+                                                </label>
+                                            </div>
+                                        )
+                                    )}
                                 </div>
                                 <DialogFooter>
-                                    <Button className="bg-red-500">Hủy đơn</Button>
+                                    <Button onClick={() => cancelOrder()} className="bg-red-500">Hủy đơn</Button>
                                 </DialogFooter>
                             </DialogContent>
                         </Dialog>
-                        <Dialog>
+                        <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
                             <DialogTrigger>
                                 <Button className="bg-amber-500">
                                     <PenLine /> Thay đổi thông tin
@@ -359,3 +363,4 @@ export function CardHistory({ invoice }: { invoice: Invoice }) {
         </section>
     )
 }
+

@@ -128,6 +128,7 @@ export const invoices = pgTable("invoices", {
     }), // Khóa ngoại
   totalAmount: real("totalAmount"),
   status: invoiceStatusEnum("status"),
+  reason: text("reason"),
   deliveryAddress: text("deliveryAddress"),
   deliveryTime: integer("deliveryTime"),
   phone: text("phone"),

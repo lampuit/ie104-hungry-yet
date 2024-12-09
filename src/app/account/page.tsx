@@ -101,7 +101,7 @@ export default function Account() {
             });
         }
         setShortName(userInfo && userInfo[0]?.name ? splitName(userInfo[0].name) : "");
-    }, [userInfo, form]);
+    }, [userInfo]);
 
     const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         const file = event.target.files?.[0];
