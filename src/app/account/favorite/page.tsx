@@ -6,6 +6,7 @@ import useSWR from "swr";
 import { useEffect, useState } from "react";
 import LoadingSpinner from "@/components/ui/loading-spinner";
 import { getSession } from "@/lib/auth-client";
+import LoginPrompt from "@/components/ui/login-prompt";
 
 const favoriteFetcher = async (userId: string) => {
     if (!userId) throw new Error("User ID is required");
@@ -46,7 +47,7 @@ export default function Favorite() {
     }, [error, mutate]);
 
     if (!userId) {
-        return <div>Vui lòng đăng nhập để xem danh sách yêu thích!</div>;
+        return <LoginPrompt />;
     }
 
     return (
