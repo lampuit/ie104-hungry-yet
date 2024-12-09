@@ -91,6 +91,7 @@ export const ratings = pgTable("ratings", {
   star: integer("star").notNull(),
   review: text("review"),
   imageURL: text("imageURL"),
+  isAnonymous: boolean("isAnonymous").notNull(),
   createdAt: timestamp("createdAt").notNull().defaultNow(),
   updatedAt: timestamp("updatedAt").$onUpdate(() => new Date()),
 });
@@ -128,8 +129,10 @@ export const invoices = pgTable("invoices", {
     }), // Khóa ngoại
   totalAmount: real("totalAmount"),
   status: invoiceStatusEnum("status"),
+  reason: text("reason"),
   deliveryAddress: text("deliveryAddress"),
   deliveryTime: integer("deliveryTime"),
+  phone: text("phone"),
   discountId: uuid("discountId").references(() => discounts.id), // Khóa ngoại
   note: text("note"),
   createdAt: timestamp("createdAt").notNull().defaultNow(),
