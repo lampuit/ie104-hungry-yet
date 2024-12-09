@@ -12,30 +12,21 @@ const fetcherUserId = async () => {
     return userId;
 };
 
-interface CartTotal {
-    totalAmount: number;
-    totalPrice: number;
-}
-
 interface MoneyProps {
-    total: CartTotal;
+    totalPrice: string;
+    totalAmount: number;
 }
 
-export function Summary({ total }: MoneyProps) {
+export function Summary({ totalPrice, totalAmount }: MoneyProps) {
     const router = useRouter();
     const { data: userId } = useSWR("userId", fetcherUserId);
-    const formattedTotalPrice = new Intl.NumberFormat("vi-VN", {
-        style: "currency",
-        currency: "VND",
-      }).format(total.totalPrice);
 
     return (
-        //
         <div className="flex flex-col md:flex-row justify-between items-center py-8 px-2 md:px-8 bg-white rounded-lg shadow-[0_-4px_10px_rgba(0,0,0,0.1)] w-3/4">
             {/* Shopping Cart Icon */}
             <div className="mb-4 md:mb-0 relative">
                 <ShoppingCart size={32} className="stroke-red-500" />
-                <p className="absolute text-center left-3/4 bottom-3/4 p-[2px] text-[0.5rem] font-semibold w-4 h-4 bg-red-500 text-white rounded-full">{total.totalAmount}</p>
+                <p className="absolute text-center left-3/4 bottom-3/4 p-[2px] text-[0.5rem] font-semibold w-4 h-4 bg-red-500 text-white rounded-full">{totalAmount}</p>
             </div>
 
             <div className="flex justify-end items-center gap-8 lg:gap-16">
@@ -45,7 +36,7 @@ export function Summary({ total }: MoneyProps) {
                         Tổng thanh toán:
                     </p>
                     <p className="font-bold text-2xl lg:text-3xl text-red-500 text-center">
-                        {formattedTotalPrice}
+                        {totalPrice}
                     </p>
                 </div>
 

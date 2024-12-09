@@ -17,8 +17,6 @@ import useSWR from "swr";
 import React, { useState, useEffect } from "react";
 import LoadingSpinner from "@/components/ui/loading-spinner";
 import { getSession } from "@/lib/auth-client";
-import { set } from "date-fns";
-import { AnyARecord } from "dns";
 
 //get shopping cart by userId
 const fetcherCarts = async (userId: string) => {
@@ -32,12 +30,6 @@ const fetcherUserId = async () => {
   return userId;
 };
 
-// Tổng số lượng và tổng giá tiền
-interface CartTotal {
-  totalAmount: number;
-  totalPrice: number;
-};
-
 export default function CartPage() {
   const { data: userId } = useSWR('userId', fetcherUserId);
   const { data: listDish, isLoading, error } = useSWR(userId, fetcherCarts, {
@@ -47,7 +39,8 @@ export default function CartPage() {
   });
 
   const [dishes, setDishes] = useState<any[]>([]);
-  const [total, setTotal] = useState<CartTotal>({ totalAmount: 0, totalPrice: 0 });
+  const [totalPrice, settotalPrice] = useState(0);
+  const [totalAmount, setTotalAmount] = useState(0);
 
   useEffect(() => {
     if (listDish) {
@@ -59,16 +52,14 @@ export default function CartPage() {
         cost: item.product?.price,
         amount: item?.quantity,
         category: item.product?.category?.name,
-        isFavorite: item.product?.favorites?.length === 0 ? false : true,
+        isFavorite: item.product?.favorites.length === 0 ? false : true,
       }));
       setDishes(formattedData);
-      setTotal({
-        totalAmount: formattedData.length,
-        totalPrice: formattedData.reduce(
-          (acc:any, item:any) => acc + item.cost * item.amount,
-          0
-        ),
-      });
+      setTotalAmount(listDish.length);
+      settotalPrice(listDish.reduce(
+        (acc, item) => acc + item.product?.price * item.quantity,
+        0
+      ));
     }
   }, [listDish]);
 
@@ -79,13 +70,19 @@ export default function CartPage() {
     setDishes(updatedDishes);
 
     // recalculate total amount
-    const newTotalAmount = updatedDishes.length;
-    const newTotalPrice = updatedDishes.reduce(
+    const newtotalAmount = updatedDishes.length;
+    const newtotalPrice = updatedDishes.reduce(
       (acc, item) => acc + item.amount * item.cost,
       0
     );
-    setTotal({ totalPrice: newTotalPrice, totalAmount: newTotalAmount });
+    setTotalAmount(newtotalAmount);
+    settotalPrice(newtotalPrice);
   };
+
+  const formattedTotalPrice = new Intl.NumberFormat("vi-VN", {
+    style: "currency",
+    currency: "VND",
+  }).format(totalPrice);
 
   if (error) return <div>Error loading data.</div>;
   if (isLoading) {
@@ -114,8 +111,8 @@ export default function CartPage() {
       <section className="flex flex-col justify-center items-center">
         <DataTable columns={columns} data={dishes} onQuantityChange={handleQuantityChange}></DataTable>
       </section>
-      <section className="sticky bottom-0 grow flex flex-col justify-end items-center shadow-lg mt-4">
-        <Summary total={total} />
+      <section className="sticky bottom-0 grow flex flex-col justify-end items-center mt-4">
+        <Summary totalPrice={formattedTotalPrice} totalAmount={totalAmount} />
       </section>
     </main>
   );

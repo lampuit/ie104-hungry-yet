@@ -12,8 +12,10 @@ export async function submitPayment(
   discountId: string | undefined,
   paymentMethod: any,
   userId: string,
-  address: string,
+  deliveryAddress: string,
   time: number,
+  note: string,
+  phone: string,
 ) {
   try {
     const [payment] = await db
@@ -31,8 +33,10 @@ export async function submitPayment(
         paymentId: payment.id,
         discountId,
         totalAmount,
-        deliveryAddress: address,
+        deliveryAddress: deliveryAddress,
         deliveryTime: time,
+        note: note,
+        phone: phone,
         status: "pending",
       })
       .returning();
@@ -86,13 +90,12 @@ export async function submitPayment(
         .update(payments)
         .set({ status: "success" })
         .where(eq(payments.id, payment.id));
-
-      await clearCart(userId);
-
       return { success: true };
-    }
 
+    }
+    await clearCart(userId);
     throw new Error("Thanh toán không hợp lệ");
+
   } catch (error) {
     return {
       success: false,

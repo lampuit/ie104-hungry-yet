@@ -12,10 +12,11 @@ import {
   PaginationNext,
   PaginationPrevious,
 } from "@/components/ui/pagination";
-import { getProductByCategoryId } from "@/lib/data";
+import { getCartsByUserId, getProductByCategoryId } from "@/lib/data";
 import { CategoryFetcher } from "@/components/menu/category";
 import useSWR from "swr";
 import LoadingSpinner from "@/components/ui/loading-spinner";
+import { getSession } from "@/lib/auth-client";
 
 interface Dish {
   id: string;
@@ -32,11 +33,26 @@ const fetcherCategory = async (): Promise<
   return CategoryFetcher();
 };
 
+// Lấy userId từ session
+const fetcherUserId = async () => {
+  const response = await getSession();
+  const userId = response?.data?.user?.id as string;
+  return userId;
+};
+
+//get shopping cart by userId
+const fetcherCarts = async (userId: string) => {
+  return getCartsByUserId(userId);
+};
+
 export default function MenuPage() {
   const [page, setPage] = useState<number>(1);
   const limit = process.env.NEXT_PUBLIC_PAGE_SIZE ? parseInt(process.env.NEXT_PUBLIC_PAGE_SIZE) : 9;
 
-  const { data, isLoading, error } = useSWR("fetcherCategory", fetcherCategory);
+  const { data: userId } = useSWR("userId", fetcherUserId);
+  const { data, isLoading: dishLoading, error: dishError } = useSWR("fetcherCategory", fetcherCategory);
+  const { data: carts } = useSWR(userId, fetcherCarts);
+
   const [clickedIndex, setClickedIndex] = useState<string>("");
   const [dishesList, setDishesList] = useState<Dish[]>([]);
   const [totalCount, setTotalCount] = useState<number>(0);
@@ -65,6 +81,12 @@ export default function MenuPage() {
       console.error(error);
     }
   };
+
+  useEffect(() => {
+    if (carts) {
+      setTotalAmount(carts.length);
+    }
+  }, [carts]);
 
   useEffect(() => {
     if (typeof window !== 'undefined' && data) {
@@ -97,10 +119,10 @@ export default function MenuPage() {
   const totalPages = Math.ceil(totalCount / limit);
 
   return (
-    isLoading ? <LoadingSpinner /> :
+    dishLoading ? <LoadingSpinner /> :
       <main className="w-screen">
         <header className="mt-8">
-        <SearchingArea />
+        <SearchingArea totalAmount={totalAmount}/>
         </header>
 
         <section className="flex flex-col items-center">
@@ -155,4 +177,3 @@ export default function MenuPage() {
       </main>
   );
 }
-
