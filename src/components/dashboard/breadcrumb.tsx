@@ -9,16 +9,18 @@ import {
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
 import Link from "next/link";
-
 import { usePathname } from "next/navigation";
-
 import React from "react";
+import useSWR from "swr";
+import { fetcherUserRole } from "./app-sidebar";
 
 export function Breadcrumbs() {
   const pathname = usePathname();
   const pathSegments = pathname.split("/").filter(Boolean);
+  const { data: role } = useSWR('role', fetcherUserRole);
 
   return (
+    role === 'admin' &&
     <Breadcrumb>
       <BreadcrumbList>
         {pathSegments.map((segment, index) => {

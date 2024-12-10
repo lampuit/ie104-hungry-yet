@@ -114,11 +114,20 @@ export default function Account() {
     async function onSubmit(values: z.infer<typeof formSchema>) {
         try {
             setIsPending(true);
-            if (!selectedFile) throw new Error("Vui lòng chọn ảnh");
-            const newBlob = await upload(values.name, selectedFile, {
-                access: "public",
-                handleUploadUrl: "/api/image/upload",
-            });
+            setIsPending(true);
+            let imageUrl = values.imageUrl;
+
+            let newBlob = { url: "" };
+
+            if (selectedFile) {
+                newBlob = await upload(values.name, selectedFile, {
+                    access: "public",
+                    handleUploadUrl: "/api/image/upload",
+                });
+            }
+            else {
+                newBlob.url = imageUrl ?? "";
+            }
 
             const data = new FormData();
             data.append("userId", userId?.toString() ?? "");

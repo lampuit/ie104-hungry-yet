@@ -11,9 +11,21 @@ import {
   SidebarMenuItem,
 } from "@/components/ui/sidebar";
 import { BadgeCent, Home, Package2, Ticket, Clock } from "lucide-react";
-
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import useSWR from "swr";
+import { getSession } from "@/lib/auth-client";
+import { getUserById } from "@/lib/data";
+import Dashboardrompt from "../ui/dashboard-prompt";
+
+// Lấy session
+export const fetcherUserRole = async () => {
+  const response = await getSession();
+  const userId = response?.data?.user?.id as string;
+  const userInfoArray = await getUserById(userId);
+  return userInfoArray[0]?.role;
+};
+
 
 const items = [
   {
@@ -41,8 +53,11 @@ const items = [
 
 export function AppSidebar() {
   const pathname = usePathname();
+  const { data: role, isLoading, } = useSWR('userId', fetcherUserRole);
+
 
   return (
+    role === 'admin' &&
     <Sidebar>
       <SidebarContent>
         <SidebarGroup>
