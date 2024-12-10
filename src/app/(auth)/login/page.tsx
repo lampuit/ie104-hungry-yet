@@ -1,10 +1,11 @@
 "use client";
+
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { signIn } from "@/lib/auth-client";
+import { getSession, signIn } from "@/lib/auth-client";
 import { Button } from "@/components/ui/button";
-import { Loader2 } from "lucide-react";
-import { Card, CardHeader, CardContent } from "@/components/ui/card";
+import { Loader2, Home, ArrowRight, Truck, UtensilsCrossed } from 'lucide-react';
+import { Card, CardHeader, CardContent, CardFooter } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -18,6 +19,7 @@ import {
   FormItem,
   FormMessage,
 } from "@/components/ui/form";
+import { getUserById } from "@/lib/data";
 
 const formSchema = z.object({
   email: z.string().email("Email không hợp lệ"),
@@ -38,7 +40,7 @@ export default function Signin() {
   async function onSubmit(values: z.infer<typeof formSchema>) {
     try {
       setIsPending(true);
-      await signIn.email({
+      const response = await signIn.email({
         ...values,
         fetchOptions: {
           onError(ctx) {
@@ -46,7 +48,21 @@ export default function Signin() {
           },
         },
       });
-      router.push("/");
+
+      const userId = response?.data?.user?.id as string;
+
+      if (userId) {
+        const userInfoArray = await getUserById(userId);
+        const userInfo = userInfoArray[0];
+
+        if (userInfo.role === "admin") {
+          router.push("/dashboard");
+        }
+        else
+          router.push("/");
+
+      }
+
     } catch (error) {
       toast.error(`${error}.`);
     } finally {
@@ -55,27 +71,35 @@ export default function Signin() {
   }
 
   return (
-    <div
-      className={`flex min-h-screen items-center justify-center bg-gray-100 transition-opacity duration-300 ${isPending ? "opacity-50" : "opacity-100"}`}
-    >
-      <Card className="w-full max-w-md">
-        <CardHeader>
-          <h2 className="text-center text-2xl font-bold">Đăng nhập</h2>
+    <div className="min-h-screen bg-gradient-to-br from-orange-100 to-red-100 flex items-center justify-center p-4">
+      <Card className="w-full max-w-md shadow-lg">
+        <CardHeader className="text-center space-y-4">
+          <div className="flex items-center justify-center space-x-2 bg-amber-500 text-white p-4 rounded-full w-24 h-24 mx-auto">
+            <Truck className="w-12 h-12 stroke-2" />
+          </div>
+          <div className="space-y-2">
+            <h1 className="text-3xl font-extrabold text-orange-600 tracking-tight">
+              Hungry Yet?
+            </h1>
+            <h2 className="text-2xl font-bold text-gray-800">
+              Chào mừng trở lại!
+            </h2>
+          </div>
+          <p className="text-gray-600 text-lg flex items-center justify-center space-x-2">
+            <UtensilsCrossed className="w-5 h-5" />
+            <span>Đăng nhập để đặt món ăn ngon</span>
+          </p>
         </CardHeader>
         <CardContent>
           <Form {...form}>
-            <form
-              onSubmit={form.handleSubmit(onSubmit)}
-              className="flex flex-col justify-center space-y-8"
-            >
+            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
               <FormField
                 control={form.control}
                 name="email"
                 render={({ field }) => (
                   <FormItem>
-                    <div className="font-medium">Email</div>
                     <FormControl>
-                      <Input placeholder="Nhập email" {...field} />
+                      <Input placeholder="Email của bạn" {...field} className="bg-orange-50" />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -86,43 +110,58 @@ export default function Signin() {
                 name="password"
                 render={({ field }) => (
                   <FormItem>
-                    <div className="font-medium">Mật khẩu</div>
                     <FormControl>
                       <Input
-                        placeholder="Nhập mật khẩu"
+                        placeholder="Mật khẩu"
                         type="password"
                         {...field}
+                        className="bg-orange-50"
                       />
                     </FormControl>
-
                     <FormMessage />
                   </FormItem>
                 )}
               />
-
-              <Button type="submit" disabled={isPending}>
+              <Button
+                type="submit"
+                disabled={isPending}
+                className="w-full bg-amber-500 hover:bg-amber-600 text-white"
+              >
                 {isPending ? (
                   <>
                     <Loader2 className="mr-2 h-4 w-4 animate-spin" />
                     Đang đăng nhập...
                   </>
                 ) : (
-                  "Đăng nhập"
+                  <>
+                    Đăng nhập
+                    <ArrowRight className="ml-2 h-4 w-4" />
+                  </>
                 )}
               </Button>
             </form>
           </Form>
-          <div className="mt-4 text-center text-sm">
-            Bạn có tài tài khoản chưa nhỉ?{" "}
+        </CardContent>
+        <CardFooter className="flex flex-col space-y-4">
+          <div className="text-center text-sm text-gray-600">
+            Bạn chưa có tài khoản?{" "}
             <Button
               variant="link"
-              className="p-0 text-blue-500 hover:underline"
+              className="p-0 text-orange-500 hover:text-orange-600"
               onClick={() => router.push("/signup")}
             >
-              Đăng ký
+              Đăng ký ngay
             </Button>
           </div>
-        </CardContent>
+          <Button
+            variant="outline"
+            className="w-full border-orange-500 text-orange-500 hover:bg-orange-50"
+            onClick={() => router.push("/")}
+          >
+            <Home className="mr-2 h-4 w-4" />
+            Quay về trang chủ
+          </Button>
+        </CardFooter>
       </Card>
       <ToastContainer
         position="top-right"
