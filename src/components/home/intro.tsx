@@ -17,13 +17,13 @@ export function Intro() {
     const { data: userId, error: userIdError } = useSWR("userId", fetcherUserId);
 
     return (
-        <div className="flex flex-col justify-between items-center w-screen mx-10 py-10 gap-y-52">
-            <div className="relative flex justify-center items-center gap-x-36 px-32">
-                <div className="flex flex-col justify-center items-start gap-10">
-                    <div className='flex flex-col justify-center items-start gap-y-4'>
-                        <h2 className='italic font-semibold text-5xl'>Chào mừng</h2>
+        <div className="flex flex-col justify-between items-center w-screen gap-y-16 lg:gap-y-52 overflow-clip">
+            <div className="relative flex justify-center items-center lg:gap-x-8 xl:gap-x-36 px-16 sm:px-32 mt-10">
+                <div className="flex flex-col justify-center items-center lg:items-start gap-5 lg:gap-10">
+                    <div className='flex flex-col justify-center items-center lg:items-start gap-y-4'>
+                        <h2 className='italic font-semibold text-center text-4xl sm:text-5xl'>Chào mừng</h2>
                         <HorizontalLine />
-                        <p className='max-w-xl'>
+                        <p className='lg:max-w-xl text-center text-sm sm:text-base lg:text-start'>
                             Chào mừng bạn đến với HungryYet – nơi mang đến những món ăn ngon và chất lượng,
                             sẵn sàng phục vụ bạn mọi lúc, mọi nơi! Hãy cùng khám phá thế giới ẩm thực đa dạng,
                             tiện lợi đặt hàng và giao tận nơi, để mỗi bữa ăn đều trở thành niềm vui trọn vẹn.
@@ -38,28 +38,26 @@ export function Intro() {
                     src="/images/intro-dish.jpg"
                     width={400}
                     height={280}
-                    alt="Intro dish">
+                    alt="Intro dish"
+                    className='hidden lg:inline-block'>
                 </Image>
-                <div className='absolute -z-10 start-2/3 overflow-clip'>
-                    <Bg1 />
-                </div>
+                <div className='hidden lg:inline-block absolute h-80 w-1/2 bg-[#99BD76] -z-10 start-2/3'></div>
             </div>
 
-            <div className="relative flex justify-center items-center gap-x-36 px-32">
+            <div className="relative flex justify-center items-center lg:gap-x-8 xl:gap-x-36 px-16 sm:px-32">
                 <Image
                     src="/images/intro-dish-2.jpg"
                     width={400}
                     height={280}
-                    alt="Intro dish">
+                    alt="Intro dish"
+                    className='hidden lg:inline-block'>
                 </Image>
-                <div className='absolute -z-10 end-2/3 overflow-clip'>
-                    <Bg2 />
-                </div>
-                <div className="flex flex-col justify-center items-start gap-10">
-                    <div className='flex flex-col justify-center items-start gap-y-4'>
-                        <h2 className='italic font-semibold text-5xl'>Hương vị Việt Nam</h2>
+                <div className='hidden lg:inline-block absolute h-80 w-1/2 bg-amber-300 -z-10 end-2/3'></div>
+                <div className="flex flex-col justify-center items-center lg:items-start gap-5 lg:gap-10">
+                    <div className='flex flex-col justify-center items-center lg:items-start gap-y-4'>
+                        <h2 className='italic font-semibold text-center text-4xl sm:text-5xl'>Hương vị Việt Nam</h2>
                         <HorizontalLine />
-                        <p className='max-w-xl'>
+                        <p className='lg:max-w-xl text-center text-sm sm:text-base lg:text-start'>
                             Hương vị ẩm thực Việt Nam là sự kết hợp tinh tế giữa các nguyên liệu tự nhiên và gia vị đặc trưng,
                             mang đến những món ăn vừa ngon mắt vừa đậm đà. Từ vị thanh mát của phở, cái ngọt bùi của bún chả,
                             đến độ giòn rụm của nem rán, mỗi món ăn đều phản ánh một phần của nền văn hóa và tình yêu dành cho

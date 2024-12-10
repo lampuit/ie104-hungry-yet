@@ -52,10 +52,10 @@ export function FAQ() {
           value={`item-${index + 1}`}
           className="border-2 border-[#99BD76] shadow-md shadow-[#99BD7680] rounded-2xl overflow-hidden"
         >
-          <AccordionTrigger className="px-6 py-4 hover:bg-[#99BD7620] transition-colors duration-200">
-            <span className="text-left font-semibold text-lg">{item.question}</span>
+          <AccordionTrigger className="px-3 sm:px-6 py-4 hover:bg-[#99BD7620] transition-colors duration-200">
+            <span className="text-left font-semibold text-md sm:text-lg">{item.question}</span>
           </AccordionTrigger>
-          <AccordionContent className="px-6 py-4 bg-white">
+          <AccordionContent className="px-3 sm:px-6 py-4 text-sm sm:text-base bg-white">
             <p>{item.answer}</p>
           </AccordionContent>
         </AccordionItem>

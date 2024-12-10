@@ -16,7 +16,7 @@ export function Benefit() {
             </div>
             <Line />
             <div className="flex flex-col justify-around items-center text-center h-60 sm:h-56 lg:w-64 md:w-48 w-28">
-                <ShoppingBasket size={96} className="bg-lime-500 rounded-full p-6 stroke-1"/>
+                <ShoppingBasket size={96} className="bg-[#99BD76] rounded-full p-6 stroke-1"/>
                 <h2 className="font-semibold text-lg md:text-xl lg:text-2xl">Ưu đãi hấp dẫn</h2>
                 <p className="font-normal text-xs text-center max-w-64">Khuyến mãi ngập tràn, giá siêu hời chỉ trong hôm nay!</p>
             </div>
