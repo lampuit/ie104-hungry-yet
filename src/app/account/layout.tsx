@@ -16,9 +16,17 @@ const userFetcher = async (id: string) => {
 // Lấy userId từ session
 const fetcherUserId = async () => {
     const response = await getSession();
+    console.log("session", response);
     const userId = response?.data?.user?.id as string;
     return userId;
 };
+
+//get session
+const fetcherSession = async () => {
+    const response = await getSession();
+    console.log("session", response);
+    return response?.data?.session?.id;
+}
 
 interface LayoutProps {
     children: ReactNode
@@ -50,13 +58,17 @@ export default function Layout({
     }, [user]);
 
     const handleLogout = async () => {
+        const sessionId = await fetcherSession();
         try {
             if (!userId) {
                 console.error("Session ID is undefined");
                 return;
             }
+            if (!sessionId) {
+                throw new Error("Session ID is undefined");
+            }
             setIsLoggingOut(true); // Start logout spinner
-            const response = await revokeSession({ id: userId });
+            const response = await revokeSession({ id: sessionId });
 
             if (response && response?.error?.status === 200) {
                 console.log("Session successfully revoked", response);
@@ -110,7 +122,7 @@ export default function Layout({
                     </div>
                     <Button
                         variant={"outline"}
-                        onClick={handleLogout}
+                        onClick={() => handleLogout()}
                         disabled={isLoggingOut} // Disable button while logging out
                         className={`mt-6 border-gray-400 text-gray-400 ${isLoggingOut
                             ? "cursor-not-allowed opacity-50"

@@ -4,6 +4,7 @@ import { ChatMessages } from "@/components/chatbot/chat-message";
 import { MessageList } from "@/components/chatbot/mesage-list";
 import { Button } from "@/components/ui/button";
 import { ChatContainer, ChatForm } from "@/components/ui/chat";
+import LoginPrompt from "@/components/ui/login-prompt";
 import { MessageInput } from "@/components/ui/message-input";
 import {
   Sheet,
@@ -73,7 +74,7 @@ export default function Page() {
           </ChatContainer>
         ) : (
           <div className="flex flex-1 flex-col items-center justify-center space-y-4">
-            <span>Vui lòng đăng nhập để sử dụng chức năng này</span>
+            <LoginPrompt />
             <Button asChild>
               <Link href="/login">Đăng nhập</Link>
             </Button>

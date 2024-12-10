@@ -27,6 +27,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import LoadingSpinner from "@/components/ui/loading-spinner"
 import { upload } from "@vercel/blob/client";
 import { getSession } from "@/lib/auth-client";
+import LoginPrompt from "@/components/ui/login-prompt";
 
 const getUser = async (id: string) => {
     const user = await getUserById(id);
@@ -145,7 +146,7 @@ export default function Account() {
     }
 
     return (
-        isLoading ? <LoadingSpinner /> :
+        isLoading ? <LoadingSpinner /> : !userId ? <LoginPrompt /> :
             <div className="grow flex flex-col gap-5 px-4">
                 <h2 className="font-semibold text-xl sm:text-2xl">Tài khoản của tôi</h2>
                 <Form {...form}>
