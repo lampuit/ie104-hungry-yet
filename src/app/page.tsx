@@ -34,7 +34,7 @@ export default function Homepage() {
           <ImgBgHover />
         </div>
         <div className="absolute w-full h-[calc(100vh-80px)] bg-gradient-radial from-black to-transparent z-0"></div>
-        <motion.div className="relative top-1/3 flex flex-col justify-between items-center min-h-52 max-h-64 text-white z-10"
+        <motion.div className="relative top-1/3 flex flex-col justify-between items-center min-h-52 max-h-64 text-white z-10 py-4 gap-8"
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 2.5, ease: "easeOut" }}>
@@ -49,7 +49,7 @@ export default function Homepage() {
             </Button>
           </div>
         </motion.div>
-        <div className="relative end-1/3 z-10">
+        <div className="relative center sm:end-1/4 md:end-1/3 z-10">
           <TimeAndAddress />
         </div>
       </header>
