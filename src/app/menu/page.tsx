@@ -122,7 +122,7 @@ export default function MenuPage() {
     dishLoading ? <LoadingSpinner /> :
       <main className="w-screen">
         <header className="mt-8">
-        <SearchingArea totalAmount={totalAmount}/>
+          <SearchingArea totalAmount={totalAmount} />
         </header>
 
         <section className="flex flex-col items-center">

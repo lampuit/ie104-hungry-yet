@@ -32,13 +32,13 @@ export function SearchingArea({ totalAmount }: SearchingAreaProps) {
         router.push('/menu/cart');
     }
     return (
-        <div className="flex justify-between items-center px-10 py-5 mx-10">
+        <div className="flex justify-between items-center px-10 py-5 mx-10 gap-16">
             <div className="flex flex-col justify-center items-center gap-4">
-                <h2 className="italic font-semibold md:text-5xl sm:text-4xl">Thực đơn</h2>
-                <Line />
+                <h2 className="italic font-semibold text-3xl sm:text-4xl md:text-5xl">Thực đơn</h2>
+                <div className="hidden sm:inline-block"><Line /></div>    
             </div>
-            <div className={`flex justify-betwenn items-center ${inputWidth} gap-2 focus:stroke-none`}>
-                <div className="relative flex justify-end items-center w-full bg-gray-100 rounded-full">
+            <div className={`grow flex justify-end items-center ${inputWidth} gap-2 focus:stroke-none`}>
+                <div className="grow relative flex justify-start items-center bg-gray-100 rounded-full">
                     <div className="absolute left-2"><Search onClick={() => handleSearchIconClick()} /></div>
                     <Input
                         ref={inputRef}

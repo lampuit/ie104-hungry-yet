@@ -86,6 +86,13 @@ export default function CartPage() {
     settotalPrice(newtotalPrice);
   };
 
+  const updateTableData = (id: string, isFavorite: boolean) => {
+    const updatedDishes = dishes.map((dish) =>
+      dish.id === id ? { ...dish, isFavorite } : dish
+    );
+    setDishes(updatedDishes);
+  };
+
   const formattedTotalPrice = new Intl.NumberFormat("vi-VN", {
     style: "currency",
     currency: "VND",
@@ -116,7 +123,7 @@ export default function CartPage() {
         </Breadcrumb>
       </section>
       <section className="flex flex-col justify-center items-center">
-        <DataTable columns={columns(mutate)} data={dishes} onQuantityChange={handleQuantityChange}></DataTable>
+        <DataTable columns={columns(mutate, updateTableData)} data={dishes} onQuantityChange={handleQuantityChange}></DataTable>
       </section>
       <section className="sticky bottom-0 grow flex flex-col justify-end items-center mt-4">
         <Summary totalPrice={formattedTotalPrice} totalAmount={totalAmount} />
