@@ -1,23 +1,53 @@
 import { Button } from "@/components/ui/button";
-import { Truck } from "lucide-react";
 import Link from "next/link";
+import { Menu, Truck } from "lucide-react";
+import { usePathname, useRouter } from "next/navigation";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 
 export function UnauthorizedNavbar() {
+  const router = useRouter();
+  const pathname = usePathname();
+  const isMenu = pathname === "/menu";
+  const isAbout = pathname.startsWith("/about");
   return (
-    <nav className="flex flex-row px-10 py-5 justify-between items-center h-20 w-full max-w-screen-2xl text-white">
-      <Link href={"/"} className="grow flex flex-row justify-start min-w-52 items-center">
-        <Truck className="stroke-2"/>
+    <nav className="w-full flex flex-row px-10 py-5 justify-between items-center h-20 max-w-screen-2xl text-white">
+      <Link href={"/"} className="grow flex flex-row justify-start sm:min-w-52 items-center">
+        <Truck className="stroke-2" />
         <p className="sm:text-xl md:text-2xl font-bold px-2">Hungry Yet?</p>
       </Link>
-      <div className="grow sm:text-xs sm:gap-1 md:text-base min-w-sm max-w-2xl flex flex-row justify-around items-center font-medium">
+      <div className="grow hidden text-sm sm:flex justify-around items-center md:text-sm lg:text-base min-w-sm max-w-2xl  font-medium">
         <Link href={"/"} className="hover:text-amber-500">Trang chủ</Link>
-        <Link href={"/menu"} className="hover:text-amber-500">Thực đơn</Link>
+        <Link href={"/menu"} className={`hover:text-amber-500 ${isMenu ? 'text-amber-500' : ''}`}>Thực đơn</Link>
         <Link href={"/menu/cart"} className="hover:text-amber-500">Giỏ hàng</Link>
-        <Link href={"/about"} className="hover:text-amber-500">Về chúng tôi</Link>
+        <Link href={"/about"} className={`hover:text-amber-500 ${isAbout ? 'text-amber-500' : ''}`}>Về chúng tôi</Link>
       </div>
-      <Button asChild className="md:w-32 sm:w-24 sm:text-xs sm:px-1 md:px-3 md:text-base bg-amber-500 rounded-3xl hover:bg-red-500">
-        <Link href={"/login"}>Đăng nhập</Link>
-      </Button>
+      <Button className="hidden sm:inline-block text-xs px-2 bg-amber-500 rounded-sm hover:bg-red-500">Đăng nhập</Button>
+
+      <div className="sm:hidden">
+        <DropdownMenu>
+          <DropdownMenuTrigger>
+            <Menu className="stroke-2" />
+          </DropdownMenuTrigger>
+
+          <DropdownMenuContent>
+            <DropdownMenuItem onClick={() => router.push("/")}>Trang chủ</DropdownMenuItem>
+            <DropdownMenuItem onClick={() => router.push("/menu")}>Thực đơn</DropdownMenuItem>
+            <DropdownMenuItem onClick={() => router.push("/menu/cart")}>Giỏ hàng</DropdownMenuItem>
+            <DropdownMenuItem onClick={() => router.push("/about")}>Về chúng tôi</DropdownMenuItem>
+            <DropdownMenuSeparator />
+            <DropdownMenuItem className="flex items-center gap-4" onClick={() => router.push("/account")}>
+              <Button className="hidden sm:inline-block text-xs px-2 bg-amber-500 rounded-sm hover:bg-red-500">Đăng nhập</Button>
+            </DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
+      </div>
     </nav>
   );
 }

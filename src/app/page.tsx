@@ -34,7 +34,7 @@ export default function Homepage() {
           <ImgBgHover />
         </div>
         <div className="absolute w-full h-[calc(100vh-80px)] bg-gradient-radial from-black to-transparent z-0"></div>
-        <motion.div className="relative top-1/3 flex flex-col justify-between items-center min-h-52 max-h-64 text-white z-10"
+        <motion.div className="relative top-1/3 flex flex-col justify-between items-center min-h-52 max-h-64 text-white z-10 py-4 gap-8"
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 2.5, ease: "easeOut" }}>
@@ -49,7 +49,7 @@ export default function Homepage() {
             </Button>
           </div>
         </motion.div>
-        <div className="relative end-1/3 z-10">
+        <div className="relative center sm:end-1/4 md:end-1/3 z-10">
           <TimeAndAddress />
         </div>
       </header>
@@ -58,7 +58,7 @@ export default function Homepage() {
         <Categories />
       </section>
 
-      <section className="mb-20">
+      <section className="mb-10 lg:mb-20">
         <Benefit />
       </section>
 
@@ -75,32 +75,32 @@ export default function Homepage() {
       </section>
 
       <section className="flex flex-col items-center mx-10 mb-16 px-10 space-y-8">
-        <div className="flex justify-between items-center w-full max-w-screen-2xl">
+        <div className="flex flex-col sm:flex-row justify-between items-center gap-4 sm:gap-0 w-full max-w-screen-2xl">
           <div className="flex flex-col gap-y-4">
-            <h2 className='italic font-semibold text-5xl'>Món ăn trưng bày</h2>
+            <h2 className='italic font-semibold text-4xl text-center sm:text-5xl'>Best Seller</h2>
             <HorizontalLine />
           </div>
           <Button asChild className="bg-black hover:bg-red-500 rounded-3xl">
             <Link href={"/exhibition"}>Xem blog</Link>
           </Button>
         </div>
-        <div className="flex justify-center">
+        <div className="flex justify-center w-full">
           <Exhibition />
         </div>
       </section>
 
-      <section className="flex flex-col items-center mx-10 mb-16 space-y-8">
-        <div className="flex flex-col justify-between px-10 gap-4 w-full max-w-screen-2xl">
-          <h2 className="italic font-semibold text-5xl">Nhận xét & đánh giá</h2>
+      <section className="flex flex-col items-center mx-10 md:px-10 px-6 mb-16 space-y-8">
+        <div className="flex flex-col justify-between items-center sm:items-start gap-4 w-full max-w-screen-2xl">
+          <h2 className="italic font-semibold text-4xl text-center sm:text-5xl">Nhận xét & đánh giá</h2>
           <HorizontalLine />
         </div>
         <Testimonials />
 
       </section>
 
-      <section className="mx-10 px-10 mb-16 flex flex-col md:flex-row justify-center items-center md:items-start gap-10 md:gap-20 lg:gap-40">
+      <section className="mx-10 px-10 mb-16 flex flex-col lg:flex-row justify-center items-center lg:items-start gap-10 lg:gap-40">
         <div className="flex flex-col justify-center gap-4">
-          <h2 className="italic font-semibold text-5xl">FAQ</h2>
+          <h2 className="italic font-semibold text-4xl text-center lg:text-start sm:text-5xl">FAQ</h2>
           <HorizontalLine />
         </div>
         <ScrollArea className="h-[400px]">
