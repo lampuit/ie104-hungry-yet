@@ -45,9 +45,9 @@ export default function RootLayout({
 
   return (
     <html lang="en">
-      <body className={`${montserrat.className} overflow-x-clip min-h-screen flex flex-col`}>
+      <body className={`${montserrat.className} overflow-x-clip min-h-screen flex flex-col w-screen`}>
         {!isDashboardPath && !isLoginPath && !isRegisterPath && (
-          <div className={`flex justify-center w-screen bg-black z-30 ${isHomePath ? "sticky top-0" : ""}`}>
+          <div className={`flex justify-center w-full bg-black z-30 ${isHomePath ? "sticky top-0" : ""}`}>
             {userId ? <AuthorizedNavbar /> : <UnauthorizedNavbar />}
           </div>
         )}

@@ -40,7 +40,7 @@ export function Intro() {
                     height={280}
                     alt="Intro dish">
                 </Image>
-                <div className='absolute -z-10 start-2/3'>
+                <div className='absolute -z-10 start-2/3 overflow-clip'>
                     <Bg1 />
                 </div>
             </div>
@@ -52,7 +52,7 @@ export function Intro() {
                     height={280}
                     alt="Intro dish">
                 </Image>
-                <div className='absolute -z-10 end-2/3'>
+                <div className='absolute -z-10 end-2/3 overflow-clip'>
                     <Bg2 />
                 </div>
                 <div className="flex flex-col justify-center items-start gap-10">
