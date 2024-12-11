@@ -23,8 +23,14 @@ import {
   isNull,
   or,
   notInArray,
+  desc,
+  sql,
+  like,
+  SQL
 } from "drizzle-orm";
 import { unstable_noStore } from "next/cache";
+
+
 
 export async function getCategories() {
   try {
@@ -80,6 +86,13 @@ export async function getProductsByCategory(category_id: string) {
             imageUrl: true,
             price: true,
           },
+          with: {
+            ratings: {
+              extras: {
+                averageRating: sql<number>`AVG(ratings.star)`.as('averageRating'),
+              },
+            },
+          },
         },
       },
     });
@@ -87,6 +100,7 @@ export async function getProductsByCategory(category_id: string) {
     throw new Error("Không thể lấy dữ liệu danh sách sản phẩm theo thể loại.");
   }
 }
+
 
 export async function fetchProducts() {
   try {
@@ -228,13 +242,16 @@ export async function getProductByCategoryId(
   // Count total records for the specified category ID
   const totalRecords = await db.$count(products, eq(products.categoryId, id));
 
-  // Retrieve the paginated records
+  // Retrieve the paginated records with average star rating
   const records = await db
     .select({
       ...getTableColumns(products),
+      averageRating: sql<number>`COALESCE(AVG(${ratings.star}), 0)`.as('averageRating'),
     })
     .from(products)
+    .leftJoin(ratings, eq(products.id, ratings.productId))
     .where(eq(products.categoryId, id))
+    .groupBy(products.id)
     .limit(pageSize)
     .offset((page - 1) * pageSize);
   // Return both totalRecords and the records for the current page
@@ -307,12 +324,12 @@ export async function getInvoiceByUserId(userId: string, status: string) {
         eq(
           invoices.status,
           status as
-            | "pending"
-            | "accepted"
-            | "cooking"
-            | "ready"
-            | "delivered"
-            | "cancelled",
+          | "pending"
+          | "accepted"
+          | "cooking"
+          | "ready"
+          | "delivered"
+          | "cancelled",
         ),
       ),
     );
@@ -335,4 +352,62 @@ export async function getInvoiceDetail(id: string) {
       discount: true,
     },
   });
+}
+
+
+export async function filterAndSearch(formData: FormData) {
+  const { categoryId, minPrice, maxPrice, rating, search, page, pageSize } = Object.fromEntries(formData);
+
+  const pageNumber = Number(page) || 1;
+  const itemsPerPage = Number(pageSize) || 10;
+
+  let whereClause: SQL[] = [];
+
+  whereClause.push(eq(products.categoryId, categoryId as string));
+
+  if (minPrice) {
+    whereClause.push(gte(products.price, Number(minPrice)));
+  }
+
+  if (maxPrice) {
+    whereClause.push(lte(products.price, Number(maxPrice)));
+  }
+
+  if (search) {
+    whereClause.push(like(products.name, `%${search as string}%`));
+  }
+
+  const averageRatingExpr = sql<number>`COALESCE(AVG(${ratings.star}), 0)`;
+
+  const baseQuery = db
+    .select({
+      ...getTableColumns(products),
+      averageRating: averageRatingExpr.as('averageRating'),
+    })
+    .from(products)
+    .leftJoin(ratings, eq(products.id, ratings.productId))
+    .where(and(...whereClause))
+    .groupBy(products.id);
+
+  // Apply rating filter after aggregation
+  let query = baseQuery as any;
+  if (rating) {
+    query = query.having(sql`${averageRatingExpr} >= ${Number(rating)}`); // Use the computed expression
+  }
+
+  // Count total records
+  const totalRecordsResult = await db
+    .select({ count: sql<number>`COUNT(DISTINCT ${products.id})` })
+    .from(query.as('filtered_products'));
+
+  const totalRecords = totalRecordsResult[0]?.count || 0;
+
+  // Retrieve the paginated records and sort by averageRating descending
+  const records = await query
+    .orderBy(sql`${averageRatingExpr} DESC`) // Use the computed expression
+    .limit(itemsPerPage)
+    .offset((pageNumber - 1) * itemsPerPage);
+
+  // Return both totalRecords and the records for the current page
+  return { totalRecords, records };
 }
