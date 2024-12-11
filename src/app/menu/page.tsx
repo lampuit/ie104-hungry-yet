@@ -138,7 +138,7 @@ export default function MenuPage() {
             />
           </section>
 
-          <section className="mb-10 max-w-screen-xl">
+          <section className="mb-10 max-w-screen-2xl">
             {dishesList.length === 0 || dishesList.every((dish) => !dish.published) ? (
               <p>Không có sản phẩm nào</p>
             ) : (
