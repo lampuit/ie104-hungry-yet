@@ -114,7 +114,6 @@ export default function Account() {
     async function onSubmit(values: z.infer<typeof formSchema>) {
         try {
             setIsPending(true);
-            setIsPending(true);
             let imageUrl = values.imageUrl;
 
             let newBlob = { url: "" };
@@ -124,8 +123,7 @@ export default function Account() {
                     access: "public",
                     handleUploadUrl: "/api/image/upload",
                 });
-            }
-            else {
+            } else {
                 newBlob.url = imageUrl ?? "";
             }
 
@@ -146,12 +144,12 @@ export default function Account() {
 
             await updateUser(data);
             toast({ description: "Cập nhật thông tin thành công!" });
-
         } catch (error) {
             console.log(error);
             toast({ description: "Cập nhật thông tin thất bại!" });
+        } finally {
+            setIsPending(false);
         }
-
     }
 
     return (

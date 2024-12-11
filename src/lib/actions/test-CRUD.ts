@@ -14,7 +14,8 @@ import {
   getCartsByUserId,
   getRatingsByProductId,
   getInvoiceByUserId,
-  getInvoiceDetail
+  getInvoiceDetail,
+  filterAndSearch
 } from "@/lib/data";
 
 import { clearCart } from "./cart";
@@ -90,14 +91,16 @@ async function testDeleteFavorite() {
 
 // testDeleteFavorite()
 
-// async function testGetProductByCategoryId(id: string) {
-//   const response = await getProductByCategoryId(
-//     id
-//   );
-//   console.log("Product Data:", response);
-// }
+async function testGetProductByCategoryId(id: string) {
+  const response = await getProductByCategoryId(
+    id,
+    1,
+    10
+  );
+  console.log("Product Data:", response);
+}
 
-// testGetProductByCategoryId('58f8a47c-c295-4e70-8482-ba02444155fc');
+// testGetProductByCategoryId('fe02d3ff-f145-46b9-9714-5a18dbf4b5cc');
 
 async function testGetAllCategory() {
   const response = await getAllCategory();
@@ -180,5 +183,20 @@ async function testGetInvoiceDetail() {
   console.log("Invoice Detail Data:", response?.orders);
 }
 
-testGetInvoiceDetail()
+// testGetInvoiceDetail()
+
+async function testFilterAndSearch(){
+  const formData = new FormData();
+  formData.append("categoryId", "fe02d3ff-f145-46b9-9714-5a18dbf4b5cc");
+  formData.append("minPrice", "10000");
+  formData.append("maxPrice", "1000000");
+  formData.append("rating", "");
+  formData.append("search", "");
+  formData.append("page", "1");
+  formData.append("pageSize", "10");
+  const reespone = await filterAndSearch(formData);
+  console.log("Filter And Search:", reespone);
+}
+
+testFilterAndSearch();
 
