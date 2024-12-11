@@ -8,14 +8,14 @@ import useSWR from "swr";
 import LoadingSpinner from "@/components/ui/loading-spinner";
 import { getSession } from "@/lib/auth-client";
 import { Summary } from "@/components/menu/cart/summary";
-import {
-  Breadcrumb,
-  BreadcrumbItem,
-  BreadcrumbLink,
-  BreadcrumbList,
-  BreadcrumbPage,
-  BreadcrumbSeparator,
-} from "@/components/ui/breadcrumb";
+// import {
+//   Breadcrumb,
+//   BreadcrumbItem,
+//   BreadcrumbLink,
+//   BreadcrumbList,
+//   BreadcrumbPage,
+//   BreadcrumbSeparator,
+// } from "@/components/ui/breadcrumb";
 
 //get shopping cart by userId
 const fetcherCarts = async (userId: string) => {
@@ -105,7 +105,7 @@ export default function CartPage() {
 
   return (
     <main className="grow flex flex-col h-full">
-      <section className="my-10 mx-10 w-72 text-base font-semibold">
+      {/* <section className="my-10 mx-10 w-72 text-base font-semibold">
         <Breadcrumb>
           <BreadcrumbList>
             <BreadcrumbItem>
@@ -121,8 +121,8 @@ export default function CartPage() {
             </BreadcrumbItem>
           </BreadcrumbList>
         </Breadcrumb>
-      </section>
-      <section className="flex flex-col justify-center items-center">
+      </section> */}
+      <section className="flex flex-col justify-center items-center my-10 w-full">
         <DataTable columns={columns(mutate, updateTableData)} data={dishes} onQuantityChange={handleQuantityChange}></DataTable>
       </section>
       <section className="sticky bottom-0 grow flex flex-col justify-end items-center mt-4">
