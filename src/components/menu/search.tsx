@@ -4,18 +4,23 @@ import { Input } from "../ui/input";
 import React, { useRef } from 'react';
 import Link from 'next/link';
 import { useState } from 'react';
-import { Filter, Search, ShoppingCart } from "lucide-react";
+import { CheckIcon, Filter, MoveDown, MoveUp, Radio, Search, ShoppingCart } from "lucide-react";
 import { useRouter } from 'next/navigation';
-import { DropdownMenuCheckboxItemProps } from "@radix-ui/react-dropdown-menu"
+import { DropdownMenuCheckboxItemProps, ItemIndicator } from "@radix-ui/react-dropdown-menu"
 import { Button } from "@/components/ui/button"
 import {
     DropdownMenu,
-    DropdownMenuCheckboxItem,
+    DropdownMenuTrigger,
     DropdownMenuContent,
     DropdownMenuLabel,
+    DropdownMenuItem,
+    DropdownMenuGroup,
+    DropdownMenuCheckboxItem,
+    DropdownMenuRadioGroup,
+    DropdownMenuRadioItem,
     DropdownMenuSeparator,
-    DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
+import { filterAndSearch } from "@/lib/data";
 
 type Checked = DropdownMenuCheckboxItemProps["checked"]
 
@@ -24,13 +29,23 @@ interface SearchingAreaProps {
 }
 
 export function SearchingArea({ totalAmount }: SearchingAreaProps) {
-    const [showStatusBar, setShowStatusBar] = React.useState<Checked>(true)
-    const [showActivityBar, setShowActivityBar] = React.useState<Checked>(false)
-    const [showPanel, setShowPanel] = React.useState<Checked>(false)
+    const [price1, setPrice1] = React.useState<Checked>(false)
+    const [price2, setPrice2] = React.useState<Checked>(false)
+    const [price3, setPrice3] = React.useState<Checked>(false)
+    const [price4, setPrice4] = React.useState<Checked>(false)
+    const [price5, setPrice5] = React.useState<Checked>(false)
 
     const router = useRouter();
     const inputRef = useRef<HTMLInputElement>(null);
     const [inputWidth, setInputWidth] = useState("w-1/4");
+
+    const handlePriceOnSelect = () => {
+        const formData = new FormData();
+        formData.append('minPrice', price1 ? "0" : price2 ? "20000" : price3 ? "40000" : price4 ? "60000" : price5 ? "100000" : "");
+        formData.append('maxPrice', price1 ? "20000" : price2 ? "40000" : price3 ? "60000" : price4 ? "100000" : price5 ? "" : "");
+        filterAndSearch(formData);
+    }
+
     const handlleShoppingCartOnClick = () => {
         router.push('/menu/cart');
     }
@@ -65,24 +80,62 @@ export function SearchingArea({ totalAmount }: SearchingAreaProps) {
                     <DropdownMenuContent className="w-56">
                         <DropdownMenuLabel>Bộ lọc</DropdownMenuLabel>
                         <DropdownMenuSeparator />
+
+                        <DropdownMenuLabel>Giá</DropdownMenuLabel>
                         <DropdownMenuCheckboxItem
-                            checked={showStatusBar}
-                            onCheckedChange={setShowStatusBar}
+                            checked={price1}
+                            onCheckedChange={setPrice1}
+                            onSelect={handlePriceOnSelect}
                         >
-                            Status Bar
+                            Từ 0 - 20.000 VNĐ
                         </DropdownMenuCheckboxItem>
                         <DropdownMenuCheckboxItem
-                            checked={showActivityBar}
-                            onCheckedChange={setShowActivityBar}
+                            checked={price2}
+                            onCheckedChange={setPrice2}
+                            onSelect={handlePriceOnSelect}
                         >
-                            Activity Bar
+                            Từ 20.000 - 40.000 VNĐ
                         </DropdownMenuCheckboxItem>
                         <DropdownMenuCheckboxItem
-                            checked={showPanel}
-                            onCheckedChange={setShowPanel}
+                            checked={price3}
+                            onCheckedChange={setPrice3}
+                            onSelect={handlePriceOnSelect}
                         >
-                            Panel
+                            Từ 40.000 - 60.000 VNĐ
                         </DropdownMenuCheckboxItem>
+                        <DropdownMenuCheckboxItem
+                            checked={price4}
+                            onCheckedChange={setPrice4}
+                            onSelect={handlePriceOnSelect}
+                        >
+                            Từ 60.000 - 100.000 VNĐ
+                        </DropdownMenuCheckboxItem>
+                        <DropdownMenuCheckboxItem
+                            checked={price5}
+                            onCheckedChange={setPrice5}
+                            onSelect={handlePriceOnSelect}
+                        >
+                            Trên 100.000 VNĐ
+                        </DropdownMenuCheckboxItem>
+
+                        <DropdownMenuSeparator />
+                        <DropdownMenuLabel>Xếp hạng</DropdownMenuLabel>
+
+                        <DropdownMenuRadioGroup>
+                            <DropdownMenuRadioItem value="5.0">
+                                <ItemIndicator><CheckIcon /></ItemIndicator>
+                                5.0
+                            </DropdownMenuRadioItem>
+                            <DropdownMenuRadioItem value="4.0">
+                                <ItemIndicator><CheckIcon /></ItemIndicator>
+                                Từ 4.0 trở lên
+                            </DropdownMenuRadioItem>
+                            <DropdownMenuRadioItem value="3.0">
+                                <ItemIndicator><CheckIcon /></ItemIndicator>
+                                Từ 3.0 trở lên
+                            </DropdownMenuRadioItem>
+                        </DropdownMenuRadioGroup>
+
                     </DropdownMenuContent>
                 </DropdownMenu>
 
