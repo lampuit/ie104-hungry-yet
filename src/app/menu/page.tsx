@@ -122,7 +122,7 @@ export default function MenuPage() {
     dishLoading ? <LoadingSpinner /> :
       <main className="w-screen">
         <header className="mt-8">
-        <SearchingArea totalAmount={totalAmount}/>
+          <SearchingArea totalAmount={totalAmount} />
         </header>
 
         <section className="flex flex-col items-center">
@@ -138,7 +138,7 @@ export default function MenuPage() {
             />
           </section>
 
-          <section className="mb-10 max-w-screen-xl">
+          <section className="mb-10 max-w-screen-2xl">
             {dishesList.length === 0 || dishesList.every((dish) => !dish.published) ? (
               <p>Không có sản phẩm nào</p>
             ) : (

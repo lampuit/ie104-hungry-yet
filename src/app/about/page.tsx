@@ -23,10 +23,10 @@ export default function AboutPage() {
             </Image>
 
 
-            <div className="flex justify-center items-center px-16">
-                <div className="flex flex-col gap-2 w-1/3">
-                    <h1 className="font-bold text-3xl">WHAT WE DO</h1>
-                    <h3 className="font-bold text-2xl">Savor the Moment!</h3>
+            <div className="w-full flex flex-col md:flex-row justify-center items-center px-16 gap-4">
+                <div className="flex flex-col gap-2 min-w-72">
+                    <h1 className="font-bold text-3xl text-center">WHAT WE DO</h1>
+                    <h3 className="font-bold text-2xl text-center">Savor the Moment!</h3>
                 </div>
                 <p className="text-lg">Sứ mệnh của HungryYet? là kết nối bạn với ẩm thực đa dạng,
                     từ món truyền thống đến hiện đại, với chất lượng và phong cách phục vụ chu đáo.

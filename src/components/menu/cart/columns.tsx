@@ -99,13 +99,14 @@ const AmountCell = ({ row, table }: { row: any; table: any }) => {
     );
 };
 
-const FavoriteCell = ({ row }: { row: any }) => {
+const FavoriteCell = ({ row, updateTableData }: { row: any, updateTableData: (id: string, isFavorite: boolean) => void }) => {
     const [isFavorite, setIsFavorite] = useState(row.original.isFavorite);
 
     const handleDeleteFavorite = async () => {
         const id = row.original.id;
         await deleteFavorite(userId || "", id);
-        setIsFavorite(!isFavorite);
+        setIsFavorite(false);
+        updateTableData(id, false); // Update the table data immediately
     };
 
     const handleUpdateFavorite = async () => {
@@ -113,7 +114,8 @@ const FavoriteCell = ({ row }: { row: any }) => {
         data.append("productId", row.original.id);
         data.append("userId", userId || "");
         await createFavorite(data);
-        setIsFavorite(!isFavorite);
+        setIsFavorite(true);
+        updateTableData(row.original.id, true); // Update the table data immediately
     };
 
     return (
@@ -149,7 +151,7 @@ const DeleteCell = ({ row, mutate }: { row: any, mutate: () => void }) => {
     </AlertDialog>;
 };
 
-export const columns: (mutate: () => void) => ColumnDef<Cart>[] = (mutate) => [
+export const columns: (mutate: () => void, updateTableData: (id: string, isFavorite: boolean) => void) => ColumnDef<Cart>[] = (mutate, updateTableData) => [
     {
         accessorKey: "name",
         header: () => <div className="text-center">Giỏ hàng</div>,
@@ -193,7 +195,7 @@ export const columns: (mutate: () => void) => ColumnDef<Cart>[] = (mutate) => [
     },
     {
         id: "favorite",
-        cell: ({ row }) => <FavoriteCell row={row} />,
+        cell: ({ row }) => <FavoriteCell row={row} updateTableData={updateTableData} />,
     },
     {
         id: "delete",

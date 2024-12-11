@@ -129,12 +129,12 @@ export const DishList = ({ dishesList, onTotalAmountChange }: DishListProps) => 
     };
 
     return (
-        <div className="grid lg:grid-cols-3 md:grid-cols-2 sm:grid-cols-1 gap-y-10 gap-x-8 mx-10 px-10">
+        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-y-10 gap-x-8 mx-5 sm:mx-10 sm:px-4 lg:px-10">
             {dishesList?.map((dish: any) => (
                 dish.published ? (
                     <div
                         key={dish.id}
-                        className="relative shadow-md rounded-3xl flex flex-col items-center group"
+                        className="relative w-full h-full shadow-md rounded-3xl flex flex-col items-center group"
                         onMouseEnter={() =>
                             setFavorites(prev =>
                                 prev.map(fav =>
@@ -163,12 +163,12 @@ export const DishList = ({ dishesList, onTotalAmountChange }: DishListProps) => 
                         <div
                             className={`flex flex-col ${favorites.find(fav => fav.productId === dish.id)?.isHovered
                                 ? 'justify-start'
-                                : 'justify-center'
-                                } items-center gap-3 py-4 pt-6 w-full h-44 px-3 transition-all duration-300 ease-in-out`}
+                                : 'justify-start md:justify-center'
+                                } items-center gap-3 py-4 pt-6 w-full md:h-44 px-3 transition-all duration-300 ease-in-out`}
                         >
                             <div
                                 className={`flex flex-col justify-between items-start gap-1 w-full transform transition-transform duration-300 ${favorites.find(fav => fav.productId === dish.id)?.isHovered
-                                    ? 'translate-y-[-10px]'
+                                    ? 'md:translate-y-[-10px]'
                                     : 'translate-y-[0]'
                                     }`}
                             >
@@ -191,11 +191,11 @@ export const DishList = ({ dishesList, onTotalAmountChange }: DishListProps) => 
                                     className="font-normal"
                                     onClick={() => handleProductOnClick(dish.id)}
                                 >
-                                    {`${dish.des.substr(0, 31)}${dish.des.length > 32 ? '...' : ''}`}
+                                    {`${dish.des.substr(0, 30)}${dish.des.length > 32 ? '...' : ''}`}
                                 </p>
                             </div>
                             <div className={`flex justify-between items-center w-full transform transition-transform duration-300 ${favorites.find(fav => fav.productId === dish.id)?.isHovered
-                                ? 'translate-y-[-10px]'
+                                ? 'md:translate-y-[-10px]'
                                 : 'translate-y-[0]'
                                 }`}>
                                 <div className="flex justify-center items-center gap-1">
@@ -210,7 +210,7 @@ export const DishList = ({ dishesList, onTotalAmountChange }: DishListProps) => 
                                 </div>
                             </div>
                         </div>
-                        <div className="absolute bottom-0 left-0 right-0 flex justify-between items-center opacity-0 group-hover:opacity-100 transition-opacity duration-300 ease-in-out px-3 py-2">
+                        <div className="md:absolute bottom-0 left-0 right-0 flex justify-between items-center md:opacity-0 group-hover:opacity-100 md:transition-opacity duration-300 ease-in-out gap-2 px-3 py-2">
                             <Button
                                 onClick={() => handleProductOnClick(dish.id)}
                                 className="rounded-3xl bg-black hover:bg-red-500"
