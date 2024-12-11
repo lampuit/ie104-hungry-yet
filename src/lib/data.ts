@@ -392,7 +392,7 @@ export async function filterAndSearch(formData: FormData) {
   // Apply rating filter after aggregation
   let query = baseQuery as any;
   if (rating) {
-    query = query.having(sql`${averageRatingExpr} >= ${Number(rating)}`); // Use the computed expression
+    query = query.having(sql`${averageRatingExpr} <= ${Number(rating)}`); // Use the computed expression
   }
 
   // Count total records
