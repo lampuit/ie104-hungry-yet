@@ -6,12 +6,28 @@ import Link from 'next/link';
 import { useState } from 'react';
 import { Filter, Search, ShoppingCart } from "lucide-react";
 import { useRouter } from 'next/navigation';
+import { DropdownMenuCheckboxItemProps } from "@radix-ui/react-dropdown-menu"
+import { Button } from "@/components/ui/button"
+import {
+    DropdownMenu,
+    DropdownMenuCheckboxItem,
+    DropdownMenuContent,
+    DropdownMenuLabel,
+    DropdownMenuSeparator,
+    DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu"
+
+type Checked = DropdownMenuCheckboxItemProps["checked"]
 
 interface SearchingAreaProps {
     totalAmount: number;
 }
 
 export function SearchingArea({ totalAmount }: SearchingAreaProps) {
+    const [showStatusBar, setShowStatusBar] = React.useState<Checked>(true)
+    const [showActivityBar, setShowActivityBar] = React.useState<Checked>(false)
+    const [showPanel, setShowPanel] = React.useState<Checked>(false)
+
     const router = useRouter();
     const inputRef = useRef<HTMLInputElement>(null);
     const [inputWidth, setInputWidth] = useState("w-1/4");
@@ -42,7 +58,34 @@ export function SearchingArea({ totalAmount }: SearchingAreaProps) {
                     />
                 </div>
                 <Search className="inline-block md:hidden" />
-                <Filter size={24} />
+                <DropdownMenu>
+                    <DropdownMenuTrigger asChild>
+                        <Filter size={24} />
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent className="w-56">
+                        <DropdownMenuLabel>Bộ lọc</DropdownMenuLabel>
+                        <DropdownMenuSeparator />
+                        <DropdownMenuCheckboxItem
+                            checked={showStatusBar}
+                            onCheckedChange={setShowStatusBar}
+                        >
+                            Status Bar
+                        </DropdownMenuCheckboxItem>
+                        <DropdownMenuCheckboxItem
+                            checked={showActivityBar}
+                            onCheckedChange={setShowActivityBar}
+                        >
+                            Activity Bar
+                        </DropdownMenuCheckboxItem>
+                        <DropdownMenuCheckboxItem
+                            checked={showPanel}
+                            onCheckedChange={setShowPanel}
+                        >
+                            Panel
+                        </DropdownMenuCheckboxItem>
+                    </DropdownMenuContent>
+                </DropdownMenu>
+
                 <Link href={"/menu/cart"}>
                     <div className="relative">
                         <ShoppingCart size={24} onClick={() => handlleShoppingCartOnClick()} />
