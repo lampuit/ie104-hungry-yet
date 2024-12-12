@@ -411,3 +411,22 @@ export async function filterAndSearch(formData: FormData) {
   // Return both totalRecords and the records for the current page
   return { totalRecords, records };
 }
+
+
+export async function getAllInvoices() {
+  return await db.query.invoices.findMany({
+    with: {
+      orders: {
+        with: {
+          products: {
+            with: {
+              category: true,
+            },
+          },
+        },
+      },
+    },
+  });
+}
+
+

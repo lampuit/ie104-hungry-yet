@@ -5,6 +5,7 @@ import { db } from "@/drizzle/db";
 import { assigments } from "@/drizzle/schema/project";
 import { eq, and } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
+import { z } from "zod";
 
 const CreateUserWorkShift = insertAssigmentSchema.omit({
   createdAt: true,
@@ -12,18 +13,20 @@ const CreateUserWorkShift = insertAssigmentSchema.omit({
 });
 
 export async function createUserWorkShift(formData: FormData) {
+
   const data = CreateUserWorkShift.parse({
     id: formData.get("id"),
     userId: formData.get("userId"),
     shiftId: formData.get("shiftId"),
-    workDate: new Date(formData.get("workDate") as string) 
+    workDate: new Date(formData.get("workDate") as string),
   });
+
   console.log(formData);
 
   /* This code snippet is inside the `createUserWorkShift` function and it is responsible for creating
   a new user work shift record in the database. Here's what it does: */
   try {
-    await db.insert(assigments).values(data).onConflictDoNothing({target: assigments.id});
+    await db.insert(assigments).values(data).onConflictDoNothing({ target: assigments.id });
     console.log("User work shift created successfully");
   } catch (err) {
     console.error(err);

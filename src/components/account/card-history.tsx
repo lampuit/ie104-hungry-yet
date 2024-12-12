@@ -17,7 +17,7 @@ import { ScrollArea } from "@/components/ui/scroll-area"
 import Image from "next/image";
 import React, { useEffect } from "react";
 import { Form } from "@/components/ui/form"
-import { getInvoiceDetail } from "@/lib/data";
+import { getInvoiceDetail, getUserById } from "@/lib/data";
 import useSWR from "swr";
 import { InformationForm } from "@/components/checkout/information-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -29,6 +29,7 @@ import { toast } from "sonner";
 import { createCart } from "@/lib/actions/cart";
 import { Textarea } from "../ui/textarea";
 import { createRatings } from "@/lib/actions/rating";
+import { get } from "http";
 
 interface Invoice {
     id: string;
@@ -43,6 +44,11 @@ const fetcherInvoiceDetail = async (invoiceId: string) => {
     if (!invoiceId) return null;
     return await getInvoiceDetail(invoiceId);
 };
+
+const getUserInfo = async (userId: string) => {
+    return await getUserById(userId);
+}
+
 
 const formSchema = z.object({
     invoiceId: z.string(),
@@ -73,6 +79,8 @@ export function CardHistory({ invoice }: { invoice: Invoice }) {
     const { data: invoiceData, error } = useSWR(invoice.id, fetcherInvoiceDetail, {
         revalidateOnFocus: true,
     });
+
+    const { data: shipperInfo } = useSWR(invoiceData?.shipperId || "", getUserInfo);
 
     useEffect(() => {
         if (error) {
@@ -198,7 +206,6 @@ export function CardHistory({ invoice }: { invoice: Invoice }) {
         setReviews(prev => ({ ...prev, [productId]: review }));
     };
 
-
     return (
         <section className="flex flex-col gap-2 p-3 sm:p-5 bg-white rounded shadow-md">
             {/* Thông tin đơn hàng */}
@@ -207,11 +214,11 @@ export function CardHistory({ invoice }: { invoice: Invoice }) {
                     <div className="flex flex-col gap-1 text-xs">
                         <p className="flex gap-1 items-center">
                             <Bike className="w-4 h-4" />
-                            <span>Ngô Tuấn Kiệt</span>
+                            <span>{shipperInfo?.[0]?.name}</span>
                         </p>
                         <p className="flex gap-1 items-center">
                             <PhoneCall className="w-4 h-4" />
-                            <span>0901429731</span>
+                            <span>{shipperInfo?.[0]?.phone}</span>
                         </p>
                     </div>
                 ) : isCancelPage ?
