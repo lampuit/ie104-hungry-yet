@@ -63,10 +63,12 @@ export default function Homepage() {
         <Categories />
       </section>
 
-      <section className="flex flex-col items-center mt-16 lg:mb-20">
+      <section className="flex flex-col items-center mt-10 lg:mb-20">
       <div className="flex flex-col justify-center items-center gap-y-4">
         <p className="inline-block sm:hidden italic font-semibold text-4xl text-center">Dịch vụ cung cấp</p>
+        <div className="inline-bock sm:hidden">
         <HorizontalLine />
+          </div>
       </div>
         <Benefit />
         <MobileBenefit />

@@ -22,7 +22,7 @@ export function Summary({ totalPrice, totalAmount }: MoneyProps) {
     const { data: userId } = useSWR("userId", fetcherUserId);
 
     return (
-        <div className="flex flex-col md:flex-row justify-between items-center py-4 md:py-8 px-2 md:px-8 bg-white rounded-lg shadow-[0_-4px_10px_rgba(0,0,0,0.1)] w-11/12 sm:w-3/4">
+        <div className="flex flex-col md:flex-row justify-between items-center py-4 md:py-8 px-2 md:px-8 bg-white rounded-lg shadow-[0_-4px_10px_rgba(0,0,0,0.1)] w-11/12 lg:w-3/4">
             {/* Shopping Cart Icon */}
             <div className="mb-4 md:mb-0 relative">
                 <ShoppingCart size={32} className="stroke-red-500" />

@@ -39,9 +39,9 @@ export function Intro() {
                     width={400}
                     height={280}
                     alt="Intro dish"
-                    className='hidden lg:inline-block'>
+                    className='hidden lg:inline-block rounded-3xl'>
                 </Image>
-                <div className='hidden lg:inline-block absolute h-80 w-1/2 bg-[#99BD76] -z-10 start-2/3'></div>
+                <div className='hidden lg:inline-block rounded-s-3xl absolute h-80 w-full bg-[#99BD76] -z-10 start-2/3 overflow-clip'></div>
             </div>
 
             <div className="relative flex justify-center items-center lg:gap-x-8 xl:gap-x-36 px-16 sm:px-32">
@@ -50,9 +50,9 @@ export function Intro() {
                     width={400}
                     height={280}
                     alt="Intro dish"
-                    className='hidden lg:inline-block'>
+                    className='hidden lg:inline-block rounded-3xl'>
                 </Image>
-                <div className='hidden lg:inline-block absolute h-80 w-1/2 bg-amber-300 -z-10 end-2/3'></div>
+                <div className='hidden lg:inline-block rounded-e-3xl absolute h-80 w-full bg-amber-300 -z-10 end-2/3 overflow-clip'></div>
                 <div className="flex flex-col justify-center items-center lg:items-start gap-5 lg:gap-10">
                     <div className='flex flex-col justify-center items-center lg:items-start gap-y-4'>
                         <h2 className='italic font-semibold text-center text-4xl sm:text-5xl'>Hương vị Việt Nam</h2>
