@@ -87,13 +87,15 @@ const AmountCell = ({ row, table }: { row: any; table: any }) => {
     };
 
     return (
-        <div className="flex flex-row justify-center items-center gap-4">
+        <div className="flex flex-row justify-center items-center gap-3 md:gap-4 text-xs md:text-sm">
             <Button variant={"outline"}
-                className={amount > 1 ? "border-amber-500 text-amber-500 hover:bg-orange-200 w-8 h-8"
-                    : "border-gray-300 text-gray-300 w-8 h-8 hover:text-gray-300 hover:border-gray-300 hover:bg-white"}
+                size={"sm"}
+                className={`${amount > 1 ? "border-amber-500 text-amber-500 hover:bg-orange-200"
+                    : "border-gray-300 text-gray-300 hover:text-gray-300 hover:border-gray-300 hover:bg-white"} w-6 h-6`}
                 onClick={handleDecrease}>-</Button>
             <div>{amount}</div>
-            <Button className="bg-amber-500 hover:bg-red-500 w-8 h-8"
+            <Button size={"sm"}
+                className="bg-amber-500 hover:bg-red-500 w-6 h-6"
                 onClick={handleIncrease}>+</Button>
         </div>
     );
@@ -154,19 +156,22 @@ const DeleteCell = ({ row, mutate }: { row: any, mutate: () => void }) => {
 export const columns: (mutate: () => void, updateTableData: (id: string, isFavorite: boolean) => void) => ColumnDef<Cart>[] = (mutate, updateTableData) => [
     {
         accessorKey: "name",
-        header: () => <div className="text-center">Giỏ hàng</div>,
+        header: () => <div className="text-center text-xs md:text-sm">Giỏ hàng</div>,
         cell: ({ row }) => {
             const name = row.original.name;
             const img = row.original.img;
             const des = row.original.category;
 
-            return <div className="flex flex-row justify-start items-center w-96 text-start gap-4">
-                <Image
-                    src={img}
-                    alt={name}
-                    width={128}
-                    height={128}
-                />
+            return <div className="flex flex-row justify-start items-center w-48 sm:w-60 md:w-72 lg:w-96 text-start gap-4 text-xs md:text-sm">
+                <div className="w-16 sm:w-20 md:w-24 lg:w-28 h-12 md:h-16 lg:h-20 relative">
+                    <Image
+                        src={img}
+                        alt={name}
+                        layout="fill"
+                        objectFit="cover"
+                        className="rounded-sm"
+                    />
+                </div>
                 <div className="flex flex-col justify-center items-start gap-4">
                     <p className="font-bold">{name}</p>
                     <p>{des}</p>
@@ -176,7 +181,7 @@ export const columns: (mutate: () => void, updateTableData: (id: string, isFavor
     },
     {
         accessorKey: "cost",
-        header: () => <div className="w-36 text-center">Giá tiền</div>,
+        header: () => <div className="text-center text-xs md:text-sm">Giá tiền</div>,
         cell: ({ row }) => {
             const cost = row.original.cost as number;
             const convertToVND = (price: number) => {
@@ -185,12 +190,12 @@ export const columns: (mutate: () => void, updateTableData: (id: string, isFavor
                     currency: "VND",
                 }).format(price);
             };
-            return <div className="text-center">{convertToVND(cost)}</div>;
+            return <div className="text-center text-xs md:text-sm">{convertToVND(cost)}</div>;
         },
     },
     {
         accessorKey: "amount",
-        header: () => <div className="w-36 text-center">Số lượng</div>,
+        header: () => <div className="text-center text-xs md:text-sm">Số lượng</div>,
         cell: ({ row, table }) => <AmountCell row={row} table={table} />,
     },
     {

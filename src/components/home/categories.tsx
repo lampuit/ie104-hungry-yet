@@ -45,7 +45,7 @@ export function Categories() {
 
     return (
         <div
-            className="overflow-hidden w-full"
+            className="overflow-clip w-full"
             ref={containerRef}
             onMouseEnter={() => setIsHovered(true)} // Pause auto-scroll on hover
             onMouseLeave={() => setIsHovered(false)} // Resume auto-scroll when not hovering
@@ -65,7 +65,7 @@ export function Categories() {
                         whileHover={{ scale: 1.1 }}
                         whileTap={{ scale: 0.95 }}
                     >
-                        <div className="rounded-lg overflow-hidden">
+                        <div className="rounded-lg overflow-clip">
                             <Image
                                 src={product.imageUrl || "/placeholder-image.jpg"}
                                 alt={product.name || "No image"}

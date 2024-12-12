@@ -40,7 +40,7 @@ export default function ExhibitionPage() {
             </div>
 
             <div className='w-4/5 my-16 space-y-8'>
-                <h1 className='italic font-semibold text-5xl'>Món ăn nổi bật</h1>
+                <h1 className='italic font-semibold text-4xl sm:text-5xl'>Món ăn nổi bật</h1>
                 <HorizontalLine />
                 <p className=''>
                     Hương vị ẩm thực Việt Nam là sự kết hợp tinh tế giữa các nguyên liệu tự nhiên và gia vị đặc trưng,
@@ -72,7 +72,7 @@ export default function ExhibitionPage() {
                 })}
             </div>
 
-            <div className='w-4/5 mt-8 space-y-8'>
+            <div className='w-4/5 my-8 space-y-8'>
                 <HorizontalLine />
                 <p className=''>
                     HungryYet – nơi mang đến những món ăn ngon và chất lượng,

@@ -54,6 +54,7 @@
     "drizzle-kit": "^0.28.1",
     "drizzle-orm": "^0.36.4",
     "drizzle-zod": "^0.5.1",
+    "embla-carousel-autoplay": "^8.5.1",
     "embla-carousel-react": "^8.5.1",
     "framer-motion": "^11.13.1",
     "ie104-hungry-yet": "link:",

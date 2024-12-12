@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { getAllCategory } from '@/lib/data';
 import useSWR from "swr";
+import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area"
 
 // Lấy danh sách các danh mục món ăn
 export const CategoryFetcher = async () => {
@@ -25,19 +26,22 @@ export function Category({ clickedIndex, setClickedIndex }: CategoryProps) {
     }, [data]);
 
     return (
-        <div className="flex flex-row justify-center items-center gap-4 py-5 px-4">
-            {listCate.map((cate) => (
-                <div key={cate.id} className="flex flex-col justify-end items-center gap-2 w-32">
-                    <p
-                        className={`text-xs sm:text-sm md:text-base text-center font-semibold cursor-pointer ${clickedIndex === cate.id ? 'text-amber-500' : 'text-black'} hover:text-amber-500`}
-                        onClick={() => setClickedIndex(cate.id)}
-                    >
-                        {cate.name}
-                    </p>
-                    {clickedIndex === cate.id && <Underline />}
-                </div>
-            ))}
-        </div>
+        <ScrollArea>
+            <div className="flex flex-row justify-center items-center gap-4 py-5 px-4">
+                {listCate.map((cate) => (
+                    <div key={cate.id} className="flex flex-col justify-end items-center gap-2 w-32">
+                        <p
+                            className={`text-sm md:text-base text-center font-semibold cursor-pointer ${clickedIndex === cate.id ? 'text-amber-500' : 'text-black'} hover:text-amber-500`}
+                            onClick={() => setClickedIndex(cate.id)}
+                        >
+                            {cate.name}
+                        </p>
+                        {clickedIndex === cate.id && <Underline />}
+                    </div>
+                ))}
+            </div>
+            <ScrollBar orientation="horizontal" />
+        </ScrollArea>
     );
 }
 
