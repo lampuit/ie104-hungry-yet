@@ -3,7 +3,7 @@ import Image from "next/image"
 import { Button } from "../ui/button"
 import Link from "next/link"
 
-const img = { name: 'img2', src: '/images/food/img2.jpg', alt: 'food img2' }
+const img = { name: 'banhmi', src: '/images/food/banhmi.jpg', alt: 'Banh Mi Viet Nam' }
 
 const charm = Charm({
     subsets: ["vietnamese"],

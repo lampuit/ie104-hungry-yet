@@ -75,7 +75,7 @@ export function ProductDetailContent({ id }: { id: string }) {
         }
     }, [productData, favoriteData]);
 
-    if (!productData || !favoriteData || !ratingData) {
+    if (!productData || !ratingData) {
         return <LoadingSpinner />;
     }
 

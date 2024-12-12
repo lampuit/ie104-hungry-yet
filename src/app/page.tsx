@@ -14,10 +14,10 @@ import { Exhibition } from "@/components/home/exhibition";
 import { Testimonials } from "@/components/home/testimonials";
 import { HorizontalLine } from "@/components/home/intro";
 import { FAQ } from "@/components/home/faq";
-import { Charm } from "next/font/google";
 import { motion } from "framer-motion";
 import { MobileHero } from "@/components/home/mobile-hero";
 import { MobileBenefit } from "@/components/home/mobile-benefit";
+import { Charm } from "next/font/google";
 const charm = Charm({
   subsets: ["vietnamese"],
   weight: ["400", "700"],
@@ -65,7 +65,7 @@ export default function Homepage() {
 
       <section className="flex flex-col items-center mt-10 lg:mb-20">
       <div className="flex flex-col justify-center items-center gap-y-4">
-        <p className="inline-block sm:hidden italic font-semibold text-4xl text-center">Dịch vụ cung cấp</p>
+        <p className={`${charm.className} inline-block sm:hidden italic font-semibold text-4xl text-center`}>Dịch vụ cung cấp</p>
         <div className="inline-bock sm:hidden">
         <HorizontalLine />
           </div>

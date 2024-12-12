@@ -4,6 +4,11 @@ import Link from "next/link";
 import Image from "next/image";
 import useSWR from 'swr';
 import { getSession } from "@/lib/auth-client";
+import { Charm } from "next/font/google";
+const charm = Charm({
+    subsets: ["vietnamese"],
+    weight: ["400", "700"],
+});
 
 // Lấy userId từ session
 const fetcherUserId = async () => {
@@ -12,25 +17,37 @@ const fetcherUserId = async () => {
     return userId;
 };
 
-
 export function Intro() {
     const { data: userId, error: userIdError } = useSWR("userId", fetcherUserId);
 
     return (
         <div className="flex flex-col justify-between items-center w-screen gap-y-16 lg:gap-y-52 overflow-clip">
-            <div className="relative flex justify-center items-center lg:gap-x-8 xl:gap-x-36 px-16 sm:px-32 mt-10">
+            {/* First Section */}
+            <div className="relative flex justify-center items-center lg:gap-x-8 xl:gap-x-36 px-8 sm:px-32 mt-10">
                 <div className="flex flex-col justify-center items-center lg:items-start gap-5 lg:gap-10">
-                    <div className='flex flex-col justify-center items-center lg:items-start gap-y-4'>
-                        <h2 className='italic font-semibold text-center text-4xl sm:text-5xl'>Chào mừng</h2>
+                    {/* Small Screen */}
+                    <div className='w-full h-64 relative mb-4'>
+                        <Image
+                            src="/images/intro-dish.jpg"
+                            layout='fill'
+                            objectFit='cover'
+                            alt="Intro dish"
+                            className='lg:hidden rounded-3xl'>
+                        </Image>
+                        <div className='lg:hidden absolute rounded-s-3xl h-72 w-full bg-[#99BD76] -z-10 start-1/2 -top-4 overflow-clip'></div>
+                    </div>
+
+                    <div className='flex flex-col justify-center items-start gap-y-4'>
+                        <h2 className={`${charm.className} italic font-semibold text-center text-4xl sm:text-5xl`}>Chào mừng</h2>
                         <HorizontalLine />
-                        <p className='lg:max-w-xl text-center text-sm sm:text-base lg:text-start'>
+                        <p className='lg:max-w-xl text-justify text-sm sm:text-base lg:text-start'>
                             Chào mừng bạn đến với HungryYet – nơi mang đến những món ăn ngon và chất lượng,
                             sẵn sàng phục vụ bạn mọi lúc, mọi nơi! Hãy cùng khám phá thế giới ẩm thực đa dạng,
                             tiện lợi đặt hàng và giao tận nơi, để mỗi bữa ăn đều trở thành niềm vui trọn vẹn.
                             Chọn món yêu thích và để chúng tôi chăm sóc bữa ăn của bạn!
                         </p>
                     </div>
-                    <Button asChild className='bg-black hover:bg-red-500 rounded-3xl'>
+                    <Button asChild className='w-full sm:w-40 max-w-80 bg-black hover:bg-red-500 rounded-3xl'>
                         <Link href={"/about"}>Về chúng tôi</Link>
                     </Button>
                 </div>
@@ -44,7 +61,8 @@ export function Intro() {
                 <div className='hidden lg:inline-block rounded-s-3xl absolute h-80 w-full bg-[#99BD76] -z-10 start-2/3 overflow-clip'></div>
             </div>
 
-            <div className="relative flex justify-center items-center lg:gap-x-8 xl:gap-x-36 px-16 sm:px-32">
+            {/* Second Section */}
+            <div className="relative flex justify-center items-center lg:gap-x-8 xl:gap-x-36 px-8 sm:px-32">
                 <Image
                     src="/images/intro-dish-2.jpg"
                     width={400}
@@ -54,10 +72,22 @@ export function Intro() {
                 </Image>
                 <div className='hidden lg:inline-block rounded-e-3xl absolute h-80 w-full bg-amber-300 -z-10 end-2/3 overflow-clip'></div>
                 <div className="flex flex-col justify-center items-center lg:items-start gap-5 lg:gap-10">
-                    <div className='flex flex-col justify-center items-center lg:items-start gap-y-4'>
-                        <h2 className='italic font-semibold text-center text-4xl sm:text-5xl'>Hương vị Việt Nam</h2>
+                    {/* Small Screen */}
+                    <div className='w-full h-64 relative mb-4'>
+                        <Image
+                            src="/images/intro-dish-2.jpg"
+                            layout='fill'
+                            objectFit='cover'
+                            alt="Intro dish"
+                            className='lg:hidden rounded-3xl'>
+                        </Image>
+                        <div className='lg:hidden absolute rounded-3xl h-72 w-full bg-amber-300 -z-10 end-1/2 -top-4 overflow-clip'></div>
+                    </div>
+
+                    <div className='flex flex-col justify-center items-start gap-y-4'>
+                        <h2 className={`${charm.className} italic font-semibold text-center text-4xl sm:text-5xl`}>Hương vị Việt Nam</h2>
                         <HorizontalLine />
-                        <p className='lg:max-w-xl text-center text-sm sm:text-base lg:text-start'>
+                        <p className='lg:max-w-xl text-justify text-sm sm:text-base lg:text-start'>
                             Hương vị ẩm thực Việt Nam là sự kết hợp tinh tế giữa các nguyên liệu tự nhiên và gia vị đặc trưng,
                             mang đến những món ăn vừa ngon mắt vừa đậm đà. Từ vị thanh mát của phở, cái ngọt bùi của bún chả,
                             đến độ giòn rụm của nem rán, mỗi món ăn đều phản ánh một phần của nền văn hóa và tình yêu dành cho
@@ -65,8 +95,8 @@ export function Intro() {
                             trải nghiệm vị giác mà còn là hành trình khám phá văn hóa, gắn kết người với người qua từng món ăn.
                         </p>
                     </div>
-                    <Button asChild className='bg-amber-500 hover:bg-red-500 rounded-3xl'>
-                        <Link href={ userId ? "/menu/cart" : "/login" }>Đặt hàng ngay</Link>
+                    <Button asChild className='w-full sm:w-40 max-w-80 bg-amber-500 hover:bg-red-500 rounded-3xl'>
+                        <Link href={userId ? "/menu/cart" : "/login"}>Đặt hàng ngay</Link>
                     </Button>
                 </div>
             </div>
