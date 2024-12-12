@@ -22,6 +22,7 @@ import { clearCart } from "./cart";
 
 import { updateUser } from "./user";
 import { createRatings, updateRating } from "./rating";
+import { updateInvoiceStatus } from "./invoice";
 
 //sucessfull SHOPPING CART
 async function testcreateCart() {
@@ -185,7 +186,7 @@ async function testGetInvoiceDetail() {
 
 // testGetInvoiceDetail()
 
-async function testFilterAndSearch(){
+async function testFilterAndSearch() {
   const formData = new FormData();
   formData.append("categoryId", "fe02d3ff-f145-46b9-9714-5a18dbf4b5cc");
   formData.append("minPrice", "10000");
@@ -198,5 +199,13 @@ async function testFilterAndSearch(){
   console.log("Filter And Search:", reespone);
 }
 
-testFilterAndSearch();
+// testFilterAndSearch();
+
+async function testUpdateInVoice() {
+  const response = await updateInvoiceStatus("e5b2733e-24c6-4161-b7ac-fa670e7bc5ef", "cancelled");
+  console.log("Update Invoice Status:", response);
+}
+
+testUpdateInVoice();
+
 

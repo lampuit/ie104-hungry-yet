@@ -1,6 +1,6 @@
 "use client"
 
-import { MoreHorizontal } from 'lucide-react'
+import { Link, MoreHorizontal } from 'lucide-react'
 import { useState, useTransition } from 'react'
 import { useRouter } from 'next/navigation'
 
@@ -40,13 +40,9 @@ const StatusAction: React.FC<{
             // Async logic handled here
             (async () => {
                 try {
-                    const result = await updateInvoiceStatus(invoiceId, status)
-                    if (result) {
-                        setOptimisticStatus(status)
-                        toast.success("Status updated successfully")
-                    } else {
-                        throw new Error('Failed to update status')
-                    }
+                    await updateInvoiceStatus(invoiceId, status)
+                    toast.success("Status updated successfully")
+
                 } catch (error) {
                     console.error("Error updating invoice status:", error)
                     toast.error("Failed to update status")
@@ -110,9 +106,19 @@ export function DataTableRowActions({
                     startTransition={startTransition}
                 />
                 <DropdownMenuItem>
-                    Delete
+                    Xóa
                     <DropdownMenuShortcut>⌫</DropdownMenuShortcut>
                 </DropdownMenuItem>
+
+                <DropdownMenuItem onClick={() => {
+                    router.push(`/dashboard/order-management/${invoiceId}`)
+                }} >
+                    Xem chi tiết
+                </DropdownMenuItem>
+
+                {/* <DropdownMenuItem asChild>
+                    <Link href={`/dashboard/order-management/${invoiceId}`}>Xem chi tiết</Link>
+                </DropdownMenuItem> */}
             </DropdownMenuContent>
         </DropdownMenu>
     )
