@@ -116,9 +116,9 @@ export const invoices = pgTable("invoices", {
     .references(() => user.id, {
       onUpdate: "cascade",
     }), // Khóa ngoại
-  // shipperId: text("shipperId").references(() => user.id, {
-  //   onUpdate: "cascade",
-  // }), // Khóa ngoại
+  shipperId: text("shipperId").references(() => user.id, {
+    onUpdate: "cascade",
+  }), // Khóa ngoại
   // cookId: text("cookId").references(() => user.id, {
   //   onUpdate: "cascade",
   // }), // Khóa ngoại
@@ -151,10 +151,10 @@ export const invoicesRelations = relations(invoices, ({ one, many }) => ({
   //   fields: [invoices.cookId],
   //   references: [user.id],
   // }),
-  // shipper: one(user, {
-  //   fields: [invoices.shipperId],
-  //   references: [user.id],
-  // }),
+  shipper: one(user, {
+    fields: [invoices.shipperId],
+    references: [user.id],
+  }),
   discount: one(discounts, {
     fields: [invoices.discountId],
     references: [discounts.id],

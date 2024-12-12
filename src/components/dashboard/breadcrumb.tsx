@@ -17,10 +17,10 @@ import { fetcherUserRole } from "./app-sidebar";
 export function Breadcrumbs() {
   const pathname = usePathname();
   const pathSegments = pathname.split("/").filter(Boolean);
-  const { data: role } = useSWR('role', fetcherUserRole);
+  // const { data: role } = useSWR('role', fetcherUserRole);
 
   return (
-    role === 'admin' &&
+    // role === 'admin' &&
     <Breadcrumb>
       <BreadcrumbList>
         {pathSegments.map((segment, index) => {

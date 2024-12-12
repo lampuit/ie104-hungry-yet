@@ -10,7 +10,7 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from "@/components/ui/sidebar";
-import { BadgeCent, Home, Package2, Ticket, Clock } from "lucide-react";
+import { BadgeCent, Home, Package2, Ticket, Clock, LucideListOrdered } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import useSWR from "swr";
@@ -49,6 +49,11 @@ const items = [
     url: "/dashboard/discount",
     icon: Ticket,
   },
+  {
+    title: "Order Management",
+    url: "/dashboard/order-management",
+    icon: LucideListOrdered,
+  },
 ];
 
 export function AppSidebar() {
@@ -61,7 +66,7 @@ export function AppSidebar() {
     <Sidebar>
       <SidebarContent>
         <SidebarGroup>
-          <SidebarGroupLabel>Application</SidebarGroupLabel>
+          <SidebarGroupLabel className="text-2xl">Hungry Yet?</SidebarGroupLabel>
           <SidebarGroupContent>
             <SidebarMenu>
               {items.map((item) => (

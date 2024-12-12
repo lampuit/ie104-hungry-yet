@@ -411,3 +411,37 @@ export async function filterAndSearch(formData: FormData) {
   // Return both totalRecords and the records for the current page
   return { totalRecords, records };
 }
+
+
+export async function getAllInvoices() {
+  return await db.query.invoices.findMany({
+    with: {
+      orders: {
+        with: {
+          products: {
+            with: {
+              category: true,
+            },
+          },
+        },
+      },
+    },
+  });
+}
+
+export async function changeStatusOfInvoice(id: string, status: string) {
+  const today = new Date();
+  today.setHours(0, 0, 0, 0); // Set to start of day
+
+  const assignment = await db.query.assigments.findFirst({
+    where: eq(assigments.workDate, today)
+  });
+
+  const shipperId = assignment ? assignment.userId : null;
+
+  return await db.update(invoices).set({
+    status: status as "pending" | "accepted" | "cooking" | "ready" | "delivered" | "cancelled",
+    shipperId: shipperId,
+  }).where(eq(invoices.id, id));
+}
+

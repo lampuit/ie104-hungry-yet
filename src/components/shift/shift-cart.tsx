@@ -114,7 +114,7 @@ export function ShiftCart({
               )?.userName
               : "Sáng"}
           </DropdownMenuTrigger>
-          <DropdownMenuContent className="z-50">
+          <DropdownMenuContent className="z-50 text-red-500">
             {employees.map((employee: any) => (
               <DropdownMenuItem
                 key={employee.id}
@@ -124,7 +124,7 @@ export function ShiftCart({
                     dayString,
                     employee.id.toString(),
                     "employee1",
-                    shifts[0].id.toString()
+                    shifts[0]?.id.toString()
                   )
                 }
               >
