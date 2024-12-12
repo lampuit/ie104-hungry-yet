@@ -3,8 +3,11 @@ import { Button } from "@/components/ui/button"
 import Image from "next/image"
 import { getSession } from "@/lib/auth-client"
 import useSWR from "swr"
-
-
+import { Charm } from "next/font/google";
+const charm = Charm({
+  subsets: ["vietnamese"],
+  weight: ["400", "700"],
+});
 
 // Lấy userId từ session
 const fetcherUserId = async () => {
@@ -28,7 +31,7 @@ export function OrderOnline() {
             </div>
             <div className="flex flex-col justify-between items-center gap-y-7 w-64 py-4 px-2 bg-white rounded-3xl text-center z-0">
                 <div className="flex flex-col justify-center items-center">
-                    <h2 className='italic text-3xl text-black'>Order Online</h2>
+                    <h2 className={`${charm.className} italic text-3xl text-black`}>Order Online</h2>
                     <ShortHorizontalLine />
                 </div>
                 <p className="px-4">Bạn muốn hương vị tươi mới? Đặt ngay để thưởng thức ẩm thực Việt Nam tại nhà - giao tận nơi, ngon tuyệt vời!</p>

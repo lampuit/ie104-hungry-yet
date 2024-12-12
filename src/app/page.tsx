@@ -86,27 +86,27 @@ export default function Homepage() {
         <OrderOnline />
       </section>
 
-      <section className="flex flex-col items-center mx-10 mb-12 px-10 space-y-8">
+      <section className="flex flex-col items-center mx-5 sm:mx-10 mb-12 sm:px-10 space-y-8">
         <div className="flex flex-col sm:flex-row justify-between items-center gap-4 sm:gap-0 w-full max-w-screen-2xl">
           <div className="flex flex-col gap-y-4">
-            <h2 className='italic font-semibold text-4xl text-center sm:text-5xl'>Best Seller</h2>
+            <h2 className={`${charm.className} italic font-semibold text-4xl text-center sm:text-5xl`}>Best Seller</h2>
             <HorizontalLine />
           </div>
-          <Button asChild className="hidden sm:inline-block bg-black hover:bg-red-500 rounded-3xl">
+          <Button asChild className="hidden sm:flex items-center bg-black hover:bg-red-500 rounded-3xl">
             <Link href={"/exhibition"}>Xem blog</Link>
           </Button>
         </div>
         <div className="flex justify-center w-full">
           <Exhibition />
         </div>
-        <Button asChild className="inline-block sm:hidden bg-black hover:bg-red-500 rounded-3xl">
+        <Button asChild className="sm:hidden bg-black hover:bg-red-500 rounded-3xl">
             <Link href={"/exhibition"}>Xem blog</Link>
           </Button>
       </section>
 
       <section className="flex flex-col items-center mx-10 md:px-10 px-6 mb-16 space-y-8">
         <div className="flex flex-col justify-between items-center sm:items-start gap-4 w-full max-w-screen-2xl">
-          <h2 className="italic font-semibold text-4xl text-center sm:text-5xl">Nhận xét & đánh giá</h2>
+          <h2 className={`${charm.className} italic font-semibold text-4xl text-center sm:text-5xl`}>Nhận xét & đánh giá</h2>
           <HorizontalLine />
         </div>
         <Testimonials />
@@ -115,7 +115,7 @@ export default function Homepage() {
 
       <section className="mx-10 px-10 mb-16 flex flex-col lg:flex-row justify-center items-center lg:items-start gap-10 lg:gap-40">
         <div className="flex flex-col justify-center gap-4">
-          <h2 className="italic font-semibold text-4xl text-center lg:text-start sm:text-5xl">FAQs</h2>
+          <h2 className={`${charm.className} italic font-semibold text-4xl text-center lg:text-start sm:text-5xl`}>FAQs</h2>
           <HorizontalLine />
         </div>
         <ScrollArea className="h-[400px]">
