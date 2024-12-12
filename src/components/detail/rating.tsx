@@ -50,58 +50,58 @@ export const Rating = () => {
     }
 
     return (
-        <section className="space-y-10 mx-10 px-5">
-            <h1 className="font-semibold text-2xl">Nhận xét & Đánh giá</h1>
-            <div className="flex gap-32 justify-center items-center bg-amber-400 bg-opacity-20 rounded-md px-20 py-16">
-                <div className="gap-4">
+        <section className="space-y-10 mx-5 sm:mx-10 px-5">
+            <h1 className="font-semibold text-xl sm:text-2xl">Nhận xét & Đánh giá</h1>
+            <div className="flex flex-col md:flex-row justify-center items-center gap-8 md:gap-12 lg:gap-20 xl:gap-32 bg-amber-400 bg-opacity-20 rounded-md px-4 py-4 md:px-20 md:py-16">
+                <div className="space-y-2">
                     <h1 className="font-semibold text-5xl text-red-500">{averageRating.toFixed(1)}</h1>
                     <div className="flex gap-2">
-                        <Star className={` stroke-red-500 size-8 ${averageRating < 0.5 ? "" : "fill-red-500"}`} />
-                        <Star className={` stroke-red-500 size-8 ${averageRating < 1.5 ? "" : "fill-red-500"}`} />
-                        <Star className={` stroke-red-500 size-8 ${averageRating < 2.5 ? "" : "fill-red-500"}`} />
-                        <Star className={` stroke-red-500 size-8 ${averageRating < 3.5 ? "" : "fill-red-500"}`} />
-                        <Star className={` stroke-red-500 size-8 ${averageRating < 4.5 ? "" : "fill-red-500"}`} />
+                        <Star className={` stroke-red-500 size-6 lg:size-8 ${averageRating < 0.5 ? "" : "fill-red-500"}`} />
+                        <Star className={` stroke-red-500 size-6 lg:size-8 ${averageRating < 1.5 ? "" : "fill-red-500"}`} />
+                        <Star className={` stroke-red-500 size-6 lg:size-8 ${averageRating < 2.5 ? "" : "fill-red-500"}`} />
+                        <Star className={` stroke-red-500 size-6 lg:size-8 ${averageRating < 3.5 ? "" : "fill-red-500"}`} />
+                        <Star className={` stroke-red-500 size-6 lg:size-8 ${averageRating < 4.5 ? "" : "fill-red-500"}`} />
                     </div>
                 </div>
-                <div className="flex gap-8">
+                <div className="grow flex flex-wrap justify-center lg:flex-nowrap gap-8">
                     <Button className={`bg-white text-black border-2 border-black 
                         ${starFilter === 0 ? "border-amber-500 text-amber-500 shadow hover:bg-white"
-                            : "hover:bg-amber-500 hover:bg-opacity-20"}`}
+                            : "hover:bg-amber-500 hover:bg-opacity-20"} w-20 h-10 text-xs md:text-sm`}
                         onClick={() => handleStarFilterOnClick(0)}>
                         Tất cả
                     </Button>
 
                     <Button className={`bg-white text-black border-2 border-black 
                         ${starFilter === 5 ? "border-amber-500 text-amber-500 shadow hover:bg-white"
-                            : "hover:bg-amber-500 hover:bg-opacity-20"}`}
+                            : "hover:bg-amber-500 hover:bg-opacity-20"} w-20 h-10 text-xs md:text-sm`}
                         onClick={() => handleStarFilterOnClick(5)}>5
-                        <Star className="fill-amber-400 stroke-amber-400 size-5" />
+                        <Star className="fill-amber-400 stroke-amber-400 size-2 md:size-5" />
                     </Button>
 
                     <Button className={`bg-white text-black border-2 border-black 
                         ${starFilter === 4 ? "border-amber-500 text-amber-500 shadow hover:bg-white"
-                            : "hover:bg-amber-500 hover:bg-opacity-20"}`}
+                            : "hover:bg-amber-500 hover:bg-opacity-20"} w-20 h-10 text-xs md:text-sm`}
                         onClick={() => handleStarFilterOnClick(4)}>4
                         <Star className="fill-amber-400 stroke-amber-400 size-5" />
                     </Button>
 
                     <Button className={`bg-white text-black border-2 border-black 
                         ${starFilter === 3 ? "border-amber-500 text-amber-500 shadow hover:bg-white"
-                            : "hover:bg-amber-500 hover:bg-opacity-20"}`}
+                            : "hover:bg-amber-500 hover:bg-opacity-20"} w-20 h-10 text-xs md:text-sm`}
                         onClick={() => handleStarFilterOnClick(3)}>3
                         <Star className="fill-amber-400 stroke-amber-400 size-5" />
                     </Button>
 
                     <Button className={`bg-white text-black border-2 border-black 
                         ${starFilter === 2 ? "border-amber-500 text-amber-500 shadow hover:bg-white"
-                            : "hover:bg-amber-500 hover:bg-opacity-20"}`}
+                            : "hover:bg-amber-500 hover:bg-opacity-20"} w-20 h-10 text-xs md:text-sm`}
                         onClick={() => handleStarFilterOnClick(2)}>2
                         <Star className="fill-amber-400 stroke-amber-400 size-5" />
                     </Button>
 
                     <Button className={`bg-white text-black border-2 border-black 
                         ${starFilter === 1 ? "border-amber-500 text-amber-500 shadow hover:bg-white"
-                            : "hover:bg-amber-500 hover:bg-opacity-20"}`}
+                            : "hover:bg-amber-500 hover:bg-opacity-20"} w-20 h-10 text-xs md:text-sm`}
                         onClick={() => handleStarFilterOnClick(1)}>1
                         <Star className="fill-amber-400 stroke-amber-400 size-5" />
                     </Button>
@@ -137,25 +137,6 @@ export const Rating = () => {
                             </div>
                         </div>
                     ))}
-                    <Pagination>
-                        <PaginationContent>
-                            <PaginationItem>
-                                <PaginationPrevious href="#" />
-                            </PaginationItem>
-                            <PaginationItem>
-                                <PaginationLink href="#">1</PaginationLink>
-                            </PaginationItem>
-                            <PaginationItem>
-                                <PaginationLink href="#">2</PaginationLink>
-                            </PaginationItem>
-                            <PaginationItem>
-                                <PaginationLink href="#">3</PaginationLink>
-                            </PaginationItem>
-                            <PaginationItem>
-                                <PaginationNext href="#" />
-                            </PaginationItem>
-                        </PaginationContent>
-                    </Pagination>
                 </div>
             </div>
         </section>
