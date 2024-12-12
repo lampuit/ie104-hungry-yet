@@ -33,7 +33,6 @@ export const MobileHero = () => {
                             </Image>
                         </CarouselItem>
                     ))}
-
                 </CarouselContent>
             </Carousel>
             <div className="flex justify-around min-w-36 gap-x-3">

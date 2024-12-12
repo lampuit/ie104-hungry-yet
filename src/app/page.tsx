@@ -17,6 +17,7 @@ import { FAQ } from "@/components/home/faq";
 import { Charm } from "next/font/google";
 import { motion } from "framer-motion";
 import { MobileHero } from "@/components/home/mobile-hero";
+import { MobileBenefit } from "@/components/home/mobile-benefit";
 
 const charm = Charm({
   subsets: ["vietnamese"],
@@ -69,6 +70,8 @@ export default function Homepage() {
 
       <section className="mb-10 lg:mb-20">
         <Benefit />
+        <MobileBenefit />
+
       </section>
 
       <section className="mb-20">
