@@ -2,8 +2,9 @@
 
 import { db } from "@/drizzle/db";
 import { revalidatePath } from "next/cache";
-import { invoices, assigments } from "@/drizzle/schema/project";
-import { eq } from "drizzle-orm";
+import { invoices, assigments, shifts } from "@/drizzle/schema/project";
+import { and, eq, gte, lte } from "drizzle-orm";
+import { redirect } from "next/navigation";
 
 
 export async function updateInvoices(formData: FormData) {
@@ -57,22 +58,50 @@ export async function updateStatus(formData: FormData) {
     }
 }
 
+// export async function updateInvoiceStatus(id: string, status: string) {
+//     const today = new Date();
+//     today.setHours(0, 0, 0, 0); // Set to start of day
+
+//     const assignment = await db.query.assigments.findFirst({
+//         where: eq(assigments.workDate, today)
+//     });
+
+//     const shipperId = assignment ? assignment.userId : 'null';
+
+//     return await db.update(invoices).set({
+//         status: status as "pending" | "accepted" | "cooking" | "ready" | "delivered" | "cancelled",
+//         shipperId: shipperId,
+//     }).where(eq(invoices.id, id));
+// }
+
 export async function updateInvoiceStatus(id: string, status: string) {
-    const today = new Date();
-    today.setHours(0, 0, 0, 0); // Set to start of day
+    try {
+        const now = new Date();
+        const today = new Date(now).toISOString().split('T')[0];
+        const currentTime = now.getHours();
 
-    console.log(today);
+        const assignment = await db.select({ userId: assigments.userId }).from(assigments)
+            .where(
+                and(
+                    eq(assigments.workDate, new Date(today)),
+                    lte(shifts.endTime, currentTime)
+                )
+            )
+            .innerJoin(shifts, eq(assigments.shiftId, shifts.id));
 
-    const assignment = await db.query.assigments.findFirst({
-        where: eq(assigments.workDate, today)
-    });
+        const shipperId = assignment[0]?.userId || null;
 
-    const shipperId = assignment ? assignment.userId : 'ECiCT6IsnmOi7hm3zUBZe';
+        await db.update(invoices).set({
+            status: status as "pending" | "accepted" | "cooking" | "ready" | "delivered" | "cancelled",
+            shipperId: shipperId,
+        }).where(eq(invoices.id, id));
 
-    return await db.update(invoices).set({
-        status: status as "pending" | "accepted" | "cooking" | "ready" | "delivered" | "cancelled",
-        shipperId: shipperId,
-    }).where(eq(invoices.id, id));
+        console.log('Success: Invoice status updated successfully');
+        // revalidatePath('/dashboard/invoices');
+    } catch (error) {
+        console.error('Error updating invoice status:', error);
+        throw new Error('Failed to update invoice status');
+    }
 }
 
 

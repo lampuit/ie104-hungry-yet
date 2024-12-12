@@ -235,8 +235,8 @@ export const discountsRelations = relations(discounts, ({ many }) => ({
 export const shifts = pgTable("shifts", {
   id: uuid("id").notNull().defaultRandom().primaryKey(),
   name: text("name").notNull(),
-  startTime: text("startTime"),
-  endTime: text("endTime"),
+  startTime: integer("startTime"),
+  endTime: integer("endTime"),
 });
 
 // Relation: 1 discount - n invoices
