@@ -429,19 +429,4 @@ export async function getAllInvoices() {
   });
 }
 
-export async function changeStatusOfInvoice(id: string, status: string) {
-  const today = new Date();
-  today.setHours(0, 0, 0, 0); // Set to start of day
-
-  const assignment = await db.query.assigments.findFirst({
-    where: eq(assigments.workDate, today)
-  });
-
-  const shipperId = assignment ? assignment.userId : null;
-
-  return await db.update(invoices).set({
-    status: status as "pending" | "accepted" | "cooking" | "ready" | "delivered" | "cancelled",
-    shipperId: shipperId,
-  }).where(eq(invoices.id, id));
-}
 

@@ -111,7 +111,7 @@ export function ShiftCart({
               ? employees.find(
                 (e: any) =>
                   e.id.toString() === selectedEmployees[dayString]?.employee1
-              )?.userName
+              )?.name
               : "Sáng"}
           </DropdownMenuTrigger>
           <DropdownMenuContent className="z-50 text-red-500">
@@ -128,13 +128,13 @@ export function ShiftCart({
                   )
                 }
               >
-                {employee.userName}
+                {employee.name}
               </DropdownMenuItem>
             ))}
               {
               selectedEmployees[dayString]?.employee1 &&
               <DropdownMenuItem onSelect={async () => {
-                await deleteUserWorkShift(`${dayString}-${shifts?.[0].id.toString()}`);
+                await deleteUserWorkShift(`${dayString}-${shifts?.[0]?.id.toString()}`);
               }}>
               Trống
             </DropdownMenuItem>
@@ -152,7 +152,7 @@ export function ShiftCart({
               ? employees.find(
                 (e: any) =>
                   e.id.toString() === selectedEmployees[dayString]?.employee2
-              )?.userName
+              )?.name
               : "Chiều"}
           </DropdownMenuTrigger>
           <DropdownMenuContent className="z-50">
@@ -163,13 +163,13 @@ export function ShiftCart({
                   shifts &&
                   handleEmployeeChange(
                     dayString,
-                    employee.id.toString(),
+                    employee?.id.toString(),
                     "employee2",
-                    shifts[1].id.toString()
+                    shifts[1]?.id.toString()
                   )
                 }
               >
-                {employee.userName}
+                {employee?.name}
               </DropdownMenuItem>
             ))}
             {

@@ -2,8 +2,9 @@
 
 import { db } from "@/drizzle/db";
 import { revalidatePath } from "next/cache";
-import { invoices } from "@/drizzle/schema/project";
+import { invoices, assigments } from "@/drizzle/schema/project";
 import { eq } from "drizzle-orm";
+
 
 export async function updateInvoices(formData: FormData) {
     const id = formData.get("id") as string;
@@ -55,4 +56,23 @@ export async function updateStatus(formData: FormData) {
         }
     }
 }
+
+export async function updateInvoiceStatus(id: string, status: string) {
+    const today = new Date();
+    today.setHours(0, 0, 0, 0); // Set to start of day
+
+    console.log(today);
+
+    const assignment = await db.query.assigments.findFirst({
+        where: eq(assigments.workDate, today)
+    });
+
+    const shipperId = assignment ? assignment.userId : 'ECiCT6IsnmOi7hm3zUBZe';
+
+    return await db.update(invoices).set({
+        status: status as "pending" | "accepted" | "cooking" | "ready" | "delivered" | "cancelled",
+        shipperId: shipperId,
+    }).where(eq(invoices.id, id));
+}
+
 

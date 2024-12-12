@@ -1,7 +1,8 @@
 "use client"
 
-import { Row } from "@tanstack/react-table"
 import { MoreHorizontal } from 'lucide-react'
+import { useState, useTransition } from 'react'
+import { useRouter } from 'next/navigation'
 
 import { Button } from "@/components/ui/button"
 import {
@@ -18,25 +19,75 @@ import {
     DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 
-import { Invoice } from "@/app/dashboard/order-management/page"
-import { changeStatusOfInvoice } from "@/lib/data"
+import { updateInvoiceStatus } from "@/lib/actions/invoice"
+import { toast } from 'sonner'
 
-interface DataTableRowActionsProps<TData> {
-    row: Row<TData>
+interface DataTableRowActionsProps {
+    invoiceId: string
+    initialStatus: string
 }
 
-export function DataTableRowActions<TData>({
-    row,
-}: DataTableRowActionsProps<TData>) {
-    const invoice = row.original as Invoice
+const StatusAction: React.FC<{
+    optimisticStatus: string,
+    isPending: boolean,
+    invoiceId: string,
+    setOptimisticStatus: (status: string) => void,
+    startTransition: React.TransitionStartFunction
+}> = ({ optimisticStatus, isPending, invoiceId, setOptimisticStatus, startTransition }) => {
 
-    const hadleChangeStatus = async (id: string, status: string) => {
-        try {
-            await changeStatusOfInvoice(id, status)
-        } catch (error) {
-            console.error(error)
-        }
+    const handleChangeStatus = (status: string) => {
+        startTransition(() => {
+            // Async logic handled here
+            (async () => {
+                try {
+                    const result = await updateInvoiceStatus(invoiceId, status)
+                    if (result) {
+                        setOptimisticStatus(status)
+                        toast.success("Status updated successfully")
+                    } else {
+                        throw new Error('Failed to update status')
+                    }
+                } catch (error) {
+                    console.error("Error updating invoice status:", error)
+                    toast.error("Failed to update status")
+                }
+            })()
+        })
     }
+
+
+    return (
+        <>
+            <DropdownMenuSeparator />
+            <DropdownMenuSub>
+                <DropdownMenuSubTrigger>Status</DropdownMenuSubTrigger>
+                <DropdownMenuSubContent>
+                    <DropdownMenuRadioGroup value={optimisticStatus}>
+                        {["pending", "accepted", "cooking", "ready", "delivered", "cancelled"].map((status) => (
+                            <DropdownMenuRadioItem
+                                key={status}
+                                value={status}
+                                onClick={() => handleChangeStatus(status)}
+                                disabled={isPending}
+                            >
+                                {status}
+                            </DropdownMenuRadioItem>
+                        ))}
+                    </DropdownMenuRadioGroup>
+                </DropdownMenuSubContent>
+            </DropdownMenuSub>
+            <DropdownMenuSeparator />
+        </>
+    )
+}
+
+export function DataTableRowActions({
+    invoiceId,
+    initialStatus,
+}: DataTableRowActionsProps) {
+    const [optimisticStatus, setOptimisticStatus] = useState(initialStatus)
+    const [isPending, startTransition] = useTransition()
+    const router = useRouter()
 
     return (
         <DropdownMenu>
@@ -44,30 +95,20 @@ export function DataTableRowActions<TData>({
                 <Button
                     variant="ghost"
                     className="flex h-8 w-8 p-0 data-[state=open]:bg-muted"
+                    disabled={isPending}
                 >
                     <MoreHorizontal className="h-4 w-4" />
                     <span className="sr-only">Open menu</span>
                 </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end" className="w-[160px]">
-                {/* <DropdownMenuItem>View details</DropdownMenuItem>
-                <DropdownMenuItem>View customer</DropdownMenuItem> */}
-                <DropdownMenuSeparator />
-                <DropdownMenuSub>
-                    <DropdownMenuSubTrigger>Status</DropdownMenuSubTrigger>
-                    <DropdownMenuSubContent>
-                        <DropdownMenuRadioGroup value={invoice.status || undefined}>
-                            {["pending", "accepted", "cooking", "ready", "delivered", "cancelled"].map((status) => (
-                                <DropdownMenuRadioItem key={status} value={status} onClick={() => {
-                                    hadleChangeStatus(invoice.id, status)
-                                }}>
-                                    {status}
-                                </DropdownMenuRadioItem>
-                            ))}
-                        </DropdownMenuRadioGroup>
-                    </DropdownMenuSubContent>
-                </DropdownMenuSub>
-                <DropdownMenuSeparator />
+                <StatusAction
+                    optimisticStatus={optimisticStatus}
+                    isPending={isPending}
+                    invoiceId={invoiceId}
+                    setOptimisticStatus={setOptimisticStatus}
+                    startTransition={startTransition}
+                />
                 <DropdownMenuItem>
                     Delete
                     <DropdownMenuShortcut>⌫</DropdownMenuShortcut>
@@ -76,4 +117,3 @@ export function DataTableRowActions<TData>({
         </DropdownMenu>
     )
 }
-

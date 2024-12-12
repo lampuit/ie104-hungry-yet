@@ -13,12 +13,11 @@ const CreateUserWorkShift = insertAssigmentSchema.omit({
 });
 
 export async function createUserWorkShift(formData: FormData) {
-  const shiftId = formData.get("shiftId") as string;
-  
+
   const data = CreateUserWorkShift.parse({
     id: formData.get("id"),
     userId: formData.get("userId"),
-    shiftId: shiftId,
+    shiftId: formData.get("shiftId"),
     workDate: new Date(formData.get("workDate") as string),
   });
 
