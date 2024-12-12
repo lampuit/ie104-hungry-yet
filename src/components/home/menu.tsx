@@ -36,7 +36,7 @@ export function Menu() {
                         <HorizontalLine />
                     </div>
                 </div>
-                <Button asChild className="bg-black hover:bg-red-500 rounded-3xl">
+                <Button asChild className="hidden sm:inline-block bg-black hover:bg-red-500 rounded-3xl">
                     <Link href={"/menu"}>Xem thực đơn</Link>
                 </Button>
             </div>
@@ -72,6 +72,9 @@ export function Menu() {
                 <CarouselPrevious />
                 <CarouselNext />
             </Carousel>
+            <Button asChild className="inline-block sm:hidden bg-black hover:bg-red-500 rounded-3xl">
+                <Link href={"/menu"}>Xem thực đơn</Link>
+            </Button>
         </div>
     )
 }
