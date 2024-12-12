@@ -45,7 +45,7 @@ export function FAQ() {
   ]
 
   return (
-    <Accordion type="single" collapsible className="w-full max-w-3xl mx-auto space-y-4">
+    <Accordion type="single" collapsible className="w-[360px] md:w-[540px] lg:w-[480px] xl:w-[600px] pr-4 mx-auto space-y-4">
       {faqItems.map((item, index) => (
         <AccordionItem
           key={`item-${index + 1}`}

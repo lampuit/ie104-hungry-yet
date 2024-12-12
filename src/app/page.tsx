@@ -16,6 +16,7 @@ import { HorizontalLine } from "@/components/home/intro";
 import { FAQ } from "@/components/home/faq";
 import { Charm } from "next/font/google";
 import { motion } from "framer-motion";
+import { MobileHero } from "@/components/home/mobile-hero";
 
 const charm = Charm({
   subsets: ["vietnamese"],
@@ -26,7 +27,8 @@ export default function Homepage() {
 
   return (
     <main>
-      <header className="relative flex flex-col justify-between items-center h-[calc(100vh-80px)] w-screen overflow-hidden bg-black" >
+      {/*Herosection ở màn hình Desktop*/}
+      <header className="hidden relative sm:flex flex-col justify-between items-center h-[calc(100vh-80px)] w-screen overflow-hidden bg-black" >
         <div className="absolute right-full h-[calc(100vh-80px)] z-0">
           <ImgBg />
         </div>
@@ -54,7 +56,14 @@ export default function Homepage() {
         </div>
       </header>
 
-      <section className="my-16">
+      <MobileHero />
+
+      {/*Herosection ở màn hình Mobile*/}
+      <header>
+
+      </header>
+
+      <section className="hidden sm:inline-block my-16 overflow-clip">
         <Categories />
       </section>
 
@@ -100,7 +109,7 @@ export default function Homepage() {
 
       <section className="mx-10 px-10 mb-16 flex flex-col lg:flex-row justify-center items-center lg:items-start gap-10 lg:gap-40">
         <div className="flex flex-col justify-center gap-4">
-          <h2 className="italic font-semibold text-4xl text-center lg:text-start sm:text-5xl">FAQ</h2>
+          <h2 className="italic font-semibold text-4xl text-center lg:text-start sm:text-5xl">FAQs</h2>
           <HorizontalLine />
         </div>
         <ScrollArea className="h-[400px]">
