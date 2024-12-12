@@ -16,7 +16,8 @@ import { HorizontalLine } from "@/components/home/intro";
 import { FAQ } from "@/components/home/faq";
 import { Charm } from "next/font/google";
 import { motion } from "framer-motion";
-
+import { MobileHero } from "@/components/home/mobile-hero";
+import { MobileBenefit } from "@/components/home/mobile-benefit";
 const charm = Charm({
   subsets: ["vietnamese"],
   weight: ["400", "700"],
@@ -26,7 +27,8 @@ export default function Homepage() {
 
   return (
     <main>
-      <header className="relative flex flex-col justify-between items-center h-[calc(100vh-80px)] w-screen overflow-hidden bg-black" >
+      {/*Herosection ở màn hình Desktop*/}
+      <header className="hidden relative sm:flex flex-col justify-between items-center h-[calc(100vh-80px)] w-screen overflow-hidden bg-black" >
         <div className="absolute right-full h-[calc(100vh-80px)] z-0">
           <ImgBg />
         </div>
@@ -54,15 +56,23 @@ export default function Homepage() {
         </div>
       </header>
 
-      <section className="my-16">
+      {/*Herosection ở màn hình Mobile*/}
+      <MobileHero />
+
+      <section className="hidden sm:inline-block my-16 overflow-clip">
         <Categories />
       </section>
 
-      <section className="mb-10 lg:mb-20">
+      <section className="flex flex-col items-center mt-16 lg:mb-20">
+      <div className="flex flex-col justify-center items-center gap-y-4">
+        <p className="inline-block sm:hidden italic font-semibold text-4xl text-center">Dịch vụ cung cấp</p>
+        <HorizontalLine />
+      </div>
         <Benefit />
+        <MobileBenefit />
       </section>
 
-      <section className="mb-20">
+      <section className="mb-16">
         <Intro />
       </section>
 
@@ -74,19 +84,22 @@ export default function Homepage() {
         <OrderOnline />
       </section>
 
-      <section className="flex flex-col items-center mx-10 mb-16 px-10 space-y-8">
+      <section className="flex flex-col items-center mx-10 mb-12 px-10 space-y-8">
         <div className="flex flex-col sm:flex-row justify-between items-center gap-4 sm:gap-0 w-full max-w-screen-2xl">
           <div className="flex flex-col gap-y-4">
             <h2 className='italic font-semibold text-4xl text-center sm:text-5xl'>Best Seller</h2>
             <HorizontalLine />
           </div>
-          <Button asChild className="bg-black hover:bg-red-500 rounded-3xl">
+          <Button asChild className="hidden sm:inline-block bg-black hover:bg-red-500 rounded-3xl">
             <Link href={"/exhibition"}>Xem blog</Link>
           </Button>
         </div>
         <div className="flex justify-center w-full">
           <Exhibition />
         </div>
+        <Button asChild className="inline-block sm:hidden bg-black hover:bg-red-500 rounded-3xl">
+            <Link href={"/exhibition"}>Xem blog</Link>
+          </Button>
       </section>
 
       <section className="flex flex-col items-center mx-10 md:px-10 px-6 mb-16 space-y-8">
@@ -100,7 +113,7 @@ export default function Homepage() {
 
       <section className="mx-10 px-10 mb-16 flex flex-col lg:flex-row justify-center items-center lg:items-start gap-10 lg:gap-40">
         <div className="flex flex-col justify-center gap-4">
-          <h2 className="italic font-semibold text-4xl text-center lg:text-start sm:text-5xl">FAQ</h2>
+          <h2 className="italic font-semibold text-4xl text-center lg:text-start sm:text-5xl">FAQs</h2>
           <HorizontalLine />
         </div>
         <ScrollArea className="h-[400px]">

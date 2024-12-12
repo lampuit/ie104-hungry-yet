@@ -28,7 +28,8 @@ export function UnauthorizedNavbar() {
         <Link href={"/menu/cart"} className="hover:text-amber-500">Giỏ hàng</Link>
         <Link href={"/about"} className={`hover:text-amber-500 ${isAbout ? 'text-amber-500' : ''}`}>Về chúng tôi</Link>
       </div>
-      <Button className="hidden sm:inline-block text-sm px-4 bg-amber-500 rounded-2xl hover:bg-red-500">Đăng nhập</Button>
+      <Button className="hidden sm:inline-block text-sm px-4 bg-amber-500 rounded-2xl hover:bg-red-500"
+        onClick={() => router.push("/login")}>Đăng nhập</Button>
 
       <div className="sm:hidden">
         <DropdownMenu>
