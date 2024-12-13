@@ -26,12 +26,63 @@ import {
   desc,
   sql,
   like,
-  SQL
+  SQL,
 } from "drizzle-orm";
 import { unstable_noStore } from "next/cache";
 
+export async function getInvoices() {
+  try {
+    return await db
+      .select({
+        date: sql`DATE(${invoices.createdAt})`,
+        invoices: sql<number>`count(${invoices.id})`,
+      })
+      .from(invoices)
+      .groupBy(sql`DATE(${invoices.createdAt})`)
+      .orderBy(desc(sql`DATE(${invoices.createdAt})`))
+      .limit(30);
+  } catch (error) {
+    throw new Error("Không thể lấy dữ liệu danh sách hóa đơn.");
+  }
+}
 
+export async function getRevenues() {
+  try {
+    return await db
+      .select({
+        monthYear: sql`TO_CHAR(DATE_TRUNC('month', ${invoices.createdAt}), 'YYYY-MM')`,
+        revenues: sql<number>`SUM(${invoices.totalAmount})`,
+      })
+      .from(invoices)
+      .where(eq(invoices.status, "delivered"))
+      .groupBy(sql`DATE_TRUNC('month', ${invoices.createdAt})`)
+      .orderBy(desc(sql`DATE_TRUNC('month', ${invoices.createdAt})`));
+  } catch (error) {
+    throw new Error("Không thể lấy dữ liệu danh sách hóa đơn.");
+  }
+}
 
+export async function getInvoicesByStatus(status: string) {
+  try {
+    return await db
+      .select()
+      .from(invoices)
+      .where(
+        eq(
+          invoices.status,
+          status as
+            | "pending"
+            | "accepted"
+            | "cooking"
+            | "ready"
+            | "delivered"
+            | "cancelled",
+        ),
+      );
+  } catch (error) {
+    throw new Error("Không thể lấy dữ liệu danh sách hóa đơn.");
+  }
+}
 export async function getCategories() {
   try {
     return await db.query.categories.findMany();
@@ -89,7 +140,9 @@ export async function getProductsByCategory(category_id: string) {
           with: {
             ratings: {
               extras: {
-                averageRating: sql<number>`AVG(ratings.star)`.as('averageRating'),
+                averageRating: sql<number>`AVG(ratings.star)`.as(
+                  "averageRating",
+                ),
               },
             },
           },
@@ -100,7 +153,6 @@ export async function getProductsByCategory(category_id: string) {
     throw new Error("Không thể lấy dữ liệu danh sách sản phẩm theo thể loại.");
   }
 }
-
 
 export async function fetchProducts() {
   try {
@@ -246,7 +298,9 @@ export async function getProductByCategoryId(
   const records = await db
     .select({
       ...getTableColumns(products),
-      averageRating: sql<number>`COALESCE(AVG(${ratings.star}), 0)`.as('averageRating'),
+      averageRating: sql<number>`COALESCE(AVG(${ratings.star}), 0)`.as(
+        "averageRating",
+      ),
     })
     .from(products)
     .leftJoin(ratings, eq(products.id, ratings.productId))
@@ -324,12 +378,12 @@ export async function getInvoiceByUserId(userId: string, status: string) {
         eq(
           invoices.status,
           status as
-          | "pending"
-          | "accepted"
-          | "cooking"
-          | "ready"
-          | "delivered"
-          | "cancelled",
+            | "pending"
+            | "accepted"
+            | "cooking"
+            | "ready"
+            | "delivered"
+            | "cancelled",
         ),
       ),
     );
@@ -354,9 +408,9 @@ export async function getInvoiceDetail(id: string) {
   });
 }
 
-
 export async function filterAndSearch(formData: FormData) {
-  const { categoryId, minPrice, maxPrice, rating, search, page, pageSize } = Object.fromEntries(formData);
+  const { categoryId, minPrice, maxPrice, rating, search, page, pageSize } =
+    Object.fromEntries(formData);
 
   const pageNumber = Number(page) || 1;
   const itemsPerPage = Number(pageSize) || 10;
@@ -382,7 +436,7 @@ export async function filterAndSearch(formData: FormData) {
   const baseQuery = db
     .select({
       ...getTableColumns(products),
-      averageRating: averageRatingExpr.as('averageRating'),
+      averageRating: averageRatingExpr.as("averageRating"),
     })
     .from(products)
     .leftJoin(ratings, eq(products.id, ratings.productId))
@@ -398,7 +452,7 @@ export async function filterAndSearch(formData: FormData) {
   // Count total records
   const totalRecordsResult = await db
     .select({ count: sql<number>`COUNT(DISTINCT ${products.id})` })
-    .from(query.as('filtered_products'));
+    .from(query.as("filtered_products"));
 
   const totalRecords = totalRecordsResult[0]?.count || 0;
 
@@ -411,7 +465,6 @@ export async function filterAndSearch(formData: FormData) {
   // Return both totalRecords and the records for the current page
   return { totalRecords, records };
 }
-
 
 export async function getAllInvoices() {
   return await db.query.invoices.findMany({
@@ -428,5 +481,3 @@ export async function getAllInvoices() {
     },
   });
 }
-
-
