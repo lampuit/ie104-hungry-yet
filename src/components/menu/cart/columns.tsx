@@ -160,10 +160,10 @@ export const columns: (mutate: () => void, updateTableData: (id: string, isFavor
         cell: ({ row }) => {
             const name = row.original.name;
             const img = row.original.img;
-            const des = row.original.category;
+            const cat = row.original.category;
 
-            return <div className="flex flex-row justify-start items-center w-48 sm:w-60 md:w-72 lg:w-96 text-start gap-4 text-xs md:text-sm">
-                <div className="w-16 sm:w-20 md:w-24 lg:w-28 h-12 md:h-16 lg:h-20 relative">
+            return <div className="flex flex-row justify-start items-center sm:w-60 md:w-72 lg:w-96 text-start gap-2 sm:gap-4 text-xs md:text-sm">
+                <div className="flex sm:w-20 md:w-24 lg:w-28 sm:h-12 md:h-16 lg:h-20 relative">
                     <Image
                         src={img}
                         alt={name}
@@ -174,7 +174,7 @@ export const columns: (mutate: () => void, updateTableData: (id: string, isFavor
                 </div>
                 <div className="flex flex-col justify-center items-start gap-4">
                     <p className="font-bold">{name}</p>
-                    <p>{des}</p>
+                    <p className="hidden sm:inline-block">{cat}</p>
                 </div>
             </div>;
         },

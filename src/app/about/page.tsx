@@ -5,7 +5,7 @@ export default function AboutPage() {
         <div className="w-full flex flex-col gap-8 my-8">
             <div className="flex flex-col gap-4 px-16">
                 <h1 className="font-bold text-4xl text-center">Về chúng tôi</h1>
-                <p className="p-4 text-lg">HungryYet? là nền tảng đặt đồ ăn tiên phong,
+                <p className="p-4 text-lg text-justify">HungryYet? là nền tảng đặt đồ ăn tiên phong,
                     mang đến trải nghiệm ăn uống tiện lợi, phong phú và đầy thú vị dành cho mọi thực khách.
                     Với giao diện hiện đại và thân thiện, chúng tôi giúp bạn dễ dàng khám phá và đặt,
                     mang sứ mệnh kết nối bạn với hàng loạt món ăn đa dạng, từ hương vị truyền thống đến
@@ -28,7 +28,7 @@ export default function AboutPage() {
                     <h1 className="font-bold text-3xl text-center">WHAT WE DO</h1>
                     <h3 className="font-bold text-2xl text-center">Savor the Moment!</h3>
                 </div>
-                <p className="text-lg">Sứ mệnh của HungryYet? là kết nối bạn với ẩm thực đa dạng,
+                <p className="text-lg text-justify">Sứ mệnh của HungryYet? là kết nối bạn với ẩm thực đa dạng,
                     từ món truyền thống đến hiện đại, với chất lượng và phong cách phục vụ chu đáo.
                     Mỗi lần chọn HungryYet? là một trải nghiệm tiện lợi và đáng nhớ.</p>
             </div>

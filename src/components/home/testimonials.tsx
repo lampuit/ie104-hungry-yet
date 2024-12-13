@@ -38,7 +38,7 @@ export function Testimonials() {
                 {listRatings?.map((rating, index) => (
                     <CarouselItem key={index} className="md:basis-full lg:basis-1/2 xl:basis-1/3">
                         <Card onClick={() => handleCardOnClick(rating.product.id)} className='hover:border-black'>
-                            <CardContent className="py-5 px-3 flex flex-col justify-between items-center gap-3 h-80 ">
+                            <CardContent className="py-5 px-3 flex flex-col justify-between items-center gap-4 h-full ">
                                 <div className="flex gap-2">
                                     {Array(rating.star).fill(0).map((_, index) => (
                                         <Star key={index} className='fill-amber-400 stroke-amber-400' size={30} />
