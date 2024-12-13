@@ -89,13 +89,12 @@ const AmountCell = ({ row, table }: { row: any; table: any }) => {
     return (
         <div className="flex flex-row justify-center items-center gap-3 md:gap-4 text-xs md:text-sm">
             <Button variant={"outline"}
-                size={"sm"}
                 className={`${amount > 1 ? "border-amber-500 text-amber-500 hover:bg-orange-200"
-                    : "border-gray-300 text-gray-300 hover:text-gray-300 hover:border-gray-300 hover:bg-white"} w-6 h-6`}
+                    : "border-gray-300 text-gray-300 hover:text-gray-300 hover:border-gray-300 hover:bg-white"} size-4 sm:size-6 p-2`}
                 onClick={handleDecrease}>-</Button>
             <div>{amount}</div>
             <Button size={"sm"}
-                className="bg-amber-500 hover:bg-red-500 w-6 h-6"
+                className="bg-amber-500 hover:bg-red-500 size-4 sm:size-6 p-2 border-amber-500 border"
                 onClick={handleIncrease}>+</Button>
         </div>
     );
@@ -122,8 +121,8 @@ const FavoriteCell = ({ row, updateTableData }: { row: any, updateTableData: (id
 
     return (
         <div>
-            {isFavorite ? <Heart className="stroke-amber-500 fill-amber-500" onClick={handleDeleteFavorite} />
-                : <Heart className="stroke-amber-500" onClick={handleUpdateFavorite} />}
+            {isFavorite ? <Heart className="stroke-amber-500 fill-amber-500 size-5 sm:size-6 hover:shadow" onClick={handleDeleteFavorite} />
+                : <Heart className="stroke-amber-500 size-5 sm:size-6 hover:shadow" onClick={handleUpdateFavorite} />}
         </div>
     );
 };
@@ -137,7 +136,7 @@ const DeleteCell = ({ row, mutate }: { row: any, mutate: () => void }) => {
     };
 
     return <AlertDialog>
-        <AlertDialogTrigger><Trash className="stroke-amber-500" /></AlertDialogTrigger>
+        <AlertDialogTrigger className="flex items-center"><Trash className="stroke-amber-500 size-5 sm:size-6 hover:shadow" /></AlertDialogTrigger>
         <AlertDialogContent>
             <AlertDialogHeader>
                 <AlertDialogTitle>Bạn có muốn xoá không?</AlertDialogTitle>
