@@ -55,23 +55,19 @@ export async function submitPayment(
       paymentResult = await createMomoPayment(
         invoice.id,
         payment.id,
+        userId,
         totalAmount,
         `Hóa đơn #${new Date().getTime()}`,
         carts,
       );
 
       if (paymentResult.success && paymentResult.payUrl) {
-        await db
-          .update(invoices)
-          .set({ status: "accepted" })
-          .where(eq(invoices.id, payment.id));
-
         return { success: true, paymentUrl: paymentResult.payUrl };
       } else {
         await db
           .update(invoices)
           .set({ status: "cancelled" })
-          .where(eq(invoices.id, payment.id));
+          .where(eq(invoices.id, invoice.id));
 
         await db
           .update(payments)
@@ -84,18 +80,14 @@ export async function submitPayment(
       await db
         .update(invoices)
         .set({ status: "accepted" })
-        .where(eq(invoices.id, payment.id));
+        .where(eq(invoices.id, invoice.id));
 
-      await db
-        .update(payments)
-        .set({ status: "success" })
-        .where(eq(payments.id, payment.id));
+      await clearCart(userId);
+
       return { success: true };
-
     }
-    await clearCart(userId);
-    throw new Error("Thanh toán không hợp lệ");
 
+    throw new Error("Thanh toán không hợp lệ");
   } catch (error) {
     return {
       success: false,

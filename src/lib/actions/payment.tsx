@@ -5,6 +5,7 @@ import crypto from "crypto";
 export async function createMomoPayment(
   invoiceId: string,
   paymentId: string,
+  userId: string,
   amount: number,
   orderInfo: string,
   carts: any[],
@@ -14,12 +15,11 @@ export async function createMomoPayment(
     const secretKey = process.env.MOMO_SECRET_KEY!;
     const partnerCode = process.env.MOMO_PARTNER_CODE!;
     const redirectUrl = process.env.NEXT_PUBLIC_APP_URL + "/checkout/success";
-    const ipnUrl = process.env.NEXT_PUBLIC_APP_URL + "/api/momo-webhook";
-
+    const ipnUrl = process.env.NEXT_PUBLIC_APP_URL + "/momo-webhook";
     const requestType = "payWithMethod";
     const orderId = partnerCode + new Date().getTime();
     const requestId = orderId;
-    const extraData = `${invoiceId}_${paymentId}`;
+    const extraData = `${invoiceId}_${paymentId}_${userId}`;
     const autoCapture = true;
     const lang = "vi";
 

@@ -1,7 +1,7 @@
 export default function SuccessPage() {
   return (
-    <div className="min-h-screen bg-green-50 flex items-center justify-center">
-      <div className="bg-white shadow-lg rounded-lg p-8 text-center">
+    <div className="flex min-h-screen items-center justify-center bg-green-50">
+      <div className="rounded-lg bg-white p-8 text-center shadow-lg">
         <div className="text-green-500">
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -9,7 +9,7 @@ export default function SuccessPage() {
             viewBox="0 0 24 24"
             strokeWidth={2}
             stroke="currentColor"
-            className="w-16 h-16 mx-auto mb-4"
+            className="mx-auto mb-4 h-16 w-16"
           >
             <path
               strokeLinecap="round"
@@ -18,15 +18,16 @@ export default function SuccessPage() {
             />
           </svg>
         </div>
-        <h1 className="text-2xl font-bold text-gray-800 mb-4">
+        <h1 className="mb-4 text-2xl font-bold text-gray-800">
           Thanh toán thành công!
         </h1>
-        <p className="text-gray-600 mb-6">
-          Cảm ơn bạn đã đặt đồ ăn. Hóa đơn và thông tin chi tiết sẽ được hiển thị trong phần thông tin đơn hàng.
+        <p className="mb-6 text-gray-600">
+          Cảm ơn bạn đã đặt đồ ăn. Hóa đơn và thông tin chi tiết sẽ được hiển
+          thị trong phần thông tin đơn hàng.
         </p>
         <a
           href="/"
-          className="inline-block bg-green-500 hover:bg-green-600 text-white font-medium py-2 px-4 rounded-lg"
+          className="inline-block rounded-lg bg-green-500 px-4 py-2 font-medium text-white hover:bg-green-600"
         >
           Quay về trang chủ
         </a>
