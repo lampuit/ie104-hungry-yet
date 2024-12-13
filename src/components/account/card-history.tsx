@@ -66,11 +66,11 @@ export function CardHistory({ invoice }: { invoice: Invoice }) {
     const [isAnonymous, setIsAnonymous] = useState(false);
 
     const pathname = usePathname();
-    const isCompletePage = pathname.includes("/account/history/complete");
+    const isDeliveredPage = pathname.includes("/account/history/delivered");
     const isCancelPage = pathname.includes("/account/history/cancel");
-    const isDeliveryPage = pathname.includes("/account/history/delivery");
-    const isWaitingPage = pathname.includes("/account/history/waiting");
-    const isPreparePage = pathname.includes("/account/history/preparing");
+    const isReadyPage = pathname.includes("/account/history/ready");
+    const isCookingPage = pathname.includes("/account/history/cooking");
+    const isAcceptedPage = pathname.includes("/account/history/accepted");
 
     const router = useRouter();
 
@@ -210,7 +210,7 @@ export function CardHistory({ invoice }: { invoice: Invoice }) {
         <section className="flex flex-col gap-2 p-3 sm:p-5 bg-white rounded shadow-md">
             {/* Thông tin đơn hàng */}
             <div className="flex flex-col gap-1 px-2 sm:px-10">
-                {isWaitingPage || isDeliveryPage ? (
+                {isDeliveredPage ? (
                     <div className="flex flex-col gap-1 text-xs">
                         <p className="flex gap-1 items-center">
                             <Bike className="w-4 h-4" />
@@ -239,31 +239,32 @@ export function CardHistory({ invoice }: { invoice: Invoice }) {
                         </div>
                     )}
                 <div className="flex flex-col gap-1 items-start md:items-end text-gray-500 text-xs">
-                    {isCompletePage ? (
+                    {isReadyPage ? (
                         <p>
-                            Trạng thái: <span className="font-semibold text-green-500">Hoàn thành</span>
+                            Trạng thái: <span className="font-semibold text-green-500">Đang giao</span>
                         </p>
                     ) : isCancelPage ? (
                         <p>
                             Trạng thái: <span className="font-semibold text-red-500">Đã hủy</span>
                         </p>
-                    ) : isDeliveryPage ? (
-                        <p>
-                            Trạng thái: <span className="font-semibold text-blue-400">Đang giao</span>
-                        </p>
-                    ) : isWaitingPage ? (
-                        <p>
-                            Trạng thái: <span className="font-semibold text-blue-400">Chờ giao hàng</span>
-                        </p>
-                    ) : isPreparePage ? (
+                    ) : isCookingPage ? (
                         <p>
                             Trạng thái: <span className="font-semibold text-amber-500">Đang chuẩn bị</span>
                         </p>
-                    ) : (
+                    ) : isAcceptedPage ? (
                         <p>
-                            Trạng thái: <span className="font-semibold text-amber-500">Chờ xác nhận</span>
+                            Trạng thái: <span className="font-semibold text-amber-500">Đã xác nhận</span>
                         </p>
-                    )}
+                    )
+                        : isDeliveredPage ? (
+                            <p>
+                                Trạng thái: <span className="font-semibold text-green-500">Hoàn thành</span>
+                            </p>
+                        ) : (
+                            <p>
+                                Trạng thái: <span className="font-semibold text-amber-500">Chờ xác nhận</span>
+                            </p>
+                        )}
                     <p className="text-gray-500 text-xs">
                         Ngày đặt hàng: <span className="font-semibold">{invoice?.createdAt.toLocaleDateString()}</span>
                     </p>
@@ -272,30 +273,30 @@ export function CardHistory({ invoice }: { invoice: Invoice }) {
 
             {/* Chi tiết đơn */}
             <div className="flex flex-col gap-1 px-10">
-                {invoiceData?.orders?.map((order, index) => (
-                    <div className="flex items-center p-2 justify-between rounded border-2" key={order.invoiceId}>
-                        <div className="flex gap-6 items-center">
-                            <div className="relative w-40 h-40">
-                                <Image src={order.products.imageUrl}
-                                    alt="..."
-                                    layout="fill"
-                                    objectFit="cover"
-                                    objectPosition="center"
-                                    className="rounded shadow">
-                                </Image>
-                            </div>
-                            <div className="flex flex-col">
 
-                                <div key={index} className="flex flex-col gap-2">
-                                    <p className="text-lg font-semibold">{order.products.name}</p>
-                                    <span>{order.products.category?.name}</span>
-                                    <span className="flex gap-2">Số lượng: <span>x{order.quantity}</span></span>
-                                </div>
+                <div className="flex items-center p-2 justify-between rounded border-2" key={invoiceData?.orders[0].invoiceId}>
+                    <div className="flex gap-6 items-center">
+                        <div className="relative w-40 h-40">
+                            <Image src={invoiceData?.orders[0].products.imageUrl || "/path/to/default/image.jpg"}
+                                alt="..."
+                                layout="fill"
+                                objectFit="cover"
+                                objectPosition="center"
+                                className="rounded shadow">
+                            </Image>
+                        </div>
+                        <div className="flex flex-col">
+
+                            <div className="flex flex-col gap-2">
+                                <p className="text-lg font-semibold">{invoiceData?.orders[0].products.name}</p>
+                                <span>{invoiceData?.orders[0].products.category?.name}</span>
+                                <span className="flex gap-2">Số lượng: <span>x{invoiceData?.orders[0].quantity}</span></span>
                             </div>
                         </div>
-                        <span className="flex gap-2 pr-4">Giá: <span className="text-red-500 font-medium">{convertToVND(order.products.price)}</span></span>
                     </div>
-                ))}
+                    <span className="flex gap-2 pr-4">Giá: <span className="text-red-500 font-medium">{convertToVND(invoiceData?.orders[0].products.price ?? 0)}</span></span>
+                </div>
+
                 <div className="flex justify-center">
                     <Button variant={"ghost"} onClick={() => router.push(`/account/order-detail?invoiceId=${invoice.id}`)}>
                         Xem chi tiết <ChevronRight />
@@ -308,9 +309,9 @@ export function CardHistory({ invoice }: { invoice: Invoice }) {
                 <p className="text-xl md:text-xl flex justify-end gap-2">
                     Tổng tiền: <span className="font-bold text-red-500">{convertToVND(invoice?.totalAmount)}</span>
                 </p>
-                {isPreparePage || isWaitingPage || isDeliveryPage ? (
+                {isCookingPage || isAcceptedPage || isCancelPage || isAcceptedPage ? (
                     <></>
-                ) : isCompletePage ? (
+                ) : isDeliveredPage ? (
                     <div className="flex justify-end gap-6">
                         <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
                             <DialogContent className="flex flex-col gap-4 w-[1024px]">

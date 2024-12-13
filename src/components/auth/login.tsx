@@ -7,7 +7,7 @@ import { Button } from "@/components/ui/button";
 import { Loader2, Home, ArrowRight, Truck, UtensilsCrossed } from 'lucide-react';
 import { Card, CardHeader, CardContent, CardFooter } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
-import { toast, ToastContainer } from "react-toastify";
+import { toast } from 'sonner'
 import "react-toastify/dist/ReactToastify.css";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -64,7 +64,7 @@ export default function LoginForm() {
             }
 
         } catch (error) {
-            toast.error(`${error}.`);
+            toast.error("Đăng nhập thất bại. Vui lòng kiểm tra lại thông tin đăng nhập");
         } finally {
             setIsPending(false);
         }
@@ -163,11 +163,7 @@ export default function LoginForm() {
                     </Button>
                 </CardFooter>
             </Card>
-            <ToastContainer
-                position="top-right"
-                autoClose={5000}
-                hideProgressBar={false}
-            />
+            
         </div>
     );
 }

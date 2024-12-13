@@ -26,6 +26,12 @@ export default function SuccessPage() {
           thị trong phần thông tin đơn hàng.
         </p>
         <a
+          href="/account/history"
+          className="inline-block rounded-lg bg-amber-500 px-4 py-2 font-medium text-white hover:bg-amber-600 mr-4"
+        >
+          Chi tiết đơn hàng
+        </a>
+        <a
           href="/"
           className="inline-block rounded-lg bg-green-500 px-4 py-2 font-medium text-white hover:bg-green-600"
         >
