@@ -75,7 +75,7 @@ export function SearchingArea({ totalAmount }: SearchingAreaProps) {
                 <Search className="inline-block md:hidden" />
                 <DropdownMenu>
                     <DropdownMenuTrigger asChild>
-                        <Filter size={24} />
+                        <Filter size={24} className="hover:stroke-red-500" />
                     </DropdownMenuTrigger>
                     <DropdownMenuContent className="w-56">
                         <DropdownMenuLabel>Bộ lọc</DropdownMenuLabel>
@@ -141,7 +141,7 @@ export function SearchingArea({ totalAmount }: SearchingAreaProps) {
 
                 <Link href={"/menu/cart"}>
                     <div className="relative">
-                        <ShoppingCart size={24} onClick={() => handlleShoppingCartOnClick()} />
+                        <ShoppingCart size={24} className="hover:stroke-red-500" onClick={() => handlleShoppingCartOnClick()} />
                         <p className="absolute text-center left-3/4 bottom-3/4 p-[2px] text-[0.5rem] font-semibold w-4 h-4 bg-red-500 text-white rounded-full">{totalAmount}</p>
                     </div>
                 </Link>
