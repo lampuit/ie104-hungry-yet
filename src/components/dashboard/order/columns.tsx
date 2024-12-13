@@ -20,7 +20,7 @@ const ShipperCell: React.FC<ShipperCellProps> = ({ shipperId }) => {
     const fetchUser = async () => {
       try {
         const response = await getUserById(shipperId);
-        setUser(response?.[0]?.name || "Unknown");
+        setUser(response?.[0]?.name || "Chưa có");
       } catch (error) {
         console.error("Error fetching user info:", error);
         setUser("Unknown");
@@ -42,21 +42,33 @@ export const columns: ColumnDef<Invoice>[] = [
   {
     accessorKey: "id",
     header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Invoice ID" />
+      <DataTableColumnHeader column={column} title="STT" />
     ),
-    cell: ({ row }) => <div className="w-[80px]">{row.getValue("id")}</div>,
+    cell: ({ row }) => (
+      <div className="w-[40px]">{row.index + 1}</div> // Tính số thứ tự từ 1
+    ),
     enableSorting: false,
     enableHiding: false,
   },
   {
     accessorKey: "createdAt",
     header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Created At" />
+      <DataTableColumnHeader column={column} title="Giờ đặt đơn" />
     ),
     cell: ({ row }) => {
       return (
         <div className="flex space-x-2">
-          <span>{format(row.getValue("createdAt"), "PPP")}</span>
+          <span>
+            {row.getValue("createdAt")
+              ? new Date(row.getValue("createdAt")).toLocaleString("vi-VN", {
+                year: "numeric",
+                month: "2-digit",
+                day: "2-digit",
+                hour: "2-digit",
+                minute: "2-digit",
+              })
+              : "Không có ghi chú"}
+          </span>
         </div>
       );
     },
@@ -64,7 +76,7 @@ export const columns: ColumnDef<Invoice>[] = [
   {
     accessorKey: "status",
     header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Status" />
+      <DataTableColumnHeader column={column} title="Trạng thái" />
     ),
     cell: ({ row }) => {
       const status = row.getValue("status") as string;
@@ -82,7 +94,7 @@ export const columns: ColumnDef<Invoice>[] = [
   {
     accessorKey: "phone",
     header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Phone" />
+      <DataTableColumnHeader column={column} title="SĐT khách" />
     ),
     cell: ({ row }) => {
       return (
