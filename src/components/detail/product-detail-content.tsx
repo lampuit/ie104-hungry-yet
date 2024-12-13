@@ -227,10 +227,10 @@ export function ProductDetailContent({ id }: { id: string }) {
                     </div>
                 </div>
             </section>
-            <section className="flex justify-start my-10 mx-5 sm:mx-10 px-5">
+            <section className="flex w-full justify-start my-10 px-10 sm:px-16">
                 <div className="space-y-3">
                     <h1 className="font-semibold text-xl sm:text-2xl">Mô tả món ăn</h1>
-                    <p>{dish.des}</p>
+                    <p className="text-justify">{dish.des}</p>
                 </div>
             </section>
         </section>
