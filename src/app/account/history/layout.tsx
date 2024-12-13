@@ -1,10 +1,10 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
+import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area"
 import { Package, PackageCheck, PackageX, Image, Paperclip, CookingPot, Truck, NotebookPen } from "lucide-react";
 import { usePathname, useRouter } from "next/navigation";
-import { ReactNode, useEffect, useState } from "react";
+import { ReactNode, useState } from "react";
 import useSWR from "swr";
 import { getSession } from "@/lib/auth-client";
 import LoginPrompt from "@/components/ui/login-prompt";
@@ -36,7 +36,7 @@ export default function Layout({
                 <h1 className="text-2xl font-semibold">Đơn hàng của tôi</h1>
                 <div className="flex flex-col lg:flex-row">
                     <div className="flex flex-col gap-5 w-full">
-                        <div className="flex gap-4 justify-around bg-white rounded-lg p-2 shadow-md">
+                        <ScrollArea className="flex gap-4 justify-around whitespace-nowrap bg-white rounded-lg p-2 shadow-md">
                             <Button
                                 className={activeButton === "Chờ xác nhận" ? "bg-slate-200" : ""}
                                 variant={activeButton === "Chờ xác nhận" ? "secondary" : "ghost"}
@@ -79,7 +79,8 @@ export default function Layout({
                             >
                                 <PackageX /> Đã hủy
                             </Button>
-                        </div>
+                            <ScrollBar orientation="horizontal" />
+                        </ScrollArea>
                         {children}
                     </div>
                 </div>

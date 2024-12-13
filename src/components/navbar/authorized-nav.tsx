@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { CircleUserRound, Menu, Truck } from "lucide-react";
+import { CircleUserRound, House, Info, Menu, ShoppingCart, SquareMenu, Truck } from "lucide-react";
 import { usePathname, useRouter } from "next/navigation";
 import {
   DropdownMenu,
@@ -39,7 +39,7 @@ export function AuthorizedNavbar() {
         <Link href={"/about"} className={`hover:text-amber-500 ${isAbout ? 'text-amber-500' : ''}`}>Về chúng tôi</Link>
       </div>
       <Link href={"/account/history"} className="hidden sm:inline-block">
-        <CircleUserRound size={32} />
+        <CircleUserRound size={32} className="hover:stroke-amber-500"/>
       </Link>
 
       <div className="sm:hidden">
@@ -49,10 +49,10 @@ export function AuthorizedNavbar() {
           </DropdownMenuTrigger>
 
           <DropdownMenuContent>
-            <DropdownMenuItem onClick={() => router.push("/")}>Trang chủ</DropdownMenuItem>
-            <DropdownMenuItem onClick={() => router.push("/menu")}>Thực đơn</DropdownMenuItem>
-            <DropdownMenuItem onClick={() => router.push("/menu/cart")}>Giỏ hàng</DropdownMenuItem>
-            <DropdownMenuItem onClick={() => router.push("/about")}>Về chúng tôi</DropdownMenuItem>
+            <DropdownMenuItem onClick={() => router.push("/")}><div className="flex items-center gap-4"><House /><p>Trang chủ</p></div></DropdownMenuItem>
+            <DropdownMenuItem onClick={() => router.push("/menu")}><div className="flex items-center gap-4"><SquareMenu /><p>Thực đơn</p></div></DropdownMenuItem>
+            <DropdownMenuItem onClick={() => router.push("/menu/cart")}><div className="flex items-center gap-4"><ShoppingCart /><p>Giỏ hàng</p></div></DropdownMenuItem>
+            <DropdownMenuItem onClick={() => router.push("/about")}><div className="flex items-center gap-4"><Info /><p>Về chúng tôi</p></div></DropdownMenuItem>
             <DropdownMenuSeparator />
             <DropdownMenuItem className="flex items-center gap-4" onClick={() => router.push("/account/history")}>
               <CircleUserRound size={32} />
