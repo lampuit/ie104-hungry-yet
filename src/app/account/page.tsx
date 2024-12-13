@@ -154,20 +154,20 @@ export default function Account() {
 
     return (
         isLoading ? <LoadingSpinner /> : !userId ? <LoginPrompt /> :
-            <div className="grow flex flex-col gap-5 px-4">
+            <div className="flex flex-col gap-2 sm:gap-5 px-2 sm:px-4">
                 <h2 className="font-semibold text-xl sm:text-2xl">Tài khoản của tôi</h2>
                 <Form {...form}>
                     <form
                         onSubmit={form.handleSubmit(onSubmit)}
-                        className="flex flex-col items-center lg:items-start lg:flex-row lg:justify-start w-full gap-16 p-16 border-2 rounded-md bg-white">
+                        className="flex flex-col items-center lg:items-start lg:flex-row lg:justify-start w-full lg:gap-16 p-4 lg:p-16 border-2 rounded-md bg-white">
                         {/* Avatar Section */}
                         <div className="flex flex-col items-center gap-6 w-1/2 lg:w-1/4">
-                            <Avatar className="w-32 h-32">
+                            <Avatar className="size-32">
                                 <AvatarImage src={selectedFile ? URL.createObjectURL(selectedFile) : userInfo?.[0]?.imageUrl ?? undefined} />
                                 <AvatarFallback className="text-4xl">{shortName}</AvatarFallback>
                             </Avatar>
                             <Label htmlFor="avatar-upload" className="cursor-pointer">
-                                <div className="flex items-center gap-2 px-4 py-2 border border-amber-500 rounded-md text-amber-500 text-sm hover:bg-amber-500 hover:bg-opacity-20">
+                                <div className="flex items-center gap-2 px-4 py-2 border border-amber-500 rounded-md text-xs md:text-sm text-amber-500 hover:bg-amber-500 hover:bg-opacity-20">
                                     <SquarePen className="stroke-amber-500 w-4 h-4" />
                                     Thay đổi ảnh
                                 </div>
@@ -187,8 +187,8 @@ export default function Account() {
                                 control={form.control}
                                 name="name"
                                 render={({ field }) => (
-                                    <FormItem>
-                                        <div className="font-semibold text-sm">Họ và tên:</div>
+                                    <FormItem className="text-xs sm:text-sm">
+                                        <div className="font-semibold">Họ và tên:</div>
                                         <FormControl>
                                             <Input placeholder="Nhập họ và tên" {...field} />
                                         </FormControl>
@@ -200,7 +200,7 @@ export default function Account() {
                                 name="phone"
                                 render={({ field }) => (
                                     <FormItem>
-                                        <div className="font-semibold text-sm">Số điện thoại:</div>
+                                        <div className="font-semibold text-xs sm:text-sm">Số điện thoại:</div>
                                         <FormControl>
                                             <Input placeholder="Nhập số điện thoại" {...field} />
                                         </FormControl>
@@ -213,7 +213,7 @@ export default function Account() {
                                 name="email"
                                 render={({ field }) => (
                                     <FormItem>
-                                        <div className="font-semibold text-sm">Email:</div>
+                                        <div className="font-semibold text-xs sm:text-sm">Email:</div>
                                         <FormControl>
                                             <Input placeholder="Nhập email" {...field} />
                                         </FormControl>
@@ -226,18 +226,18 @@ export default function Account() {
                                 name="gender"
                                 render={({ field }) => (
                                     <FormItem className="space-y-3">
-                                        <FormLabel className="font-semibold text-sm">Giới tính:</FormLabel>
+                                        <FormLabel className="font-semibold text-xs sm:text-sm">Giới tính:</FormLabel>
                                         <FormControl>
                                             <RadioGroup
                                                 onValueChange={field.onChange}
                                                 value={field.value}
-                                                className="flex gap-16"
+                                                className="flex gap-8 sm:gap-16"
                                             >
                                                 <FormItem className="flex items-center space-x-3 space-y-0">
                                                     <FormControl>
                                                         <RadioGroupItem value="Nam" />
                                                     </FormControl>
-                                                    <FormLabel className="font-normal">
+                                                    <FormLabel className="font-normal text-xs sm:text-sm">
                                                         Nam
                                                     </FormLabel>
                                                 </FormItem>
@@ -245,7 +245,7 @@ export default function Account() {
                                                     <FormControl>
                                                         <RadioGroupItem value="Nữ" />
                                                     </FormControl>
-                                                    <FormLabel className="font-normal">
+                                                    <FormLabel className="font-normal text-xs sm:text-sm">
                                                         Nữ
                                                     </FormLabel>
                                                 </FormItem>
@@ -253,7 +253,7 @@ export default function Account() {
                                                     <FormControl>
                                                         <RadioGroupItem value="Khác" />
                                                     </FormControl>
-                                                    <FormLabel className="font-normal">
+                                                    <FormLabel className="font-normal text-xs sm:text-sm">
                                                         Khác
                                                     </FormLabel>
                                                 </FormItem>
@@ -269,14 +269,14 @@ export default function Account() {
                                 name="birthday"
                                 render={() => (
                                     <FormItem className="flex flex-col">
-                                        <FormLabel className="font-semibold text-sm">Ngày sinh:</FormLabel>
+                                        <FormLabel className="font-semibold text-xs sm:text-sm">Ngày sinh:</FormLabel>
                                         <div className="flex space-x-2">
                                             <FormField
                                                 control={form.control}
                                                 name="birthday.day"
                                                 render={({ field }) => (
                                                     <Select onValueChange={field.onChange} value={field.value}>
-                                                        <SelectTrigger className="w-[80px]">
+                                                        <SelectTrigger className="sm:w-[80px]">
                                                             <SelectValue placeholder="Ngày" />
                                                         </SelectTrigger>
                                                         <SelectContent>
@@ -294,7 +294,7 @@ export default function Account() {
                                                 name="birthday.month"
                                                 render={({ field }) => (
                                                     <Select onValueChange={field.onChange} value={field.value}>
-                                                        <SelectTrigger className="w-[120px]">
+                                                        <SelectTrigger className="sm:w-[120px]">
                                                             <SelectValue placeholder="Tháng" />
                                                         </SelectTrigger>
                                                         <SelectContent>
@@ -312,7 +312,7 @@ export default function Account() {
                                                 name="birthday.year"
                                                 render={({ field }) => (
                                                     <Select onValueChange={field.onChange} value={field.value}>
-                                                        <SelectTrigger className="w-[100px]">
+                                                        <SelectTrigger className="sm:w-[100px]">
                                                             <SelectValue placeholder="Năm" />
                                                         </SelectTrigger>
                                                         <SelectContent>
@@ -336,7 +336,7 @@ export default function Account() {
                                 name="address"
                                 render={({ field }) => (
                                     <FormItem>
-                                        <div className="font-semibold text-sm">Địa chỉ:</div>
+                                        <div className="font-semibold text-xs sm:text-sm">Địa chỉ:</div>
                                         <FormControl>
                                             <Input placeholder="Nhập địa chỉ" {...field} />
                                         </FormControl>
@@ -344,7 +344,7 @@ export default function Account() {
                                     </FormItem>
                                 )} />
 
-                            <Button type="submit" className="w-1/2 bg-amber-500 hover:bg-red-500">Lưu thay đổi</Button>
+                            <Button type="submit" className="w-full sm:w-1/2 bg-amber-500 hover:bg-red-500">Lưu thay đổi</Button>
                         </div>
                     </form>
                 </Form>

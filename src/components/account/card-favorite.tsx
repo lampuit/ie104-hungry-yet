@@ -45,10 +45,10 @@ export function AccountFavorite({ listFavorite, isLoading, mutate }: { listFavor
         listFavorite?.map((item: any) => (
             isLoading ? <LoadingSpinner key={item.id} /> :
                 <div key={item.id} className="bg-white rounded shadow-md border-b-2 relative p-4">
-                    <div className="flex flex-col md:flex-row gap-4 md:gap-7 items-start md:items-end">
-                        <div className="flex flex-col justify-center w-[120px] h-[180px] relative">
+                    <div className="flex flex-col sm:flex-row gap-4 sm:gap-7 items-center sm:items-end">
+                        <div className="w-full max-w-[360px] sm:w-[120px] h-[180px] relative">
                             <Image
-                                className="rounded w-full md:w-auto"
+                                className="rounded"
                                 src={item?.products.imageUrl}
                                 alt="review"
                                 layout="fill"
@@ -57,7 +57,7 @@ export function AccountFavorite({ listFavorite, isLoading, mutate }: { listFavor
                         </div>
 
                         {/* Nội dung */}
-                        <div className="flex flex-col gap-4 md:gap-6 flex-1">
+                        <div className="flex flex-col gap-4 sm:gap-6 flex-1">
                             {/* Thông tin món ăn */}
                             <div className="flex flex-col gap-2">
                                 <div className="flex flex-col">
@@ -72,19 +72,19 @@ export function AccountFavorite({ listFavorite, isLoading, mutate }: { listFavor
                             </div>
 
                             {/* Nút hành động */}
-                            <div className="flex gap-2 md:gap-4 items-center justify-between md:justify-end">
+                            <div className="flex gap-2 sm:gap-4 items-center justify-between sm:justify-end">
                                 <Button
                                     onClick={() => {
                                         console.log("Xem chi tiết");
                                         router.push(`/detail?id=${item?.productId}`);
                                     }}
                                     variant={"outline"}
-                                    className="text-xs flex-grow md:flex-grow-0"
+                                    className="text-xs flex-grow sm:flex-grow-0"
                                 >
-                                    <Eye />Xem chi tiết
+                                    <Eye /><span className="hidden sm:inline">Xem chi tiết</span>
                                 </Button>
                                 <Button
-                                    className="bg-amber-500 text-xs flex-grow md:flex-grow-0"
+                                    className="bg-amber-500 text-xs flex-grow sm:flex-grow-0"
                                     onClick={async () => {
                                         try {
                                             const data = new FormData();

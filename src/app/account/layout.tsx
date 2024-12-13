@@ -90,41 +90,41 @@ export default function Layout({
 
     return (
         <main className="bg-gray-50 w-full">
-            <div className="flex gap-10 px-4 py-10">
-                <div className="flex flex-col gap-6 bg-white rounded p-6 shadow-md w-72">
-                    <div className="flex mb-4 gap-2 items-center w-full border-b-2 px-4 pb-4">
-                        <Avatar>
+            <div className="flex gap-2 md:gap-10 md:px-4 md:py-10">
+                <div className="flex flex-col gap-4 md:gap-6 bg-white rounded p-2 py-10 md:p-6 shadow-md md:w-72">
+                    <div className="flex justify-canter md:justify-between items-center md:mb-4 gap-2 w-full md:border-b-2 px-2 md:pb-4">
+                        <Avatar className="size-6 md:size-8">
                             <AvatarImage src={user?.[0]?.imageUrl ?? undefined} />
                             <AvatarFallback>{shortName}</AvatarFallback>
                         </Avatar>
-                        <p className="text-sm font-semibold">{name}</p>
+                        <p className="grow text-center text-md font-semibold hidden md:inline-block">{name}</p>
                     </div>
                     <div
                         onClick={() => handleClick("Thông tin tài khoản", "/account")}
-                        className={activePath === "Thông tin tài khoản" ? "flex gap-3 shadow p-2 rounded-md bg-slate-200" : "flex gap-3"}
+                        className={`${activePath === "Thông tin tài khoản" ? "shadow  bg-slate-200" : ""} flex justify-canter md:justify-between items-center md:gap-2 rounded-md p-2`}
                     >
-                        <UserIcon className="stroke-amber-500" />
-                        <p>Thông tin tài khoản</p>
+                        <UserIcon className="grow md:grow-0 stroke-amber-500 size-6 md:size-8" />
+                        <p className="hidden md:inline-block text-center">Thông tin tài khoản</p>
                     </div>
                     <div
                         onClick={() => handleClick("Thông tin đơn hàng", "/account/history")}
-                        className={activePath === "Thông tin đơn hàng" ? "flex gap-3 shadow p-2 rounded-md bg-slate-200" : "flex gap-3"}
+                        className={`${activePath === "Thông tin đơn hàng" ? "shadow  bg-slate-200" : ""} flex justify-canter md:justify-between items-center md:gap-2 rounded-md p-2`}
                     >
-                        <ClipboardList className="stroke-blue-500" />
-                        <p>Thông tin đơn hàng</p>
+                        <ClipboardList className="grow md:grow-0 stroke-blue-500 size-6 md:size-8" />
+                        <p className="hidden md:inline-block text-center">Thông tin đơn hàng</p>
                     </div>
                     <div
                         onClick={() => handleClick("Danh mục yêu thích", "/account/favorite")}
-                        className={activePath === "Danh mục yêu thích" ? "flex gap-3 shadow p-2 rounded-md bg-slate-200" : "flex gap-3"}
+                        className={`${activePath === "Danh mục yêu thích" ? "shadow  bg-slate-200" : ""} flex justify-canter md:justify-between items-center md:gap-2 rounded-md p-2`}
                     >
-                        <Heart className="stroke-red-500" />
-                        <p>Danh mục yêu thích</p>
+                        <Heart className="grow md:grow-0 stroke-red-500 size-6 md:size-8" />
+                        <p className="hidden md:inline-block text-center">Danh mục yêu thích</p>
                     </div>
                     <Button
                         variant={"outline"}
                         onClick={() => handleLogout()}
                         disabled={isLoggingOut} // Disable button while logging out
-                        className={`mt-6 border-gray-400 text-gray-400 ${isLoggingOut
+                        className={`p-1 md:p-4 md:mt-4 border-gray-400 text-gray-400 ${isLoggingOut
                             ? "cursor-not-allowed opacity-50"
                             : "hover:bg-gray-400 hover:bg-opacity-20 hover:text-gray-400"
                             }`}
@@ -132,16 +132,19 @@ export default function Layout({
                         {isLoggingOut ? (
                             <div className="flex items-center gap-2">
                                 <Loader2 className="animate-spin" />
-                                <span>Đang đăng xuất</span>
+                                <span className="hidden md:inline">Đang đăng xuất</span>
                             </div>
                         ) : (
                             <>
-                                <LogOut className="stroke-gray-400" /> Đăng xuất
+                                <LogOut className="stroke-gray-400" />
+                                <span className="hidden md:inline">Đăng xuất</span>
                             </>
                         )}
                     </Button>
                 </div>
-                {children}
+                <div className="grow py-5 md:py-10">
+                    {children}
+                </div>
             </div>
         </main>
     );

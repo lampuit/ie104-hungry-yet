@@ -79,7 +79,7 @@ export default function Footer() {
                                         </Link>
                                     </li>
                                     <li>
-                                        <Link href="#" className="text-base hover:text-amber-700">
+                                        <Link href="/contact" className="text-base hover:text-amber-700">
                                             Liên hệ
                                         </Link>
                                     </li>
