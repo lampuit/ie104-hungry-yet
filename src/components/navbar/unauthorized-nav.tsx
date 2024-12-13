@@ -43,8 +43,8 @@ export function UnauthorizedNavbar() {
             <DropdownMenuItem onClick={() => router.push("/menu/cart")}>Giỏ hàng</DropdownMenuItem>
             <DropdownMenuItem onClick={() => router.push("/about")}>Về chúng tôi</DropdownMenuItem>
             <DropdownMenuSeparator />
-            <DropdownMenuItem className="flex items-center gap-4" onClick={() => router.push("/account")}>
-              <Button className="hidden sm:inline-block text-xs px-2 bg-amber-500 rounded-sm hover:bg-red-500">Đăng nhập</Button>
+            <DropdownMenuItem className="flex items-center gap-4" onClick={() => router.push("/login")}>
+              <Button className="w-full text-sm px-2 bg-amber-500 rounded-3xl hover:bg-red-500">Đăng nhập</Button>
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>

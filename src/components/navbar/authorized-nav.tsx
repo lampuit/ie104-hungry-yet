@@ -54,7 +54,7 @@ export function AuthorizedNavbar() {
             <DropdownMenuItem onClick={() => router.push("/menu/cart")}>Giỏ hàng</DropdownMenuItem>
             <DropdownMenuItem onClick={() => router.push("/about")}>Về chúng tôi</DropdownMenuItem>
             <DropdownMenuSeparator />
-            <DropdownMenuItem className="flex items-center gap-4" onClick={() => router.push("/account")}>
+            <DropdownMenuItem className="flex items-center gap-4" onClick={() => router.push("/account/history")}>
               <CircleUserRound size={32} />
               <p>Tài khoản</p>
             </DropdownMenuItem>

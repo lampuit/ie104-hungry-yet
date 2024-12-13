@@ -101,21 +101,21 @@ export default function Layout({
                     </div>
                     <div
                         onClick={() => handleClick("Thông tin tài khoản", "/account")}
-                        className={`${activePath === "Thông tin tài khoản" ? "shadow  bg-slate-200" : ""} flex justify-canter md:justify-between items-center md:gap-2 rounded-md p-2`}
+                        className={`flex justify-canter md:justify-between items-center md:gap-2 rounded-md p-2 ${activePath === "Thông tin tài khoản" ? "shadow  bg-slate-200" : ""}`}
                     >
                         <UserIcon className="grow md:grow-0 stroke-amber-500 size-6 md:size-8" />
                         <p className="hidden md:inline-block text-center">Thông tin tài khoản</p>
                     </div>
                     <div
                         onClick={() => handleClick("Thông tin đơn hàng", "/account/history")}
-                        className={`${activePath === "Thông tin đơn hàng" ? "shadow  bg-slate-200" : ""} flex justify-canter md:justify-between items-center md:gap-2 rounded-md p-2`}
+                        className={`flex justify-canter md:justify-between items-center md:gap-2 rounded-md p-2 ${activePath === "Thông tin đơn hàng" ? "shadow  bg-slate-200" : ""}`}
                     >
                         <ClipboardList className="grow md:grow-0 stroke-blue-500 size-6 md:size-8" />
                         <p className="hidden md:inline-block text-center">Thông tin đơn hàng</p>
                     </div>
                     <div
                         onClick={() => handleClick("Danh mục yêu thích", "/account/favorite")}
-                        className={`${activePath === "Danh mục yêu thích" ? "shadow  bg-slate-200" : ""} flex justify-canter md:justify-between items-center md:gap-2 rounded-md p-2`}
+                        className={`flex justify-canter md:justify-between items-center md:gap-2 rounded-md p-2 ${activePath === "Danh mục yêu thích" ? "shadow  bg-slate-200" : ""}`}
                     >
                         <Heart className="grow md:grow-0 stroke-red-500 size-6 md:size-8" />
                         <p className="hidden md:inline-block text-center">Danh mục yêu thích</p>
