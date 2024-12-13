@@ -17,9 +17,10 @@ import {
 import { useSession } from "@/lib/auth-client";
 
 import { useChat } from "ai/react";
+import { MessageCircleMore } from "lucide-react";
 import Link from "next/link";
 
-export default function Page() {
+export default function Chatbot() {
   const { data: session } = useSession();
 
   const {
@@ -38,8 +39,10 @@ export default function Page() {
     lastMessage?.role === "user" || (!lastMessage?.content && !isEmpty);
 
   return (
-    <Sheet>
-      <SheetTrigger>Open</SheetTrigger>
+    <Sheet modal={false}>
+      <SheetTrigger className="fixed bottom-12 right-12 z-40 rounded-full bg-amber-500 p-2 ring-2 ring-background">
+        <MessageCircleMore className="stroke-white" size={32} />
+      </SheetTrigger>
       <SheetContent className="flex h-full w-full flex-col sm:max-w-5xl">
         <SheetHeader className="flex-none">
           <SheetTitle>Chatbot</SheetTitle>
