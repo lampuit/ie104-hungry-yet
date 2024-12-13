@@ -1,10 +1,9 @@
 "use client";
-
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { signIn } from "@/lib/auth-client";
+import { signUp } from "@/lib/auth-client";
 import { Button } from "@/components/ui/button";
-import { Loader2, Home, ArrowRight, Truck, UtensilsCrossed } from 'lucide-react';
+import { Loader2, Home, ArrowRight, Truck, UtensilsCrossed, User, Mail, Phone, Lock } from 'lucide-react';
 import { Card, CardHeader, CardContent, CardFooter } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { toast, ToastContainer } from "react-toastify";
@@ -19,28 +18,32 @@ import {
     FormItem,
     FormMessage,
 } from "@/components/ui/form";
-import { getUserById } from "@/lib/data";
 
 const formSchema = z.object({
     email: z.string().email("Email không hợp lệ"),
     password: z.string().min(8, "Mật khẩu phải có ít nhất 8 ký tự"),
+    name: z.string().min(1, "Tên người dùng không hợp lệ!"),
+    role: z.string().optional(),
+    phone: z.string().min(10, "Số điện thoại không hợp lệ!"),
 });
 
-export default function LoginForm() {
+export default function FormSignUp() {
     const router = useRouter();
     const [isPending, setIsPending] = useState(false);
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
         defaultValues: {
+            name: "",
             email: "",
             password: "",
+            phone: "",
         },
     });
 
     async function onSubmit(values: z.infer<typeof formSchema>) {
         try {
             setIsPending(true);
-            const response = await signIn.email({
+            await signUp.email({
                 ...values,
                 fetchOptions: {
                     onError(ctx) {
@@ -48,22 +51,10 @@ export default function LoginForm() {
                     },
                 },
             });
-
-            const userId = response?.data?.user?.id as string;
-
-            if (userId) {
-                const userInfoArray = await getUserById(userId);
-                const userInfo = userInfoArray[0];
-
-                if (userInfo.role === "admin" || userInfo.role === "staff") {
-                    router.push("/dashboard");
-                }
-                else
-                    router.push("/");
-
-            }
-
+            router.push("/login");
         } catch (error) {
+            setIsPending(false);
+
             toast.error(`${error}.`);
         } finally {
             setIsPending(false);
@@ -79,27 +70,60 @@ export default function LoginForm() {
                     </div>
                     <div className="space-y-2">
                         <h1 className="text-3xl font-extrabold text-orange-600 tracking-tight">
-                            Hungry Yet?
+                            Đăng ký ngay!
                         </h1>
                         <h2 className="text-2xl font-bold text-gray-800">
-                            Chào mừng trở lại!
+                            Tham gia cùng chúng tôi
                         </h2>
                     </div>
                     <p className="text-gray-600 text-lg flex items-center justify-center space-x-2">
                         <UtensilsCrossed className="w-5 h-5" />
-                        <span>Đăng nhập để đặt món ăn ngon</span>
+                        <span>Đăng ký để khám phá món ngon</span>
                     </p>
                 </CardHeader>
                 <CardContent>
                     <Form {...form}>
-                        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+                        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+                            <FormField
+                                control={form.control}
+                                name="name"
+                                render={({ field }) => (
+                                    <FormItem>
+                                        <FormControl>
+                                            <div className="relative">
+                                                <Input placeholder="Họ và Tên" {...field} className="bg-orange-50 pl-10" />
+                                                <User className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={18} />
+                                            </div>
+                                        </FormControl>
+                                        <FormMessage />
+                                    </FormItem>
+                                )}
+                            />
                             <FormField
                                 control={form.control}
                                 name="email"
                                 render={({ field }) => (
                                     <FormItem>
                                         <FormControl>
-                                            <Input placeholder="Email của bạn" {...field} className="bg-orange-50" />
+                                            <div className="relative">
+                                                <Input placeholder="Email" {...field} className="bg-orange-50 pl-10" />
+                                                <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={18} />
+                                            </div>
+                                        </FormControl>
+                                        <FormMessage />
+                                    </FormItem>
+                                )}
+                            />
+                            <FormField
+                                control={form.control}
+                                name="phone"
+                                render={({ field }) => (
+                                    <FormItem>
+                                        <FormControl>
+                                            <div className="relative">
+                                                <Input placeholder="Số điện thoại" {...field} className="bg-orange-50 pl-10" />
+                                                <Phone className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={18} />
+                                            </div>
                                         </FormControl>
                                         <FormMessage />
                                     </FormItem>
@@ -111,12 +135,10 @@ export default function LoginForm() {
                                 render={({ field }) => (
                                     <FormItem>
                                         <FormControl>
-                                            <Input
-                                                placeholder="Mật khẩu"
-                                                type="password"
-                                                {...field}
-                                                className="bg-orange-50"
-                                            />
+                                            <div className="relative">
+                                                <Input placeholder="Mật khẩu" type="password" {...field} className="bg-orange-50 pl-10" />
+                                                <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={18} />
+                                            </div>
                                         </FormControl>
                                         <FormMessage />
                                     </FormItem>
@@ -130,11 +152,11 @@ export default function LoginForm() {
                                 {isPending ? (
                                     <>
                                         <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                                        Đang đăng nhập...
+                                        Đang đăng ký...
                                     </>
                                 ) : (
                                     <>
-                                        Đăng nhập
+                                        Đăng ký
                                         <ArrowRight className="ml-2 h-4 w-4" />
                                     </>
                                 )}
@@ -144,13 +166,13 @@ export default function LoginForm() {
                 </CardContent>
                 <CardFooter className="flex flex-col space-y-4">
                     <div className="text-center text-sm text-gray-600">
-                        Bạn chưa có tài khoản?{" "}
+                        Bạn đã có tài khoản?{" "}
                         <Button
                             variant="link"
                             className="p-0 text-orange-500 hover:text-orange-600"
-                            onClick={() => router.push("/signup")}
+                            onClick={() => router.push("/login")}
                         >
-                            Đăng ký ngay
+                            Đăng nhập ngay
                         </Button>
                     </div>
                     <Button
