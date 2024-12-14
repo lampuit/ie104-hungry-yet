@@ -26,6 +26,7 @@ interface Dish {
   price: number;
   des: string;
   published: boolean;
+  avgRating: number;
 }
 
 const fetcherCategory = async (): Promise<
@@ -81,6 +82,7 @@ export default function MenuPage() {
           published: item.isPublish,
           price: item.price,
           des: item.description,
+          avgRating: item.averageRating
         })),
       );
       setTotalCount(response.totalRecords);

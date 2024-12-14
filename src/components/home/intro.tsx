@@ -26,13 +26,13 @@ export function Intro() {
             <div className="relative flex justify-center items-center lg:gap-x-8 xl:gap-x-36 px-8 sm:px-32 mt-10">
                 <div className="flex flex-col justify-center items-center lg:items-start gap-5 lg:gap-10">
                     {/* Small Screen */}
-                    <div className='w-full h-64 relative mb-4'>
+                    <div className='lg:hidden w-full h-64 relative mb-4'>
                         <Image
                             src="/images/intro-dish.jpg"
                             layout='fill'
                             objectFit='cover'
                             alt="Intro dish"
-                            className='lg:hidden rounded-3xl'>
+                            className='rounded-3xl'>
                         </Image>
                         <div className='lg:hidden absolute rounded-s-3xl h-72 w-full bg-[#99BD76] -z-10 start-1/2 -top-4 overflow-clip'></div>
                     </div>
@@ -73,13 +73,13 @@ export function Intro() {
                 <div className='hidden lg:inline-block rounded-e-3xl absolute h-80 w-full bg-amber-300 -z-10 end-2/3 overflow-clip'></div>
                 <div className="flex flex-col justify-center items-center lg:items-start gap-5 lg:gap-10">
                     {/* Small Screen */}
-                    <div className='w-full h-64 relative mb-4'>
+                    <div className='lg:hidden w-full h-64 relative mb-4'>
                         <Image
                             src="/images/intro-dish-2.jpg"
                             layout='fill'
                             objectFit='cover'
                             alt="Intro dish"
-                            className='lg:hidden rounded-3xl'>
+                            className=' rounded-3xl'>
                         </Image>
                         <div className='lg:hidden absolute rounded-3xl h-72 w-full bg-amber-300 -z-10 end-1/2 -top-4 overflow-clip'></div>
                     </div>

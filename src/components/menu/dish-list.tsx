@@ -26,6 +26,7 @@ interface Dish {
     price: number;
     des: string;
     published: boolean;
+    avgRating: number;
 }
 
 interface IsFavorite {
@@ -200,7 +201,7 @@ export const DishList = ({ dishesList, onTotalAmountChange }: DishListProps) => 
                                 }`}>
                                 <div className="flex justify-center items-center gap-1">
                                     <Star className="fill-amber-400 stroke-amber-400" />
-                                    <p className="font-normal">4.8</p>
+                                    <p className="font-normal">{Number(dish.avgRating).toFixed(1)}</p>
                                 </div>
                                 <div className="flex justify-end items-center gap-2">
                                     <FaCoins className="fill-amber-400" />
