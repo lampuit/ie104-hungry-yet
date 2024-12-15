@@ -6,8 +6,7 @@ import useSWR from "swr"
 import LoadingSpinner from "../ui/loading-spinner"
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar"
 import Image from "next/image"
-import { Pagination, PaginationContent, PaginationItem, PaginationLink, PaginationNext, PaginationPrevious } from "../ui/pagination"
-import {  useState } from "react"
+import { useState } from "react"
 import { getRatingsByProductId } from "@/lib/data"
 
 const ratingFetcher = async (id: string) => {
@@ -20,6 +19,7 @@ export const Rating = () => {
     const id = searchParams.get("id") || "";
     const { data: ratingData, error: ratingError } = useSWR(`product-${id}`, () => ratingFetcher(id));
     const [starFilter, setStarFilter] = useState(0);
+    const [expandedReviews, setExpandedReviews] = useState<{ [key: number]: boolean }>({});
 
     if (ratingError) return <div>Error loading data.</div>;
     if (!ratingData) {
@@ -47,6 +47,12 @@ export const Rating = () => {
             const filtered = ratingData.filter((review: { star: number }) => review.star === star);
             return filtered;
         }
+    }
+    const toggleExpandReview = (index: number) => {
+        setExpandedReviews(prev => ({
+            ...prev,
+            [index]: !prev[index]
+        }));
     }
 
     return (
@@ -117,7 +123,7 @@ export const Rating = () => {
                                     <AvatarFallback>{splitName(review.user.name)}</AvatarFallback>
                                 </Avatar>
                                 <div className="space-y-2 p-4">
-                                    <h6 className="font-semibold">{review.user.name}</h6>
+                                    <h6 className="font-semibold">{!review.isAnonymous ? review.user.name : `${review.user.name.slice(0, 2)}***`}</h6>
                                     <div className="flex gap-2">
                                         <Star className="fill-amber-400 stroke-amber-400 size-5" />
                                         <Star className={`fill-amber-400 stroke-amber-400 size-5 ${review.star < 2 ? "hidden" : ""}`} />
@@ -128,11 +134,26 @@ export const Rating = () => {
                                 </div>
                             </div>
                             <p>{review.review}</p>
-                            <div className="flex items-center gap-4">
-                                <Image className="rounded-md" src={review.imageUrl || "/images/square.jpg"} alt="review" width={100} height={100}></Image>
+                            <div className="flex flex-wrap items-center gap-4">
+                                <div className="flex flex-wrap gap-4">
+                                    <Image className="rounded-md object-cover" src={review.product.imageUrl || "/images/square.jpg"} alt="review" width={100} height={100} />
+                                    {expandedReviews[index] && (
+                                        <>
+                                            <Image className="rounded-md object-cover" src="/images/square.jpg" alt="additional review 1" width={100} height={100} />
+                                            <Image className="rounded-md object-cover" src="/images/intro-dish-2.jpg" alt="additional review 2" width={100} height={100} />
+                                            <Image className="rounded-md object-cover" src="/images/long2.jpg" alt="additional review 3" width={100} height={100} />
+                                        </>
+                                    )}
+                                </div>
                                 <div className="flex items-center gap-1">
-                                    <Button className="hover:bg-amber-400 hover:bg-opacity-20" variant={"ghost"}>Xem thêm</Button>
-                                    <ChevronRight />
+                                    <Button
+                                        className="hover:bg-amber-400 hover:bg-opacity-20"
+                                        variant={"ghost"}
+                                        onClick={() => toggleExpandReview(index)}
+                                    >
+                                        {expandedReviews[index] ? "Ẩn bớt" : "Xem thêm"}
+                                    </Button>
+                                    <ChevronRight className={expandedReviews[index] ? "rotate-90" : ""} />
                                 </div>
                             </div>
                         </div>
