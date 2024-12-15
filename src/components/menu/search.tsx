@@ -1,13 +1,15 @@
 "use client";
 
 import { Input } from "../ui/input";
-import React, { useRef, useEffect } from 'react';
-import Link from 'next/link';
-import { useState } from 'react';
-import { CheckIcon, Filter, Search, ShoppingCart } from 'lucide-react';
-import { useRouter } from 'next/navigation';
-import { DropdownMenuCheckboxItemProps, ItemIndicator } from "@radix-ui/react-dropdown-menu"
-import { Button } from "@/components/ui/button"
+import React, { useRef, useEffect, useState } from "react";
+import Link from "next/link";
+import { CheckIcon, Filter, Search, ShoppingCart, Star } from "lucide-react";
+import { useRouter } from "next/navigation";
+import {
+    DropdownMenuCheckboxItemProps,
+    ItemIndicator,
+} from "@radix-ui/react-dropdown-menu";
+import { Button } from "@/components/ui/button";
 import {
     DropdownMenu,
     DropdownMenuTrigger,
@@ -17,10 +19,9 @@ import {
     DropdownMenuRadioGroup,
     DropdownMenuRadioItem,
     DropdownMenuSeparator,
-} from "@/components/ui/dropdown-menu"
+} from "@/components/ui/dropdown-menu";
 import { filterAndSearch } from "@/lib/data";
-
-type Checked = DropdownMenuCheckboxItemProps["checked"]
+import { useDebouncedCallback } from 'use-debounce';
 
 interface SearchingAreaProps {
     totalAmount: number;
@@ -31,10 +32,14 @@ interface SearchingAreaProps {
         search: string;
         categoryId: string;
     };
-    onFilterChange: (newFilter: SearchingAreaProps['filter']) => void;
+    onFilterChange: (newFilter: SearchingAreaProps["filter"]) => void;
 }
 
 export function SearchingArea({ totalAmount, filter, onFilterChange }: SearchingAreaProps) {
+    const [rating, setRating] = useState<string>("");
+    const [inputWidth, setInputWidth] = useState<string>("w-72");
+    const [search, setSearch] = useState<string>(filter.search);
+
     const [priceRanges, setPriceRanges] = useState([
         { checked: false, min: 0, max: 20000 },
         { checked: false, min: 20000, max: 40000 },
@@ -43,28 +48,48 @@ export function SearchingArea({ totalAmount, filter, onFilterChange }: Searching
         { checked: false, min: 100000, max: Infinity },
     ]);
 
-    const [rating, setRating] = useState<string>("");
-    const [searchTerm, setSearchTerm] = useState(filter.search);
+    const ratingOptions = [
+        { value: "5", label: "5.0" },
+        { value: "4", label: "Từ 4.0 trở lên" },
+        { value: "3", label: "Từ 3.0 trở lên" },
+    ];
 
-    const router = useRouter();
-    const inputRef = useRef<HTMLInputElement>(null);
-    const [inputWidth, setInputWidth] = useState("w-1/4");
+
+    const debouncedFilterAndSearch = useDebouncedCallback((newFilter) => {
+        const formData = new FormData();
+        Object.entries(newFilter).forEach(([key, value]) => {
+            formData.append(key, String(value));
+        });
+        filterAndSearch(formData);
+    }, 300); // 300ms debounce delay
+
+
 
     useEffect(() => {
-        setSearchTerm(filter.search);
-    }, [filter.search]);
+        const newFilter = {
+            ...filter,
+            search,
+            rating: parseFloat(rating) || 0,
+        };
+        onFilterChange(newFilter);
+        debouncedFilterAndSearch(newFilter);
+    }, [search, rating]);
+
+    const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        setSearch(e.target.value);
+    };
 
     const handlePriceChange = (index: number) => {
         const newPriceRanges = priceRanges.map((range, i) =>
             i === index ? { ...range, checked: !range.checked } : range
         );
         setPriceRanges(newPriceRanges);
-        updateFilter(newPriceRanges, rating, searchTerm);
+        updateFilter(newPriceRanges, rating, search);
     };
 
     const handleRatingChange = (value: string) => {
         setRating(value);
-        updateFilter(priceRanges, value, searchTerm);
+        updateFilter(priceRanges, value, search);
     };
 
     const updateFilter = (newPriceRanges: typeof priceRanges, newRating: string, newSearch: string) => {
@@ -81,6 +106,7 @@ export function SearchingArea({ totalAmount, filter, onFilterChange }: Searching
         };
 
         onFilterChange(newFilter);
+
         const formData = new FormData();
         Object.entries(newFilter).forEach(([key, value]) => {
             formData.append(key, value.toString());
@@ -88,15 +114,6 @@ export function SearchingArea({ totalAmount, filter, onFilterChange }: Searching
         filterAndSearch(formData);
     };
 
-    const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const newSearchTerm = e.target.value;
-        setSearchTerm(newSearchTerm);
-        updateFilter(priceRanges, rating, newSearchTerm);
-    };
-
-    const handleShoppingCartClick = () => {
-        router.push('/menu/cart');
-    };
 
     const handleSearchFocus = () => {
         setInputWidth("w-full");
@@ -112,17 +129,18 @@ export function SearchingArea({ totalAmount, filter, onFilterChange }: Searching
                 <h2 className="italic font-semibold text-3xl sm:text-4xl md:text-5xl min-w-40">Thực đơn</h2>
                 <div className="hidden sm:inline-block"><Line /></div>
             </div>
-            <div className={`sm:grow flex justify-end items-center ${inputWidth} gap-2 focus:stroke-none`}>
+
+            <div className={`sm:grow flex justify-end items-center gap-2 focus:stroke-none`}>
                 <div className="grow max-w-3xl relative flex justify-end items-center rounded-full">
                     <div className="hidden md:inline-block absolute right-2"><Search /></div>
-                    <Input
-                        ref={inputRef}
-                        className="h-8 hidden w-1/3 md:inline-block bg-gray-100 border-none rounded-3xl text-xs text-black pl-3 hover:h-8 focus-visible:ring-0 focus-visible:ring-offset-0"
+                    <input
                         type="text"
-                        value={searchTerm}
+                        value={search}
                         onChange={handleSearchChange}
                         onFocus={handleSearchFocus}
                         onBlur={handleSearchBlur}
+                        className={`transition-all duration-300 ${inputWidth} p-2 border border-gray-300 rounded-md`}
+                        placeholder="Nhập tên món ăn"
                     />
                 </div>
                 <Search className="inline-block md:hidden" />
@@ -151,28 +169,25 @@ export function SearchingArea({ totalAmount, filter, onFilterChange }: Searching
                         <DropdownMenuSeparator />
                         <DropdownMenuLabel>Xếp hạng</DropdownMenuLabel>
 
-                        <DropdownMenuRadioGroup value={rating} onValueChange={handleRatingChange}>
-                            <DropdownMenuRadioItem value="5.0">
-                                <ItemIndicator><CheckIcon /></ItemIndicator>
-                                5.0
-                            </DropdownMenuRadioItem>
-                            <DropdownMenuRadioItem value="4.0">
-                                <ItemIndicator><CheckIcon /></ItemIndicator>
-                                Từ 4.0 trở lên
-                            </DropdownMenuRadioItem>
-                            <DropdownMenuRadioItem value="3.0">
-                                <ItemIndicator><CheckIcon /></ItemIndicator>
-                                Từ 3.0 trở lên
-                            </DropdownMenuRadioItem>
+                        <DropdownMenuRadioGroup value={filter.rating.toString()} onValueChange={handleRatingChange}>
+                            {ratingOptions.map((option) => (
+                                <DropdownMenuRadioItem key={option.value} value={option.value}>
+                                    <div className="flex items-center">
+                                        <span>{option.label}</span>
+                                        <Star className="h-4 w-4 ml-2 fill-yellow-400 stroke-yellow-400" />
+                                    </div>
+                                </DropdownMenuRadioItem>
+                            ))}
                         </DropdownMenuRadioGroup>
-
                     </DropdownMenuContent>
                 </DropdownMenu>
 
-                <Link href={"/menu/cart"}>
+                <Link href="/menu/cart">
                     <div className="relative">
-                        <ShoppingCart size={24} className="hover:stroke-red-500" onClick={handleShoppingCartClick} />
-                        <p className="absolute text-center left-3/4 bottom-3/4 p-[2px] text-[0.5rem] font-semibold w-4 h-4 bg-red-500 text-white rounded-full">{totalAmount}</p>
+                        <ShoppingCart size={24} className="hover:stroke-red-500" />
+                        <p className="absolute text-center left-3/4 bottom-3/4 p-[2px] text-[0.5rem] font-semibold w-4 h-4 bg-red-500 text-white rounded-full">
+                            {totalAmount}
+                        </p>
                     </div>
                 </Link>
             </div>
@@ -184,4 +199,4 @@ export const Line = () => (
     <svg width="220" height="2" viewBox="0 0 220 2" fill="none" xmlns="http://www.w3.org/2000/svg">
         <path d="M0 1C0 0.447715 0.447715 0 1 0H219C219.552 0 220 0.447715 220 1C220 1.55228 219.552 2 219 2H0.999999C0.447714 2 0 1.55228 0 1Z" fill="#99BD76" />
     </svg>
-)
+);
