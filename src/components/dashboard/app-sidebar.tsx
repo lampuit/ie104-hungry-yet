@@ -10,59 +10,57 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from "@/components/ui/sidebar";
-import { BadgeCent, Home, Package2, Ticket, Clock, LucideListOrdered } from "lucide-react";
+import { Home, Package2, Ticket, Clock, LucideListOrdered, LogOut } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import useSWR from "swr";
-import { getSession } from "@/lib/auth-client";
-import { getUserById } from "@/lib/data";
-import Dashboardrompt from "../ui/dashboard-prompt";
+import { getSession, revokeSession } from "@/lib/auth-client";
 
 // Lấy session
-export const fetcherUserRole = async () => {
+export const fetcherSessionId = async () => {
   const response = await getSession();
-  const userId = response?.data?.user?.id as string;
-  const userInfoArray = await getUserById(userId);
-  return userInfoArray[0]?.role;
+  return response?.data?.session?.id;
 };
 
 
 const items = [
   {
-    title: "Home",
+    title: "Trang chủ",
     url: "/dashboard",
     icon: Home,
+    role: ['admin', 'staff'],
   },
   {
-    title: "Product",
+    title: "Quản lý món ăn",
     url: "/dashboard/product",
     icon: Package2,
+    role: ['admin'],
   },
   {
-    title: "Shift",
+    title: "Ca làm việc",
     url: "/dashboard/shift",
     icon: Clock,
+    role: ['admin'],
   },
 
   {
-    title: "Discount",
+    title: "Quản lý khuyến mãi",
     url: "/dashboard/discount",
     icon: Ticket,
+    role: ['admin'],
   },
   {
-    title: "Order Management",
+    title: "Quản lý đơn hàng",
     url: "/dashboard/order-management",
     icon: LucideListOrdered,
-  },
+    role: ['admin', 'staff'],
+  }
 ];
 
-export function AppSidebar() {
+export function AppSidebar({ userRole }: { userRole: string }) {
   const pathname = usePathname();
-  const { data: role, isLoading, } = useSWR('userId', fetcherUserRole);
 
 
   return (
-    role === 'admin' &&
     <Sidebar>
       <SidebarContent>
         <SidebarGroup>
@@ -70,6 +68,7 @@ export function AppSidebar() {
           <SidebarGroupContent>
             <SidebarMenu>
               {items.map((item) => (
+                item.role.includes(userRole) &&
                 <SidebarMenuItem key={item.title}>
                   <SidebarMenuButton isActive={pathname === item.url} asChild>
                     <Link href={item.url}>
@@ -79,6 +78,24 @@ export function AppSidebar() {
                   </SidebarMenuButton>
                 </SidebarMenuItem>
               ))}
+
+              <SidebarMenuItem >
+                <SidebarMenuButton asChild onClick={async () => {
+                  const sessionId = await fetcherSessionId();
+                  if (sessionId) {
+                    await revokeSession({ id: sessionId });
+                  } else {
+                    console.error("Session ID is undefined");
+                  }
+                }}>
+                  <Link href="/">
+                    <LogOut />
+                    <span>Logout</span>
+                  </Link>
+                </SidebarMenuButton>
+              </SidebarMenuItem>
+
+
             </SidebarMenu>
           </SidebarGroupContent>
         </SidebarGroup>

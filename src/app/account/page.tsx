@@ -28,6 +28,8 @@ import LoadingSpinner from "@/components/ui/loading-spinner"
 import { upload } from "@vercel/blob/client";
 import { getSession } from "@/lib/auth-client";
 import LoginPrompt from "@/components/ui/login-prompt";
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
 
 const getUser = async (id: string) => {
     const user = await getUserById(id);
@@ -263,73 +265,45 @@ export default function Account() {
                                     </FormItem>
                                 )}
                             />
-
                             <FormField
                                 control={form.control}
                                 name="birthday"
-                                render={() => (
-                                    <FormItem className="flex flex-col">
+                                render={({ field }) => (
+                                    <FormItem>
                                         <FormLabel className="font-semibold text-xs sm:text-sm">Ngày sinh:</FormLabel>
-                                        <div className="flex space-x-2">
-                                            <FormField
-                                                control={form.control}
-                                                name="birthday.day"
-                                                render={({ field }) => (
-                                                    <Select onValueChange={field.onChange} value={field.value}>
-                                                        <SelectTrigger className="sm:w-[80px]">
-                                                            <SelectValue placeholder="Ngày" />
-                                                        </SelectTrigger>
-                                                        <SelectContent>
-                                                            {Array.from({ length: 31 }, (_, i) => i + 1).map((day) => (
-                                                                <SelectItem key={day} value={day.toString().padStart(2, '0')}>
-                                                                    {day}
-                                                                </SelectItem>
-                                                            ))}
-                                                        </SelectContent>
-                                                    </Select>
-                                                )}
+                                        <FormControl>
+                                            <DatePicker
+                                            className="ml-2 border border-gray-300 rounded-md p-2 w-full"
+                                                selected={
+                                                    field.value?.year && field.value?.month && field.value?.day
+                                                        ? new Date(Number(field.value.year), Number(field.value.month) - 1, Number(field.value.day)) // Month bắt đầu từ 0
+                                                        : null
+                                                }
+                                                onChange={(date) => {
+                                                    if (date) {
+                                                        const selectedDate = new Date(date);
+                                                        form.setValue("birthday", {
+                                                            day: selectedDate.getDate().toString(),
+                                                            month: (selectedDate.getMonth() + 1).toString(), // Month phải +1 do JS bắt đầu từ 0
+                                                            year: selectedDate.getFullYear().toString(),
+                                                        });
+                                                    } else {
+                                                        form.setValue("birthday", { day: "", month: "", year: "" }); // Nếu không có ngày, đặt lại giá trị
+                                                    }
+                                                }}
+                                                dateFormat="dd/MM/yyyy"
+                                                showMonthDropdown
+                                                showYearDropdown
+                                                yearDropdownItemNumber={100} // Hiển thị 100 năm
+                                                scrollableYearDropdown // Cho phép cuộn dropdown năm
+                                                placeholderText="Chọn ngày sinh"
                                             />
-                                            <FormField
-                                                control={form.control}
-                                                name="birthday.month"
-                                                render={({ field }) => (
-                                                    <Select onValueChange={field.onChange} value={field.value}>
-                                                        <SelectTrigger className="sm:w-[120px]">
-                                                            <SelectValue placeholder="Tháng" />
-                                                        </SelectTrigger>
-                                                        <SelectContent>
-                                                            {Array.from({ length: 12 }, (_, i) => i + 1).map((month) => (
-                                                                <SelectItem key={month} value={month.toString().padStart(2, '0')}>
-                                                                    Tháng {month}
-                                                                </SelectItem>
-                                                            ))}
-                                                        </SelectContent>
-                                                    </Select>
-                                                )}
-                                            />
-                                            <FormField
-                                                control={form.control}
-                                                name="birthday.year"
-                                                render={({ field }) => (
-                                                    <Select onValueChange={field.onChange} value={field.value}>
-                                                        <SelectTrigger className="sm:w-[100px]">
-                                                            <SelectValue placeholder="Năm" />
-                                                        </SelectTrigger>
-                                                        <SelectContent>
-                                                            {Array.from({ length: 100 }, (_, i) => new Date().getFullYear() - i).map((year) => (
-                                                                <SelectItem key={year} value={year.toString()}>
-                                                                    {year}
-                                                                </SelectItem>
-                                                            ))}
-                                                        </SelectContent>
-                                                    </Select>
-                                                )}
-                                            />
-                                        </div>
+                                        </FormControl>
                                         <FormMessage />
                                     </FormItem>
                                 )}
                             />
+
 
                             <FormField
                                 control={form.control}
@@ -346,6 +320,7 @@ export default function Account() {
 
                             <Button type="submit" className="w-full sm:w-1/2 bg-amber-500 hover:bg-red-500">Lưu thay đổi</Button>
                         </div>
+
                     </form>
                 </Form>
             </div>

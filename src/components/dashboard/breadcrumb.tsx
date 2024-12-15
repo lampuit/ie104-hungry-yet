@@ -11,8 +11,6 @@ import {
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import React from "react";
-import useSWR from "swr";
-import { fetcherUserRole } from "./app-sidebar";
 
 export function Breadcrumbs() {
   const pathname = usePathname();

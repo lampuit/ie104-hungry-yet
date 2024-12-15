@@ -8,7 +8,7 @@ import { useEffect, useState } from "react";
 import { getSession } from "@/lib/auth-client";
 
 const fetcherInvoicePending = async (userId: string) => {
-    return getInvoiceByUserId(userId, "ready");
+    return getInvoiceByUserId(userId, "accepted");
 }
 
 // Lấy userId từ session
