@@ -47,7 +47,6 @@ export function Category({ clickedIndex, setClickedIndex }: CategoryProps) {
 
 export const Underline = () => (
     <svg width="60" height="4" viewBox="0 0 60 4" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <path d="M0 2C0 0.895431 0.89543 0 2 0H121C122.105 0 123 0.895431 123 2C123 3.10457 122.105 4 121 4H2C0.895429 4 0 3.10457 0 2Z" fill="#E99B3F" />
+        <path d="M2 0H58C59.1046 0 60 0.895431 60 2C60 3.10457 59.1046 4 58 4H2C0.89543 4 0 3.10457 0 2C0 0.895431 0.89543 0 2 0Z" fill="#E99B3F" rx="2" ry="2" />
     </svg>
-
 )

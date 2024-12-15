@@ -341,7 +341,7 @@ export function CardHistory({ invoice }: { invoice: Invoice }) {
                                                         {[1, 2, 3, 4, 5].map((star) => (
                                                             <Star
                                                                 key={star}
-                                                                className="w-5 h-5 cursor-pointer"
+                                                                className="w-5 h-5 cursor-pointer stroke-yellow-400"
                                                                 fill={star <= (ratings[order.products.id] || 0) ? "gold" : "none"}
                                                                 onClick={() => handleRating(order.products.id, star)}
                                                             />
