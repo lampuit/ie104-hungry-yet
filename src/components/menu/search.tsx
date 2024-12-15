@@ -1,10 +1,10 @@
 "use client";
 
 import { Input } from "../ui/input";
-import React, { useRef } from 'react';
+import React, { useRef, useEffect } from 'react';
 import Link from 'next/link';
 import { useState } from 'react';
-import { CheckIcon, Filter, MoveDown, MoveUp, Radio, Search, ShoppingCart } from "lucide-react";
+import { CheckIcon, Filter, Search, ShoppingCart } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { DropdownMenuCheckboxItemProps, ItemIndicator } from "@radix-ui/react-dropdown-menu"
 import { Button } from "@/components/ui/button"
@@ -13,8 +13,6 @@ import {
     DropdownMenuTrigger,
     DropdownMenuContent,
     DropdownMenuLabel,
-    DropdownMenuItem,
-    DropdownMenuGroup,
     DropdownMenuCheckboxItem,
     DropdownMenuRadioGroup,
     DropdownMenuRadioItem,
@@ -26,35 +24,88 @@ type Checked = DropdownMenuCheckboxItemProps["checked"]
 
 interface SearchingAreaProps {
     totalAmount: number;
+    filter: {
+        minPrice: number;
+        maxPrice: number;
+        rating: number;
+        search: string;
+        categoryId: string;
+    };
+    onFilterChange: (newFilter: SearchingAreaProps['filter']) => void;
 }
 
-export function SearchingArea({ totalAmount }: SearchingAreaProps) {
-    const [price1, setPrice1] = React.useState<Checked>(false)
-    const [price2, setPrice2] = React.useState<Checked>(false)
-    const [price3, setPrice3] = React.useState<Checked>(false)
-    const [price4, setPrice4] = React.useState<Checked>(false)
-    const [price5, setPrice5] = React.useState<Checked>(false)
+export function SearchingArea({ totalAmount, filter, onFilterChange }: SearchingAreaProps) {
+    const [priceRanges, setPriceRanges] = useState([
+        { checked: false, min: 0, max: 20000 },
+        { checked: false, min: 20000, max: 40000 },
+        { checked: false, min: 40000, max: 60000 },
+        { checked: false, min: 60000, max: 100000 },
+        { checked: false, min: 100000, max: Infinity },
+    ]);
+
+    const [rating, setRating] = useState<string>("");
+    const [searchTerm, setSearchTerm] = useState(filter.search);
 
     const router = useRouter();
     const inputRef = useRef<HTMLInputElement>(null);
     const [inputWidth, setInputWidth] = useState("w-1/4");
 
-    const handlePriceOnSelect = () => {
-        const formData = new FormData();
-        formData.append('minPrice', price1 ? "0" : price2 ? "20000" : price3 ? "40000" : price4 ? "60000" : price5 ? "100000" : "");
-        formData.append('maxPrice', price1 ? "20000" : price2 ? "40000" : price3 ? "60000" : price4 ? "100000" : price5 ? "" : "");
-        filterAndSearch(formData);
-    }
+    useEffect(() => {
+        setSearchTerm(filter.search);
+    }, [filter.search]);
 
-    const handlleShoppingCartOnClick = () => {
+    const handlePriceChange = (index: number) => {
+        const newPriceRanges = priceRanges.map((range, i) =>
+            i === index ? { ...range, checked: !range.checked } : range
+        );
+        setPriceRanges(newPriceRanges);
+        updateFilter(newPriceRanges, rating, searchTerm);
+    };
+
+    const handleRatingChange = (value: string) => {
+        setRating(value);
+        updateFilter(priceRanges, value, searchTerm);
+    };
+
+    const updateFilter = (newPriceRanges: typeof priceRanges, newRating: string, newSearch: string) => {
+        const checkedRanges = newPriceRanges.filter(range => range.checked);
+        const minPrice = checkedRanges.length > 0 ? Math.min(...checkedRanges.map(r => r.min)) : 0;
+        const maxPrice = checkedRanges.length > 0 ? Math.max(...checkedRanges.map(r => r.max)) : Infinity;
+
+        const newFilter = {
+            ...filter,
+            minPrice,
+            maxPrice,
+            rating: parseFloat(newRating) || 0,
+            search: newSearch,
+        };
+
+        onFilterChange(newFilter);
+        const formData = new FormData();
+        Object.entries(newFilter).forEach(([key, value]) => {
+            formData.append(key, value.toString());
+        });
+        filterAndSearch(formData);
+    };
+
+    const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const newSearchTerm = e.target.value;
+        setSearchTerm(newSearchTerm);
+        updateFilter(priceRanges, rating, newSearchTerm);
+    };
+
+    const handleShoppingCartClick = () => {
         router.push('/menu/cart');
-    }
-    const handleSearchOnFocus = () => {
+    };
+
+    const handleSearchFocus = () => {
         setInputWidth("w-full");
-    }
-    const handleSearchOnBlur = () => {
+    };
+
+    const handleSearchBlur = () => {
         setInputWidth("w-72");
-    }
+    };
+
     return (
         <div className="flex justify-between items-center sm:px-10 py-5 mx-10 gap-4 sm:gap-16">
             <div className="flex flex-col justify-center items-center gap-4 sm:min-w-40">
@@ -68,8 +119,10 @@ export function SearchingArea({ totalAmount }: SearchingAreaProps) {
                         ref={inputRef}
                         className="h-8 hidden w-1/3 md:inline-block bg-gray-100 border-none rounded-3xl text-xs text-black pl-3 hover:h-8 focus-visible:ring-0 focus-visible:ring-offset-0"
                         type="text"
-                        onFocus={handleSearchOnFocus}
-                        onBlur={handleSearchOnBlur}
+                        value={searchTerm}
+                        onChange={handleSearchChange}
+                        onFocus={handleSearchFocus}
+                        onBlur={handleSearchBlur}
                     />
                 </div>
                 <Search className="inline-block md:hidden" />
@@ -82,46 +135,23 @@ export function SearchingArea({ totalAmount }: SearchingAreaProps) {
                         <DropdownMenuSeparator />
 
                         <DropdownMenuLabel>Giá</DropdownMenuLabel>
-                        <DropdownMenuCheckboxItem
-                            checked={price1}
-                            onCheckedChange={setPrice1}
-                            onSelect={handlePriceOnSelect}
-                        >
-                            Từ 0 - 20.000 VNĐ
-                        </DropdownMenuCheckboxItem>
-                        <DropdownMenuCheckboxItem
-                            checked={price2}
-                            onCheckedChange={setPrice2}
-                            onSelect={handlePriceOnSelect}
-                        >
-                            Từ 20.000 - 40.000 VNĐ
-                        </DropdownMenuCheckboxItem>
-                        <DropdownMenuCheckboxItem
-                            checked={price3}
-                            onCheckedChange={setPrice3}
-                            onSelect={handlePriceOnSelect}
-                        >
-                            Từ 40.000 - 60.000 VNĐ
-                        </DropdownMenuCheckboxItem>
-                        <DropdownMenuCheckboxItem
-                            checked={price4}
-                            onCheckedChange={setPrice4}
-                            onSelect={handlePriceOnSelect}
-                        >
-                            Từ 60.000 - 100.000 VNĐ
-                        </DropdownMenuCheckboxItem>
-                        <DropdownMenuCheckboxItem
-                            checked={price5}
-                            onCheckedChange={setPrice5}
-                            onSelect={handlePriceOnSelect}
-                        >
-                            Trên 100.000 VNĐ
-                        </DropdownMenuCheckboxItem>
+                        {priceRanges.map((range, index) => (
+                            <DropdownMenuCheckboxItem
+                                key={index}
+                                checked={range.checked}
+                                onCheckedChange={() => handlePriceChange(index)}
+                            >
+                                {range.max === Infinity
+                                    ? `Trên ${range.min.toLocaleString()} VNĐ`
+                                    : `Từ ${range.min.toLocaleString()} - ${range.max.toLocaleString()} VNĐ`
+                                }
+                            </DropdownMenuCheckboxItem>
+                        ))}
 
                         <DropdownMenuSeparator />
                         <DropdownMenuLabel>Xếp hạng</DropdownMenuLabel>
 
-                        <DropdownMenuRadioGroup>
+                        <DropdownMenuRadioGroup value={rating} onValueChange={handleRatingChange}>
                             <DropdownMenuRadioItem value="5.0">
                                 <ItemIndicator><CheckIcon /></ItemIndicator>
                                 5.0
@@ -141,7 +171,7 @@ export function SearchingArea({ totalAmount }: SearchingAreaProps) {
 
                 <Link href={"/menu/cart"}>
                     <div className="relative">
-                        <ShoppingCart size={24} className="hover:stroke-red-500" onClick={() => handlleShoppingCartOnClick()} />
+                        <ShoppingCart size={24} className="hover:stroke-red-500" onClick={handleShoppingCartClick} />
                         <p className="absolute text-center left-3/4 bottom-3/4 p-[2px] text-[0.5rem] font-semibold w-4 h-4 bg-red-500 text-white rounded-full">{totalAmount}</p>
                     </div>
                 </Link>

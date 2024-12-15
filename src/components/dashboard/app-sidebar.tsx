@@ -10,10 +10,11 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from "@/components/ui/sidebar";
-import { Home, Package2, Ticket, Clock, LucideListOrdered, LogOut } from "lucide-react";
+import { Home, Package2, Ticket, Clock, LucideListOrdered, LogOut, Router } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { getSession, revokeSession } from "@/lib/auth-client";
+import { useRouter } from "next/navigation";
 
 // Lấy session
 export const fetcherSessionId = async () => {
@@ -58,6 +59,7 @@ const items = [
 
 export function AppSidebar({ userRole }: { userRole: string }) {
   const pathname = usePathname();
+  const router = useRouter();
 
 
   return (
@@ -84,14 +86,16 @@ export function AppSidebar({ userRole }: { userRole: string }) {
                   const sessionId = await fetcherSessionId();
                   if (sessionId) {
                     await revokeSession({ id: sessionId });
+                    router.push("/");
+                    router.refresh();
                   } else {
                     console.error("Session ID is undefined");
                   }
                 }}>
-                  <Link href="/">
-                    <LogOut />
-                    <span>Logout</span>
-                  </Link>
+
+                  <LogOut />
+                  <span>Logout</span>
+
                 </SidebarMenuButton>
               </SidebarMenuItem>
 
