@@ -189,8 +189,8 @@ async function testGetInvoiceDetail() {
 async function testFilterAndSearch() {
   const formData = new FormData();
   formData.append("categoryId", "fe02d3ff-f145-46b9-9714-5a18dbf4b5cc");
-  formData.append("minPrice", "10000");
-  formData.append("maxPrice", "1000000");
+  formData.append("minPrice", "");
+  formData.append("maxPrice", "");
   formData.append("rating", "");
   formData.append("search", "");
   formData.append("page", "1");
@@ -206,6 +206,6 @@ async function testUpdateInVoice() {
   console.log("Update Invoice Status:", response);
 }
 
-testUpdateInVoice();
+// testUpdateInVoice();
 
 

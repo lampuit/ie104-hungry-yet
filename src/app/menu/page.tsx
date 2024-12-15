@@ -91,7 +91,7 @@ export default function MenuPage() {
       formData.append("rating", filter.rating.toString());
       formData.append("search", filter.search);
       formData.append("page", page.toString());
-      formData.append("limit", limit.toString());
+      formData.append("pageSize", limit.toString());
 
       const response = await filterAndSearch(formData);
       setDishesList(

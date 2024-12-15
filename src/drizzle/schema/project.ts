@@ -127,10 +127,10 @@ export const invoices = pgTable("invoices", {
     .references(() => payments.id, {
       onDelete: "cascade",
     }), // Khóa ngoại
-  totalAmount: real("totalAmount"),
-  status: invoiceStatusEnum("status"),
-  reason: text("reason"),
-  deliveryAddress: text("deliveryAddress"),
+  totalAmount: real("totalAmount"), // Tổng tiền
+  status: invoiceStatusEnum("status"), // Trạng thái đơn hàng
+  reason: text("reason"), // lý do nếu hủy đơn hàng
+  deliveryAddress: text("deliveryAddress"), // Địa chỉ giao hàng
   deliveryTime: integer("deliveryTime"),
   phone: text("phone"),
   discountId: uuid("discountId").references(() => discounts.id), // Khóa ngoại

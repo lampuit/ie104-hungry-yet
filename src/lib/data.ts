@@ -71,12 +71,12 @@ export async function getInvoicesByStatus(status: string) {
         eq(
           invoices.status,
           status as
-            | "pending"
-            | "accepted"
-            | "cooking"
-            | "ready"
-            | "delivered"
-            | "cancelled",
+          | "pending"
+          | "accepted"
+          | "cooking"
+          | "ready"
+          | "delivered"
+          | "cancelled",
         ),
       );
   } catch (error) {
@@ -378,12 +378,12 @@ export async function getInvoiceByUserId(userId: string, status: string) {
         eq(
           invoices.status,
           status as
-            | "pending"
-            | "accepted"
-            | "cooking"
-            | "ready"
-            | "delivered"
-            | "cancelled",
+          | "pending"
+          | "accepted"
+          | "cooking"
+          | "ready"
+          | "delivered"
+          | "cancelled",
         ),
       ),
     );
@@ -417,7 +417,9 @@ export async function filterAndSearch(formData: FormData) {
 
   let whereClause: SQL[] = [];
 
-  whereClause.push(eq(products.categoryId, categoryId as string));
+  if (categoryId) {
+    whereClause.push(eq(products.categoryId, categoryId as string));
+  }
 
   if (minPrice) {
     whereClause.push(gte(products.price, Number(minPrice)));
@@ -428,7 +430,7 @@ export async function filterAndSearch(formData: FormData) {
   }
 
   if (search) {
-    whereClause.push(like(products.name, `%${search as string}%`));
+    whereClause.push(sql`LOWER(${products.name}) LIKE LOWER(${`%${search as string}%`})`);
   }
 
   const averageRatingExpr = sql<number>`COALESCE(AVG(${ratings.star}), 0)`;
@@ -446,7 +448,7 @@ export async function filterAndSearch(formData: FormData) {
   // Apply rating filter after aggregation
   let query = baseQuery as any;
   if (rating) {
-    query = query.having(sql`${averageRatingExpr} <= ${Number(rating)}`); // Use the computed expression
+    query = query.having(sql`${averageRatingExpr} >= ${Number(rating)}`);
   }
 
   // Count total records
@@ -458,13 +460,17 @@ export async function filterAndSearch(formData: FormData) {
 
   // Retrieve the paginated records and sort by averageRating descending
   const records = await query
-    .orderBy(sql`${averageRatingExpr} DESC`) // Use the computed expression
+    .orderBy(sql`${averageRatingExpr} DESC`)
     .limit(itemsPerPage)
     .offset((pageNumber - 1) * itemsPerPage);
 
-  // Return both totalRecords and the records for the current page
-  return { totalRecords, records };
+  // Return pagination information along with the records
+  return {
+    totalRecords,
+    records,
+  };
 }
+
 
 export async function getAllInvoices() {
   return await db.query.invoices.findMany({
