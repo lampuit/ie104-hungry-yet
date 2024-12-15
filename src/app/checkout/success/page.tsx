@@ -1,26 +1,12 @@
 import { Button } from "@/components/ui/button";
+import { CircleCheck } from "lucide-react";
 import Link from "next/link";
 
 export default function SuccessPage() {
   return (
-    <div className="flex min-h-screen items-center justify-center bg-green-50">
-      <div className="rounded-lg bg-white p-8 text-center shadow-lg">
-        <div className="text-green-500">
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            fill="none"
-            viewBox="0 0 24 24"
-            strokeWidth={2}
-            stroke="currentColor"
-            className="mx-auto mb-4 h-16 w-16"
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              d="M9 12l2 2 4-4m8 2a9 9 0 11-18 0 9 9 0 0118 0z"
-            />
-          </svg>
-        </div>
+    <div className="bg-green-50 h-screen flex items-center justify-center">
+      <div className="flex flex-col items-center justify-center bg-white rounded-lg p-8 text-center shadow-lg gap-2">
+        <CircleCheck className="stroke-green-500 size-16" />
         <h1 className="mb-4 text-2xl font-bold text-gray-800">
           Thanh toán thành công!
         </h1>
