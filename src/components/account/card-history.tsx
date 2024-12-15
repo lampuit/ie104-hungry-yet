@@ -207,9 +207,9 @@ export function CardHistory({ invoice }: { invoice: Invoice }) {
     };
 
     return (
-        <section className="flex flex-col gap-2 p-3 sm:p-5 bg-white rounded shadow-md">
+        <section className="w-full flex flex-col gap-2 p-3 sm:p-5 bg-white rounded shadow-md">
             {/* Thông tin đơn hàng */}
-            <div className="flex flex-col gap-1 px-2 sm:px-10">
+            <div className="flex flex-col gap-1 px-2 lg:px-10">
                 {isDeliveredPage ? (
                     <div className="flex flex-col gap-1 text-xs">
                         <p className="flex gap-1 items-center">
@@ -272,11 +272,11 @@ export function CardHistory({ invoice }: { invoice: Invoice }) {
             </div>
 
             {/* Chi tiết đơn */}
-            <div className="flex flex-col gap-1 px-10">
+            <div className="w-full flex flex-col gap-1 px-2 lg:px-10">
 
                 <div className="flex items-center p-2 justify-between rounded border-2" key={invoiceData?.orders[0].invoiceId}>
-                    <div className="flex gap-6 items-center">
-                        <div className="relative w-40 h-40">
+                    <div className="flex gap-3 sm:gap-6 items-center">
+                        <div className="relative hidden sm:block sm:w-20 sm:h-20 md:w-28 md:h-28 lg:w-40 lg:h-40">
                             <Image src={invoiceData?.orders[0].products.imageUrl || "/path/to/default/image.jpg"}
                                 alt="..."
                                 layout="fill"
@@ -287,14 +287,14 @@ export function CardHistory({ invoice }: { invoice: Invoice }) {
                         </div>
                         <div className="flex flex-col">
 
-                            <div className="flex flex-col gap-2">
-                                <p className="text-lg font-semibold">{invoiceData?.orders[0].products.name}</p>
-                                <span>{invoiceData?.orders[0].products.category?.name}</span>
-                                <span className="flex gap-2">Số lượng: <span>x{invoiceData?.orders[0].quantity}</span></span>
+                            <div className="flex flex-col gap-1 sm:gap-2">
+                                <p className="text-sm sm:text-base md:text-lg font-semibold">{invoiceData?.orders[0].products.name}</p>
+                                <span className="text-xs sm:text-sm md:text-base">{invoiceData?.orders[0].products.category?.name}</span>
+                                <span className="text-xs sm:text-sm md:text-base flex gap-2">Số lượng: <span>x{invoiceData?.orders[0].quantity}</span></span>
                             </div>
                         </div>
                     </div>
-                    <span className="flex gap-2 pr-4">Giá: <span className="text-red-500 font-medium">{convertToVND(invoiceData?.orders[0].products.price ?? 0)}</span></span>
+                    <span className="text-sm sm:text-base flex gap-2 pr-4">Giá: <span className="text-red-500 font-medium">{convertToVND(invoiceData?.orders[0].products.price ?? 0)}</span></span>
                 </div>
 
                 <div className="flex justify-center">
@@ -305,8 +305,8 @@ export function CardHistory({ invoice }: { invoice: Invoice }) {
             </div>
 
             {/* Trạng thái và nút hành động */}
-            <div className="flex flex-col gap-2 justify-end">
-                <p className="text-xl md:text-xl flex justify-end gap-2">
+            <div className="flex flex-col gap-2 justify-end px-2 lg:px-10">
+                <p className="text-lg sm:text-xl md:text-xl flex justify-end gap-2">
                     Tổng tiền: <span className="font-bold text-red-500">{convertToVND(invoice?.totalAmount)}</span>
                 </p>
                 {isCookingPage || isAcceptedPage || isCancelPage || isAcceptedPage ? (

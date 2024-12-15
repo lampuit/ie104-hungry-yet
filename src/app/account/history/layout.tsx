@@ -7,6 +7,7 @@ import { ReactNode } from "react";
 import useSWR from "swr";
 import { getSession } from "@/lib/auth-client";
 import LoginPrompt from "@/components/ui/login-prompt";
+import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
 
 // Fetch userId from session
 const fetcherUserId = async () => {
@@ -39,11 +40,11 @@ export default function Layout({
 
     return (
         !userId ? <LoginPrompt /> :
-            <div className="grow flex flex-col gap-4">
+            <div className="flex flex-col gap-4">
                 <h1 className="text-2xl font-semibold">Đơn hàng của tôi</h1>
-                <div className="flex flex-col lg:flex-row">
-                    <div className="flex flex-col gap-5 w-full">
-                        <div className="flex gap-4 justify-around bg-white rounded-lg p-2 shadow-md">
+                <div className="flex flex-col gap-1 md:gap-5 w-full overflow-x-auto">
+                    <ScrollArea className="w-full overflow-hidden flex whitespace-nowrap">
+                        <div className="flex lg:gap-2 xl:gap-4 justify-around items-center bg-white rounded-lg xl:px-1 xl:py-2 shadow-md">
                             {buttons.map((button) => (
                                 <Button
                                     key={button.name}
@@ -51,13 +52,14 @@ export default function Layout({
                                     variant={pathname === button.path ? "secondary" : "ghost"}
                                     onClick={() => handleButtonClick(button.path)}
                                 >
-                                    <button.icon className="mr-2 h-4 w-4" />
-                                    {button.name}
+                                    <button.icon className="h-4 w-4" />
+                                    <span className="hidden md:inline text-xs">{button.name}</span>
                                 </Button>
                             ))}
                         </div>
-                        {children}
-                    </div>
+                        <ScrollBar orientation="horizontal" />
+                    </ScrollArea>
+                    {children}
                 </div>
             </div>
     )
