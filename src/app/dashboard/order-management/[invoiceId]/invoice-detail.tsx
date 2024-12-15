@@ -31,11 +31,11 @@ const getUserInfo = async (userId: string) => {
 }
 
 export function InvoiceDetails({ invoice }: { invoice: any }) {
-    const [status, setStatus] = useState<"cooking" | "ready" | "delivered" | "cancelled">(invoice.status)
+    const [status, setStatus] = useState<"pending" | "accepted" |"cooking" | "ready" | "delivered" | "cancelled">(invoice.status)
     const [isPending, setIsPending] = useState(false)
     const router = useRouter()
 
-    const handleStatusChange = async (newStatus: "cooking" | "ready" | "delivered" | "cancelled") => {
+    const handleStatusChange = async (newStatus: "pending" | "accepted" |"cooking" | "ready" | "delivered" | "cancelled") => {
         setIsPending(true)
         try {
             await updateInvoiceStatus(invoice.id, newStatus)

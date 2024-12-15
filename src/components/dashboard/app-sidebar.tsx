@@ -93,8 +93,10 @@ export function AppSidebar({ userRole }: { userRole: string }) {
                   }
                 }}>
 
-                  <LogOut />
-                  <span>Logout</span>
+                  <div>
+                    <LogOut />
+                    <span>Logout</span>
+                  </div>
 
                 </SidebarMenuButton>
               </SidebarMenuItem>
