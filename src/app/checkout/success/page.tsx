@@ -1,3 +1,6 @@
+import { Button } from "@/components/ui/button";
+import Link from "next/link";
+
 export default function SuccessPage() {
   return (
     <div className="flex min-h-screen items-center justify-center bg-green-50">
@@ -25,18 +28,20 @@ export default function SuccessPage() {
           Cảm ơn bạn đã đặt đồ ăn. Hóa đơn và thông tin chi tiết sẽ được hiển
           thị trong phần thông tin đơn hàng.
         </p>
-        <a
-          href="/account/history"
-          className="inline-block rounded-lg bg-amber-500 px-4 py-2 font-medium text-white hover:bg-amber-600 mr-4"
-        >
-          Chi tiết đơn hàng
-        </a>
-        <a
-          href="/"
-          className="inline-block rounded-lg bg-green-500 px-4 py-2 font-medium text-white hover:bg-green-600"
-        >
-          Quay về trang chủ
-        </a>
+        <div className="flex flex-col items-center justify-center sm:flex-row gap-2">
+          <Button
+            className="inline-block rounded-lg bg-amber-500 px-4 py-2 font-medium text-white hover:bg-amber-600">
+            <Link href="/account/history">
+              Chi tiết đơn hàng
+            </Link>
+          </Button>
+          <Button
+            className="inline-block rounded-lg bg-green-500 px-4 py-2 font-medium text-white hover:bg-green-600">
+            <Link href="/">
+              Quay về trang chủ
+            </Link>
+          </Button>
+        </div>
       </div>
     </div>
   );

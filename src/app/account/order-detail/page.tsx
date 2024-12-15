@@ -144,7 +144,7 @@ function OrderDetailContent({ invoiceId }: { invoiceId: string }) {
                             <CardDescription>Trạng thái giao hàng</CardDescription>
                         </CardHeader>
                         <CardContent>
-                            <div className="grid gap-4 grid-cols-2 md:grid-cols-5 text-xs ">
+                            <div className="grid gap-4 grid-cols-1 md:grid-cols-5 text-xs ">
                                 {[
                                     { status: "pending", label: "Chờ xác nhận", icon: WalletCards },
                                     { status: "accepted", label: "Đã xác nhận", icon: CircleCheck },
@@ -178,7 +178,7 @@ function OrderDetailContent({ invoiceId }: { invoiceId: string }) {
                             <Table className="w-full">
                                 <TableHeader className="bg-gray-100">
                                     <TableRow>
-                                        <TableHead className="text-center w-[100px]">Món ăn</TableHead>
+                                        <TableHead className="hidden md:block text-center w-[100px]">Món ăn</TableHead>
                                         <TableHead></TableHead>
                                         <TableHead className="text-center">Số lượng</TableHead>
                                         <TableHead className="text-center">Giá</TableHead>
@@ -187,7 +187,7 @@ function OrderDetailContent({ invoiceId }: { invoiceId: string }) {
                                 <TableBody>
                                     {invoice.orders?.map((order, index) => (
                                         <TableRow key={index}>
-                                            <TableCell>
+                                            <TableCell className="hidden md:block ">
                                                 <div className="flex justify-center items-center">
                                                     <Image
                                                         src={order.products.imageUrl}
