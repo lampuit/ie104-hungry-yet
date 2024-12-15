@@ -84,7 +84,7 @@ export async function updateInvoiceStatus(id: string, status: string) {
             .where(
                 and(
                     eq(assigments.workDate, new Date(today)),
-                    lte(shifts.endTime, currentTime)
+                    gte(shifts.endTime, currentTime)
                 )
             )
             .innerJoin(shifts, eq(assigments.shiftId, shifts.id));

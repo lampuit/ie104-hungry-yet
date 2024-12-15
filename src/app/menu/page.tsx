@@ -1,9 +1,9 @@
-"use client";
+'use client'
 
-import { useEffect, useState } from "react";
-import { SearchingArea } from "@/components/menu/search";
-import { Category } from "@/components/menu/category";
-import { DishList } from "@/components/menu/dish-list";
+import { useEffect, useState } from "react"
+import { SearchingArea } from "@/components/menu/search"
+import { Category } from "@/components/menu/category"
+import { DishList } from "@/components/menu/dish-list"
 import {
   Pagination,
   PaginationContent,
@@ -11,13 +11,13 @@ import {
   PaginationLink,
   PaginationNext,
   PaginationPrevious,
-} from "@/components/ui/pagination";
-import { getCartsByUserId, getProductByCategoryId } from "@/lib/data";
-import { CategoryFetcher } from "@/components/menu/category";
-import useSWR from "swr";
-import LoadingSpinner from "@/components/ui/loading-spinner";
-import { getSession } from "@/lib/auth-client";
-import Chatbot from "@/components/chatbot/chat-bot";
+} from "@/components/ui/pagination"
+import { getCartsByUserId, filterAndSearch } from "@/lib/data"
+import { CategoryFetcher } from "@/components/menu/category"
+import useSWR from "swr"
+import LoadingSpinner from "@/components/ui/loading-spinner"
+import { getSession } from "@/lib/auth-client"
+import Chatbot from "@/components/chatbot/chat-bot"
 
 interface Dish {
   id: string;
@@ -35,14 +35,12 @@ const fetcherCategory = async (): Promise<
   return CategoryFetcher();
 };
 
-// Lấy userId từ session
 const fetcherUserId = async () => {
   const response = await getSession();
   const userId = response?.data?.user?.id as string;
   return userId;
 };
 
-//get shopping cart by userId
 const fetcherCarts = async (userId: string) => {
   return getCartsByUserId(userId);
 };
@@ -67,13 +65,35 @@ export default function MenuPage() {
   const [totalAmount, setTotalAmount] = useState<number>(0);
   const categories = data || [];
 
+  const [filter, setFilter] = useState({
+    minPrice: 0,
+    maxPrice: Infinity,
+    categoryId: "",
+    rating: 0,
+    search: "",
+  });
+
+  const handleFilterChange = (newFilter: typeof filter) => {
+    setFilter(newFilter);
+    setPage(1); // Reset to first page when filter changes
+  };
+
   const handleChangePage = (newPage: number) => {
     setPage(newPage);
   };
 
   const getDishesByCategoryId = async (clickedIndex: string) => {
     try {
-      const response = await getProductByCategoryId(clickedIndex, page, limit);
+      const formData = new FormData();
+      formData.append("minPrice", filter.minPrice.toString());
+      formData.append("maxPrice", filter.maxPrice.toString());
+      formData.append("categoryId", clickedIndex);
+      formData.append("rating", filter.rating.toString());
+      formData.append("search", filter.search);
+      formData.append("page", page.toString());
+      formData.append("limit", limit.toString());
+
+      const response = await filterAndSearch(formData);
       setDishesList(
         response?.records.map((item: any) => ({
           id: item.id,
@@ -102,11 +122,13 @@ export default function MenuPage() {
       const sessionClickIndex = localStorage.getItem("category");
       if (sessionClickIndex) {
         setClickedIndex(sessionClickIndex);
+        setFilter(prev => ({ ...prev, categoryId: sessionClickIndex }));
       } else {
         setClickedIndex(data[0]?.id);
+        setFilter(prev => ({ ...prev, categoryId: data[0]?.id }));
       }
     }
-  }, [data]);
+  }, [data])
 
   useEffect(() => {
     if (clickedIndex) {
@@ -115,24 +137,29 @@ export default function MenuPage() {
         localStorage.setItem("category", clickedIndex);
       }
     }
-  }, [clickedIndex, page]);
+  }, [clickedIndex, page, filter]);
 
   const handleCategoryClick = (categoryId: string) => {
-    setClickedIndex(categoryId);
-    setPage(1); // Reset page to 1 when changing category
+    setClickedIndex(categoryId)
+    setFilter(prev => ({ ...prev, categoryId }))
+    setPage(1)
     if (typeof window !== "undefined") {
-      localStorage.setItem("category", categoryId);
+      localStorage.setItem("category", categoryId)
     }
-  };
+  }
 
-  const totalPages = Math.ceil(totalCount / limit);
+  const totalPages = Math.ceil(totalCount / limit)
 
   return dishLoading ? (
     <LoadingSpinner />
   ) : (
     <main className="w-screen">
       <header className="mt-8">
-        <SearchingArea totalAmount={totalAmount} />
+        <SearchingArea
+          totalAmount={totalAmount}
+          filter={filter}
+          onFilterChange={handleFilterChange}
+        />
       </header>
 
       <section className="flex flex-col items-center">
@@ -142,9 +169,9 @@ export default function MenuPage() {
             setClickedIndex={(index) => {
               const category = Array.isArray(categories)
                 ? categories.find((cat) => cat.id === index)
-                : undefined;
+                : undefined
               if (category) {
-                handleCategoryClick(category.id);
+                handleCategoryClick(category.id)
               }
             }}
           />
@@ -152,7 +179,7 @@ export default function MenuPage() {
 
         <section className="mb-10 max-w-screen-2xl">
           {dishesList.length === 0 ||
-          dishesList.every((dish) => !dish.published) ? (
+            dishesList.every((dish) => !dish.published) ? (
             <p>Không có sản phẩm nào</p>
           ) : (
             <DishList
@@ -196,5 +223,5 @@ export default function MenuPage() {
       </section>
       <Chatbot />
     </main>
-  );
+  )
 }
