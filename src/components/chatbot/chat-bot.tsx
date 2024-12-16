@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { ChatContainer, ChatForm } from "@/components/ui/chat";
 import LoginPrompt from "@/components/ui/login-prompt";
 import { MessageInput } from "@/components/ui/message-input";
+import { PromptSuggestions } from "@/components/ui/prompt-suggestions";
 import {
   Sheet,
   SheetContent,
@@ -52,6 +53,13 @@ export default function Chatbot() {
         </SheetHeader>
         {session ? (
           <ChatContainer className="mt-8 min-h-0 flex-1">
+            {isEmpty && (
+              <PromptSuggestions
+                label="Bắt đầu với các câu hỏi &#129348;"
+                append={append}
+                suggestions={["Hướng dẫn đặt đồ ăn", "Cho tôi xem thực đơn"]}
+              />
+            )}
             <ChatMessages messages={messages}>
               {!isEmpty && (
                 <MessageList

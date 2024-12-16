@@ -34,7 +34,7 @@ export function InvoiceTracking({
 
   return status === "pending" ? (
     <div className="flex w-full max-w-2xl justify-center overflow-hidden rounded-md border p-6">
-      <h2 className="text-xl font-semibold">Đơn Hàng Đang Xử Lý...</h2>
+      <h2 className="text-xl font-semibold">Đơn Hàng Đang Xử Lý</h2>
     </div>
   ) : (
     <div className="w-full max-w-2xl overflow-hidden rounded-md border bg-white">
