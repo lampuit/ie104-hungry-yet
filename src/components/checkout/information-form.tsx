@@ -17,18 +17,20 @@ import useSWR from "swr";
 
 const fetcherInvoiceInf = async (invoiceId: string) => {
   return await getInvoiceDetail(invoiceId);
-}
+};
 
 export function InformationForm({ form }: { form: any }) {
-
   const invoiceId = form.getValues("invoiceId");
 
-  const { data: invoice, isLoading, error } = useSWR(invoiceId, fetcherInvoiceInf);
+  const {
+    data: invoice,
+    isLoading,
+    error,
+  } = useSWR(invoiceId, fetcherInvoiceInf);
 
   if (error) {
     console.error("Error fetching invoice data:", error);
   }
-
 
   useEffect(() => {
     if (invoice) {
@@ -42,7 +44,7 @@ export function InformationForm({ form }: { form: any }) {
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Thông Tin Đơn Hàng</CardTitle>
+        <CardTitle>Thông Tin Giao Hàng</CardTitle>
       </CardHeader>
       <CardContent className="space-y-4">
         <FormField
@@ -86,7 +88,7 @@ export function InformationForm({ form }: { form: any }) {
           name="note"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Ghi Chú</FormLabel>
+              <FormLabel>Ghi Chú (tùy chọn)</FormLabel>
               <FormControl>
                 <Textarea
                   placeholder="Ghi chú cho nhân viên"
@@ -103,4 +105,3 @@ export function InformationForm({ form }: { form: any }) {
     </Card>
   );
 }
-

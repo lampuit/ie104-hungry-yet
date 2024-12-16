@@ -9,6 +9,13 @@ import {
 } from "@/components/ui/card";
 import { getInvoices, getInvoicesByStatus, getRevenues } from "@/lib/data";
 
+function DongFormat(number: number) {
+  return new Intl.NumberFormat("vi-VN", {
+    style: "currency",
+    currency: "VND",
+  }).format(number);
+}
+
 export default async function Page() {
   const invoices = await getInvoices();
   const revenues = await getRevenues();
@@ -63,7 +70,7 @@ export default async function Page() {
             </CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">{totalRevenue}</div>
+            <div className="text-2xl font-bold">{DongFormat(totalRevenue)}</div>
           </CardContent>
         </Card>
         <Card className="col-span-2">

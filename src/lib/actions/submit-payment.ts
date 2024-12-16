@@ -16,6 +16,7 @@ export async function submitPayment(
   time: number,
   note: string,
   phone: string,
+  append?: any,
 ) {
   try {
     const [payment] = await db
@@ -62,6 +63,21 @@ export async function submitPayment(
       );
 
       if (paymentResult.success && paymentResult.payUrl) {
+        await db
+          .update(payments)
+          .set({ payUrl: paymentResult.payUrl })
+          .where(eq(payments.id, payment.id));
+
+        await clearCart(userId);
+
+        if (append) {
+          append({
+            role: "assistant",
+            content: `Người dùng đặt tạo đơn hàng mới ${invoice.id}`,
+            appear: false,
+          });
+        }
+
         return { success: true, paymentUrl: paymentResult.payUrl };
       } else {
         await db
