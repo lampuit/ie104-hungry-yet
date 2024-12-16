@@ -134,7 +134,7 @@ export function SearchingArea({ totalAmount, filter, onFilterChange }: Searching
                     </Button>
                 </div>
 
-                <div className="flex items-center space-x-2">
+                <div className="flex items-center space-x-2 pr-2 sm:pr-0">
                     <Button
                         variant="ghost"
                         size="icon"
