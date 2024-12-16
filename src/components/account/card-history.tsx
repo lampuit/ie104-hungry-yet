@@ -210,7 +210,7 @@ export function CardHistory({ invoice }: { invoice: Invoice }) {
         <section className="w-full flex flex-col gap-2 p-3 sm:p-5 bg-white rounded shadow-md">
             {/* Thông tin đơn hàng */}
             <div className="flex flex-col gap-1 px-2 lg:px-10">
-                {isDeliveredPage ? (
+                {isReadyPage ? (
                     <div className="flex flex-col gap-1 text-xs">
                         <p className="flex gap-1 items-center">
                             <Bike className="w-4 h-4" />
@@ -309,7 +309,7 @@ export function CardHistory({ invoice }: { invoice: Invoice }) {
                 <p className="text-lg sm:text-xl md:text-xl flex justify-end gap-2">
                     Tổng tiền: <span className="font-bold text-red-500">{convertToVND(invoice?.totalAmount)}</span>
                 </p>
-                {isCookingPage || isAcceptedPage || isCancelPage || isAcceptedPage ? (
+                {isCookingPage || isAcceptedPage || isCancelPage || isAcceptedPage || isReadyPage ? (
                     <></>
                 ) : isDeliveredPage ? (
                     <div className="flex justify-end gap-6">
