@@ -83,6 +83,7 @@
     "tailwind-merge": "^2.5.5",
     "tailwindcss-animate": "^1.0.7",
     "timescape": "^0.6.2",
+    "use-debounce": "^10.0.4",
     "ws": "^8.18.0",
     "zod": "^3.24.1"
   },

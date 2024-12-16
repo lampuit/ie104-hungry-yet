@@ -116,6 +116,7 @@ export function Checkout({ carts, userId }: { carts: any[]; userId: string }) {
               <DiscountForm
                 subtotal={subtotal}
                 discount={discount}
+                discountId={discountId}
                 onDiscountChange={setDiscount}
                 onDiscountIdChange={setDiscountId}
               />
