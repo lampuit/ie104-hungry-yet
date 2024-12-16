@@ -1,10 +1,8 @@
 "use server";
 
 import { db } from "@/drizzle/db";
-import { user, insertUserSchema } from "@/drizzle/schema/auth";
+import { user } from "@/drizzle/schema/auth";
 import { eq } from "drizzle-orm";
-import { revalidatePath, revalidateTag } from "next/cache";
-import { redirect } from "next/navigation";
 
 export async function updateUser(formData: FormData) {
   await db
