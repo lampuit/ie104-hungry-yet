@@ -213,6 +213,7 @@ export default function Account() {
                             <FormField
                                 control={form.control}
                                 name="email"
+                                disabled={true}
                                 render={({ field }) => (
                                     <FormItem>
                                         <div className="font-semibold text-xs sm:text-sm">Email:</div>
