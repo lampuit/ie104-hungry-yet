@@ -127,10 +127,10 @@ export const invoices = pgTable("invoices", {
     .references(() => payments.id, {
       onDelete: "cascade",
     }), // Khóa ngoại
-  totalAmount: real("totalAmount"), // Tổng tiền
-  status: invoiceStatusEnum("status"), // Trạng thái đơn hàng
-  reason: text("reason"), // lý do nếu hủy đơn hàng
-  deliveryAddress: text("deliveryAddress"), // Địa chỉ giao hàng
+  totalAmount: real("totalAmount"),
+  status: invoiceStatusEnum("status"),
+  reason: text("reason"),
+  deliveryAddress: text("deliveryAddress"),
   deliveryTime: integer("deliveryTime"),
   phone: text("phone"),
   discountId: uuid("discountId").references(() => discounts.id), // Khóa ngoại
@@ -160,7 +160,7 @@ export const invoicesRelations = relations(invoices, ({ one, many }) => ({
     references: [discounts.id],
   }),
   payment: one(payments, {
-    fields: [invoices.discountId],
+    fields: [invoices.paymentId],
     references: [payments.id],
   }),
   orders: many(orders),
@@ -179,7 +179,7 @@ export const orders = pgTable("orders", {
   updatedAt: timestamp("updatedAt")
     .notNull()
     .$onUpdate(() => new Date()),
-},);
+});
 
 // Relation: 1 user -> 1 order
 export const ordersRelations = relations(orders, ({ one, many }) => ({
@@ -202,6 +202,7 @@ export const payments = pgTable("payments", {
   id: uuid("id").primaryKey().notNull().defaultRandom(),
   method: methodEnum("method"),
   status: paymentStatusEnum("status"),
+  payUrl: text("payUrl"),
   createdAt: timestamp("createdAt").notNull().defaultNow(),
   updatedAt: timestamp("updatedAt")
     .notNull()
@@ -284,11 +285,9 @@ export const carts = pgTable(
       .notNull()
       .$onUpdate(() => new Date()),
   },
-  (t) => [
-    {
-      pk: primaryKey({ columns: [t.userId, t.productId] }),
-    },
-  ],
+  (table) => {
+    return [primaryKey({ columns: [table.userId, table.productId] })];
+  },
 );
 
 // Relation: 1 cart - n products && 1 product - n carts
@@ -318,12 +317,9 @@ export const favorites = pgTable(
       .notNull()
       .$onUpdate(() => new Date()),
   },
-
-  (t) => [
-    {
-      pk: primaryKey({ columns: [t.userId, t.productId] }),
-    },
-  ],
+  (table) => {
+    return [primaryKey({ columns: [table.userId, table.productId] })];
+  },
 );
 
 //Relation: 1 user - n products && 1 product - n users

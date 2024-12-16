@@ -25,7 +25,6 @@ export async function POST(req: NextRequest) {
 
     const invoiceId = body.extraData.split("_")[0];
     const paymentId = body.extraData.split("_")[1];
-    const userId = body.extraData.split("_")[2];
 
     let paymentStatus: any;
     let invoiceStatus: any;
@@ -35,7 +34,6 @@ export async function POST(req: NextRequest) {
         paymentStatus = "success";
         invoiceStatus = "accepted";
 
-        await clearCart(userId);
         break;
       case 9000:
         paymentStatus = "pending";

@@ -18,12 +18,12 @@ export function ProductList({
   append: any;
 }) {
   return products.length > 0 ? (
-    <div className="w-[500px] space-y-4 rounded-md border p-4">
+    <div className="w-full max-w-md space-y-4 rounded-md border p-4">
       <h2 className="text-lg font-semibold">Danh Sách Món {name}</h2>
       {products.map((product: any) => (
         <div
-          key={product.id}
           className="flex items-center space-x-4 rounded border p-2"
+          key={product.id}
         >
           <Image
             src={product.imageUrl}
@@ -38,12 +38,12 @@ export function ProductList({
           </div>
           <Button
             size="sm"
-            variant="outline"
             className="z-50"
-            onClick={async () =>
+            onClick={() =>
               append({
-                role: "user",
-                content: `Tôi muốn gọi món ${product.name}`,
+                role: "assistant",
+                content: `Người dùng gọi món ${product.id}`,
+                appear: false,
               })
             }
           >

@@ -1,11 +1,13 @@
 import { streamText } from "ai";
-import { createOpenAI as createGroq } from "@ai-sdk/openai";
+import { openai } from "@ai-sdk/openai";
 import { z } from "zod";
 import {
   getCartsByUserId,
   getCategories,
   getInvoicesIdByUserId,
   getProductsByCategory,
+  getPuslishProducts,
+  getRatings,
   getValidDiscounts,
 } from "@/lib/data";
 import { auth } from "@/lib/auth";
@@ -16,12 +18,8 @@ import {
   deletecarts,
   updateCarts,
 } from "@/lib/actions/cart";
-import { formatDistanceStrict } from "date-fns";
-
-const groq = createGroq({
-  baseURL: "https://api.groq.com/openai/v1",
-  apiKey: process.env.GROQ_API_KEY,
-});
+import { getInvoiceDetail, getProductById } from "@/lib/actions/chatbot";
+import { invoices } from "@/drizzle/schema/project";
 
 export const maxDuration = 30;
 
@@ -35,168 +33,188 @@ export async function POST(req: Request) {
   if (!session) throw new Error("Không tồn tại session");
 
   const result = streamText({
-    model: groq("llama-3.3-70b-versatile"),
+    model: openai("gpt-4o-mini-2024-07-18"),
     system: `
-    - Bạn là một bot con bot của một tiệm bán đồ ăn tên Hungry Yet
-    - Hãy phản hồi ngắn gọn
-    - Yêu cầu đầy đủ thông tin khi thanh toán
+    - Bạn là chatbot thông tin của tiệm bán đồ ăn nhanh tên Hungry Yet
+    - Câu trả lời của bạn ngắn gọn
+    - Bạn không bao giờ sử dụng danh sách, bảng hoặc gạch đầu dòng, hình ảnh; thay vào đó, bạn không trả lời lại
     `,
     messages,
     maxSteps: 5,
     tools: {
       getCategories: {
-        description: "Danh sách các thể loại món ăn",
+        description: "Lấy danh sách tên thể loại",
         parameters: z.object({}),
         execute: async function () {
           const categories = await getCategories();
           return categories;
         },
       },
-      displayProducts: {
+      getProducts: {
+        description: "Lấy danh sách các món ăn",
+        parameters: z.object({}),
+        execute: async function () {
+          const products = await getPuslishProducts();
+          return products;
+        },
+      },
+      getRatings: {
+        description: "Lấy danh sách các đánh giá",
+        parameters: z.object({}),
+        execute: async function () {
+          const ratings = await getRatings();
+          return ratings;
+        },
+      },
+      displayProductDetail: {
+        description: "Hiển thị thông tin chi tiết của món ăn",
+        parameters: z.object({
+          product_id: z
+            .string()
+            .describe("Mã món ăn được hiển thị định dạng UUID"),
+        }),
+        execute: async function ({ product_id }) {
+          const product = await getProductById(product_id);
+          return product[0];
+        },
+      },
+      getDiscounts: {
+        description: "Lấy danh sách các mã giảm giá",
+        parameters: z.object({}),
+        execute: async function () {
+          const discounts = await getValidDiscounts();
+          return discounts;
+        },
+      },
+      displayProductByCategory: {
         description: "Hiện danh sách các món ăn dựa theo thể loại",
         parameters: z.object({
-          category_id: z.string().describe("ID của thể loại món ăn"),
+          category_id: z.string().describe("Mã thể loại món ăn định dạng UUID"),
         }),
         execute: async function ({ category_id }) {
           const products = await getProductsByCategory(category_id);
-          return { ...products };
+          console.log(products);
+          return products;
         },
       },
-      displayCarts: {
-        description: "Hiện danh sách món ăn trong giỏ hàng",
+      displayCart: {
+        description: "Hiện danh sách các món ăn trong giỏ hàng",
+        parameters: z.object({
+          discount: z.number().describe("Số tiền giảm giá").default(0),
+        }),
+        execute: async function ({ discount }) {
+          const carts = await getCartsByUserId(session.user.id);
+          console.log(discount);
+
+          return { carts, discount };
+        },
+      },
+      addCart: {
+        description: "Thêm món ăn chỉ định vào giỏ hàng",
+        parameters: z.object({
+          product_id: z
+            .string()
+            .describe("Mã của món ăn được thêm định dạng UUID"),
+          quantity: z.number().describe("Số lượng món ăn"),
+        }),
+        execute: async function ({ product_id, quantity }) {
+          console.log(product_id);
+          console.log(quantity);
+          const formData = new FormData();
+          formData.append("userId", session.user.id);
+          formData.append("productId", product_id);
+          formData.append("quantity", quantity.toString());
+          const cart = await createCart(formData);
+          return cart;
+        },
+      },
+      updateCart: {
+        description: "Cập nhập món ăn được chỉ định trong giỏ hàng",
+        parameters: z.object({
+          product_id: z
+            .string()
+            .describe("Mã của món ăn được cập nhập định dạng UUID"),
+          quantity: z.number().describe("Số lượng món ăn"),
+        }),
+        execute: async function ({ product_id, quantity }) {
+          const formData = new FormData();
+          formData.append("userId", session.user.id);
+          formData.append("productId", product_id);
+          formData.append("quantity", quantity.toString());
+
+          const carts = await updateCarts(formData);
+          return carts;
+        },
+      },
+      deleteCart: {
+        description: "Xóa món ăn được chỉ định ra khỏi giỏ hàng",
+        parameters: z.object({
+          product_id: z
+            .string()
+            .describe("Mã của món ăn được xóa định dạng UUID"),
+        }),
+        execute: async function ({ product_id }) {
+          const carts = await deletecarts(product_id, session.user.id);
+          return carts;
+        },
+      },
+      clearCart: {
+        description: "Xóa tất cả các món ăn ra khỏi giỏ hàng",
         parameters: z.object({}),
         execute: async function () {
+          const carts = await clearCart(session.user.id);
+          return carts;
+        },
+      },
+      checkingInformation: {
+        description: "Kiểm tra thông tin giao hàng",
+        parameters: z.object({
+          address: z.string().describe("Địa chỉ của người nhận đơn hàng"),
+          phone: z
+            .string()
+            .describe(
+              "Số điện thoại của người nhận đơn hàng để liên hệ khi cần",
+            ),
+          note: z
+            .string()
+            .describe("Ghi chú bổ sung cho người giao hàn")
+            .optional(),
+          discount_id: z
+            .string()
+            .describe("Mã giảm giá được áp dụng định dạng UUID")
+            .optional(),
+        }),
+        execute: async function ({ address, phone, note, discount_id }) {
           const carts = await getCartsByUserId(session.user.id);
 
-          const subtotal: number = carts.reduce(
-            (acc, cart) => acc + cart.product.price * cart.quantity,
-            0,
-          );
-
-          return { carts, subtotal };
+          return {
+            carts,
+            address,
+            phone,
+            note,
+            discount_id,
+            userId: session.user.id,
+          };
         },
       },
       getInvoices: {
-        description: "Danh sách các hóa đơn đã được xác nhận",
+        description: "Lấy danh sách các biên lai đã được xác nhận",
         parameters: z.object({}),
         execute: async function () {
           const invoices = await getInvoicesIdByUserId(session.user.id);
           return { invoices };
         },
       },
-      addCart: {
-        description: "Thêm món ăn vào giỏ hàng",
+      trackingInvoice: {
+        description: "Kiểm tra trạng thái của hóa đơn",
         parameters: z.object({
-          product_id: z.string().describe("ID của món ăn được thêm"),
-          quantity: z.number().describe("Số lượng món ăn"),
+          invoice_id: z
+            .string()
+            .describe("Mã của hóa đơn được kiểm tra định dạng UUID"),
         }),
-        execute: async function ({ product_id, quantity }) {
-          const formData = new FormData();
-          formData.append("userId", session.user.id);
-          formData.append("productId", product_id);
-          formData.append("quantity", quantity);
-          const cart = await createCart(formData);
-          return { cart };
-        },
-      },
-      updateCart: {
-        description: "Cập nhập món ăn được chỉ định trong giỏ hàng",
-        parameters: z.object({
-          product_id: z.string().describe("ID của món ăn được cập nhập"),
-          quantity: z.number().describe("Số lượng món ăn"),
-        }),
-        execute: async function ({ product_id, quantity }) {
-          const formData = new FormData();
-          formData.append("userId", session.user.id);
-          formData.append("productId", product_id);
-          formData.append("quantity", quantity);
-
-          const carts = await updateCarts(formData);
-          return { carts };
-        },
-      },
-      deleteCart: {
-        description: "Xóa món ăn được chỉ định ra khỏi giỏ hàng",
-        parameters: z.object({
-          product_id: z.string().describe("ID của món ăn được xóa"),
-        }),
-        execute: async function ({ product_id }) {
-          const carts = await deletecarts(product_id, session.user.id);
-          return { carts };
-        },
-      },
-      clearCart: {
-        description: "Xóa tất cả món ăn ra khỏi giỏ hàng",
-        parameters: z.object({}),
-        execute: async function () {
-          const carts = await clearCart(session.user.id);
-          return { carts };
-        },
-      },
-      getDiscount: {
-        description: "Danh sách các mã giảm giá hợp lệ",
-        parameters: z.object({}),
-        execute: async function () {
-          const discounts = await getValidDiscounts();
-          return { discounts };
-        },
-      },
-      disPlayment: {
-        description: "Thanh toán các món ăn trong giỏ hàng",
-        parameters: z.object({
-          street: z
-            .string()
-            .describe("Tên đường và số nhà nơi đơn hàng cần được giao."),
-          province: z
-            .string()
-            .describe("Tên tỉnh hoặc thành phố nơi đơn hàng được giao."),
-          district: z
-            .string()
-            .describe("Tên quận/huyện nơi đơn hàng được giao."),
-          ward: z
-            .string()
-            .describe("Tên phường/xã nơi đơn hàng được giao.")
-            .optional(),
-          phone: z
-            .string()
-            .describe(
-              "Số điện thoại của người nhận đơn hàng để liên hệ khi cần.",
-            )
-            .optional(),
-          note: z
-            .string()
-            .describe(
-              "Ghi chú bổ sung cho người giao hàng, ví dụ: 'Gọi trước khi giao' hoặc 'Giao sau 18h'.",
-            ),
-          discount: z.number().describe("Số tiền giảm giá").optional(),
-          discountCode: z.number().describe("Mã giảm giá").optional(),
-        }),
-        execute: async function ({
-          street,
-          province,
-          district,
-          ward,
-          phone,
-          note,
-          discount,
-          discountCode,
-        }) {
-          const carts = await getCartsByUserId(session.user.id);
-
-          const subtotal: number = carts.reduce(
-            (acc, cart) => acc + cart?.product?.price * cart?.quantity,
-            0,
-          );
-
-          return {
-            carts,
-            address: { street, province, district, ward },
-            phone,
-            note,
-            discount,
-            discountCode,
-            subtotal,
-          };
+        execute: async function ({ invoice_id }) {
+          const invoice = await getInvoiceDetail(invoice_id, session.user.id);
+          return invoice;
         },
       },
     },

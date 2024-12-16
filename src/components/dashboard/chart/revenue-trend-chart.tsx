@@ -9,6 +9,13 @@ import {
   ChartTooltipContent,
 } from "@/components/ui/chart";
 
+function DongFormat(number: number) {
+  return new Intl.NumberFormat("vi-VN", {
+    style: "currency",
+    currency: "VND",
+  }).format(number);
+}
+
 const getLastNMonths = (n: number) => {
   const data = [];
   const today = new Date();
@@ -55,8 +62,9 @@ export function RevenueTrendChart({ revenues }: { revenues: any[] }) {
           tickFormatter={(value) => value.slice(0, 3)}
         />
         <ChartTooltip
+          formatter={(value: any) => DongFormat(value)}
           cursor={false}
-          content={<ChartTooltipContent hideLabel />}
+          content={<ChartTooltipContent />}
         />
         <Bar dataKey="revenues" fill="var(--color-desktop)" radius={8}>
           <LabelList
@@ -64,6 +72,7 @@ export function RevenueTrendChart({ revenues }: { revenues: any[] }) {
             offset={12}
             className="fill-foreground"
             fontSize={12}
+            formatter={(value: any) => DongFormat(value)}
           />
         </Bar>
       </BarChart>

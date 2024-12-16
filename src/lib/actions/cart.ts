@@ -29,7 +29,7 @@ export async function createCart(formData: FormData) {
 
   if (existingCartItem) {
     // Nếu sản phẩm đã tồn tại, tăng số lượng
-    await db
+    return await db
       .update(carts)
       .set({
         quantity: Number(formData.get("quantity")) + existingCartItem.quantity,
@@ -40,7 +40,7 @@ export async function createCart(formData: FormData) {
       .returning();
   } else {
     // Nếu sản phẩm chưa tồn tại, thêm sản phẩm mới
-    await db.insert(carts).values(data).returning();
+    return await db.insert(carts).values(data).returning();
   }
 }
 
@@ -53,7 +53,8 @@ export async function updateCarts(formData: FormData) {
         eq(carts.userId, formData.get("userId") as string),
         eq(carts.productId, formData.get("productId") as string),
       ),
-    );
+    )
+    .returning();
 }
 
 export async function deletecarts(productId: string, userId: string) {
