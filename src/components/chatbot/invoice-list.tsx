@@ -63,13 +63,13 @@ export default function InvoiceListCard({
   };
 
   return (
-    <div className="round-md max-w-2xl border p-4">
+    <div className="round-md relative z-50 max-w-2xl border p-4">
       <h1 className="mb-4 text-2xl font-bold">Danh Sách Hóa Đơn</h1>
       <div className="mb-4 flex space-x-4">
-        <button onClick={() => toggleSort("date")} className="z-50">
+        <button onClick={() => toggleSort("createdAt")}>
           Sắp xếp theo ngày
         </button>
-        <button onClick={() => toggleSort("amount")} className="z-50">
+        <button onClick={() => toggleSort("totalAmount")}>
           Sắp xếp theo số tiền
         </button>
       </div>

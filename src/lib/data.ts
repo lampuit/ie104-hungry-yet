@@ -35,12 +35,11 @@ export async function getInvoices() {
     return await db
       .select({
         date: sql`DATE(${invoices.createdAt})`,
-        invoices: sql<number>`count(${invoices.id})`,
+        invoices: sql<number>`count(${invoices.id})`.mapWith(Number),
       })
       .from(invoices)
       .groupBy(sql`DATE(${invoices.createdAt})`)
-      .orderBy(desc(sql`DATE(${invoices.createdAt})`))
-      .limit(30);
+      .orderBy(desc(sql`DATE(${invoices.createdAt})`));
   } catch (error) {
     throw new Error("Không thể lấy dữ liệu danh sách hóa đơn.");
   }
@@ -71,12 +70,12 @@ export async function getInvoicesByStatus(status: string) {
         eq(
           invoices.status,
           status as
-          | "pending"
-          | "accepted"
-          | "cooking"
-          | "ready"
-          | "delivered"
-          | "cancelled",
+            | "pending"
+            | "accepted"
+            | "cooking"
+            | "ready"
+            | "delivered"
+            | "cancelled",
         ),
       );
   } catch (error) {
@@ -377,12 +376,12 @@ export async function getInvoiceByUserId(userId: string, status: string) {
         eq(
           invoices.status,
           status as
-          | "pending"
-          | "accepted"
-          | "cooking"
-          | "ready"
-          | "delivered"
-          | "cancelled",
+            | "pending"
+            | "accepted"
+            | "cooking"
+            | "ready"
+            | "delivered"
+            | "cancelled",
         ),
       ),
     );
@@ -429,7 +428,9 @@ export async function filterAndSearch(formData: FormData) {
   }
 
   if (search) {
-    whereClause.push(sql`LOWER(${products.name}) LIKE LOWER(${`%${search as string}%`})`);
+    whereClause.push(
+      sql`LOWER(${products.name}) LIKE LOWER(${`%${search as string}%`})`,
+    );
   }
 
   const averageRatingExpr = sql<number>`COALESCE(AVG(${ratings.star}), 0)`;
@@ -469,7 +470,6 @@ export async function filterAndSearch(formData: FormData) {
     records,
   };
 }
-
 
 export async function getAllInvoices() {
   return await db.query.invoices.findMany({
