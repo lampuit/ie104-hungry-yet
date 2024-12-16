@@ -1,9 +1,8 @@
 "use client";
 
+import { useEffect } from "react";
 import {
-  Form,
   FormControl,
-  FormDescription,
   FormField,
   FormItem,
   FormLabel,
@@ -13,87 +12,59 @@ import { Input } from "@/components/ui/input";
 import { PhoneInput } from "@/components/ui/phone-input";
 import { Textarea } from "@/components/ui/textarea";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { getInvoiceDetail } from "@/lib/data";
+import useSWR from "swr";
+
+const fetcherInvoiceInf = async (invoiceId: string) => {
+  return await getInvoiceDetail(invoiceId);
+};
 
 export function InformationForm({ form }: { form: any }) {
+  const invoiceId = form.getValues("invoiceId");
+
+  const {
+    data: invoice,
+    isLoading,
+    error,
+  } = useSWR(invoiceId, fetcherInvoiceInf);
+
+  if (error) {
+    console.error("Error fetching invoice data:", error);
+  }
+
+  useEffect(() => {
+    if (invoice) {
+      form.setValue("invoiceId", invoice.id);
+      form.setValue("addressDelivery", invoice.deliveryAddress || "");
+      form.setValue("phone", invoice.phone || "");
+      form.setValue("note", invoice.note || "");
+    }
+  }, [invoice]);
+
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Thông Tin Đơn Hàng</CardTitle>
+        <CardTitle>Thông Tin Giao Hàng</CardTitle>
       </CardHeader>
       <CardContent className="space-y-4">
         <FormField
           control={form.control}
-          name="street"
+          name="addressDelivery"
           render={({ field }) => (
             <FormItem>
               <FormLabel>Địa Chỉ Giao Hàng</FormLabel>
               <FormControl>
-                <Input placeholder="Nhập địa chỉ" type="text" {...field} />
+                <Input
+                  placeholder="Nhập địa chỉ"
+                  type="text"
+                  {...field}
+                  disabled={isLoading}
+                />
               </FormControl>
               <FormMessage />
             </FormItem>
           )}
         />
-        <div className="grid grid-cols-12 gap-4">
-          <div className="col-span-4">
-            <FormField
-              control={form.control}
-              name="province"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Tỉnh Thành</FormLabel>
-                  <FormControl>
-                    <Input
-                      placeholder="Nhập tỉnh thành"
-                      type="text"
-                      {...field}
-                    />
-                  </FormControl>
-
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-          </div>
-          <div className="col-span-4">
-            <FormField
-              control={form.control}
-              name="district"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Quận Huyện (tùy chọn)</FormLabel>
-                  <FormControl>
-                    <Input
-                      placeholder="Nhập quận huyện"
-                      type="text"
-                      {...field}
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-          </div>
-          <div className="col-span-4">
-            <FormField
-              control={form.control}
-              name="ward"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Phường Xã (tùy chọn)</FormLabel>
-                  <FormControl>
-                    <Input
-                      placeholder="Nhập phường xã"
-                      type="text"
-                      {...field}
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-          </div>
-        </div>
         <FormField
           control={form.control}
           name="phone"
@@ -101,9 +72,13 @@ export function InformationForm({ form }: { form: any }) {
             <FormItem className="flex flex-col items-start">
               <FormLabel>Số Điện Thoại</FormLabel>
               <FormControl className="w-full">
-                <PhoneInput {...field} defaultCountry="VN" />
+                <PhoneInput
+                  {...field}
+                  defaultCountry="VN"
+                  placeholder="Điền số điện thoại"
+                  disabled={isLoading}
+                />
               </FormControl>
-              <FormDescription>Điền số điện thoại</FormDescription>
               <FormMessage />
             </FormItem>
           )}
@@ -113,12 +88,13 @@ export function InformationForm({ form }: { form: any }) {
           name="note"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Ghi Chú</FormLabel>
+              <FormLabel>Ghi Chú (tùy chọn)</FormLabel>
               <FormControl>
                 <Textarea
                   placeholder="Ghi chú cho nhân viên"
                   className="resize-none"
                   {...field}
+                  disabled={isLoading}
                 />
               </FormControl>
               <FormMessage />

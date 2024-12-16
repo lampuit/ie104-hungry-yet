@@ -12,17 +12,21 @@ import {
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Star, Stars } from 'lucide-react';
 import useSWR from 'swr';
-
-import { getAllRatings } from '@/lib/data';
+import { getAllRatings, getProductById } from '@/lib/data';
+import { useRouter } from 'next/navigation';
 
 const fetcher = async () => {
     const ratings = await getAllRatings();
     return ratings;
 }
 
-export function Testimonials() {
 
+export function Testimonials() {
     const { data: listRatings, error } = useSWR('ratings', fetcher);
+    const router = useRouter();
+    const handleCardOnClick = (productId: string) => {
+        router.push(`/detail?id=${productId}`);
+    }
 
     return (
         <Carousel
@@ -33,8 +37,8 @@ export function Testimonials() {
             <CarouselContent>
                 {listRatings?.map((rating, index) => (
                     <CarouselItem key={index} className="md:basis-full lg:basis-1/2 xl:basis-1/3">
-                        <Card>
-                            <CardContent className="py-5 px-3 flex flex-col justify-between items-center gap-3 h-80">
+                        <Card onClick={() => handleCardOnClick(rating.product.id)} className='hover:border-black'>
+                            <CardContent className="py-5 px-3 flex flex-col justify-between items-center gap-4 h-full ">
                                 <div className="flex gap-2">
                                     {Array(rating.star).fill(0).map((_, index) => (
                                         <Star key={index} className='fill-amber-400 stroke-amber-400' size={30} />
@@ -46,8 +50,8 @@ export function Testimonials() {
                                 <ThinLine />
                                 <div className="flex justity-start items-center gap-4">
                                     <Avatar className='w-12 h-12'>
-                                        <AvatarImage src="/images/main-dishes.jpg" sizes='' />
-                                        <AvatarFallback>CN</AvatarFallback>
+                                        <AvatarImage src={rating.product.imageUrl || "/images/main-dishes.jpg"} sizes='' />
+                                        <AvatarFallback>F</AvatarFallback>
                                     </Avatar>
                                     <div className='flex flex-col justify-between'>
                                         <p className='font-semibold'>{rating?.product?.name}</p>

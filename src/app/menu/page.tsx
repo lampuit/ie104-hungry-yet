@@ -1,8 +1,9 @@
-"use client";
-import { useEffect, useState } from "react";
-import { Search } from "@/components/menu/search";
-import { Category } from "@/components/menu/category";
-import { DishList } from "@/components/menu/dish-list";
+'use client'
+
+import { useEffect, useState } from "react"
+import { SearchingArea } from "@/components/menu/search"
+import { Category } from "@/components/menu/category"
+import { DishList } from "@/components/menu/dish-list"
 import {
   Pagination,
   PaginationContent,
@@ -10,12 +11,14 @@ import {
   PaginationLink,
   PaginationNext,
   PaginationPrevious,
-} from "@/components/ui/pagination";
-import { getProductByCategoryId } from "@/lib/data";
-import { CategoryFetcher } from "@/components/menu/category";
-import useSWR from "swr";
+} from "@/components/ui/pagination"
+import { getCartsByUserId, filterAndSearch } from "@/lib/data"
+import { CategoryFetcher } from "@/components/menu/category"
+import useSWR from "swr"
+import LoadingSpinner from "@/components/ui/loading-spinner"
+import { getSession } from "@/lib/auth-client"
+import Chatbot from "@/components/chatbot/chat-bot"
 
-// Đối tượng mô tả một món ăn
 interface Dish {
   id: string;
   name: string;
@@ -23,32 +26,74 @@ interface Dish {
   price: number;
   des: string;
   published: boolean;
+  avgRating: number;
 }
 
-// Lấy session
-export const fetcher = async () => {
-  const category = CategoryFetcher();
-  return category;
+const fetcherCategory = async (): Promise<
+  { id: string; name: string; imageUrl: string | null }[]
+> => {
+  return CategoryFetcher();
+};
+
+const fetcherUserId = async () => {
+  const response = await getSession();
+  const userId = response?.data?.user?.id as string;
+  return userId;
+};
+
+const fetcherCarts = async (userId: string) => {
+  return getCartsByUserId(userId);
 };
 
 export default function MenuPage() {
-  // Kiểm tra session
-  const { data, isLoading, error } = useSWR("fetcherKey", fetcher, {
-    revalidateIfStale: true,
-    revalidateOnFocus: false,
-    revalidateOnReconnect: true
-  });
+  const [page, setPage] = useState<number>(1);
+  const limit = process.env.NEXT_PUBLIC_PAGE_SIZE
+    ? parseInt(process.env.NEXT_PUBLIC_PAGE_SIZE)
+    : 9;
 
-  // ID của danh mục được chọn
+  const { data: userId } = useSWR("userId", fetcherUserId);
+  const {
+    data,
+    isLoading: dishLoading,
+    error: dishError,
+  } = useSWR("fetcherCategory", fetcherCategory);
+  const { data: carts } = useSWR(userId, fetcherCarts);
+
   const [clickedIndex, setClickedIndex] = useState<string>("");
-  const [dishesList, setDishesList] = useState<Dish[]>([]); // Danh sách món ăn được lưu trữ dưới dạng 1 mảng các đối tượng Dish
-  const sessionClickIndex = sessionStorage.getItem("clickedIndex");
+  const [dishesList, setDishesList] = useState<Dish[]>([]);
+  const [totalCount, setTotalCount] = useState<number>(0);
+  const [totalAmount, setTotalAmount] = useState<number>(0);
   const categories = data || [];
 
-  // Hàm lấy danh sách món ăn theo danh mục cụ thể (clickedIndex)
+  const [filter, setFilter] = useState({
+    minPrice: 0,
+    maxPrice: Infinity,
+    categoryId: "",
+    rating: 0,
+    search: "",
+  });
+
+  const handleFilterChange = (newFilter: typeof filter) => {
+    setFilter(newFilter);
+    setPage(1); // Reset to first page when filter changes
+  };
+
+  const handleChangePage = (newPage: number) => {
+    setPage(newPage);
+  };
+
   const getDishesByCategoryId = async (clickedIndex: string) => {
     try {
-      const response = await getProductByCategoryId(clickedIndex, 1, 6);
+      const formData = new FormData();
+      formData.append("minPrice", filter.minPrice.toString());
+      formData.append("maxPrice", filter.maxPrice.toString());
+      formData.append("categoryId", clickedIndex);
+      formData.append("rating", filter.rating.toString());
+      formData.append("search", filter.search);
+      formData.append("page", page.toString());
+      formData.append("pageSize", limit.toString());
+
+      const response = await filterAndSearch(formData);
       setDishesList(
         response?.records.map((item: any) => ({
           id: item.id,
@@ -57,87 +102,126 @@ export default function MenuPage() {
           published: item.isPublish,
           price: item.price,
           des: item.description,
-        }))
+          avgRating: item.averageRating
+        })),
       );
+      setTotalCount(response.totalRecords);
     } catch (error) {
       console.error(error);
     }
   };
 
-  // Tự động gọi API khi trang được tải - khi người dùng chọn danh mục khác (clickedIndex thay đổi)
   useEffect(() => {
-    if (data) {
-      // Gán danh mục mặc định là "Khai vị" hoặc danh mục được chọn từ trang Homepage
+    if (carts) {
+      setTotalAmount(carts.length);
+    }
+  }, [carts]);
+
+  useEffect(() => {
+    if (typeof window !== "undefined" && data) {
+      const sessionClickIndex = localStorage.getItem("category");
       if (sessionClickIndex) {
         setClickedIndex(sessionClickIndex);
+        setFilter(prev => ({ ...prev, categoryId: sessionClickIndex }));
       } else {
         setClickedIndex(data[0]?.id);
+        setFilter(prev => ({ ...prev, categoryId: data[0]?.id }));
       }
     }
+  }, [data])
 
+  useEffect(() => {
     if (clickedIndex) {
       getDishesByCategoryId(clickedIndex);
-      sessionStorage.setItem("clickedIndex", clickedIndex); // Persist clickedIndex
+      if (typeof window !== "undefined") {
+        localStorage.setItem("category", clickedIndex);
+      }
     }
+  }, [clickedIndex, page, filter]);
 
-  }, [data, clickedIndex]);
-
-
-  // Hàm xử lý khi người dùng click vào một danh mục khác
   const handleCategoryClick = (categoryId: string) => {
-    setClickedIndex(categoryId);
-    sessionStorage.setItem("clickedIndex", categoryId);
-  };
+    setClickedIndex(categoryId)
+    setFilter(prev => ({ ...prev, categoryId }))
+    setPage(1)
+    if (typeof window !== "undefined") {
+      localStorage.setItem("category", categoryId)
+    }
+  }
 
-  return (
+  const totalPages = Math.ceil(totalCount / limit)
+
+  return dishLoading ? (
+    <LoadingSpinner />
+  ) : (
     <main className="w-screen">
       <header className="mt-8">
-        <Search />
+        <SearchingArea
+          totalAmount={totalAmount}
+          filter={filter}
+          onFilterChange={handleFilterChange}
+        />
       </header>
 
       <section className="flex flex-col items-center">
-        <section className="sticky top-0 bg-white w-full">
+        <section className="sticky top-0 z-10 w-full bg-white">
           <Category
             clickedIndex={clickedIndex}
             setClickedIndex={(index) => {
-              const category = Array.isArray(categories) ? categories.find((cat) => cat.id === index) : undefined;
+              const category = Array.isArray(categories)
+                ? categories.find((cat) => cat.id === index)
+                : undefined
               if (category) {
-                handleCategoryClick(category.id);
+                handleCategoryClick(category.id)
               }
             }}
           />
         </section>
 
-        <section className="mb-10 max-w-screen-xl">
-          {dishesList.length === 0 || dishesList.every((dish) => !dish.published) ? (
+        <section className="mb-10 max-w-screen-2xl">
+          {dishesList.length === 0 ||
+            dishesList.every((dish) => !dish.published) ? (
             <p>Không có sản phẩm nào</p>
           ) : (
-            <DishList dishesList={dishesList} />
+            <DishList
+              dishesList={dishesList}
+              onTotalAmountChange={setTotalAmount}
+            />
           )}
         </section>
-        <Pagination className="mb-20">
-          <PaginationContent>
-            <PaginationItem>
-              <PaginationPrevious href="#" />
-            </PaginationItem>
-            <PaginationItem>
-              <PaginationLink href="#" isActive>
-                1
-              </PaginationLink>
-            </PaginationItem>
-            <PaginationItem>
-              <PaginationLink href="#">2</PaginationLink>
-            </PaginationItem>
-            <PaginationItem>
-              <PaginationLink href="#">3</PaginationLink>
-            </PaginationItem>
-            <PaginationItem>
-              <PaginationNext href="#" />
-            </PaginationItem>
-          </PaginationContent>
-        </Pagination>
+        {totalPages > 1 && (
+          <Pagination className="mb-20">
+            <PaginationContent>
+              <PaginationItem>
+                <PaginationPrevious
+                  onClick={() => handleChangePage(Math.max(1, page - 1))}
+                  className={page === 1 ? "pointer-events-none opacity-50" : ""}
+                />
+              </PaginationItem>
+              {Array.from({ length: totalPages }).map((_, index) => (
+                <PaginationItem key={index}>
+                  <PaginationLink
+                    onClick={() => handleChangePage(index + 1)}
+                    isActive={page === index + 1}
+                  >
+                    {index + 1}
+                  </PaginationLink>
+                </PaginationItem>
+              ))}
+              <PaginationItem>
+                <PaginationNext
+                  onClick={() =>
+                    handleChangePage(Math.min(totalPages, page + 1))
+                  }
+                  className={
+                    page === totalPages ? "pointer-events-none opacity-50" : ""
+                  }
+                />
+              </PaginationItem>
+            </PaginationContent>
+          </Pagination>
+        )}
       </section>
-      <footer className="h-80 bg-black"></footer>
+      <Chatbot />
     </main>
-  );
+  )
 }

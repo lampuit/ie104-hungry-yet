@@ -32,7 +32,7 @@ import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
 import { ToastAction } from "@/components/ui/toast";
 import { createProduct } from "@/lib/actions/product";
-import { useFormState } from "react-dom";
+// Removed incorrect import for useFormState
 import { product } from "remeda";
 import { put } from "@vercel/blob";
 
@@ -83,7 +83,13 @@ export function EditForm({
     },
   });
 
-  const formAction = async (formData: FormData) => {
+  const formAction = async (data: z.infer<typeof formSchema>) => {
+    const formData = new FormData();
+    formData.append("file", data.file);
+    formData.append("name", data.name);
+    formData.append("description", data.description);
+    formData.append("category", data.category);
+    formData.append("price", data.price.toString());
     try {
       //  Tạo sản phẩm
       await createProduct(formData);
@@ -110,7 +116,7 @@ export function EditForm({
 
   return (
     <Form {...form}>
-      <form ref={formRef} className="flex flex-col gap-4" action={formAction}>
+      <form ref={formRef} className="flex flex-col gap-4" onSubmit={form.handleSubmit(formAction)}>
         <div className="flex items-center justify-end">
           <Button
             type="submit"

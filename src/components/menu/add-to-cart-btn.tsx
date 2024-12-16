@@ -1,8 +1,22 @@
 import { toast } from "sonner";
-import { Button } from "../ui/button"
+import { Button } from "../ui/button";
 import { ShoppingCart } from "lucide-react";
 import { createCart } from "@/lib/actions/cart";
-import { redirect, useRouter } from "next/navigation";
+import { useRouter } from "next/navigation";
+import { getSession } from "@/lib/auth-client";
+import useSWR, { mutate } from "swr";
+import { getCartsByUserId } from "@/lib/data";
+import { useEffect, useState } from "react";
+
+const fetcherUserId = async () => {
+    const response = await getSession();
+    const userId = response?.data?.user?.id as string;
+    return userId;
+};
+
+const fetchCart = async (userId: string) => {
+    return await getCartsByUserId(userId);
+};
 
 interface Dish {
     id: string;
@@ -13,22 +27,38 @@ interface Dish {
     published: boolean;
 }
 
+interface AddToCartButtonProps {
+    dish: Dish;
+    onAddToCart?: (totalAmount: number) => void;
+}
 
-export const AddToCartButton: React.FC<{ dish: Dish }> = ({ dish }) => {
+export const AddToCartButton = ({ dish, onAddToCart }: AddToCartButtonProps) => {
     const router = useRouter();
-    const userId = sessionStorage.getItem('userId');
+    const { data: userId, error: userIdError } = useSWR("userId", fetcherUserId);
+    const { data: cartData, error: cartError } = useSWR(userId ? `cart-${userId}` : null, () => fetchCart(userId as string));
+    const [cart, setCart] = useState<any[]>([]);
+
+    useEffect(() => {
+        if (cartData) {
+            setCart(cartData);
+            onAddToCart && onAddToCart(cartData.length);
+        }
+    }, [cartData]);
+
     const handleAddToCartOnClick = async (productId: string) => {
         const data = new FormData();
-        console.log(sessionStorage.getItem('userId'));
-        if (!sessionStorage.getItem('userId')) {
+        if (!userId) {
             router.push("/login");
-        }
-        else {
+        } else {
             data.append('userId', userId as string);
             data.append('productId', productId);
             data.append('quantity', '1');
 
             await createCart(data);
+
+            // Refetch the cart data after adding to cart
+            mutate(`cart-${userId}`);
+            onAddToCart && onAddToCart(cart.length);
 
             const currentDateTime = new Date().toLocaleString("en-US", {
                 year: "numeric",
@@ -38,8 +68,6 @@ export const AddToCartButton: React.FC<{ dish: Dish }> = ({ dish }) => {
                 minute: "numeric",
                 hour12: true,
             });
-
-            console.log(`Add product ${productId} to cart`);
             toast(`Đã thêm ${dish.name} vào giỏ hàng`, {
                 description: currentDateTime,
                 action: {
@@ -49,10 +77,11 @@ export const AddToCartButton: React.FC<{ dish: Dish }> = ({ dish }) => {
             });
         }
     };
+
     return (
         <Button onClick={() => handleAddToCartOnClick(dish.id)}
-            className='rounded-3xl bg-amber-500 hover:bg-red-500 hidden group-hover:flex transition-all duration-300 ease-in-out'>
+            className='rounded-3xl bg-amber-500 hover:bg-red-500'>
             <ShoppingCart /> <span>Thêm giỏ hàng</span>
         </Button>
     );
-}
+};

@@ -1,58 +1,74 @@
 "use client";
 
-import {
-  Breadcrumb,
-  BreadcrumbEllipsis,
-  BreadcrumbItem,
-  BreadcrumbLink,
-  BreadcrumbList,
-  BreadcrumbPage,
-  BreadcrumbSeparator,
-} from "@/components/ui/breadcrumb";
-import { Summary } from "@/components/menu/cart/summary";
-import { redirect } from "next/navigation";
-import { columns } from "@/components/menu/cart/columns";
-import { DataTable } from "@/components/menu/cart/data-table";
-import { getCartsByUserId, fetchDiscounts } from "@/lib/data";
-import useSWR from "swr";
 import React, { useState, useEffect } from "react";
+import { DataTable } from "@/components/menu/cart/data-table";
+import { columns } from "@/components/menu/cart/columns";
+import { getCartsByUserId, getFavoriteByUserId } from "@/lib/data";
+import useSWR from "swr";
 import LoadingSpinner from "@/components/ui/loading-spinner";
-import Footer from "@/components/ui/footer";
+import { getSession } from "@/lib/auth-client";
+import { Summary } from "@/components/menu/cart/summary";
+// import {
+//   Breadcrumb,
+//   BreadcrumbItem,
+//   BreadcrumbLink,
+//   BreadcrumbList,
+//   BreadcrumbPage,
+//   BreadcrumbSeparator,
+// } from "@/components/ui/breadcrumb";
 
 //get shopping cart by userId
-const fetcher = async (userId: string) => {
+const fetcherCarts = async (userId: string) => {
   return getCartsByUserId(userId);
 };
 
+// Lấy session
+const fetcherUserId = async () => {
+  const response = await getSession();
+  const userId = response?.data?.user?.id as string;
+  return userId;
+};
+
+// Lấy danh sách sản phẩm yêu thích
+const favoriteFetcher = async (userId: string) => {
+  return await getFavoriteByUserId(userId);
+}
+
 export default function CartPage() {
-  const userId = sessionStorage.getItem("userId");
-  const { data: listDish, isLoading, error, mutate } = useSWR(userId, fetcher, {
+  const { data: userId } = useSWR('userId', fetcherUserId);
+  const { data: listDish, isLoading, error, mutate } = useSWR(`userId${userId}`, () => fetcherCarts(userId || ""), {
     revalidateIfStale: true,
     revalidateOnFocus: false,
     revalidateOnReconnect: true,
   });
+  const { data: favoriteList } = useSWR(`id${userId}`, () => favoriteFetcher(userId || ""));
 
   const [dishes, setDishes] = useState<any[]>([]);
+  const [totalPrice, settotalPrice] = useState(0);
   const [totalAmount, setTotalAmount] = useState(0);
 
   useEffect(() => {
-    if (listDish) {
+    if (listDish && favoriteList) {
       const formattedData = listDish.map((item: any) => ({
         id: item.productId || undefined,
-        img: item.product?.imageUrl || "/images/fallback.jpg",
+        img: item.product?.imageUrl || "",
         name: item.product?.name,
         des: item.product?.description || "",
         cost: item.product?.price,
         amount: item?.quantity,
-        isFavorite: item.product?.favorites.length === 0 ? false : true,
+        category: item.product?.category?.name,
+        isFavorite: favoriteList.some(favorite => favorite.productId === item.productId),
       }));
       setDishes(formattedData);
-      setTotalAmount(listDish.reduce(
+      setTotalAmount(listDish.length);
+      settotalPrice(listDish.reduce(
         (acc, item) => acc + item.product?.price * item.quantity,
         0
-      ))
+      ));
     }
-  }, [listDish]);
+  }, [listDish, favoriteList]);
+
+  console.log("Dish", dishes);
 
   const handleQuantityChange = (id: string, newQuantity: number) => {
     const updatedDishes = dishes.map((dish) =>
@@ -61,19 +77,26 @@ export default function CartPage() {
     setDishes(updatedDishes);
 
     // recalculate total amount
-    const newTotalAmount = updatedDishes.reduce(
+    const newtotalAmount = updatedDishes.length;
+    const newtotalPrice = updatedDishes.reduce(
       (acc, item) => acc + item.amount * item.cost,
       0
     );
-    setTotalAmount(newTotalAmount);
+    setTotalAmount(newtotalAmount);
+    settotalPrice(newtotalPrice);
   };
 
+  const updateTableData = (id: string, isFavorite: boolean) => {
+    const updatedDishes = dishes.map((dish) =>
+      dish.id === id ? { ...dish, isFavorite } : dish
+    );
+    setDishes(updatedDishes);
+  };
 
-
-  const formattedTotalAmount = new Intl.NumberFormat("vi-VN", {
+  const formattedTotalPrice = new Intl.NumberFormat("vi-VN", {
     style: "currency",
     currency: "VND",
-  }).format(totalAmount);
+  }).format(totalPrice);
 
   if (error) return <div>Error loading data.</div>;
   if (isLoading) {
@@ -81,33 +104,30 @@ export default function CartPage() {
   }
 
   return (
-    <main>
-      <section className="my-10 mx-10 w-72 text-base font-semibold">
+    <main className="grow flex flex-col h-full">
+      {/* <section className="my-10 mx-10 w-72 text-base font-semibold">
         <Breadcrumb>
           <BreadcrumbList>
             <BreadcrumbItem>
-              <BreadcrumbLink href="/">Trang chủ</BreadcrumbLink>
+              <BreadcrumbLink className="hover:text-amber-500" href="/">Trang chủ</BreadcrumbLink>
             </BreadcrumbItem>
             <BreadcrumbSeparator />
             <BreadcrumbItem>
-              <BreadcrumbLink href="/menu">Thực đơn</BreadcrumbLink>
+              <BreadcrumbLink className="hover:text-amber-500" href="/menu">Thực đơn</BreadcrumbLink>
             </BreadcrumbItem>
             <BreadcrumbSeparator />
             <BreadcrumbItem>
-              <BreadcrumbPage>Giỏ hàng</BreadcrumbPage>
+              <BreadcrumbPage className="font-semibold text-amber-500">Giỏ hàng</BreadcrumbPage>
             </BreadcrumbItem>
           </BreadcrumbList>
         </Breadcrumb>
+      </section> */}
+      <section className="flex flex-col justify-center items-center my-10 w-full">
+        <DataTable columns={columns(mutate, updateTableData)} data={dishes} onQuantityChange={handleQuantityChange}></DataTable>
       </section>
-      <section>
-        <div className="flex flex-col justify-center items-center">
-          <DataTable columns={columns} data={dishes} onQuantityChange={handleQuantityChange}></DataTable>
-        </div>
+      <section className="sticky bottom-0 grow flex flex-col justify-end items-center mt-4">
+        <Summary totalPrice={formattedTotalPrice} totalAmount={totalAmount} />
       </section>
-      <section className="mx-10 py-5">
-        <Summary totalAmount={formattedTotalAmount} />
-      </section>
-      <Footer />
     </main>
   );
 }

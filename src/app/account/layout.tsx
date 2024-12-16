@@ -7,28 +7,36 @@ import { usePathname, useRouter } from "next/navigation";
 import { ReactNode, useEffect, useState } from "react";
 import { revokeSession } from "@/lib/auth-client";
 import useSWR from "swr";
-import { getSession } from "@/lib/auth-client";
 import { getUserById } from "@/lib/data";
-
-// Fetch session data
-const sessionFetcher = async () => {
-    const response = await getSession();
-    const session = response?.data?.session?.id as string;
-    return session;
-};
+import { getSession } from "@/lib/auth-client";
 
 const userFetcher = async (id: string) => {
     return await getUserById(id);
 }
+// Lấy userId từ session
+const fetcherUserId = async () => {
+    const response = await getSession();
+    console.log("session", response);
+    const userId = response?.data?.user?.id as string;
+    return userId;
+};
+
+//get session
+const fetcherSession = async () => {
+    const response = await getSession();
+    console.log("session", response);
+    return response?.data?.session?.id;
+}
+
+interface LayoutProps {
+    children: ReactNode
+}
 
 export default function Layout({
-    children,
-}: {
-    children: ReactNode;
-    modal: ReactNode;
-}) {
+    children
+}: LayoutProps) {
     const router = useRouter();
-    const [activePath, setActivePath] = useState<string>("Thông tin tài khoản"); // Track active path
+    const [activePath, setActivePath] = useState<string>("Thông tin đơn hàng"); // Track active path
     const [isLoggingOut, setIsLoggingOut] = useState(false); // Track logout state
     const [shortName, setShortName] = useState<string>("");
     const [name, setName] = useState<string>("");
@@ -38,9 +46,11 @@ export default function Layout({
         router.push(path);
     };
 
-    const { data: session, isLoading: isSessionLoading, error } = useSWR("session", sessionFetcher);
-    const uid = sessionStorage.getItem("userId");
-    const { data: user, error: userError } = useSWR(uid, userFetcher);
+    const { data: userId } = useSWR('userId', fetcherUserId);
+
+    const { data: user, error: userError } = useSWR(userId, userFetcher, { shouldRetryOnError: false });
+
+
 
     useEffect(() => {
         setShortName(user && user[0]?.name ? splitName(user[0].name) : "");
@@ -48,13 +58,17 @@ export default function Layout({
     }, [user]);
 
     const handleLogout = async () => {
+        const sessionId = await fetcherSession();
         try {
-            if (!session) {
+            if (!userId) {
                 console.error("Session ID is undefined");
                 return;
             }
+            if (!sessionId) {
+                throw new Error("Session ID is undefined");
+            }
             setIsLoggingOut(true); // Start logout spinner
-            const response = await revokeSession({ id: session });
+            const response = await revokeSession({ id: sessionId });
 
             if (response && response?.error?.status === 200) {
                 console.log("Session successfully revoked", response);
@@ -71,72 +85,67 @@ export default function Layout({
 
     const splitName = (name: string) => {
         const array = name.split(" ");
-        return (array[array.length - 2]?.at(0) || '') + (array[array.length - 1]?.at(0) || '');
+        return (array[array.length - 2]?.at(0) || '').toUpperCase() + (array[array.length - 1]?.at(0) || '').toUpperCase();
     }
 
     return (
         <main className="bg-gray-50 w-full">
-            <div className="flex gap-10 px-4 py-10">
-                <div className="flex flex-col gap-6 bg-white rounded p-6 shadow-md w-72">
-                    <div className="flex mb-4 gap-2 items-center w-full border-b-2 px-4 pb-4">
-                        <Avatar>
-                            <AvatarImage src={user?.[0].imageUrl ?? undefined} />
+            <div className="flex gap-2 md:gap-10 md:px-4 md:py-10">
+                <div className="flex flex-col gap-4 md:gap-6 bg-white rounded p-2 py-10 md:p-6 shadow-md md:w-72">
+                    <div className="flex justify-canter md:justify-between items-center md:mb-4 gap-2 w-full md:border-b-2 px-2 md:pb-4">
+                        <Avatar className="size-6 md:size-8">
+                            <AvatarImage src={user?.[0]?.imageUrl ?? undefined} />
                             <AvatarFallback>{shortName}</AvatarFallback>
                         </Avatar>
-                        <p className="text-sm font-semibold">{name}</p>
+                        <p className="grow text-center text-md font-semibold hidden md:inline-block">{name}</p>
                     </div>
                     <div
                         onClick={() => handleClick("Thông tin tài khoản", "/account")}
-                        className={activePath === "Thông tin tài khoản" ? "flex gap-3 shadow p-2 rounded-md" : "flex gap-3"}
+                        className={`flex justify-canter md:justify-between items-center md:gap-2 rounded-md p-2 ${activePath === "Thông tin tài khoản" ? "shadow  bg-slate-200" : ""}`}
                     >
-                        <UserIcon className="stroke-amber-500" />
-                        <p>Thông tin tài khoản</p>
+                        <UserIcon className="grow md:grow-0 stroke-amber-500 size-6 md:size-8" />
+                        <p className="hidden md:inline-block text-center">Thông tin tài khoản</p>
                     </div>
                     <div
                         onClick={() => handleClick("Thông tin đơn hàng", "/account/history")}
-                        className={activePath === "Thông tin đơn hàng" ? "flex gap-3 shadow p-2 rounded-md" : "flex gap-3"}
+                        className={`flex justify-canter md:justify-between items-center md:gap-2 rounded-md p-2 ${activePath === "Thông tin đơn hàng" ? "shadow  bg-slate-200" : ""}`}
                     >
-                        <ClipboardList className="stroke-blue-500" />
-                        <p>Thông tin đơn hàng</p>
+                        <ClipboardList className="grow md:grow-0 stroke-blue-500 size-6 md:size-8" />
+                        <p className="hidden md:inline-block text-center">Thông tin đơn hàng</p>
                     </div>
                     <div
                         onClick={() => handleClick("Danh mục yêu thích", "/account/favorite")}
-                        className={activePath === "Danh mục yêu thích" ? "flex gap-3 shadow p-2 rounded-md" : "flex gap-3"}
+                        className={`flex justify-canter md:justify-between items-center md:gap-2 rounded-md p-2 ${activePath === "Danh mục yêu thích" ? "shadow  bg-slate-200" : ""}`}
                     >
-                        <Heart className="stroke-red-500" />
-                        <p>Danh mục yêu thích</p>
-                    </div>
-                    <div
-                        onClick={() => handleClick("Cài đặt", "/account/setting")}
-                        className={activePath === "Cài đặt" ? "flex gap-3 shadow p-2 rounded-md" : "flex gap-3"}
-                    >
-                        <Settings className="stroke-gray-500" />
-                        <p>Cài đặt</p>
+                        <Heart className="grow md:grow-0 stroke-red-500 size-6 md:size-8" />
+                        <p className="hidden md:inline-block text-center">Danh mục yêu thích</p>
                     </div>
                     <Button
                         variant={"outline"}
-                        onClick={handleLogout}
-                        disabled={isLoggingOut || isSessionLoading} // Disable button while logging out or session is loading
-                        className={`mt-6 border-gray-400 text-gray-400 ${isLoggingOut || isSessionLoading
+                        onClick={() => handleLogout()}
+                        disabled={isLoggingOut} // Disable button while logging out
+                        className={`p-1 md:p-4 md:mt-4 border-gray-400 text-gray-400 ${isLoggingOut
                             ? "cursor-not-allowed opacity-50"
                             : "hover:bg-gray-400 hover:bg-opacity-20 hover:text-gray-400"
                             }`}
                     >
-                        {isLoggingOut || isSessionLoading ? (
+                        {isLoggingOut ? (
                             <div className="flex items-center gap-2">
                                 <Loader2 className="animate-spin" />
-                                <span>Đang đăng xuất</span>
+                                <span className="hidden md:inline">Đang đăng xuất</span>
                             </div>
                         ) : (
                             <>
-                                <LogOut className="stroke-gray-400" /> Đăng xuất
+                                <LogOut className="stroke-gray-400" />
+                                <span className="hidden md:inline">Đăng xuất</span>
                             </>
                         )}
                     </Button>
                 </div>
-                {children}
+                <div className="grow py-5 md:py-10">
+                    {children}
+                </div>
             </div>
-            <footer className="bg-black h-64"></footer>
         </main>
     );
 }

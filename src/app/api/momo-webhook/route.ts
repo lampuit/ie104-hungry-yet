@@ -1,8 +1,9 @@
-import { NextRequest, NextResponse } from "next/server";
-import { invoices, payments, carts } from "@/drizzle/schema/project";
-import { eq } from "drizzle-orm";
 import crypto from "crypto";
+import { NextRequest, NextResponse } from "next/server";
+import { invoices, payments } from "@/drizzle/schema/project";
+import { eq } from "drizzle-orm";
 import { db } from "@/drizzle/db";
+import { clearCart } from "@/lib/actions/cart";
 
 export async function POST(req: NextRequest) {
   try {
@@ -22,8 +23,8 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ message: "Sai Signature" }, { status: 400 });
     }
 
-    const invoiceId = body.orderId.split("_")[0];
-    const paymentId = body.orderId.split("_")[1];
+    const invoiceId = body.extraData.split("_")[0];
+    const paymentId = body.extraData.split("_")[1];
 
     let paymentStatus: any;
     let invoiceStatus: any;
@@ -32,12 +33,7 @@ export async function POST(req: NextRequest) {
       case 0:
         paymentStatus = "success";
         invoiceStatus = "accepted";
-        const userId = sessionStorage.getItem("userId");
-        if (userId) {
-          await db.delete(carts).where(eq(carts.userId, userId));;
-        } else {
-          console.error("No userId found in sessionStorage");
-        }
+
         break;
       case 9000:
         paymentStatus = "pending";

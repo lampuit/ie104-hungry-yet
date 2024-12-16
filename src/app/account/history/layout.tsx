@@ -1,10 +1,20 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Package, PackageCheck, PackageX, Image, Paperclip } from "lucide-react";
+import { PackageCheck, PackageX, CookingPot, Truck, NotebookPen, CircleCheck } from 'lucide-react';
 import { usePathname, useRouter } from "next/navigation";
-import { ReactNode, useEffect, useState } from "react";
+import { ReactNode } from "react";
+import useSWR from "swr";
+import { getSession } from "@/lib/auth-client";
+import LoginPrompt from "@/components/ui/login-prompt";
+import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
+
+// Fetch userId from session
+const fetcherUserId = async () => {
+    const response = await getSession();
+    const userId = response?.data?.user?.id as string;
+    return userId;
+};
 
 export default function Layout({
     children,
@@ -13,50 +23,45 @@ export default function Layout({
 }) {
     const pathname = usePathname();
     const router = useRouter();
-    const [activeButton, setActiveButton] = useState<string>("Đang giao");
+    const { data: userId } = useSWR('userId', fetcherUserId)
 
-    // useEffect(() => {
-    //     if (pathname === "/account/history/complete") {
-    //         setActiveButton("Hoàn thành");
-    //     } else if (pathname === "/account/history/cancel") {
-    //         setActiveButton("Đã hủy");
-    //     } else {
-    //         setActiveButton("Đang giao");
-    //     }
-    // }, [pathname]);
+    const buttons = [
+        { name: "Chờ xác nhận", icon: NotebookPen, path: "/account/history" },
+        { name: "Đã xác nhận", icon: CircleCheck, path: "/account/history/accepted" },
+        { name: "Đang chuẩn bị", icon: CookingPot, path: "/account/history/cooking" },
+        { name: "Đang giao", icon: Truck, path: "/account/history/ready" },
+        { name: "Hoàn thành", icon: PackageCheck, path: "/account/history/delivered" },
+        { name: "Đã hủy", icon: PackageX, path: "/account/history/cancel" },
+    ];
 
-    const handleButtonClick = (buttonName: string, path: string) => {
-        setActiveButton(buttonName);
+    const handleButtonClick = (path: string) => {
         router.push(path);
     };
+
     return (
-        <div className="grow flex flex-col gap-4 px-20">
-            <h1 className="text-2xl font-semibold">Đơn hàng của tôi</h1>
-            <div className="flex flex-col lg:flex-row">
-                <div className="flex flex-col gap-5 w-full">
-                    <div className="flex gap-4 justify-around bg-white rounded-lg p-2 shadow-md">
-                        <Button
-                            variant={activeButton === "Đang giao" ? "secondary" : "ghost"}
-                            onClick={() => handleButtonClick("Đang giao", "/account/history")}
-                        >
-                            <Package /> Đang giao
-                        </Button>
-                        <Button
-                            variant={activeButton === "Hoàn thành" ? "secondary" : "ghost"}
-                            onClick={() => handleButtonClick("Hoàn thành", "/account/history/complete")}
-                        >
-                            <PackageCheck /> Hoàn thành
-                        </Button>
-                        <Button
-                            variant={activeButton === "Đã hủy" ? "secondary" : "ghost"}
-                            onClick={() => handleButtonClick("Đã hủy", "/account/history/cancel")}
-                        >
-                            <PackageX /> Đã hủy
-                        </Button>
-                    </div>
+        !userId ? <LoginPrompt /> :
+            <div className="flex flex-col gap-4">
+                <h1 className="text-2xl font-semibold">Đơn hàng của tôi</h1>
+                <div className="flex flex-col gap-1 md:gap-5 w-full overflow-x-auto">
+                    <ScrollArea className="w-full overflow-hidden flex whitespace-nowrap">
+                        <div className="flex lg:gap-2 xl:gap-4 justify-around items-center bg-white rounded-lg xl:px-1 xl:py-2 shadow-md">
+                            {buttons.map((button) => (
+                                <Button
+                                    key={button.name}
+                                    className={pathname === button.path ? "bg-slate-200" : ""}
+                                    variant={pathname === button.path ? "secondary" : "ghost"}
+                                    onClick={() => handleButtonClick(button.path)}
+                                >
+                                    <button.icon className="h-4 w-4" />
+                                    <span className="hidden md:inline text-xs">{button.name}</span>
+                                </Button>
+                            ))}
+                        </div>
+                        <ScrollBar orientation="horizontal" />
+                    </ScrollArea>
                     {children}
                 </div>
             </div>
-        </div>
     )
-} 
+}
+

@@ -12,6 +12,11 @@ export async function submitPayment(
   discountId: string | undefined,
   paymentMethod: any,
   userId: string,
+  deliveryAddress: string,
+  time: number,
+  note: string,
+  phone: string,
+  append?: any,
 ) {
   try {
     const [payment] = await db
@@ -29,8 +34,11 @@ export async function submitPayment(
         paymentId: payment.id,
         discountId,
         totalAmount,
+        deliveryAddress: deliveryAddress,
+        deliveryTime: time,
+        note: note,
+        phone: phone,
         status: "pending",
-        deliveryAddress: "",
       })
       .returning();
 
@@ -48,6 +56,7 @@ export async function submitPayment(
       paymentResult = await createMomoPayment(
         invoice.id,
         payment.id,
+        userId,
         totalAmount,
         `Hóa đơn #${new Date().getTime()}`,
         carts,
@@ -55,16 +64,26 @@ export async function submitPayment(
 
       if (paymentResult.success && paymentResult.payUrl) {
         await db
-          .update(invoices)
-          .set({ status: "accepted" })
-          .where(eq(invoices.id, payment.id));
+          .update(payments)
+          .set({ payUrl: paymentResult.payUrl })
+          .where(eq(payments.id, payment.id));
+
+        await clearCart(userId);
+
+        if (append) {
+          append({
+            role: "assistant",
+            content: `Người dùng đặt tạo đơn hàng mới ${invoice.id}`,
+            appear: false,
+          });
+        }
 
         return { success: true, paymentUrl: paymentResult.payUrl };
       } else {
         await db
           .update(invoices)
           .set({ status: "cancelled" })
-          .where(eq(invoices.id, payment.id));
+          .where(eq(invoices.id, invoice.id));
 
         await db
           .update(payments)
@@ -77,12 +96,7 @@ export async function submitPayment(
       await db
         .update(invoices)
         .set({ status: "accepted" })
-        .where(eq(invoices.id, payment.id));
-
-      await db
-        .update(payments)
-        .set({ status: "success" })
-        .where(eq(payments.id, payment.id));
+        .where(eq(invoices.id, invoice.id));
 
       await clearCart(userId);
 

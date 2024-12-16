@@ -11,13 +11,18 @@ import {
   getAllCategory,
   getUserById,
   getUserWorkShift,
-  getCartsByUserId
+  getCartsByUserId,
+  getRatingsByProductId,
+  getInvoiceByUserId,
+  getInvoiceDetail,
+  filterAndSearch
 } from "@/lib/data";
 
 import { clearCart } from "./cart";
 
 import { updateUser } from "./user";
 import { createRatings, updateRating } from "./rating";
+import { updateInvoiceStatus } from "./invoice";
 
 //sucessfull SHOPPING CART
 async function testcreateCart() {
@@ -87,14 +92,16 @@ async function testDeleteFavorite() {
 
 // testDeleteFavorite()
 
-// async function testGetProductByCategoryId(id: string) {
-//   const response = await getProductByCategoryId(
-//     id
-//   );
-//   console.log("Product Data:", response);
-// }
+async function testGetProductByCategoryId(id: string) {
+  const response = await getProductByCategoryId(
+    id,
+    1,
+    10
+  );
+  console.log("Product Data:", response);
+}
 
-// testGetProductByCategoryId('58f8a47c-c295-4e70-8482-ba02444155fc');
+// testGetProductByCategoryId('fe02d3ff-f145-46b9-9714-5a18dbf4b5cc');
 
 async function testGetAllCategory() {
   const response = await getAllCategory();
@@ -157,4 +164,48 @@ async function testUpdateRating() {
   await updateRating(data);
 }
 
-testUpdateRating()
+// testUpdateRating()
+
+async function testGetRatingByProduct() {
+  const response = await getRatingsByProductId("ba959b90-66c9-4313-a97d-43818851f7b7");
+  console.log("Rating Data:", response);
+}
+// testGetRatingByProduct();
+
+async function testGetInvoiceByUserId() {
+  const response = await getInvoiceByUserId("2twIpHSepp6aENGIF-Zfq", "pending");
+  console.log("Invoice Data:", response);
+}
+
+// testGetInvoiceByUserId();
+
+async function testGetInvoiceDetail() {
+  const response = await getInvoiceDetail("28c7ece9-05b1-4cbe-a0a4-4175f8670265");
+  console.log("Invoice Detail Data:", response?.orders);
+}
+
+// testGetInvoiceDetail()
+
+async function testFilterAndSearch() {
+  const formData = new FormData();
+  formData.append("categoryId", "fe02d3ff-f145-46b9-9714-5a18dbf4b5cc");
+  formData.append("minPrice", "");
+  formData.append("maxPrice", "");
+  formData.append("rating", "");
+  formData.append("search", "");
+  formData.append("page", "1");
+  formData.append("pageSize", "10");
+  const reespone = await filterAndSearch(formData);
+  console.log("Filter And Search:", reespone);
+}
+
+// testFilterAndSearch();
+
+async function testUpdateInVoice() {
+  const response = await updateInvoiceStatus("e5b2733e-24c6-4161-b7ac-fa670e7bc5ef", "cancelled");
+  console.log("Update Invoice Status:", response);
+}
+
+// testUpdateInVoice();
+
+

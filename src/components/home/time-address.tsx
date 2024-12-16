@@ -2,14 +2,14 @@ import { Clock3, MapPin } from "lucide-react"
 
 export function TimeAndAddress() {
     return (
-        <div className="flex flex-col justify-around items-center text-start text-white text-xs font-normal bg-black bg-opacity-70 w-48 px-1 py-3 gap-3">
-            <div className="flex justify-start items-center w-11/12 gap-3">
-                <Clock3 />
+        <div className="flex flex-col justify-around items-center text-start text-white text-xs font-normal bg-black bg-opacity-70 w-64 px-1 py-3 gap-3">
+            <div className="flex justify-start items-center w-full gap-3 pl-2">
+                <Clock3 size={20}/>
                 <p>Thứ hai - Chủ nhật<br />8:00 AM - 10:00 PM</p>
             </div>
-            <div className="flex justify-start items-center w-11/12 gap-3">
-                <MapPin />
-                <p>Đường ABC, Quận 1,<br />TP Hồ Chí Minh</p>
+            <div className="flex justify-start items-center w-full gap-3 pl-2">
+                <MapPin size={20}/>
+                <p>Đường Hàn Thuyên, Khu Phố 6,<br />Linh Trung, Thủ Đức, TP HCM</p>
             </div>
         </div>
     );

@@ -1,35 +1,33 @@
+import { Button } from "@/components/ui/button";
+import { CircleCheck } from "lucide-react";
+import Link from "next/link";
+
 export default function SuccessPage() {
   return (
-    <div className="min-h-screen bg-green-50 flex items-center justify-center">
-      <div className="bg-white shadow-lg rounded-lg p-8 text-center">
-        <div className="text-green-500">
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            fill="none"
-            viewBox="0 0 24 24"
-            strokeWidth={2}
-            stroke="currentColor"
-            className="w-16 h-16 mx-auto mb-4"
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              d="M9 12l2 2 4-4m8 2a9 9 0 11-18 0 9 9 0 0118 0z"
-            />
-          </svg>
-        </div>
-        <h1 className="text-2xl font-bold text-gray-800 mb-4">
+    <div className="bg-green-50 h-screen flex items-center justify-center">
+      <div className="flex flex-col items-center justify-center bg-white rounded-lg p-8 text-center shadow-lg gap-2">
+        <CircleCheck className="stroke-green-500 size-16" />
+        <h1 className="mb-4 text-2xl font-bold text-gray-800">
           Thanh toán thành công!
         </h1>
-        <p className="text-gray-600 mb-6">
-          Cảm ơn bạn đã đặt đồ ăn. Hóa đơn và thông tin chi tiết sẽ được hiển thị trong phần thông tin đơn hàng.
+        <p className="mb-6 text-gray-600">
+          Cảm ơn bạn đã đặt đồ ăn. Hóa đơn và thông tin chi tiết sẽ được hiển
+          thị trong phần thông tin đơn hàng.
         </p>
-        <a
-          href="/"
-          className="inline-block bg-green-500 hover:bg-green-600 text-white font-medium py-2 px-4 rounded-lg"
-        >
-          Quay về trang chủ
-        </a>
+        <div className="flex flex-col items-center justify-center sm:flex-row gap-2">
+          <Button
+            className="inline-block rounded-lg bg-amber-500 px-4 py-2 font-medium text-white hover:bg-amber-600">
+            <Link href="/account/history">
+              Chi tiết đơn hàng
+            </Link>
+          </Button>
+          <Button
+            className="inline-block rounded-lg bg-green-500 px-4 py-2 font-medium text-white hover:bg-green-600">
+            <Link href="/">
+              Quay về trang chủ
+            </Link>
+          </Button>
+        </div>
       </div>
     </div>
   );
