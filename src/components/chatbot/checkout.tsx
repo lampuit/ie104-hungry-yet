@@ -6,7 +6,7 @@ import { PaymentForm } from "@/components/checkout/payment-form";
 import { Form } from "@/components/ui/form";
 import { ToastAction } from "@/components/ui/toast";
 import { useToast } from "@/hooks/use-toast";
-import { submitPayment } from "@/lib/actions/submit-payment";
+import { submitPayment } from "@/lib/actions/payment";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
