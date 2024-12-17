@@ -198,14 +198,13 @@ export async function getValidDiscounts() {
 export async function fetchValidDiscount(code: string) {
   try {
     const now = new Date();
-    const discount = await db.query.discounts.findFirst({
+    return await db.query.discounts.findFirst({
       where: and(
         eq(discounts.code, code),
         or(isNull(discounts.fromDate), lte(discounts.fromDate, now)),
         or(isNull(discounts.toDate), gte(discounts.toDate, now)),
       ),
     });
-    return discount;
   } catch (error) {
     throw new Error("Không thể lấy dữ liệu mã ưu đãi.");
   }

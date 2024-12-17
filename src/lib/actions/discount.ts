@@ -16,7 +16,9 @@ export async function createDiscount(values: any) {
   const newDiscount = CreateDiscount.parse(values);
 
   try {
-    await db.insert(discounts).values(newDiscount);
+    await db
+      .insert(discounts)
+      .values({ ...newDiscount, code: newDiscount?.code?.toUpperCase() });
   } catch (error) {
     if (error instanceof Error)
       throw new Error("Lỗi cơ sở dữ liệu: Không thể thêm mã.");

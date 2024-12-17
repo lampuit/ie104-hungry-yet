@@ -78,7 +78,11 @@ export async function submitPayment(
           });
         }
 
-        return { success: true, paymentUrl: paymentResult.payUrl };
+        return {
+          success: true,
+          paymentUrl: paymentResult.payUrl,
+          invoiceId: invoice.id,
+        };
       } else {
         await db
           .update(invoices)
@@ -100,7 +104,7 @@ export async function submitPayment(
 
       await clearCart(userId);
 
-      return { success: true };
+      return { success: true, invoiceId: invoice.id };
     }
 
     throw new Error("Thanh toán không hợp lệ");

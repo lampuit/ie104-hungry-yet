@@ -98,7 +98,13 @@ const InvoiceCard = ({ invoice }: { invoice: any }) => {
             {invoice.payment.status === "pending" && invoice.payment.payUrl && (
               <Button
                 size="sm"
-                onClick={() => window.open(invoice.payment.payUrl, "_blank")}
+                onClick={() =>
+                  window.open(
+                    invoice.payment.payUrl,
+                    "_blank",
+                    "noopener,noreferrer",
+                  )
+                }
               >
                 Trả Ngay
               </Button>
