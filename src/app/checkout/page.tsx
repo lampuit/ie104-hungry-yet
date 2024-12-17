@@ -22,7 +22,7 @@ export default async function CheckoutPage() {
   return (
     <Suspense fallback={<LoadingSpinner />}>
       <div className="container mx-auto px-4 py-8">
-        <h1 className="mb-8 text-3xl font-bold">Checkout</h1>
+        <h1 className="mb-8 text-3xl font-bold">Thanh toán</h1>
         <Checkout carts={carts} userId={session.user.id} />
       </div>
     </Suspense>
