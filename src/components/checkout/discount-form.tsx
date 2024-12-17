@@ -11,12 +11,14 @@ export function DiscountForm({
   discountId,
   onDiscountChange,
   onDiscountIdChange,
+  append,
 }: {
   subtotal: number;
   discount: number;
   discountId: string | undefined;
   onDiscountChange: (value: number) => void;
   onDiscountIdChange: (value: string | undefined) => void;
+  append?: any;
 }) {
   const { toast } = useToast();
   const [discountCode, setDiscountCode] = useState("");

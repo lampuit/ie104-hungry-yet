@@ -68,7 +68,7 @@ export default function Homepage() {
       {/*Herosection ở màn hình Mobile*/}
       <MobileHero />
 
-      <section className="my-16 hidden overflow-clip sm:inline-block">
+      <section className="my-16 hidden w-full overflow-hidden sm:inline-block">
         <Categories />
       </section>
 

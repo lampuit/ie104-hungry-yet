@@ -1,16 +1,47 @@
 "use client";
 
+import { useState } from "react";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import {
-  Card,
-  CardContent,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
-import { Calendar, CreditCard, Eye, ShoppingCart } from "lucide-react";
-import { useState } from "react";
+import { ShoppingCart, Truck, Calendar, DollarSign } from "lucide-react";
+
+const statusColors: Record<any, string> = {
+  pending: "bg-yellow-500",
+  accepted: "bg-blue-500",
+  cooking: "bg-orange-500",
+  ready: "bg-purple-500",
+  delivered: "bg-green-500",
+  cancelled: "bg-red-500",
+};
+
+const status: Record<any, string> = {
+  pending: "Đang xử lý",
+  accepted: "Xác nhận",
+  cooking: "Đang nấu",
+  ready: "Sẵn sàng",
+  delivered: "Đã giao",
+  cancelled: "Đã hủy",
+};
+
+const paymentStatusColors: Record<any, string> = {
+  pending: "text-yellow-500",
+  failed: "text-red-500",
+  success: "text-green-500",
+  cancelled: "text-gray-500",
+};
+
+const paymentStatus: Record<any, string> = {
+  pending: "Đang xử lý",
+  failed: "Thất bại",
+  success: "Thành công",
+  cancelled: "Đã hủy",
+};
+
+const method: Record<any, string> = {
+  paylater: "Tiền mặt",
+  momo: "MOMO",
+};
 
 function DongFormat(number: number) {
   return new Intl.NumberFormat("vi-VN", {
@@ -19,32 +50,80 @@ function DongFormat(number: number) {
   }).format(number);
 }
 
-const possibleColors = [
-  "bg-yellow-500",
-  "bg-green-500",
-  "bg-purple-500",
-  "bg-pink-500",
-  "bg-blue-500",
-  "bg-red-500",
-];
+const InvoiceCard = ({ invoice }: { invoice: any }) => {
+  const totalAmount = invoice.orders.reduce(
+    (sum: any, order: any) => sum + order.price * order.quantity,
+    0,
+  );
 
-const status = [
-  "pending",
-  "accepted",
-  "cooking",
-  "ready",
-  "delivered",
-  "cancelled",
-];
+  return (
+    <Card className="mb-4 overflow-hidden">
+      <div className={`h-2 ${statusColors[invoice.status]}`} />
+      <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+        <CardTitle className="truncate text-sm font-medium">
+          Hóa đơn #{invoice.id}
+        </CardTitle>
+        <Badge
+          variant={invoice.status === "delivered" ? "default" : "secondary"}
+        >
+          {status[invoice.status]}
+        </Badge>
+      </CardHeader>
+      <CardContent>
+        <div className="flex items-center justify-between text-2xl font-bold">
+          {DongFormat(invoice.totalAmount)}
+          <div className="flex items-center space-x-2 text-sm text-muted-foreground">
+            <ShoppingCart className="h-4 w-4" />
+            <span>{invoice.orders.length} sản phẩm</span>
+          </div>
+        </div>
+        <div className="mt-4 space-y-2">
+          <div className="flex items-center space-x-2 text-sm">
+            <Calendar className="h-4 w-4" />
+            <span>{new Date(invoice.createdAt).toLocaleDateString()}</span>
+          </div>
+          <div className="flex items-center justify-between space-x-2 text-sm">
+            <div className="flex h-9 items-center space-x-2">
+              <DollarSign className="h-4 w-4" />
+              <span>
+                Thanh toán:{" "}
+                <span
+                  className={`font-semibold ${paymentStatusColors[invoice.payment.status]}`}
+                >
+                  {paymentStatus[invoice.payment.status]}
+                </span>
+              </span>
+              <Badge variant="outline">{method[invoice.payment.method]}</Badge>
+            </div>
+            {invoice.payment.status === "pending" && invoice.payment.payUrl && (
+              <Button
+                size="sm"
+                onClick={() =>
+                  window.open(
+                    invoice.payment.payUrl,
+                    "_blank",
+                    "noopener,noreferrer",
+                  )
+                }
+              >
+                Trả Ngay
+              </Button>
+            )}
+          </div>
+          {invoice.shipper && (
+            <div className="flex items-center space-x-2 text-sm">
+              <Truck className="h-4 w-4" />
+              <span>Người giao hàng: {invoice.shipper.name}</span>
+            </div>
+          )}
+        </div>
+      </CardContent>
+    </Card>
+  );
+};
 
-export default function InvoiceListCard({
-  invoices,
-  append,
-}: {
-  invoices: any[];
-  append: any;
-}) {
-  const [sortBy, setSortBy] = useState("date");
+export default function InvoiceListCard({ invoices }: { invoices: any }) {
+  const [sortBy, setSortBy] = useState("createdAt");
   const [sortOrder, setSortOrder] = useState<"asc" | "desc">("desc");
 
   const sortedInvoices = [...invoices].sort((a, b) => {
@@ -63,59 +142,17 @@ export default function InvoiceListCard({
   };
 
   return (
-    <div className="round-md relative z-50 max-w-2xl border p-4">
+    <div className="relative z-50 max-w-xl rounded-md border p-4">
       <h1 className="mb-4 text-2xl font-bold">Danh Sách Hóa Đơn</h1>
       <div className="mb-4 flex space-x-4">
-        <button onClick={() => toggleSort("createdAt")}>
-          Sắp xếp theo ngày
-        </button>
-        <button onClick={() => toggleSort("totalAmount")}>
-          Sắp xếp theo số tiền
-        </button>
+        <Button onClick={() => toggleSort("createdAt")}>Xếp theo Ngày</Button>
+        <Button onClick={() => toggleSort("status")}>
+          Xếp theo Trạng Thái
+        </Button>
       </div>
-      <div className="grid gap-4 sm:grid-cols-1 md:grid-cols-2">
-        {sortedInvoices.map((invoice: any, index) => (
-          <Card className="mb-4 overflow-hidden" key={index}>
-            <div
-              className={`h-2 ${possibleColors[status.findIndex((item: any) => item === invoice.status)]}`}
-            />
-            <CardHeader className="flex flex-row items-center justify-between gap-4 space-y-0 pb-2">
-              <CardTitle
-                className="z-50 cursor-pointer truncate text-sm font-medium"
-                onClick={() => navigator.clipboard.writeText(invoice.id)}
-              >
-                #{invoice.id}
-              </CardTitle>
-              <Badge
-                variant={
-                  invoice.payment.status === "success"
-                    ? "default"
-                    : invoice.status === "pending"
-                      ? "secondary"
-                      : "destructive"
-                }
-              >
-                {invoice.payment.status}
-              </Badge>
-            </CardHeader>
-            <CardContent>
-              <div className="flex items-center justify-between text-2xl font-bold">
-                {DongFormat(invoice.totalAmount)}
-                <div className="flex items-center space-x-2 text-sm text-muted-foreground">
-                  <ShoppingCart className="h-4 w-4" />
-                  <span>{invoice.orders.length} sản phẩm</span>
-                </div>
-              </div>
-              <div className="flex items-center space-x-2 pt-4 text-sm text-muted-foreground">
-                <Calendar className="h-4 w-4" />
-                <span>
-                  {new Date(invoice.createdAt).toLocaleString("vi-VN", {
-                    timeZone: "UTC",
-                  })}
-                </span>
-              </div>
-            </CardContent>
-          </Card>
+      <div className="grid gap-4">
+        {sortedInvoices.map((invoice) => (
+          <InvoiceCard key={invoice.id} invoice={invoice} />
         ))}
       </div>
     </div>
