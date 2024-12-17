@@ -160,8 +160,7 @@ export async function fetchProducts() {
         categoryName: categories.name,
       })
       .from(products)
-      .leftJoin(categories, eq(products.categoryId, categories.id))
-      .limit(5);
+      .leftJoin(categories, eq(products.categoryId, categories.id));
   } catch (error) {
     throw new Error("Không thể lấy dữ liệu danh sách sản phẩm.");
   }
