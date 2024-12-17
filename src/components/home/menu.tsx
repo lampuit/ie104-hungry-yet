@@ -8,8 +8,8 @@ import useSWR from "swr";
 import Autoplay from "embla-carousel-autoplay"
 import { Charm } from "next/font/google";
 const charm = Charm({
-  subsets: ["vietnamese"],
-  weight: ["400", "700"],
+    subsets: ["vietnamese"],
+    weight: ["400", "700"],
 });
 
 import {
@@ -31,7 +31,7 @@ export function Menu() {
     const router = useRouter();
     const plugin = React.useRef(
         Autoplay({ delay: 2000, stopOnInteraction: true })
-      )
+    )
     const handleCategoryClick = (categoryId: string) => {
         localStorage.setItem("category", categoryId);
         router.push("/menu");
@@ -63,13 +63,7 @@ export function Menu() {
                             <div className="overflow-clip h-[100px] sm:h-[200px] relative"
                                 onClick={() => handleCategoryClick(category.id)}>
                                 <Image
-                                    src={category.name === "Cơm" ? "https://aw6zddwvvm1te20u.public.blob.vercel-storage.com/C%C6%A1m%20s%C6%B0%E1%BB%9Dn-Rhh9PxlZbTvaThevBJXUraS3Aqrvl2" :
-                                        category.name === "Món nước" ? "https://aw6zddwvvm1te20u.public.blob.vercel-storage.com/Ph%E1%BB%9F%20b%C3%B2-jE3qCxmz6FXq9U01SZ2zAyV83U4XnB" :
-                                            category.name === "Đồ uống" ? "https://aw6zddwvvm1te20u.public.blob.vercel-storage.com/C%C3%A0%20ph%C3%AA%20s%E1%BB%AFa%20%C4%91%C3%A1-PFARJLTrTEgr6UEFJeeKpA6jaMc4mK" :
-                                                category.name === "Bánh ngọt" ? "https://aw6zddwvvm1te20u.public.blob.vercel-storage.com/B%C3%A1nh%20b%C3%B2-ljJkUSP5kxOQtmEmjvwOKVkoOxeIgo" :
-                                                    category.name === "Món lẩu" ? "https://aw6zddwvvm1te20u.public.blob.vercel-storage.com/L%E1%BA%A9u%20th%C3%A1i%20chua%20cay-doiXtZESEyMWNfB2cYi7957M8xTMXt" :
-                                                        "https://aw6zddwvvm1te20u.public.blob.vercel-storage.com/B%C3%A1nh%20tr%C3%A1ng%20tr%E1%BB%99n-qvzjvOKGOjQrrD32G8t4VXhbKx4tNW"
-                                    }
+                                    src={category.imageUrl || ""}
                                     alt={category.name}
                                     layout="fill"
                                     objectFit="cover"
