@@ -1,5 +1,14 @@
-## 🌟 Dự án "Hungry Yet?" : Website đặt đồ ăn trực tuyến
-Dự án "Hungry Yet?" là một ứng dụng web hiện đại cho phép người dùng đặt đồ ăn trực tuyến với các tính năng tối ưu, giao diện đẹp mắt và trải nghiệm mượt mà. Dự án sử dụng các công nghệ tiên tiến trong ngành phát triển web nhằm mang lại hiệu năng và khả năng mở rộng tốt.
+## 🌟 Dồ án môn học "Hungry Yet?" : Website đặt đồ ăn trực tuyến
+Đồ án "Hungry Yet?" là một ứng dụng web hiện đại cho phép người dùng đặt đồ ăn trực tuyến với các tính năng tối ưu, giao diện đẹp mắt và trải nghiệm mượt mà. Dự án sử dụng các công nghệ tiên tiến trong ngành phát triển web nhằm mang lại hiệu năng và khả năng mở rộng tốt.
+
+## Lớp: IE104.P11  
+**GVHD**: ThS. Võ Tấn Khoa  
+**Nhóm sinh viên thực hiện**:
+1. **Phạm Thành Lam** - MSSV: 22520743
+2. **Trần Ngô Thanh Bình** - MSSV: 22520138
+3. **Đỗ Thanh Liêm** - MSSV: 22520751
+4. **Trần Minh Tùng** - MSSV: 22521622
+5. **Ngô Tuấn Kiệt** - MSSV: 22520719
 
 ## 🚀 Tính Năng Chính
 - **Quản lý món ăn, đơn hàng và khuyến mãi**: Hỗ trợ quản lý danh sách món ăn, theo dõi đơn hàng, cập nhật khuyến mãi.
@@ -20,7 +29,7 @@ Dự án "Hungry Yet?" là một ứng dụng web hiện đại cho phép ngư�
 - **Neon PostgreSQL**: Dịch vụ cơ sở dữ liệu PostgreSQL hiệu suất cao trên đám mây.
 - **Vercel AI SDK**: Tích hợp AI chatbot thông minh vào ứng dụng.
 - **Shadcn**: Tạo giao diện UI hiện đại và tinh tế.
-- **Framer Motion**: Thư viện tạo hiệu ứng animation mượt mà.
+- **Motion**: Thư viện tạo hiệu ứng animation mượt mà.
 
 ## 📂 Cấu Trúc Thư Mục
 ```plaintext
@@ -55,7 +64,13 @@ Dự án "Hungry Yet?" là một ứng dụng web hiện đại cho phép ngư�
 
 2. **Cài Đặt Package**
    ```bash
-   pnpm install
+   npm i
+   # or
+   yarn i
+   # or
+   pnpm i
+   # or
+   bun i
    ```
 
 3. **Tạo File .env.local**
@@ -82,7 +97,13 @@ Dự án "Hungry Yet?" là một ứng dụng web hiện đại cho phép ngư�
 
 4. **Chạy Dự Án**
    ```bash
+   npm run dev
+   # or
+   yarn dev
+   # or
    pnpm dev
+   # or
+   bun dev
    ```
    Ứng dụng sẽ chạy tại: [http://localhost:3000](http://localhost:3000)
 
