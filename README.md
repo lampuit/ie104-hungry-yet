@@ -1,4 +1,4 @@
-## 🌟 Dồ án môn học "Hungry Yet?" : Website đặt đồ ăn trực tuyến
+## 🌟 Đồ án môn học "Hungry Yet?" : Website đặt đồ ăn trực tuyến
 Đồ án "Hungry Yet?" là một ứng dụng web hiện đại cho phép người dùng đặt đồ ăn trực tuyến với các tính năng tối ưu, giao diện đẹp mắt và trải nghiệm mượt mà. Dự án sử dụng các công nghệ tiên tiến trong ngành phát triển web nhằm mang lại hiệu năng và khả năng mở rộng tốt.
 
 ## Lớp: IE104.P11  
