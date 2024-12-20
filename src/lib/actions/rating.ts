@@ -13,7 +13,7 @@ export async function createRatings(formData: FormData) {
     imageURL: formData.get("imageURL"),
     isAnonymous: Boolean(formData.get("isAnonymous")),
   });
-  console.log("rating",data);
+  console.log("rating", data);
   await db.insert(ratings).values(data);
 }
 

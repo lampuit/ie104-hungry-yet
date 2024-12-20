@@ -176,7 +176,7 @@ const TimePicker = () => {
 
       onValueChange(newVal);
     },
-    [value],
+    [onTimeChange, onValueChange, value],
   );
 
   const handleKeydown = React.useCallback(
@@ -415,7 +415,7 @@ const NaturalLanguageInput = React.forwardRef<
     }:${new Date().getMinutes()} ${hour >= 12 ? "PM" : "AM"}`;
     setInputValue(value ? formatDateTime(value) : "");
     onTimeChange(value ? Time : timeVal);
-  }, [value, Time]);
+  }, [value, Time, onTimeChange]);
 
   const handleParse = React.useCallback(
     (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -439,7 +439,7 @@ const NaturalLanguageInput = React.forwardRef<
         onTimeChange(`${hour}:${parsedDateTime.getMinutes()} ${PM_AM}`);
       }
     },
-    [value],
+    [onTimeChange, onValueChange],
   );
 
   const handleKeydown = React.useCallback(
@@ -467,7 +467,7 @@ const NaturalLanguageInput = React.forwardRef<
           break;
       }
     },
-    [value],
+    [onTimeChange, onValueChange],
   );
 
   return (
@@ -512,7 +512,7 @@ const DateTimeLocalInput = ({
         onValueChange(parsedDateTime);
       }
     },
-    [value, Time],
+    [Time, onValueChange],
   );
 
   return (
