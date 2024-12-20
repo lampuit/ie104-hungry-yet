@@ -25,7 +25,8 @@ import { useState } from "react";
 import { useForm } from "react-hook-form";
 import z from "zod";
 import { updateInvoices, updateStatus } from "@/lib/actions/invoice";
-import { toast } from "sonner";
+import { useToast } from "@/hooks/use-toast";
+import { ToastAction } from "../ui/toast";
 import { createCart } from "@/lib/actions/cart";
 import { Textarea } from "../ui/textarea";
 import { createRatings } from "@/lib/actions/rating";
@@ -73,6 +74,7 @@ export function CardHistory({ invoice }: { invoice: Invoice }) {
     const isAcceptedPage = pathname.includes("/account/history/accepted");
 
     const router = useRouter();
+    const { toast } = useToast();
 
     // State for managing selected reasons
     const [selectedReasons, setSelectedReasons] = useState<string[]>([]);
@@ -119,15 +121,23 @@ export function CardHistory({ invoice }: { invoice: Invoice }) {
 
             const result = await updateInvoices(formData);
             if (result.success) {
-                toast.success(result.message);
+                toast({
+                    title: result.message,
+                })
                 setIsDialogOpen(false);
 
             } else {
-                toast.error(result.message);
+                toast({
+                    variant: "destructive",
+                    title: result.message,
+                })
             }
         } catch (error) {
             console.error("Error updating invoice:", error);
-            toast.error("Cập nhật thông tin đơn hàng thất bại");
+            toast({
+                variant: "destructive",
+                title: "Cập nhật thông tin đơn hàng thất bại",
+            })
         }
     };
 
@@ -140,16 +150,23 @@ export function CardHistory({ invoice }: { invoice: Invoice }) {
 
             const result = await updateStatus(formData);
             if (result.success) {
-                toast.success(result.message);
+                toast({
+                    title: result.message,
+                })
                 setConfirmDelete(false);
                 router.push("/account/history/cancel");
             } else {
-                toast.error(result.message);
+                toast({
+                    variant: "destructive",
+                    title: result.message,
+                })
             }
-
         } catch (error) {
             console.error("Error updating invoice:", error);
-            toast.error("Cập nhật thông tin đơn hàng thất bại");
+            toast({
+                variant: "destructive",
+                title: "Cập nhật thông tin đơn hàng thất bại",
+            })
         }
     }
 
@@ -162,11 +179,18 @@ export function CardHistory({ invoice }: { invoice: Invoice }) {
                 formData.append("quantity", order.quantity.toString() || "");
                 await createCart(formData);
             }
-            toast.success("Tất cả sản phẩm đã được thêm vào giỏ hàng");
+            toast({
+                title: "Thêm vào giỏ hàng thành công!",
+                description: "Tất cả sản phẩm đã duoc thêm vào giỏ hàng của bạn.",
+                action: <ToastAction altText="Xem giỏ hàng" onClick={() => router.push("/menu/cart")}>Xem</ToastAction>,
+              })  
             router.push("/menu/cart");
         } catch (error) {
             console.error("Error creating cart:", error);
-            toast.error("Thêm sản phẩm vào giỏ hàng thất bại");
+            toast({
+                variant: "destructive",
+                title: "Thêm sản phẩm vào giỏ hàng thất bại",
+              })
         }
     };
 
@@ -189,11 +213,16 @@ export function CardHistory({ invoice }: { invoice: Invoice }) {
                 formData.append("isAnonymous", isAnonymous ? "1" : "0");
                 await createRatings(formData);
             }
-            toast.success("Đánh giá đã được gửi thành công");
+            toast({
+                title: "Đánh giá đã được gửi thành công",
+              })  
             setIsDialogOpen(false);
         } catch (error) {
             console.error("Error submitting ratings:", error);
-            toast.error("Có lỗi xảy ra khi gửi đánh giá");
+            toast({
+                variant: "destructive",
+                title: "Có lỗi xảy ra khi gửi đánh giá",
+              })
         }
     };
 

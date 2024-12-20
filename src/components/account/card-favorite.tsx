@@ -6,11 +6,12 @@ import { Eye, ShoppingCart, X } from "lucide-react";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import LoadingSpinner from "../ui/loading-spinner";
 import { createCart } from "@/lib/actions/cart";
-import { toast } from "sonner";
 import { useRouter } from 'next/navigation';
 import { deleteFavorite } from "@/lib/actions/favorite";
 import { getSession } from "@/lib/auth-client";
 import useSWR from "swr";
+import { useToast } from "@/hooks/use-toast";
+import { ToastAction } from "../ui/toast";
 
 //get userId from session
 const fetcherUserId = async () => {
@@ -22,6 +23,7 @@ const fetcherUserId = async () => {
 export function AccountFavorite({ listFavorite, isLoading, mutate }: { listFavorite: any, isLoading: boolean, mutate: any }) {
     const { data: userId } = useSWR('userId', fetcherUserId);
     const router = useRouter();
+    const { toast } = useToast();
 
     const convertToVND = (price: number) => {
         return new Intl.NumberFormat("vi-VN", {
@@ -33,12 +35,19 @@ export function AccountFavorite({ listFavorite, isLoading, mutate }: { listFavor
     const handleDeleteFavorite = async (userId: string, productId: string) => {
         try {
             await deleteFavorite(userId, productId);
-            toast.success("Xóa yêu thích thành công");
+            toast({
+                title: "Xoá yêu thích thành công!",
+                description: "Sản phẩm đã được xoá khỏi danh mục yêu thích của bạn.",
+              })
             // router.push("/account/favorite");
             mutate();
         } catch (error) {
             console.error("Error deleting favorite:", error);
-            toast("Xóa yêu thích thất bại");
+            toast({
+                variant: "destructive",
+                title: "Xoá yêu thích thất bại!",
+                description: "Uh oh, có lỗi xảy ra khi xoá sản phẩm khỏi danh mục yêu thích của bạn.",
+              })
         }
     };
     return (
@@ -94,10 +103,18 @@ export function AccountFavorite({ listFavorite, isLoading, mutate }: { listFavor
                                             data.append("productId", item?.productId);
                                             data.append("quantity", '1');
                                             await createCart(data);
-                                            toast.success("Thêm vào giỏ hàng thành công");
+                                            toast({
+                                                title: "Thêm vào giỏ hàng thành công!",
+                                                description: "Sản phẩm đã duoc thêm vào giỏ hàng của bạn.",
+                                                action: <ToastAction altText="Xem giỏ hàng" onClick={() => router.push("/menu/cart")}>Xem</ToastAction>,
+                                              })                                            
                                         } catch (error) {
                                             console.error(error);
-                                            toast.error("Thêm vào giỏ hàng thất bại");
+                                            toast({
+                                                variant: "destructive",
+                                                title: "Thêm vào giỏ hàng thất bại!",
+                                                description: "Uh oh, có lỗi xảy ra khi thêm sản phẩm vào giỏ hàng của bạn.",
+                                              })    
                                         }
 
                                     }}
