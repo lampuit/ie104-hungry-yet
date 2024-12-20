@@ -19,7 +19,8 @@ import {
     AlertDialogTitle,
     AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
-import { toast } from "sonner";
+import { useToast } from "@/hooks/use-toast";
+import { ToastAction } from "@/components/ui/toast";
 import useSWR, { mutate } from "swr";
 import { getSession } from "@/lib/auth-client";
 
@@ -102,10 +103,15 @@ const AmountCell = ({ row, table }: { row: any; table: any }) => {
 
 const FavoriteCell = ({ row, updateTableData }: { row: any, updateTableData: (id: string, isFavorite: boolean) => void }) => {
     const [isFavorite, setIsFavorite] = useState(row.original.isFavorite);
+    const { toast } = useToast();
 
     const handleDeleteFavorite = async () => {
         const id = row.original.id;
         await deleteFavorite(userId || "", id);
+        toast({
+            title: "Đã bỏ yêu thích!",
+            description: `${row.original.name} đã được xoá khỏi danh mục yêu thích của bạn.`,
+        })
         setIsFavorite(false);
         updateTableData(id, false); // Update the table data immediately
     };
@@ -115,6 +121,10 @@ const FavoriteCell = ({ row, updateTableData }: { row: any, updateTableData: (id
         data.append("productId", row.original.id);
         data.append("userId", userId || "");
         await createFavorite(data);
+        toast({
+            title: "Đã thêm vào danh mục yêu thích!",
+            description: `${row.original.name} đã được thêm vào danh mục yêu thích của bạn.`,
+        })
         setIsFavorite(true);
         updateTableData(row.original.id, true); // Update the table data immediately
     };
@@ -128,11 +138,15 @@ const FavoriteCell = ({ row, updateTableData }: { row: any, updateTableData: (id
 };
 
 const DeleteCell = ({ row, mutate }: { row: any, mutate: () => void }) => {
+    const { toast } = useToast();
     const handleDeleteItem = async () => {
         const id = row.original.id;
         await deletecarts(id, userId || "");
         mutate(); // Update the table data immediately
-        toast("Xoá thành công");
+        toast({
+            title: "Xoá thành công!",
+            description: `${row.original.name} đã được xoá khỏi giỏ hàng của bạn.`,
+          })  
     };
 
     return <AlertDialog>

@@ -7,7 +7,8 @@ import { Button } from "@/components/ui/button";
 import { Loader2, Home, ArrowRight, Truck, UtensilsCrossed } from 'lucide-react';
 import { Card, CardHeader, CardContent, CardFooter } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
-import { toast } from 'sonner'
+import { useToast } from "@/hooks/use-toast";
+import { ToastAction } from "../ui/toast";
 import "react-toastify/dist/ReactToastify.css";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -28,6 +29,7 @@ const formSchema = z.object({
 
 export default function LoginForm() {
     const router = useRouter();
+    const { toast } = useToast();
     const [isPending, setIsPending] = useState(false);
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
@@ -64,7 +66,11 @@ export default function LoginForm() {
             }
 
         } catch (error) {
-            toast.error("Đăng nhập thất bại. Vui lòng kiểm tra lại thông tin đăng nhập");
+            toast({
+                title: "Đăng nhập thất bại!",
+                description: "Vui lòng kiểm tra lại thông tin đăng nhập.",
+                variant: "destructive",
+            });
         } finally {
             setIsPending(false);
         }
