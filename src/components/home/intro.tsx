@@ -63,6 +63,7 @@ export function Intro() {
         </div>
         <Image
           src="/images/intro-dish.jpg"
+          priority
           width={400}
           height={280}
           alt="Intro dish"
@@ -78,6 +79,7 @@ export function Intro() {
           width={400}
           height={280}
           alt="Intro dish"
+          priority
           className="hidden rounded-3xl lg:inline-block"
         ></Image>
         <div className="absolute end-2/3 -z-10 hidden h-80 w-full overflow-clip rounded-e-3xl bg-amber-300 lg:inline-block"></div>

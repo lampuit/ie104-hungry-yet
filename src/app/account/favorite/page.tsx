@@ -57,22 +57,20 @@ export default function Favorite() {
   return (
     <div className="flex grow flex-col gap-6">
       <h1 className="text-2xl font-semibold">Danh mục yêu thích</h1>
-      <div className="flex grow justify-between">
-        <div className="flex w-full flex-col gap-3">
-          {isLoading ? (
-            <LoadingSpinner />
-          ) : error ? (
-            <div>Error loading favorites. Please try again.</div>
-          ) : listFavorite && listFavorite.length > 0 ? (
-            <AccountFavorite
-              listFavorite={listFavorite}
-              isLoading={isLoading}
-              mutate={mutate}
-            />
-          ) : (
-            <div>Không có món ăn nào trong danh mục yêu thích.</div>
-          )}
-        </div>
+      <div className="grid gap-4 p-4 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+        {isLoading ? (
+          <LoadingSpinner />
+        ) : error ? (
+          <div>Error loading favorites. Please try again.</div>
+        ) : listFavorite && listFavorite.length > 0 ? (
+          <AccountFavorite
+            listFavorite={listFavorite}
+            isLoading={isLoading}
+            mutate={mutate}
+          />
+        ) : (
+          <div>Không có món ăn nào trong danh mục yêu thích.</div>
+        )}
       </div>
     </div>
   );
