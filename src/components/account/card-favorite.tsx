@@ -15,8 +15,6 @@ import { useRouter } from "next/navigation";
 import { deleteFavorite } from "@/lib/actions/favorite";
 import { getSession } from "@/lib/auth-client";
 import useSWR from "swr";
-import { useToast } from "@/hooks/use-toast";
-import { ToastAction } from "../ui/toast";
 
 //get userId from session
 const fetcherUserId = async () => {

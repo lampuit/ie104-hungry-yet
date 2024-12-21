@@ -1,5 +1,4 @@
-import { useToast } from "@/hooks/use-toast";
-import { ToastAction } from "../ui/toast";
+import { toast } from "sonner";
 import { Button } from "../ui/button";
 import { ShoppingCart } from "lucide-react";
 import { createCart } from "@/lib/actions/cart";
@@ -90,6 +89,7 @@ export const AddToCartButton = ({
       });
     }
   };
+
 
   return (
     <Button

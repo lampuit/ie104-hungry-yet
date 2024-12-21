@@ -33,8 +33,7 @@ import { useState } from "react";
 import { useForm } from "react-hook-form";
 import z from "zod";
 import { updateInvoices, updateStatus } from "@/lib/actions/invoice";
-import { useToast } from "@/hooks/use-toast";
-import { ToastAction } from "../ui/toast";
+import { toast } from "sonner";
 import { createCart } from "@/lib/actions/cart";
 import { Textarea } from "../ui/textarea";
 import { createRatings } from "@/lib/actions/rating";
@@ -430,6 +429,7 @@ export function CardHistory({ invoice }: { invoice: Invoice }) {
                             </h3>
                             <p className="text-sm text-gray-500">
                               {order.products.category?.name}
+
                             </p>
                           </div>
                         </div>
