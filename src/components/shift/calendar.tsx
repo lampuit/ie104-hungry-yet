@@ -24,7 +24,7 @@ export const ShiftCalendar = ({
   const start = startOfMonth(new Date(year, month));
   const end = endOfMonth(new Date(year, month));
   const weeks = eachWeekOfInterval({ start, end }, { weekStartsOn: 1 });
-  
+
   return weeks.map((week, weekIndex) => (
     <div
       key={weekIndex}

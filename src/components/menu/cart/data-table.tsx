@@ -1,11 +1,11 @@
-"use client"
+"use client";
 
 import {
   ColumnDef,
   flexRender,
   getCoreRowModel,
   useReactTable,
-} from "@tanstack/react-table"
+} from "@tanstack/react-table";
 
 import {
   Table,
@@ -14,20 +14,20 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "@/components/ui/table"
-import { Button } from "@/components/ui/button"
-import Link from "next/link"
+} from "@/components/ui/table";
+import { Button } from "@/components/ui/button";
+import Link from "next/link";
 
 interface DataTableProps<TData, TValue> {
-  columns: ColumnDef<TData, TValue>[]
-  data: TData[]
-  onQuantityChange: (id: string, newQuantity: number) => void
+  columns: ColumnDef<TData, TValue>[];
+  data: TData[];
+  onQuantityChange: (id: string, newQuantity: number) => void;
 }
 
 export function DataTable<TData, TValue>({
   columns,
   data,
-  onQuantityChange
+  onQuantityChange,
 }: DataTableProps<TData, TValue>) {
   const table = useReactTable({
     data,
@@ -38,10 +38,10 @@ export function DataTable<TData, TValue>({
         onQuantityChange(id, newQuantity);
       },
     },
-  })
+  });
 
   return (
-    <div className="rounded-md border w-11/12 lg:w-3/4">
+    <div className="w-11/12 rounded-md border lg:w-3/4">
       <Table>
         <TableHeader>
           {table.getHeaderGroups().map((headerGroup) => (
@@ -52,11 +52,11 @@ export function DataTable<TData, TValue>({
                     {header.isPlaceholder
                       ? null
                       : flexRender(
-                        header.column.columnDef.header,
-                        header.getContext()
-                      )}
+                          header.column.columnDef.header,
+                          header.getContext(),
+                        )}
                   </TableHead>
-                )
+                );
               })}
             </TableRow>
           ))}
@@ -78,9 +78,12 @@ export function DataTable<TData, TValue>({
           ) : (
             <TableRow>
               <TableCell colSpan={columns.length} className="h-24 text-center">
-                <div className="flex flex-col justify-around items-center gap-3">
+                <div className="flex flex-col items-center justify-around gap-3">
                   <div>Không có sản phẩm nào trong giỏ hàng!</div>
-                  <Button variant={"default"} className="bg-amber-500 hover:bg-red-500">
+                  <Button
+                    variant={"default"}
+                    className="bg-amber-500 hover:bg-red-500"
+                  >
                     <Link href={"/menu"}>Xem thực đơn</Link>
                   </Button>
                 </div>
@@ -90,5 +93,5 @@ export function DataTable<TData, TValue>({
         </TableBody>
       </Table>
     </div>
-  )
+  );
 }
