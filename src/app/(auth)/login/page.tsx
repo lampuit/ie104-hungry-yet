@@ -19,3 +19,4 @@ export default async function LoginPage() {
   // If no session or user is not logged in, show the login component
   return <LoginForm />;
 }
+

@@ -19,7 +19,6 @@ import { MobileHero } from "@/components/home/mobile-hero";
 import { MobileBenefit } from "@/components/home/mobile-benefit";
 import { Charm } from "next/font/google";
 import Chatbot from "@/components/chatbot/chat-bot";
-
 const charm = Charm({
   subsets: ["vietnamese"],
   weight: ["400", "700"],

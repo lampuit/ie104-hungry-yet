@@ -11,7 +11,7 @@ const CreateOrderProduct = insertOrderSchema.omit({
 
 export async function createOrderProduct(formData: FormData) {
   const data = CreateOrderProduct.parse({
-    orderId: formData.get("orderId"),
+    orderId: formData.get('orderId'),
     productId: formData.get("productId"),
     quantity: Number(formData.get("quantity")),
   });
@@ -22,21 +22,14 @@ export async function createOrderProduct(formData: FormData) {
 }
 
 export async function updateOrderProduct(formData: FormData) {
-  await db
-    .update(orders)
+  await db.update(orders)
     .set({ quantity: Number(formData.get("quantity")) })
-    .where(
-      and(
-        eq(orders.productId, formData.get("productId") as string),
-        eq(orders.invoiceId, formData.get("invoiceId") as string),
-      ),
-    );
+    .where(and(eq(orders.productId, formData.get("productId") as string), eq(orders.invoiceId, formData.get("invoiceId") as string)));
 }
 
 export async function deleteOrderProduct(productId: string, invoiceId: string) {
-  await db
-    .delete(orders)
-    .where(
-      and(eq(orders.productId, productId), eq(orders.invoiceId, invoiceId)),
-    );
+  await db.delete(orders).where(and(eq(orders.productId, productId), eq(orders.invoiceId, invoiceId)));
 }
+
+
+

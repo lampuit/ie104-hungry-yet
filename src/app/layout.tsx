@@ -18,8 +18,6 @@ import Footer from "@/components/ui/footer";
 export const montserrat = Montserrat({
   subsets: ["vietnamese"],
   weight: ["400", "500", "600", "700"],
-  display: "swap",
-  adjustFontFallback: false,
 });
 
 // Lấy session
@@ -35,7 +33,7 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const { data: userId } = useSWR("userId", fetcherUserId);
+  const { data: userId } = useSWR('userId', fetcherUserId);
 
   const pathname = usePathname();
 
@@ -47,18 +45,18 @@ export default function RootLayout({
 
   return (
     <html lang="en">
-      <body
-        className={`${montserrat.className} flex min-h-screen w-screen flex-col overflow-x-clip`}
-      >
+      <body className={`${montserrat.className} overflow-x-clip min-h-screen flex flex-col w-screen`}>
         {!isDashboardPath && !isLoginPath && !isRegisterPath && (
-          <div
-            className={`z-30 flex w-full justify-center bg-black ${isHomePath ? "sticky top-0" : ""}`}
-          >
+          <div className={`flex justify-center w-full bg-black z-30 ${isHomePath ? "sticky top-0" : ""}`}>
             {userId ? <AuthorizedNavbar /> : <UnauthorizedNavbar />}
           </div>
         )}
-        <div className="grow">{children}</div>
-        {!isDashboardPath && !isLoginPath && !isRegisterPath && <Footer />}
+        <div className="grow">
+          {children}
+        </div>
+        {!isDashboardPath && !isLoginPath && !isRegisterPath && (
+          <Footer />
+        )}
         <Toaster />
         <Sonner />
       </body>

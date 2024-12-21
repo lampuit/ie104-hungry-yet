@@ -1,13 +1,13 @@
-"use client";
+"use client"
 
-import { ColumnDef } from "@tanstack/react-table";
-import { Invoice } from "@/app/dashboard/order-management/page";
-import { DataTableColumnHeader } from "./data-table-column-header";
-import { DataTableRowActions } from "./data-table-row-action";
-import { Badge } from "@/components/ui/badge";
-import { format } from "date-fns";
-import { getUserById } from "@/lib/data";
-import React from "react";
+import { ColumnDef } from "@tanstack/react-table"
+import { Invoice } from "@/app/dashboard/order-management/page"
+import { DataTableColumnHeader } from "./data-table-column-header"
+import { DataTableRowActions } from "./data-table-row-action"
+import { Badge } from "@/components/ui/badge"
+import { format } from "date-fns"
+import { getUserById } from "@/lib/data"
+import React from "react"
 
 interface ShipperCellProps {
   shipperId: string;
@@ -35,6 +35,9 @@ const ShipperCell: React.FC<ShipperCellProps> = ({ shipperId }) => {
 
 export default ShipperCell;
 
+
+
+
 export const columns: ColumnDef<Invoice>[] = [
   {
     accessorKey: "id",
@@ -58,12 +61,12 @@ export const columns: ColumnDef<Invoice>[] = [
           <span>
             {row.getValue("createdAt")
               ? new Date(row.getValue("createdAt")).toLocaleString("vi-VN", {
-                  year: "numeric",
-                  month: "2-digit",
-                  day: "2-digit",
-                  hour: "2-digit",
-                  minute: "2-digit",
-                })
+                year: "numeric",
+                month: "2-digit",
+                day: "2-digit",
+                hour: "2-digit",
+                minute: "2-digit",
+              })
               : "Không có ghi chú"}
           </span>
         </div>
@@ -122,3 +125,4 @@ export const columns: ColumnDef<Invoice>[] = [
     ),
   },
 ];
+
