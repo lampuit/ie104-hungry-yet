@@ -148,10 +148,7 @@ export default function Account() {
             toast({ description: "Cập nhật thông tin thành công!" });
         } catch (error) {
             console.log(error);
-            toast({ 
-                variant: "destructive",
-                description: "Cập nhật thông tin thất bại!" 
-            });
+            toast({ description: "Cập nhật thông tin thất bại!" });
         } finally {
             setIsPending(false);
         }

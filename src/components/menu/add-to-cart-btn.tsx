@@ -1,5 +1,4 @@
-import { useToast } from "@/hooks/use-toast";
-import { ToastAction } from "../ui/toast";
+import { toast } from "sonner";
 import { Button } from "../ui/button";
 import { ShoppingCart } from "lucide-react";
 import { createCart } from "@/lib/actions/cart";
@@ -35,7 +34,6 @@ interface AddToCartButtonProps {
 
 export const AddToCartButton = ({ dish, onAddToCart }: AddToCartButtonProps) => {
     const router = useRouter();
-    const { toast } = useToast();
     const { data: userId, error: userIdError } = useSWR("userId", fetcherUserId);
     const { data: cartData, error: cartError } = useSWR(userId ? `cart-${userId}` : null, () => fetchCart(userId as string));
     const [cart, setCart] = useState<any[]>([]);
@@ -70,11 +68,13 @@ export const AddToCartButton = ({ dish, onAddToCart }: AddToCartButtonProps) => 
                 minute: "numeric",
                 hour12: true,
             });
-            toast({
-                title: "Thêm vào giỏ hàng thành công!",
-                description: `${dish.name} đã duoc thêm vào giỏ hàng của bạn.`,
-                action: <ToastAction altText="Xem giỏ hàng" onClick={() => router.push("/menu/cart")}>Xem</ToastAction>,
-              })  
+            toast(`Đã thêm ${dish.name} vào giỏ hàng`, {
+                description: currentDateTime,
+                action: {
+                    label: "Xem giỏ hàng",
+                    onClick: () => router.push("/menu/cart"),
+                },
+            });
         }
     };
 

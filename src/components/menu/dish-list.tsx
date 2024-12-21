@@ -5,8 +5,7 @@ import { AddToCartButton } from './add-to-cart-btn';
 import { Heart, Star } from 'lucide-react';
 import { FaCoins } from "react-icons/fa6";
 import { createFavorite, deleteFavorite } from '@/lib/actions/favorite';
-import { useToast } from "@/hooks/use-toast";
-import { ToastAction } from "../ui/toast";
+import { toast } from '@/hooks/use-toast';
 import useSWR from 'swr';
 import { getAllProducts, getCartsByUserId, getFavoriteByUserId } from '@/lib/data';
 import LoadingSpinner from '../ui/loading-spinner';
@@ -52,7 +51,6 @@ const productsFetcher = async () => {
 
 export const DishList = ({ dishesList, onTotalAmountChange }: DishListProps) => {
     const router = useRouter();
-    const { toast } = useToast();
     const { data: userId, error: userIdError } = useSWR("userId", fetcherUserId);
     const { data: productsData, error: productsError } = useSWR("products", productsFetcher);
     const { data: favoriteData, error: favoriteError } = useSWR(`userId-${userId}`, () => favoriteFetcher(userId || ""));
@@ -98,10 +96,7 @@ export const DishList = ({ dishesList, onTotalAmountChange }: DishListProps) => 
             formData.append("productId", productId);
             try {
                 await createFavorite(formData);
-                toast({ 
-                    description: `Đã thêm ${productName.toLowerCase()} vào mục yêu thích`,
-                    action: <ToastAction altText="Xem danh mục yêu thích" onClick={() => router.push("/account/favorite")}>Xem</ToastAction>
-             });
+                toast({ description: `Đã thêm ${productName.toLowerCase()} vào mục yêu thích` });
                 newFavorites[index].status = true;
                 setFavorites(newFavorites);
             } catch (error) {
