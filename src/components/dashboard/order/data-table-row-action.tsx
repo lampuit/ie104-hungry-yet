@@ -19,9 +19,6 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 
-import { updateInvoiceStatus } from "@/lib/actions/invoice";
-import { toast } from "sonner";
-
 interface DataTableRowActionsProps {
   invoiceId: string;
   initialStatus: string;

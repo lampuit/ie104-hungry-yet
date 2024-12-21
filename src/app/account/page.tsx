@@ -165,7 +165,6 @@ export default function Account() {
       });
     } finally {
       setIsPending(false);
-
     }
   }
 

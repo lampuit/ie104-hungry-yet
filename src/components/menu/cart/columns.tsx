@@ -19,9 +19,9 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
-import { toast } from "sonner";
 import useSWR, { mutate } from "swr";
 import { getSession } from "@/lib/auth-client";
+import { useToast } from "@/hooks/use-toast";
 
 // Lấy userId từ session
 const fetcherUserId = async () => {

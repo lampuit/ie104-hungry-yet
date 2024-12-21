@@ -18,7 +18,6 @@ import {
   CardFooter,
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
-import { toast } from 'sonner'
 import "react-toastify/dist/ReactToastify.css";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -31,6 +30,7 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { getUserById } from "@/lib/data";
+import { useToast } from "@/hooks/use-toast";
 
 const formSchema = z.object({
   email: z.string().email("Email không hợp lệ"),
@@ -48,7 +48,6 @@ export default function LoginForm() {
       password: "",
     },
   });
-
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
     try {
@@ -80,7 +79,6 @@ export default function LoginForm() {
       });
     } finally {
       setIsPending(false);
-
     }
   }
 

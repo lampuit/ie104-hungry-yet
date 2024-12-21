@@ -1,4 +1,3 @@
-import { toast } from "sonner";
 import { Button } from "../ui/button";
 import { ShoppingCart } from "lucide-react";
 import { createCart } from "@/lib/actions/cart";
@@ -7,6 +6,8 @@ import { getSession } from "@/lib/auth-client";
 import useSWR, { mutate } from "swr";
 import { getCartsByUserId } from "@/lib/data";
 import { useEffect, useState } from "react";
+import { ToastAction } from "@/components/ui/toast";
+import { useToast } from "@/hooks/use-toast";
 
 const fetcherUserId = async () => {
   const response = await getSession();
@@ -89,7 +90,6 @@ export const AddToCartButton = ({
       });
     }
   };
-
 
   return (
     <Button
