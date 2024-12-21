@@ -123,7 +123,7 @@ export function ProductDetailContent({ id }: { id: string }) {
       } catch (error) {
         toast({
           variant: "destructive",
-          title: `KHÔNG THỂ XÓA ${productName.toUpperCase()}.`,
+          title: `KHÔNG thể xóa ${productName.toUpperCase()}.`,
           description: "Có lỗi gì đó đã xảy ra",
         });
       }

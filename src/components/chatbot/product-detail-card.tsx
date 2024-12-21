@@ -1,9 +1,14 @@
-import { Star } from "lucide-react";
+"use client";
+
+import { Heart, Star } from "lucide-react";
 import { Card, CardContent, CardFooter } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import Image from "next/image";
 import Link from "next/link";
+import { useToast } from "@/hooks/use-toast";
+import { createFavorite, deleteFavorite } from "@/lib/actions/favorite";
+import { useState } from "react";
 
 function DongFormat(number: number) {
   return new Intl.NumberFormat("vi-VN", {
@@ -20,6 +25,8 @@ export default function ProductDetailCard({
   description,
   imageUrl,
   append,
+  userId,
+  favorite,
 }: {
   id: string;
   name: string;
@@ -28,18 +35,76 @@ export default function ProductDetailCard({
   description: string;
   imageUrl: string;
   append: any;
+  userId: string;
+  favorite: any[];
 }) {
+  const { toast } = useToast();
+  const [isFavorite, setIsFavorite] = useState<boolean>(!!favorite.length);
+  const [isPending, setIsPending] = useState(false);
+
+  const handleFavoriteOnClick = async () => {
+    if (!isFavorite) {
+      console.log(userId);
+      console.log(favorite);
+      const formData = new FormData();
+      formData.append("userId", userId || "");
+      formData.append("productId", id);
+      try {
+        setIsPending(true);
+        await createFavorite(formData);
+        toast({
+          description: `Đã thêm ${name.toLowerCase()} vào mục yêu thích`,
+        });
+        setIsFavorite(true);
+        setIsPending(false);
+      } catch (error) {
+        toast({
+          variant: "destructive",
+          title: `KHÔNG thể thêm ${name.toUpperCase()}.`,
+          description: "Có lỗi gì đó đã xảy ra",
+        });
+      }
+    } else {
+      try {
+        setIsPending(true);
+        await deleteFavorite(userId || "", id);
+        toast({
+          description: `Đã xóa ${name.toLowerCase()} khỏi mục yêu thích`,
+        });
+        setIsFavorite(false);
+        setIsPending(false);
+      } catch (error) {
+        toast({
+          variant: "destructive",
+          title: `KHÔNG thể xóa ${name.toUpperCase()}.`,
+          description: "Có lỗi gì đó đã xảy ra",
+        });
+      }
+    }
+  };
+
   return (
     <Card className="relative w-full max-w-md overflow-hidden">
-      <Link className="z-30" href={`/detail?id=${id}`} passHref legacyBehavior>
+      <Image
+        src={imageUrl}
+        alt={name}
+        width={500}
+        height={500}
+        className="h-full w-full object-cover"
+      />{" "}
+      <Button
+        variant="secondary"
+        size="icon"
+        className="absolute right-2 top-2 bg-white/80 text-xs hover:bg-white"
+        onClick={handleFavoriteOnClick}
+        disabled={isPending}
+      >
+        <Heart
+          className={`stroke-amber-500 ${isFavorite ? "fill-amber-500" : ""}`}
+        />
+      </Button>
+      <Link href={`/detail?id=${id}`} passHref legacyBehavior>
         <a target="_blank">
-          <Image
-            src={imageUrl}
-            alt={name}
-            width={500}
-            height={500}
-            className="h-full w-full object-cover"
-          />
           <CardContent className="p-4">
             <div className="mb-2 flex items-start justify-between">
               <h2 className="line-clamp-2 text-xl font-semibold">{name}</h2>

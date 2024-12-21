@@ -2,7 +2,6 @@
 
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { toast } from "sonner";
 import { updateInvoiceStatus } from "@/lib/actions/invoice";
 import { Button } from "@/components/ui/button";
 import {
@@ -34,6 +33,7 @@ import {
   Truck,
   User,
 } from "lucide-react";
+import { toast } from "@/hooks/use-toast";
 
 const getUserInfo = async (userId: string) => {
   const response = await getUserById(userId);
@@ -60,9 +60,11 @@ export function InvoiceDetails({ invoice }: { invoice: any }) {
     try {
       await updateInvoiceStatus(invoice.id, newStatus);
       setStatus(newStatus);
-      toast.success("Cập nhật trạng thái đơn hàng thành công");
     } catch (error) {
-      toast.error("Cập nhật thất bại");
+      toast({
+        variant: "destructive",
+        title: "Cập nhật thất bại",
+      });
     } finally {
       setIsPending(false);
     }

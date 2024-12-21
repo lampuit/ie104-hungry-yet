@@ -40,13 +40,6 @@ export function AccountFavorite({
   const router = useRouter();
   const { toast } = useToast();
 
-  const convertToVND = (price: number) => {
-    return new Intl.NumberFormat("vi-VN", {
-      style: "currency",
-      currency: "VND",
-    }).format(price);
-  };
-
   const handleDeleteFavorite = async (userId: string, productId: string) => {
     try {
       await deleteFavorite(userId, productId);
