@@ -122,7 +122,7 @@
   ```bash
   pnpm lint
   ```
-  - **Format Code**
+- **Format Code**
   ```bash
   pnpm format
   ```
