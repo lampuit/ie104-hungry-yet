@@ -1,6 +1,6 @@
-import { notFound } from 'next/navigation'
-import { getInvoiceDetail } from '@/lib/data'
-import { InvoiceDetails } from './invoice-detail'
+import { notFound } from "next/navigation";
+import { getInvoiceDetail } from "@/lib/data";
+import { InvoiceDetails } from "./invoice-detail";
 
 // export interface Product {
 //     id: string
@@ -25,14 +25,18 @@ import { InvoiceDetails } from './invoice-detail'
 //     discount: { amount: number; description: string } | null
 // }
 
-export default async function InvoiceDetailsPage({ params }: { params: { invoiceId: string } }) {
-    const invoice = await getInvoiceDetail(params.invoiceId) 
+export default async function InvoiceDetailsPage({
+  params,
+}: {
+  params: { invoiceId: string };
+}) {
+  const invoice = await getInvoiceDetail(params.invoiceId);
 
-    console.log("invoice", invoice)
+  console.log("invoice", invoice);
 
-    if (!invoice) {
-        notFound()
-    }
+  if (!invoice) {
+    notFound();
+  }
 
-    return <InvoiceDetails invoice={invoice} />
+  return <InvoiceDetails invoice={invoice} />;
 }

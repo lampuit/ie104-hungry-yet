@@ -32,16 +32,23 @@ const fetcherUserId = async () => {
 // Lấy danh sách sản phẩm yêu thích
 const favoriteFetcher = async (userId: string) => {
   return await getFavoriteByUserId(userId);
-}
+};
 
 export default function CartPage() {
-  const { data: userId } = useSWR('userId', fetcherUserId);
-  const { data: listDish, isLoading, error, mutate } = useSWR(`userId${userId}`, () => fetcherCarts(userId || ""), {
+  const { data: userId } = useSWR("userId", fetcherUserId);
+  const {
+    data: listDish,
+    isLoading,
+    error,
+    mutate,
+  } = useSWR(`userId${userId}`, () => fetcherCarts(userId || ""), {
     revalidateIfStale: true,
     revalidateOnFocus: false,
     revalidateOnReconnect: true,
   });
-  const { data: favoriteList } = useSWR(`id${userId}`, () => favoriteFetcher(userId || ""));
+  const { data: favoriteList } = useSWR(`id${userId}`, () =>
+    favoriteFetcher(userId || ""),
+  );
 
   const [dishes, setDishes] = useState<any[]>([]);
   const [totalPrice, settotalPrice] = useState(0);
@@ -57,14 +64,18 @@ export default function CartPage() {
         cost: item.product?.price,
         amount: item?.quantity,
         category: item.product?.category?.name,
-        isFavorite: favoriteList.some(favorite => favorite.productId === item.productId),
+        isFavorite: favoriteList.some(
+          (favorite) => favorite.productId === item.productId,
+        ),
       }));
       setDishes(formattedData);
       setTotalAmount(listDish.length);
-      settotalPrice(listDish.reduce(
-        (acc, item) => acc + item.product?.price * item.quantity,
-        0
-      ));
+      settotalPrice(
+        listDish.reduce(
+          (acc, item) => acc + item.product?.price * item.quantity,
+          0,
+        ),
+      );
     }
   }, [listDish, favoriteList]);
 
@@ -72,7 +83,7 @@ export default function CartPage() {
 
   const handleQuantityChange = (id: string, newQuantity: number) => {
     const updatedDishes = dishes.map((dish) =>
-      dish.id === id ? { ...dish, amount: newQuantity } : dish
+      dish.id === id ? { ...dish, amount: newQuantity } : dish,
     );
     setDishes(updatedDishes);
 
@@ -80,7 +91,7 @@ export default function CartPage() {
     const newtotalAmount = updatedDishes.length;
     const newtotalPrice = updatedDishes.reduce(
       (acc, item) => acc + item.amount * item.cost,
-      0
+      0,
     );
     setTotalAmount(newtotalAmount);
     settotalPrice(newtotalPrice);
@@ -88,7 +99,7 @@ export default function CartPage() {
 
   const updateTableData = (id: string, isFavorite: boolean) => {
     const updatedDishes = dishes.map((dish) =>
-      dish.id === id ? { ...dish, isFavorite } : dish
+      dish.id === id ? { ...dish, isFavorite } : dish,
     );
     setDishes(updatedDishes);
   };
@@ -104,7 +115,7 @@ export default function CartPage() {
   }
 
   return (
-    <main className="grow flex flex-col h-full">
+    <main className="flex h-full grow flex-col">
       {/* <section className="my-10 mx-10 w-72 text-base font-semibold">
         <Breadcrumb>
           <BreadcrumbList>
@@ -122,10 +133,14 @@ export default function CartPage() {
           </BreadcrumbList>
         </Breadcrumb>
       </section> */}
-      <section className="flex flex-col justify-center items-center my-10 w-full">
-        <DataTable columns={columns(mutate, updateTableData)} data={dishes} onQuantityChange={handleQuantityChange}></DataTable>
+      <section className="my-10 flex w-full flex-col items-center justify-center">
+        <DataTable
+          columns={columns(mutate, updateTableData)}
+          data={dishes}
+          onQuantityChange={handleQuantityChange}
+        ></DataTable>
       </section>
-      <section className="sticky bottom-0 grow flex flex-col justify-end items-center mt-4">
+      <section className="sticky bottom-0 mt-4 flex grow flex-col items-center justify-end">
         <Summary totalPrice={formattedTotalPrice} totalAmount={totalAmount} />
       </section>
     </main>

@@ -1,10 +1,5 @@
 import React, { useState, useEffect } from "react";
-import {
-  Card,
-  CardContent,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
   DropdownMenu,
   DropdownMenuTrigger,
@@ -40,7 +35,10 @@ export function ShiftCart({
   const dayString = format(day, "yyyy-MM-dd");
 
   const { data: shifts } = useSWR("shifts", fetcherShift);
-  const { data: userWorkShifts } = useSWR("userWorkShifts", fetcherUserWorkShift);
+  const { data: userWorkShifts } = useSWR(
+    "userWorkShifts",
+    fetcherUserWorkShift,
+  );
 
   const [selectedEmployees, setSelectedEmployees] = useState<{
     [key: string]: { employee1: string | null; employee2: string | null };
@@ -50,8 +48,11 @@ export function ShiftCart({
     if (userWorkShifts) {
       const initialSelection = userWorkShifts.reduce((acc: any, shift: any) => {
         const workDate = format(new Date(shift.workDate), "yyyy-MM-dd");
-        if (!acc[workDate]) acc[workDate] = { employee1: null, employee2: null };
-        acc[workDate][shift.shiftId === shifts?.[0]?.id ? "employee1" : "employee2"] = shift.userId.toString();
+        if (!acc[workDate])
+          acc[workDate] = { employee1: null, employee2: null };
+        acc[workDate][
+          shift.shiftId === shifts?.[0]?.id ? "employee1" : "employee2"
+        ] = shift.userId.toString();
         return acc;
       }, {});
       setSelectedEmployees(initialSelection);
@@ -62,7 +63,7 @@ export function ShiftCart({
     date: string,
     employeeId: string,
     selectType: "employee1" | "employee2",
-    shiftId: string
+    shiftId: string,
   ) => {
     setSelectedEmployees((prev) => ({
       ...prev,
@@ -85,7 +86,7 @@ export function ShiftCart({
       className={cn(
         "h-40 overflow-hidden",
         !isCurrentMonth && "opacity-50",
-        isToday && "border-primary"
+        isToday && "border-primary",
       )}
     >
       <CardHeader className="p-2">
@@ -98,94 +99,103 @@ export function ShiftCart({
           </div>
         </CardTitle>
       </CardHeader>
-      <CardContent className="p-2 space-y-4 ">
-        <div className="flex flex-col justify-center items-center gap-4 mt-2">
+      <CardContent className="space-y-4 p-2">
+        <div className="mt-2 flex flex-col items-center justify-center gap-4">
+          {/* Dropdown 1 */}
+          <DropdownMenu modal={false}>
+            <DropdownMenuTrigger
+              className={cn("h-8 w-full rounded border px-2 text-xs", {
+                hidden: !isCurrentMonth,
+                "bg-yellow-200": selectedEmployees[dayString]?.employee1,
+              })}
+            >
+              {selectedEmployees[dayString]?.employee1
+                ? employees.find(
+                    (e: any) =>
+                      e.id.toString() ===
+                      selectedEmployees[dayString]?.employee1,
+                  )?.name
+                : "Sáng"}
+            </DropdownMenuTrigger>
+            <DropdownMenuContent className="z-50 text-red-500">
+              {employees.map((employee: any) => (
+                <DropdownMenuItem
+                  key={employee.id}
+                  onSelect={() =>
+                    shifts &&
+                    handleEmployeeChange(
+                      dayString,
+                      employee.id.toString(),
+                      "employee1",
+                      shifts[0]?.id.toString(),
+                    )
+                  }
+                >
+                  {employee.name}
+                </DropdownMenuItem>
+              ))}
+              {selectedEmployees[dayString]?.employee1 && (
+                <DropdownMenuItem
+                  onSelect={async () => {
+                    await deleteUserWorkShift(
+                      `${dayString}-${shifts?.[0]?.id.toString()}`,
+                    );
+                  }}
+                >
+                  Trống
+                </DropdownMenuItem>
+              )}
+            </DropdownMenuContent>
+          </DropdownMenu>
 
-        {/* Dropdown 1 */}
-        <DropdownMenu modal={false}>
-          <DropdownMenuTrigger className={cn("h-8 w-full text-xs border rounded px-2", {
-            "hidden": !isCurrentMonth,
-            "bg-yellow-200": selectedEmployees[dayString]?.employee1,
-          })}>
-            {selectedEmployees[dayString]?.employee1
-              ? employees.find(
-                (e: any) =>
-                  e.id.toString() === selectedEmployees[dayString]?.employee1
-              )?.name
-              : "Sáng"}
-          </DropdownMenuTrigger>
-          <DropdownMenuContent className="z-50 text-red-500">
-            {employees.map((employee: any) => (
-              <DropdownMenuItem
-                key={employee.id}
-                onSelect={() =>
-                  shifts &&
-                  handleEmployeeChange(
-                    dayString,
-                    employee.id.toString(),
-                    "employee1",
-                    shifts[0]?.id.toString()
-                  )
-                }
-              >
-                {employee.name}
-              </DropdownMenuItem>
-            ))}
-              {
-              selectedEmployees[dayString]?.employee1 &&
-              <DropdownMenuItem onSelect={async () => {
-                await deleteUserWorkShift(`${dayString}-${shifts?.[0]?.id.toString()}`);
-              }}>
-              Trống
-            </DropdownMenuItem>
-            }
-          </DropdownMenuContent>
-        </DropdownMenu>
-
-        {/* Dropdown 2 */}
-        <DropdownMenu modal={false}>
-          <DropdownMenuTrigger className={cn("h-8 w-full text-xs border rounded px-2 bg-muted", {
-            "hidden": !isCurrentMonth,
-            "bg-blue-200": selectedEmployees[dayString]?.employee2
-          })}>
-            {selectedEmployees[dayString]?.employee2
-              ? employees.find(
-                (e: any) =>
-                  e.id.toString() === selectedEmployees[dayString]?.employee2
-              )?.name
-              : "Chiều"}
-          </DropdownMenuTrigger>
-          <DropdownMenuContent className="z-50">
-            {employees.map((employee: any) => (
-              <DropdownMenuItem
-                key={employee.id}
-                onSelect={() =>
-                  shifts &&
-                  handleEmployeeChange(
-                    dayString,
-                    employee?.id.toString(),
-                    "employee2",
-                    shifts[1]?.id.toString()
-                  )
-                }
-              >
-                {employee?.name}
-              </DropdownMenuItem>
-            ))}
-            {
-              selectedEmployees[dayString]?.employee2 &&
-              <DropdownMenuItem
-              key={null}
-              onSelect={async () => {
-                await deleteUserWorkShift(`${dayString}-${shifts?.[1].id.toString()}`);
-              }}>
-              Trống
-            </DropdownMenuItem>
-            }
-          </DropdownMenuContent>
-        </DropdownMenu>
+          {/* Dropdown 2 */}
+          <DropdownMenu modal={false}>
+            <DropdownMenuTrigger
+              className={cn("h-8 w-full rounded border bg-muted px-2 text-xs", {
+                hidden: !isCurrentMonth,
+                "bg-blue-200": selectedEmployees[dayString]?.employee2,
+              })}
+            >
+              {selectedEmployees[dayString]?.employee2
+                ? employees.find(
+                    (e: any) =>
+                      e.id.toString() ===
+                      selectedEmployees[dayString]?.employee2,
+                  )?.name
+                : "Chiều"}
+            </DropdownMenuTrigger>
+            <DropdownMenuContent className="z-50">
+              {employees.map((employee: any) => (
+                <DropdownMenuItem
+                  key={employee.id}
+                  onSelect={() =>
+                    shifts &&
+                    handleEmployeeChange(
+                      dayString,
+                      employee?.id.toString(),
+                      "employee2",
+                      shifts[1]?.id.toString(),
+                    )
+                  }
+                >
+                  {employee?.name}
+                </DropdownMenuItem>
+              ))}
+              {selectedEmployees[dayString]?.employee2 && (
+                <DropdownMenuItem
+                  key={null}
+                  onSelect={async () => {
+                    await deleteUserWorkShift(
+                      `${dayString}-${shifts?.[1].id.toString()}`,
+                    );
+                  }}
+                >
+                  Trống
+                </DropdownMenuItem>
+              )}
+            </DropdownMenuContent>
+          </DropdownMenu>
         </div>
-
       </CardContent>
     </Card>
   );

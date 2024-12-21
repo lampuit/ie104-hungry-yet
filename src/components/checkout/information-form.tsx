@@ -39,7 +39,7 @@ export function InformationForm({ form }: { form: any }) {
       form.setValue("phone", invoice.phone || "");
       form.setValue("note", invoice.note || "");
     }
-  }, [invoice]);
+  }, [form, invoice]);
 
   return (
     <Card>
