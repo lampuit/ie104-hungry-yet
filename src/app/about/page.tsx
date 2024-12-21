@@ -20,9 +20,9 @@ export default function AboutPage() {
       <Image
         src="/images/anananan2.png"
         alt="..."
-        layout="responsive"
         width={1440}
         height={1056}
+        priority
       ></Image>
 
       <div className="flex w-full flex-col items-center justify-center gap-4 px-16 md:flex-row">
@@ -39,9 +39,9 @@ export default function AboutPage() {
       <Image
         src="/images/HungryYet1.png"
         alt="..."
-        layout="responsive"
         width={1440}
         height={480}
+        priority
       ></Image>
     </div>
   );
