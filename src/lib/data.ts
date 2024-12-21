@@ -35,12 +35,11 @@ export async function getInvoices() {
     return await db
       .select({
         date: sql`DATE(${invoices.createdAt})`,
-        invoices: sql<number>`count(${invoices.id})`,
+        invoices: sql<number>`count(${invoices.id})`.mapWith(Number),
       })
       .from(invoices)
       .groupBy(sql`DATE(${invoices.createdAt})`)
-      .orderBy(desc(sql`DATE(${invoices.createdAt})`))
-      .limit(30);
+      .orderBy(desc(sql`DATE(${invoices.createdAt})`));
   } catch (error) {
     throw new Error("Không thể lấy dữ liệu danh sách hóa đơn.");
   }
@@ -161,8 +160,7 @@ export async function fetchProducts() {
         categoryName: categories.name,
       })
       .from(products)
-      .leftJoin(categories, eq(products.categoryId, categories.id))
-      .limit(5);
+      .leftJoin(categories, eq(products.categoryId, categories.id));
   } catch (error) {
     throw new Error("Không thể lấy dữ liệu danh sách sản phẩm.");
   }
@@ -199,14 +197,13 @@ export async function getValidDiscounts() {
 export async function fetchValidDiscount(code: string) {
   try {
     const now = new Date();
-    const discount = await db.query.discounts.findFirst({
+    return await db.query.discounts.findFirst({
       where: and(
         eq(discounts.code, code),
         or(isNull(discounts.fromDate), lte(discounts.fromDate, now)),
         or(isNull(discounts.toDate), gte(discounts.toDate, now)),
       ),
     });
-    return discount;
   } catch (error) {
     throw new Error("Không thể lấy dữ liệu mã ưu đãi.");
   }
@@ -416,7 +413,9 @@ export async function filterAndSearch(formData: FormData) {
 
   let whereClause: SQL[] = [];
 
-  whereClause.push(eq(products.categoryId, categoryId as string));
+  if (categoryId) {
+    whereClause.push(eq(products.categoryId, categoryId as string));
+  }
 
   if (minPrice) {
     whereClause.push(gte(products.price, Number(minPrice)));
@@ -427,7 +426,9 @@ export async function filterAndSearch(formData: FormData) {
   }
 
   if (search) {
-    whereClause.push(like(products.name, `%${search as string}%`));
+    whereClause.push(
+      sql`LOWER(${products.name}) LIKE LOWER(${`%${search as string}%`})`,
+    );
   }
 
   const averageRatingExpr = sql<number>`COALESCE(AVG(${ratings.star}), 0)`;
@@ -445,7 +446,7 @@ export async function filterAndSearch(formData: FormData) {
   // Apply rating filter after aggregation
   let query = baseQuery as any;
   if (rating) {
-    query = query.having(sql`${averageRatingExpr} <= ${Number(rating)}`); // Use the computed expression
+    query = query.having(sql`${averageRatingExpr} >= ${Number(rating)}`);
   }
 
   // Count total records
@@ -457,12 +458,15 @@ export async function filterAndSearch(formData: FormData) {
 
   // Retrieve the paginated records and sort by averageRating descending
   const records = await query
-    .orderBy(sql`${averageRatingExpr} DESC`) // Use the computed expression
+    .orderBy(sql`${averageRatingExpr} DESC`)
     .limit(itemsPerPage)
     .offset((pageNumber - 1) * itemsPerPage);
 
-  // Return both totalRecords and the records for the current page
-  return { totalRecords, records };
+  // Return pagination information along with the records
+  return {
+    totalRecords,
+    records,
+  };
 }
 
 export async function getAllInvoices() {

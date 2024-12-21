@@ -41,7 +41,7 @@ import { SmartDatetimeInput } from "@/components/ui/smart-date-time-input";
 
 // Tạo schema form với các trường dữ liệu tương ứng với cơ sở dữ liệu
 const formSchema = z.object({
-  name: z.string().min(2, {
+  code: z.string().min(2, {
     message: "Tên mã phải chứa ít nhất 2 ký tự.",
   }),
   description: z.string().min(5, {
@@ -70,7 +70,7 @@ export function CreateForm() {
     resolver: zodResolver(formSchema),
     // Định nghĩa các giá trị mặc định
     defaultValues: {
-      name: "",
+      code: "",
       description: "",
       discount: undefined,
       fromDate: new Date(),
@@ -88,7 +88,7 @@ export function CreateForm() {
       // Hiện mã thành công
       toast({
         title: "Tạo mã thành công.",
-        description: `Tên mã: ${values.name}`,
+        description: `Tên mã: ${values.code}`,
       });
 
       router.back();
@@ -116,7 +116,7 @@ export function CreateForm() {
       >
         <FormField
           control={form.control}
-          name="name"
+          name="code"
           render={({ field }) => (
             <FormItem>
               <FormLabel>Tên Mã</FormLabel>

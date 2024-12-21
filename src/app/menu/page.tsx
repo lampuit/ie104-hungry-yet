@@ -1,9 +1,9 @@
-'use client'
+"use client";
 
-import { useEffect, useState } from "react"
-import { SearchingArea } from "@/components/menu/search"
-import { Category } from "@/components/menu/category"
-import { DishList } from "@/components/menu/dish-list"
+import { useEffect, useState } from "react";
+import { SearchingArea } from "@/components/menu/search";
+import { Category } from "@/components/menu/category";
+import { DishList } from "@/components/menu/dish-list";
 import {
   Pagination,
   PaginationContent,
@@ -11,13 +11,13 @@ import {
   PaginationLink,
   PaginationNext,
   PaginationPrevious,
-} from "@/components/ui/pagination"
-import { getCartsByUserId, filterAndSearch } from "@/lib/data"
-import { CategoryFetcher } from "@/components/menu/category"
-import useSWR from "swr"
-import LoadingSpinner from "@/components/ui/loading-spinner"
-import { getSession } from "@/lib/auth-client"
-import Chatbot from "@/components/chatbot/chat-bot"
+} from "@/components/ui/pagination";
+import { getCartsByUserId, filterAndSearch } from "@/lib/data";
+import { CategoryFetcher } from "@/components/menu/category";
+import useSWR from "swr";
+import LoadingSpinner from "@/components/ui/loading-spinner";
+import { getSession } from "@/lib/auth-client";
+import Chatbot from "@/components/chatbot/chat-bot";
 
 interface Dish {
   id: string;
@@ -82,35 +82,6 @@ export default function MenuPage() {
     setPage(newPage);
   };
 
-  const getDishesByCategoryId = async (clickedIndex: string) => {
-    try {
-      const formData = new FormData();
-      formData.append("minPrice", filter.minPrice.toString());
-      formData.append("maxPrice", filter.maxPrice.toString());
-      formData.append("categoryId", clickedIndex);
-      formData.append("rating", filter.rating.toString());
-      formData.append("search", filter.search);
-      formData.append("page", page.toString());
-      formData.append("pageSize", limit.toString());
-
-      const response = await filterAndSearch(formData);
-      setDishesList(
-        response?.records.map((item: any) => ({
-          id: item.id,
-          name: item.name,
-          image: item.imageUrl,
-          published: item.isPublish,
-          price: item.price,
-          des: item.description,
-          avgRating: item.averageRating
-        })),
-      );
-      setTotalCount(response.totalRecords);
-    } catch (error) {
-      console.error(error);
-    }
-  };
-
   useEffect(() => {
     if (carts) {
       setTotalAmount(carts.length);
@@ -122,33 +93,62 @@ export default function MenuPage() {
       const sessionClickIndex = localStorage.getItem("category");
       if (sessionClickIndex) {
         setClickedIndex(sessionClickIndex);
-        setFilter(prev => ({ ...prev, categoryId: sessionClickIndex }));
+        setFilter((prev) => ({ ...prev, categoryId: sessionClickIndex }));
       } else {
         setClickedIndex(data[0]?.id);
-        setFilter(prev => ({ ...prev, categoryId: data[0]?.id }));
+        setFilter((prev) => ({ ...prev, categoryId: data[0]?.id }));
       }
     }
-  }, [data])
+  }, [data]);
 
   useEffect(() => {
+    const getDishesByCategoryId = async (clickedIndex: string) => {
+      try {
+        const formData = new FormData();
+        formData.append("minPrice", filter.minPrice.toString());
+        formData.append("maxPrice", filter.maxPrice.toString());
+        formData.append("categoryId", clickedIndex);
+        formData.append("rating", filter.rating.toString());
+        formData.append("search", filter.search);
+        formData.append("page", page.toString());
+        formData.append("pageSize", limit.toString());
+
+        const response = await filterAndSearch(formData);
+        setDishesList(
+          response?.records.map((item: any) => ({
+            id: item.id,
+            name: item.name,
+            image: item.imageUrl,
+            published: item.isPublish,
+            price: item.price,
+            des: item.description,
+            avgRating: item.averageRating,
+          })),
+        );
+        setTotalCount(response.totalRecords);
+      } catch (error) {
+        console.error(error);
+      }
+    };
+
     if (clickedIndex) {
       getDishesByCategoryId(clickedIndex);
       if (typeof window !== "undefined") {
         localStorage.setItem("category", clickedIndex);
       }
     }
-  }, [clickedIndex, page, filter]);
+  }, [clickedIndex, page, filter, limit]);
 
   const handleCategoryClick = (categoryId: string) => {
-    setClickedIndex(categoryId)
-    setFilter(prev => ({ ...prev, categoryId }))
-    setPage(1)
+    setClickedIndex(categoryId);
+    setFilter((prev) => ({ ...prev, categoryId }));
+    setPage(1);
     if (typeof window !== "undefined") {
-      localStorage.setItem("category", categoryId)
+      localStorage.setItem("category", categoryId);
     }
-  }
+  };
 
-  const totalPages = Math.ceil(totalCount / limit)
+  const totalPages = Math.ceil(totalCount / limit);
 
   return dishLoading ? (
     <LoadingSpinner />
@@ -169,9 +169,9 @@ export default function MenuPage() {
             setClickedIndex={(index) => {
               const category = Array.isArray(categories)
                 ? categories.find((cat) => cat.id === index)
-                : undefined
+                : undefined;
               if (category) {
-                handleCategoryClick(category.id)
+                handleCategoryClick(category.id);
               }
             }}
           />
@@ -179,7 +179,7 @@ export default function MenuPage() {
 
         <section className="mb-10 max-w-screen-2xl">
           {dishesList.length === 0 ||
-            dishesList.every((dish) => !dish.published) ? (
+          dishesList.every((dish) => !dish.published) ? (
             <p>Không có sản phẩm nào</p>
           ) : (
             <DishList
@@ -223,5 +223,5 @@ export default function MenuPage() {
       </section>
       <Chatbot />
     </main>
-  )
+  );
 }

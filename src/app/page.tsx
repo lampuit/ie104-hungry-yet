@@ -19,6 +19,7 @@ import { MobileHero } from "@/components/home/mobile-hero";
 import { MobileBenefit } from "@/components/home/mobile-benefit";
 import { Charm } from "next/font/google";
 import Chatbot from "@/components/chatbot/chat-bot";
+
 const charm = Charm({
   subsets: ["vietnamese"],
   weight: ["400", "700"],
@@ -68,7 +69,7 @@ export default function Homepage() {
       {/*Herosection ở màn hình Mobile*/}
       <MobileHero />
 
-      <section className="my-16 hidden overflow-clip sm:inline-block">
+      <section className="my-16 hidden w-full overflow-hidden sm:inline-block">
         <Categories />
       </section>
 

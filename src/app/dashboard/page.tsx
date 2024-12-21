@@ -20,8 +20,6 @@ export default async function Page() {
   const invoices = await getInvoices();
   const revenues = await getRevenues();
 
-  console.log(revenues);
-
   const totalCancelled = (await getInvoicesByStatus("cancelled")).length;
   const invoicesDelivered = await getInvoicesByStatus("delivered");
 
@@ -31,10 +29,7 @@ export default async function Page() {
     0,
   );
 
-  const totalInvoice: number = invoices.reduce(
-    (sum, item) => sum + item.invoices,
-    0,
-  );
+  const totalInvoice = invoices.reduce((sum, item) => sum + item.invoices, 0);
 
   return (
     <div className="flex-1">
@@ -44,7 +39,7 @@ export default async function Page() {
             <CardTitle className="text-sm font-medium">Tổng Hóa Đơn</CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">{Number(totalInvoice)}</div>
+            <div className="text-2xl font-bold">{totalInvoice}</div>
           </CardContent>
         </Card>
         <Card>

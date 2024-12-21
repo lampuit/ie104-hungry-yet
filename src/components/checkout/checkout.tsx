@@ -16,7 +16,7 @@ import {
 import { Form } from "@/components/ui/form";
 import { ToastAction } from "@/components/ui/toast";
 import { useToast } from "@/hooks/use-toast";
-import { submitPayment } from "@/lib/actions/submit-payment";
+import { submitPayment } from "@/lib/actions/payment";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
@@ -116,6 +116,7 @@ export function Checkout({ carts, userId }: { carts: any[]; userId: string }) {
               <DiscountForm
                 subtotal={subtotal}
                 discount={discount}
+                discountId={discountId}
                 onDiscountChange={setDiscount}
                 onDiscountIdChange={setDiscountId}
               />
