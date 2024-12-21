@@ -1,9 +1,12 @@
 ## 🌟 Đồ án môn học "Hungry Yet?" : Website đặt đồ ăn trực tuyến
+
 Đồ án "Hungry Yet?" là một ứng dụng web hiện đại cho phép người dùng đặt đồ ăn trực tuyến với các tính năng tối ưu, giao diện đẹp mắt và trải nghiệm mượt mà. Dự án sử dụng các công nghệ tiên tiến trong ngành phát triển web nhằm mang lại hiệu năng và khả năng mở rộng tốt.
 
-## Lớp: IE104.P11  
+## Lớp: IE104.P11
+
 **GVHD**: ThS. Võ Tấn Khoa  
 **Nhóm sinh viên thực hiện**:
+
 1. **Phạm Thành Lam** - MSSV: 22520743
 2. **Trần Ngô Thanh Bình** - MSSV: 22520138
 3. **Đỗ Thanh Liêm** - MSSV: 22520751
@@ -11,6 +14,7 @@
 5. **Ngô Tuấn Kiệt** - MSSV: 22520719
 
 ## 🚀 Tính Năng Chính
+
 - **Quản lý món ăn, đơn hàng và khuyến mãi**: Hỗ trợ quản lý danh sách món ăn, theo dõi đơn hàng, cập nhật khuyến mãi.
 - **Quản lý ca làm việc và nhân viên**: Phân bổ ca làm và quản lý thông tin nhân viên hiệu quả.
 - **Thống kê và báo cáo**: Theo dõi doanh thu, báo cáo hoạt động kinh doanh của cửa hàng.
@@ -19,6 +23,7 @@
 - **Giao diện người dùng hiện đại**: Giao diện trực quan, thân thiện với người dùng, đáp ứng đầy đủ chức năng của một website bán hàng trực tuyến.
 
 ## 🛠️ Công Nghệ Sử Dụng
+
 - **Next.js**: Framework React tối ưu SEO và hiệu năng.
 - **Tailwind CSS**: Framework CSS hiện đại giúp xây dựng giao diện nhanh chóng và đẹp mắt.
 - **Drizzle ORM**: Quản lý cơ sở dữ liệu đơn giản và mạnh mẽ.
@@ -32,6 +37,7 @@
 - **Motion**: Thư viện tạo hiệu ứng animation mượt mà.
 
 ## 📂 Cấu Trúc Thư Mục
+
 ```plaintext
 .
 ├── public/              # Thư mục chứa hình ảnh và các tài nguyên tĩnh
@@ -56,13 +62,16 @@
 ```
 
 ## ⚙️ Cài Đặt và Chạy Dự Án
+
 1. **Clone Repository**
+
    ```bash
    git clone <link-repository>
    cd <tên-thư-mục>
    ```
 
 2. **Cài Đặt Package**
+
    ```bash
    npm i
    # or
@@ -75,6 +84,7 @@
 
 3. **Tạo File .env.local**
    Sao chép cấu trúc file .env.local và điền các thông tin cần thiết:
+
    ```plaintext
    # DATABASE
    DATABASE_URL=<Link kết nối cơ sở dữ liệu>
@@ -108,6 +118,7 @@
    Ứng dụng sẽ chạy tại: [http://localhost:3000](http://localhost:3000)
 
 ## 🧩 Phát Triển và Build
+
 - **Build Production**
   ```bash
   pnpm build
@@ -125,6 +136,7 @@
   ```
 
 ## 💡 Góp Ý và Phát Triển
+
 Chúng tôi luôn chào đón các đóng góp từ cộng đồng. Nếu bạn phát hiện lỗi hoặc có ý tưởng cải thiện, hãy mở Issues hoặc gửi Pull Request (PR) để cùng phát triển dự án. Mọi ý kiến đóng góp đều được hoan nghênh!
 
 ## 🎉 Chúc bạn trải nghiệm tốt với dự án này! 🚀
