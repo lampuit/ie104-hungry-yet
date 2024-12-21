@@ -159,7 +159,7 @@ export function CreateForm({ categories }: { categories: any }) {
                             alt="preview-image"
                             width={0}
                             height={0}
-                            sizes="100%"
+                            sizes="100vw"
                             style={{ width: "100%", height: "auto" }}
                           />
                         ) : (

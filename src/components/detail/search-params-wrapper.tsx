@@ -1,13 +1,14 @@
-"use client";
+'use client'
 
-import { useSearchParams } from "next/navigation";
+import { useSearchParams } from "next/navigation"
 
 export function SearchParamsWrapper({
-  children,
+    children
 }: {
-  children: (id: string | null) => React.ReactNode;
+    children: (id: string | null) => React.ReactNode
 }) {
-  const searchParams = useSearchParams();
-  const id = searchParams.get("id");
-  return children(id);
+    const searchParams = useSearchParams()
+    const id = searchParams.get("id")
+    return children(id)
 }
+

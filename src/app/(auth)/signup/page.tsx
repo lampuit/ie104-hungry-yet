@@ -4,6 +4,7 @@ import { redirect } from "next/navigation";
 import FormSignUp from "@/components/auth/signup";
 
 export default async function Signup() {
+
   const session = await auth.api.getSession({
     headers: headers(),
   });
@@ -16,5 +17,7 @@ export default async function Signup() {
     }
   }
 
-  return <FormSignUp />;
+  return (
+    <FormSignUp />
+  );
 }
