@@ -148,9 +148,7 @@ export default function Homepage() {
           </h2>
           <HorizontalLine />
         </div>
-        <ScrollArea className="h-[400px]">
-          <FAQ />
-        </ScrollArea>
+        <FAQ />
       </section>
 
       <Chatbot />
