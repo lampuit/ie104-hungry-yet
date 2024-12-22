@@ -10,7 +10,7 @@ import {
   primaryKey,
 } from "drizzle-orm/pg-core";
 import { user } from "./auth";
-import { Relation, relations } from "drizzle-orm";
+import { relations } from "drizzle-orm";
 import { createInsertSchema } from "drizzle-zod";
 
 // Định nghĩa Invoice Status (Trạng thái đơn hàng)
@@ -94,7 +94,12 @@ export const ratings = pgTable("ratings", {
   isAnonymous: boolean("isAnonymous").notNull(),
   createdAt: timestamp("createdAt").notNull().defaultNow(),
   updatedAt: timestamp("updatedAt").$onUpdate(() => new Date()),
-});
+
+},
+  (table) => {
+    return [primaryKey({ columns: [table.userId, table.productId] })];
+  },
+);
 
 // Relation: 1 product - n users && 1 user - n products
 export const ratingsRelations = relations(ratings, ({ one }) => ({
@@ -118,10 +123,7 @@ export const invoices = pgTable("invoices", {
     }), // Khóa ngoại
   shipperId: text("shipperId").references(() => user.id, {
     onUpdate: "cascade",
-  }), // Khóa ngoại
-  // cookId: text("cookId").references(() => user.id, {
-  //   onUpdate: "cascade",
-  // }), // Khóa ngoại
+  }),
   paymentId: uuid("paymentId")
     .notNull()
     .references(() => payments.id, {
@@ -129,6 +131,7 @@ export const invoices = pgTable("invoices", {
     }), // Khóa ngoại
   totalAmount: real("totalAmount"),
   status: invoiceStatusEnum("status"),
+  isRating: boolean().default(false),
   reason: text("reason"),
   deliveryAddress: text("deliveryAddress"),
   deliveryTime: integer("deliveryTime"),
@@ -147,10 +150,6 @@ export const invoicesRelations = relations(invoices, ({ one, many }) => ({
     fields: [invoices.customerId],
     references: [user.id],
   }),
-  // cook: one(user, {
-  //   fields: [invoices.cookId],
-  //   references: [user.id],
-  // }),
   shipper: one(user, {
     fields: [invoices.shipperId],
     references: [user.id],
@@ -187,14 +186,10 @@ export const ordersRelations = relations(orders, ({ one, many }) => ({
     fields: [orders.invoiceId],
     references: [invoices.id],
   }),
-  // invoices: one(invoices, {
-  //   fields: [orders.invoiceId],
-  //   references: [invoices.id],
-  // }),
   products: one(products, {
     fields: [orders.productId],
     references: [products.id],
-  }), // 1 order - 1 product
+  }),
 }));
 
 // Bảng Payments (Thanh toán)

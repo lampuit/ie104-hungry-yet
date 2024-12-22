@@ -1,6 +1,6 @@
 ## 🌟 Đồ án môn học "Hungry Yet?" : Website đặt đồ ăn trực tuyến
 
-Đồ án "Hungry Yet?" là một ứng dụng web hiện đại cho phép người dùng đặt đồ ăn trực tuyến với các tính năng tối ưu, giao diện đẹp mắt và trải nghiệm mượt mà. Dự án sử dụng các công nghệ tiên tiến trong ngành phát triển web nhằm mang lại hiệu năng và khả năng mở rộng tốt.
+Đồ án "Hungry Yet?" là một ứng dụng web hiện đại cho phép người dùng đặt đồ ăn trực tuyến với các tính năng tối ưu, giao diện đẹp mắt và trải nghiệm mượt mà. Đồ án sử dụng các công nghệ tiên tiến trong ngành phát triển web nhằm mang lại hiệu năng và khả năng mở rộng tốt. Cùng với sự hỗ trợ của thầy Khoa chúng em đã có được kết quả như này, cảm ơn thầy nhiều 🤟
 
 ## Lớp: IE104.P11
 
@@ -21,9 +21,7 @@
 - **Tích hợp thanh toán MoMo**: Thanh toán trực tuyến thông qua ví điện tử MoMo.
 - **Hỗ trợ AI Chatbot**: Trợ lý AI thông minh hỗ trợ người dùng tìm kiếm món ăn, gợi ý món ăn, đặt hàng, thanh toán và kiểm tra hóa đơn.
 - **Giao diện người dùng hiện đại**: Giao diện trực quan, thân thiện với người dùng, đáp ứng đầy đủ chức năng của một website bán hàng trực tuyến.
-
 ## 🛠️ Công Nghệ Sử Dụng
-
 - **Next.js**: Framework React tối ưu SEO và hiệu năng.
 - **Tailwind CSS**: Framework CSS hiện đại giúp xây dựng giao diện nhanh chóng và đẹp mắt.
 - **Drizzle ORM**: Quản lý cơ sở dữ liệu đơn giản và mạnh mẽ.
@@ -35,9 +33,7 @@
 - **Vercel AI SDK**: Tích hợp AI chatbot thông minh vào ứng dụng.
 - **Shadcn**: Tạo giao diện UI hiện đại và tinh tế.
 - **Motion**: Thư viện tạo hiệu ứng animation mượt mà.
-
 ## 📂 Cấu Trúc Thư Mục
-
 ```plaintext
 .
 ├── public/              # Thư mục chứa hình ảnh và các tài nguyên tĩnh
@@ -60,7 +56,6 @@
 ├── tsconfig.json        # Cấu hình TypeScript
 └── README.md            # Tài liệu hướng dẫn (file hiện tại)
 ```
-
 ## ⚙️ Cài Đặt và Chạy Dự Án
 
 1. **Clone Repository**
@@ -105,7 +100,7 @@
    OPENAI_API_KEY=<API Key của OpenAI>
    ```
 
-4. **Chạy Dự Án**
+4. **Chạy Đồ Án**
    ```bash
    npm run dev
    # or
@@ -127,6 +122,10 @@
   ```bash
   pnpm lint
   ```
+- **Format Code**
+  ```bash
+  pnpm format
+  ```
 - **Cập nhật cơ sở dữ liệu**
   ```bash
   pnpm db:generate
@@ -137,6 +136,6 @@
 
 ## 💡 Góp Ý và Phát Triển
 
-Chúng tôi luôn chào đón các đóng góp từ cộng đồng. Nếu bạn phát hiện lỗi hoặc có ý tưởng cải thiện, hãy mở Issues hoặc gửi Pull Request (PR) để cùng phát triển dự án. Mọi ý kiến đóng góp đều được hoan nghênh!
+Chúng tôi luôn chào đón các đóng góp từ lớp học và cộng đồng. Nếu bạn phát hiện lỗi hoặc có ý tưởng cải thiện, hãy mở Issues hoặc gửi Pull Request (PR) để cùng phát triển đồ án. Mọi ý kiến đóng góp đều được hoan nghênh!
 
 ## 🎉 Chúc bạn trải nghiệm tốt với dự án này! 🚀
