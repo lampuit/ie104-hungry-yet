@@ -36,6 +36,7 @@ import {
   Truck,
   Undo2,
   WalletCards,
+  X,
 } from "lucide-react";
 import LoadingSpinner from "@/components/ui/loading-spinner";
 import { getInvoiceDetail } from "@/lib/data";
@@ -86,6 +87,7 @@ function OrderDetailContent({ invoiceId }: { invoiceId: string }) {
   );
 
   const invoiceStatus = invoice.status;
+  const cancelReason = invoice.reason;
   const progressValue =
     invoiceStatus === "pending"
       ? 18
@@ -165,49 +167,56 @@ function OrderDetailContent({ invoiceId }: { invoiceId: string }) {
           <Card className="shadow-md">
             <CardHeader>
               <CardTitle>Tiến trình</CardTitle>
-              <CardDescription>Trạng thái giao hàng</CardDescription>
+              {invoiceStatus === "cancelled" ?
+                <CardDescription className="text-red-500 font-semibold space-y-1">
+                  <p className="flex gap-2"><X className="rounded-full bg-red-500 stroke-white p-1" size={20} /> Đơn hàng đã bị hủy</p>
+                  <p className="text-black font-normal">Lý do huỷ: {cancelReason}</p>
+                </CardDescription>
+                :
+                <CardDescription>Trạng thái giao hàng</CardDescription>}
             </CardHeader>
-            <CardContent>
-              <div className="grid grid-cols-1 gap-4 text-xs md:grid-cols-5">
-                {[
-                  {
-                    status: "pending",
-                    label: "Chờ xác nhận",
-                    icon: WalletCards,
-                  },
-                  {
-                    status: "accepted",
-                    label: "Đã xác nhận",
-                    icon: CircleCheck,
-                  },
-                  {
-                    status: "cooking",
-                    label: "Đang chuẩn bị",
-                    icon: CookingPot,
-                  },
-                  { status: "ready", label: "Đang giao", icon: Truck },
-                  {
-                    status: "delivered",
-                    label: "Thành công",
-                    icon: PackageCheck,
-                  },
-                ].map((step) => (
-                  <div
-                    key={step.status}
-                    className={`flex flex-col items-center rounded border-2 px-1 py-2 ${
-                      invoiceStatus === step.status ? "bg-yellow-100" : ""
-                    }`}
-                  >
-                    <step.icon />
-                    <p className="pt-2">{step.label}</p>
-                    {invoiceStatus === step.status && (
-                      <CircleCheck className="fill-green-300 stroke-green-600 pt-2" />
-                    )}
-                  </div>
-                ))}
-              </div>
-              <Progress className="mt-4 h-2" value={progressValue} />
-            </CardContent>
+            {invoiceStatus === "cancelled" ? null :
+              <CardContent>
+                <div className="grid grid-cols-1 gap-4 text-xs md:grid-cols-5">
+                  {[
+                    {
+                      status: "pending",
+                      label: "Chờ xác nhận",
+                      icon: WalletCards,
+                    },
+                    {
+                      status: "accepted",
+                      label: "Đã xác nhận",
+                      icon: CircleCheck,
+                    },
+                    {
+                      status: "cooking",
+                      label: "Đang chuẩn bị",
+                      icon: CookingPot,
+                    },
+                    { status: "ready", label: "Đang giao", icon: Truck },
+                    {
+                      status: "delivered",
+                      label: "Thành công",
+                      icon: PackageCheck,
+                    },
+                  ].map((step) => (
+                    <div
+                      key={step.status}
+                      className={`flex flex-col items-center rounded border-2 px-1 py-2 ${invoiceStatus === step.status ? "bg-yellow-100" : ""
+                        }`}
+                    >
+                      <step.icon />
+                      <p className="pt-2">{step.label}</p>
+                      {invoiceStatus === step.status && (
+                        <CircleCheck className="fill-green-300 stroke-green-600 pt-2" />
+                      )}
+                    </div>
+                  ))}
+                </div>
+                <Progress className="mt-4 h-2" value={progressValue} />
+              </CardContent>
+            }
           </Card>
 
           {/* Order Details */}
@@ -219,7 +228,7 @@ function OrderDetailContent({ invoiceId }: { invoiceId: string }) {
               <Table className="w-full">
                 <TableHeader className="bg-gray-100">
                   <TableRow>
-                    <TableHead className="hidden w-[100px] text-center md:block">
+                    <TableHead className="hidden w-[100px] text-center md:flex md:items-center">
                       Món ăn
                     </TableHead>
                     <TableHead></TableHead>
@@ -274,7 +283,7 @@ function OrderDetailContent({ invoiceId }: { invoiceId: string }) {
                 <div className="flex justify-end font-semibold">
                   {convertToVND(
                     (invoice.discount?.discount ?? 0) *
-                      ((invoice.totalAmount ?? 0) / 100),
+                    ((invoice.totalAmount ?? 0) / 100),
                   )}
                 </div>
                 <div className="mt-4 h-8 border-t-2 font-semibold">

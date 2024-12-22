@@ -94,7 +94,7 @@ export function Menu() {
       </Carousel>
       <Button
         asChild
-        className="w-full max-w-80 rounded-3xl bg-black hover:bg-red-500 sm:hidden"
+        className="w-3/4 max-w-80 rounded-3xl bg-black hover:bg-red-500 sm:hidden"
       >
         <Link href={"/menu"} className="text-center">
           Xem thực đơn
