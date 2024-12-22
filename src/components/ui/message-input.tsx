@@ -1,38 +1,39 @@
-"use client"
+"use client";
 
-import React, { useRef, useState } from "react"
-import { AnimatePresence, motion } from "framer-motion"
-import { ArrowUp, FileIcon, Paperclip, Square, X } from "lucide-react"
-import { omit } from "remeda"
+import React, { useRef, useState } from "react";
+import { AnimatePresence, motion } from "framer-motion";
+import { ArrowUp, Paperclip, Square } from "lucide-react";
+import { omit } from "remeda";
 
-import { cn } from "@/lib/utils"
-import { useAutosizeTextArea } from "@/hooks/use-autosize-textarea"
-import { Button } from "@/components/ui/button"
+import { cn } from "@/lib/utils";
+import { useAutosizeTextArea } from "@/hooks/use-autosize-textarea";
+import { Button } from "@/components/ui/button";
+import { FilePreview } from "@/components/ui/file-preview";
 
 interface MessageInputBaseProps
   extends React.TextareaHTMLAttributes<HTMLTextAreaElement> {
-  value: string
-  submitOnEnter?: boolean
-  stop?: () => void
-  isGenerating: boolean
+  value: string;
+  submitOnEnter?: boolean;
+  stop?: () => void;
+  isGenerating: boolean;
 }
 
 interface MessageInputWithoutAttachmentProps extends MessageInputBaseProps {
-  allowAttachments?: false
+  allowAttachments?: false;
 }
 
 interface MessageInputWithAttachmentsProps extends MessageInputBaseProps {
-  allowAttachments: true
-  files: File[] | null
-  setFiles: React.Dispatch<React.SetStateAction<File[] | null>>
+  allowAttachments: true;
+  files: File[] | null;
+  setFiles: React.Dispatch<React.SetStateAction<File[] | null>>;
 }
 
 type MessageInputProps =
   | MessageInputWithoutAttachmentProps
-  | MessageInputWithAttachmentsProps
+  | MessageInputWithAttachmentsProps;
 
 export function MessageInput({
-  placeholder = "Ask AI...",
+  placeholder = "Nhập câu hỏi...",
   className,
   onKeyDown: onKeyDownProp,
   submitOnEnter = true,
@@ -40,79 +41,79 @@ export function MessageInput({
   isGenerating,
   ...props
 }: MessageInputProps) {
-  const [isDragging, setIsDragging] = useState(false)
+  const [isDragging, setIsDragging] = useState(false);
 
   const addFiles = (files: File[] | null) => {
     if (props.allowAttachments) {
       props.setFiles((currentFiles) => {
         if (currentFiles === null) {
-          return files
+          return files;
         }
 
         if (files === null) {
-          return currentFiles
+          return currentFiles;
         }
 
-        return [...currentFiles, ...files]
-      })
+        return [...currentFiles, ...files];
+      });
     }
-  }
+  };
 
   const onDragOver = (event: React.DragEvent) => {
-    if (props.allowAttachments !== true) return
-    event.preventDefault()
-    setIsDragging(true)
-  }
+    if (props.allowAttachments !== true) return;
+    event.preventDefault();
+    setIsDragging(true);
+  };
 
   const onDragLeave = (event: React.DragEvent) => {
-    if (props.allowAttachments !== true) return
-    event.preventDefault()
-    setIsDragging(false)
-  }
+    if (props.allowAttachments !== true) return;
+    event.preventDefault();
+    setIsDragging(false);
+  };
 
   const onDrop = (event: React.DragEvent) => {
-    setIsDragging(false)
-    if (props.allowAttachments !== true) return
-    event.preventDefault()
-    const dataTransfer = event.dataTransfer
+    setIsDragging(false);
+    if (props.allowAttachments !== true) return;
+    event.preventDefault();
+    const dataTransfer = event.dataTransfer;
     if (dataTransfer.files.length) {
-      addFiles(Array.from(dataTransfer.files))
+      addFiles(Array.from(dataTransfer.files));
     }
-  }
+  };
 
   const onPaste = (event: React.ClipboardEvent) => {
-    const items = event.clipboardData?.items
-    if (!items) return
+    const items = event.clipboardData?.items;
+    if (!items) return;
 
     const files = Array.from(items)
       .map((item) => item.getAsFile())
-      .filter((file) => file !== null)
+      .filter((file) => file !== null);
 
     if (props.allowAttachments && files.length > 0) {
-      addFiles(files)
+      addFiles(files);
     }
-  }
+  };
 
   const onKeyDown = (event: React.KeyboardEvent<HTMLTextAreaElement>) => {
     if (submitOnEnter && event.key === "Enter" && !event.shiftKey) {
-      event.preventDefault()
-      event.currentTarget.form?.requestSubmit()
+      event.preventDefault();
+      event.currentTarget.form?.requestSubmit();
     }
 
-    onKeyDownProp?.(event)
-  }
+    onKeyDownProp?.(event);
+  };
 
-  const textAreaRef = useRef<HTMLTextAreaElement | null>(null)
+  const textAreaRef = useRef<HTMLTextAreaElement | null>(null);
 
   const showFileList =
-    props.allowAttachments && props.files && props.files.length > 0
+    props.allowAttachments && props.files && props.files.length > 0;
 
   useAutosizeTextArea({
     ref: textAreaRef,
     maxHeight: 240,
     borderWidth: 1,
     dependencies: [props.value, showFileList],
-  })
+  });
 
   return (
     <div
@@ -130,7 +131,7 @@ export function MessageInput({
         className={cn(
           "w-full grow resize-none rounded-xl border border-input bg-background p-3 pr-24 text-sm ring-offset-background transition-[border] placeholder:text-muted-foreground focus-visible:border-primary focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50",
           showFileList && "pb-16",
-          className
+          className,
         )}
         {...(props.allowAttachments
           ? omit(props, ["allowAttachments", "files", "setFiles"])
@@ -148,17 +149,17 @@ export function MessageInput({
                     file={file}
                     onRemove={() => {
                       props.setFiles((files) => {
-                        if (!files) return null
+                        if (!files) return null;
 
                         const filtered = Array.from(files).filter(
-                          (f) => f !== file
-                        )
-                        if (filtered.length === 0) return null
-                        return filtered
-                      })
+                          (f) => f !== file,
+                        );
+                        if (filtered.length === 0) return null;
+                        return filtered;
+                      });
                     }}
                   />
-                )
+                );
               })}
             </AnimatePresence>
           </div>
@@ -174,8 +175,8 @@ export function MessageInput({
             className="h-8 w-8"
             aria-label="Attach a file"
             onClick={async () => {
-              const files = await showFileUploadDialog()
-              addFiles(files)
+              const files = await showFileUploadDialog();
+              addFiles(files);
             }}
           >
             <Paperclip className="h-4 w-4" />
@@ -206,12 +207,12 @@ export function MessageInput({
 
       {props.allowAttachments && <FileUploadOverlay isDragging={isDragging} />}
     </div>
-  )
+  );
 }
-MessageInput.displayName = "MessageInput"
+MessageInput.displayName = "MessageInput";
 
 interface FileUploadOverlayProps {
-  isDragging: boolean
+  isDragging: boolean;
 }
 
 function FileUploadOverlay({ isDragging }: FileUploadOverlayProps) {
@@ -231,112 +232,27 @@ function FileUploadOverlay({ isDragging }: FileUploadOverlayProps) {
         </motion.div>
       )}
     </AnimatePresence>
-  )
+  );
 }
-
-interface FilePreviewProps {
-  file: File
-  onRemove: () => void
-}
-
-const FilePreview = React.forwardRef<HTMLDivElement, FilePreviewProps>(
-  (props, ref) => {
-    if (props.file.type.startsWith("image/")) {
-      return <ImageFilePreview {...props} ref={ref} />
-    }
-
-    return <GenericFilePreview {...props} ref={ref} />
-  }
-)
-FilePreview.displayName = "FilePreview"
-
-const ImageFilePreview = React.forwardRef<HTMLDivElement, FilePreviewProps>(
-  ({ file, onRemove }, ref) => {
-    return (
-      <motion.div
-        ref={ref}
-        className="relative flex max-w-[200px] rounded-md border p-1.5 pr-2 text-xs"
-        layout
-        initial={{ opacity: 0, y: "100%" }}
-        animate={{ opacity: 1, y: 0 }}
-        exit={{ opacity: 0, y: "100%" }}
-      >
-        <div className="flex w-full items-center space-x-2">
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img
-            alt={`Attachment ${file.name}`}
-            className="grid h-10 w-10 shrink-0 place-items-center rounded-sm border bg-muted object-cover"
-            src={URL.createObjectURL(file)}
-          />
-          <span className="w-full truncate text-muted-foreground">
-            {file.name}
-          </span>
-        </div>
-
-        <button
-          className="absolute -right-2 -top-2 flex h-4 w-4 items-center justify-center rounded-full border bg-background"
-          type="button"
-          onClick={onRemove}
-        >
-          <X className="h-2.5 w-2.5" />
-        </button>
-      </motion.div>
-    )
-  }
-)
-ImageFilePreview.displayName = "ImageFilePreview"
-
-const GenericFilePreview = React.forwardRef<HTMLDivElement, FilePreviewProps>(
-  ({ file, onRemove }, ref) => {
-    return (
-      <motion.div
-        ref={ref}
-        className="relative flex max-w-[200px] rounded-md border p-1.5 pr-2 text-xs"
-        layout
-        initial={{ opacity: 0, y: "100%" }}
-        animate={{ opacity: 1, y: 0 }}
-        exit={{ opacity: 0, y: "100%" }}
-      >
-        <div className="flex w-full items-center space-x-2">
-          <div className="grid h-10 w-10 shrink-0 place-items-center rounded-sm border bg-muted">
-            <FileIcon className="h-6 w-6 text-foreground" />
-          </div>
-          <span className="w-full truncate text-muted-foreground">
-            {file.name}
-          </span>
-        </div>
-
-        <button
-          className="absolute -right-2 -top-2 flex h-4 w-4 items-center justify-center rounded-full border bg-background"
-          type="button"
-          onClick={onRemove}
-        >
-          <X className="h-2.5 w-2.5" />
-        </button>
-      </motion.div>
-    )
-  }
-)
-GenericFilePreview.displayName = "GenericFilePreview"
 
 function showFileUploadDialog() {
-  const input = document.createElement("input")
+  const input = document.createElement("input");
 
-  input.type = "file"
-  input.multiple = true
-  input.accept = "*/*"
-  input.click()
+  input.type = "file";
+  input.multiple = true;
+  input.accept = "*/*";
+  input.click();
 
   return new Promise<File[] | null>((resolve) => {
     input.onchange = (e) => {
-      const files = (e.currentTarget as HTMLInputElement).files
+      const files = (e.currentTarget as HTMLInputElement).files;
 
       if (files) {
-        resolve(Array.from(files))
-        return
+        resolve(Array.from(files));
+        return;
       }
 
-      resolve(null)
-    }
-  })
+      resolve(null);
+    };
+  });
 }

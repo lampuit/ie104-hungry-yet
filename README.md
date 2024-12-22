@@ -1,36 +1,141 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+## 🌟 Đồ án môn học "Hungry Yet?" : Website đặt đồ ăn trực tuyến
 
-## Getting Started
+Đồ án "Hungry Yet?" là một ứng dụng web hiện đại cho phép người dùng đặt đồ ăn trực tuyến với các tính năng tối ưu, giao diện đẹp mắt và trải nghiệm mượt mà. Đồ án sử dụng các công nghệ tiên tiến trong ngành phát triển web nhằm mang lại hiệu năng và khả năng mở rộng tốt. Cùng với sự hỗ trợ của thầy Khoa chúng em đã có được kết quả như này, cảm ơn thầy nhiều 🤟
 
-First, run the development server:
+## Lớp: IE104.P11
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+**GVHD**: ThS. Võ Tấn Khoa  
+**Nhóm sinh viên thực hiện**:
+
+1. **Phạm Thành Lam** - MSSV: 22520743
+2. **Trần Ngô Thanh Bình** - MSSV: 22520138
+3. **Đỗ Thanh Liêm** - MSSV: 22520751
+4. **Trần Minh Tùng** - MSSV: 22521622
+5. **Ngô Tuấn Kiệt** - MSSV: 22520719
+
+## 🚀 Tính Năng Chính
+
+- **Quản lý món ăn, đơn hàng và khuyến mãi**: Hỗ trợ quản lý danh sách món ăn, theo dõi đơn hàng, cập nhật khuyến mãi.
+- **Quản lý ca làm việc và nhân viên**: Phân bổ ca làm và quản lý thông tin nhân viên hiệu quả.
+- **Thống kê và báo cáo**: Theo dõi doanh thu, báo cáo hoạt động kinh doanh của cửa hàng.
+- **Tích hợp thanh toán MoMo**: Thanh toán trực tuyến thông qua ví điện tử MoMo.
+- **Hỗ trợ AI Chatbot**: Trợ lý AI thông minh hỗ trợ người dùng tìm kiếm món ăn, gợi ý món ăn, đặt hàng, thanh toán và kiểm tra hóa đơn.
+- **Giao diện người dùng hiện đại**: Giao diện trực quan, thân thiện với người dùng, đáp ứng đầy đủ chức năng của một website bán hàng trực tuyến.
+## 🛠️ Công Nghệ Sử Dụng
+- **Next.js**: Framework React tối ưu SEO và hiệu năng.
+- **Tailwind CSS**: Framework CSS hiện đại giúp xây dựng giao diện nhanh chóng và đẹp mắt.
+- **Drizzle ORM**: Quản lý cơ sở dữ liệu đơn giản và mạnh mẽ.
+- **PNPM**: Trình quản lý package nhanh và tiết kiệm tài nguyên.
+- **Prettier & ESLint**: Công cụ định dạng và kiểm tra mã nguồn.
+- **Better Auth**: Quản lý xác thực bảo mật cho ứng dụng.
+- **Vercel Blob**: Lưu trữ file và hình ảnh từ Vercel.
+- **Neon PostgreSQL**: Dịch vụ cơ sở dữ liệu PostgreSQL hiệu suất cao trên đám mây.
+- **Vercel AI SDK**: Tích hợp AI chatbot thông minh vào ứng dụng.
+- **Shadcn**: Tạo giao diện UI hiện đại và tinh tế.
+- **Motion**: Thư viện tạo hiệu ứng animation mượt mà.
+## 📂 Cấu Trúc Thư Mục
+```plaintext
+.
+├── public/              # Thư mục chứa hình ảnh và các tài nguyên tĩnh
+├── src/                 # Mã nguồn chính của dự án
+|   ├── app/             # Các trang của ứng dụng
+│   ├── components/      # Các thành phần React
+│   ├── lib/             # Các thư viện và hàm tiện ích
+│   ├── drizzle/         # Cấu trúc ORM Drizzle
+|   ├── hooks/           # Các hooks tùy chỉnh
+│   ├── styles/          # Các file CSS và Tailwind
+│   └── utils/           # Các hàm tiện ích
+├── .env.local           # File cấu hình môi trường local
+├── .eslint.json         # Cấu hình ESLint
+├── .prettierrc          # Cấu hình Prettier
+├── drizzle.config.ts    # Cấu hình ORM Drizzle
+├── next.config.mjs      # Cấu hình Next.js
+├── package.json         # File quản lý dependencies
+├── pnpm-lock.yaml       # File lock cho PNPM
+├── tailwind.config.ts   # Cấu hình Tailwind CSS
+├── tsconfig.json        # Cấu hình TypeScript
+└── README.md            # Tài liệu hướng dẫn (file hiện tại)
 ```
+## ⚙️ Cài Đặt và Chạy Dự Án
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+1. **Clone Repository**
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+   ```bash
+   git clone <link-repository>
+   cd <tên-thư-mục>
+   ```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+2. **Cài Đặt Package**
 
-## Learn More
+   ```bash
+   npm i
+   # or
+   yarn i
+   # or
+   pnpm i
+   # or
+   bun i
+   ```
 
-To learn more about Next.js, take a look at the following resources:
+3. **Tạo File .env.local**
+   Sao chép cấu trúc file .env.local và điền các thông tin cần thiết:
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+   ```plaintext
+   # DATABASE
+   DATABASE_URL=<Link kết nối cơ sở dữ liệu>
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+   # AUTHENTICATION
+   BETTER_AUTH_SECRET=<Secret Key cho Better Auth>
+   BETTER_AUTH_URL=http://localhost:3000
 
-## Deploy on Vercel
+   # BLOB STORAGE
+   BLOB_READ_WRITE_TOKEN=<Token kết nối với Vercel Blob>
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+   # MOMO PAYMENT
+   MOMO_ACCESS_KEY=F8BBA842ECF85
+   MOMO_SECRET_KEY=K951B6PE1waDMi640xX08PD3vg6EkVlz
+   MOMO_PARTNER_CODE=MOMO
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+   # OPENAI
+   OPENAI_API_KEY=<API Key của OpenAI>
+   ```
+
+4. **Chạy Đồ Án**
+   ```bash
+   npm run dev
+   # or
+   yarn dev
+   # or
+   pnpm dev
+   # or
+   bun dev
+   ```
+   Ứng dụng sẽ chạy tại: [http://localhost:3000](http://localhost:3000)
+
+## 🧩 Phát Triển và Build
+
+- **Build Production**
+  ```bash
+  pnpm build
+  ```
+- **Kiểm Tra Lỗi Code**
+  ```bash
+  pnpm lint
+  ```
+- **Format Code**
+  ```bash
+  pnpm format
+  ```
+- **Cập nhật cơ sở dữ liệu**
+  ```bash
+  pnpm db:generate
+  pnpm db:push
+  pnpm db:migrate
+  pnpm db:seed
+  ```
+
+## 💡 Góp Ý và Phát Triển
+
+Chúng tôi luôn chào đón các đóng góp từ lớp học và cộng đồng. Nếu bạn phát hiện lỗi hoặc có ý tưởng cải thiện, hãy mở Issues hoặc gửi Pull Request (PR) để cùng phát triển đồ án. Mọi ý kiến đóng góp đều được hoan nghênh!
+
+## 🎉 Chúc bạn trải nghiệm tốt với dự án này! 🚀

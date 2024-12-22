@@ -1,21 +1,9 @@
-import { NextRequest, NextResponse } from "next/server";
-import { invoices, payments, carts } from "@/drizzle/schema/project";
-import { eq } from "drizzle-orm";
 import crypto from "crypto";
+import { NextRequest, NextResponse } from "next/server";
+import { invoices, payments } from "@/drizzle/schema/project";
+import { eq } from "drizzle-orm";
 import { db } from "@/drizzle/db";
-import { getSession } from "@/lib/auth-client"
-import useSWR from "swr"
-
-// // Lấy session
-const fetcherUserId = async () => {
-  const response = await getSession();
-  const userId = response?.data?.user?.id as string;
-  return userId;
-};
-
-// const { data: userId } = useSWR('userId', fetcherUserId);
-
-const userIdPromise = fetcherUserId();
+import { clearCart } from "@/lib/actions/cart";
 
 export async function POST(req: NextRequest) {
   try {
@@ -35,8 +23,8 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ message: "Sai Signature" }, { status: 400 });
     }
 
-    const invoiceId = body.orderId.split("_")[0];
-    const paymentId = body.orderId.split("_")[1];
+    const invoiceId = body.extraData.split("_")[0];
+    const paymentId = body.extraData.split("_")[1];
 
     let paymentStatus: any;
     let invoiceStatus: any;
@@ -46,12 +34,6 @@ export async function POST(req: NextRequest) {
         paymentStatus = "success";
         invoiceStatus = "accepted";
 
-        const userId = await userIdPromise;
-        if (userId) {
-          await db.delete(carts).where(eq(carts.userId, userId));
-        } else {
-          console.error("No userId found in session");
-        }
         break;
       case 9000:
         paymentStatus = "pending";

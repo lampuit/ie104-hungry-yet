@@ -110,13 +110,13 @@ export function EditForm({
           categoryId: values.category,
           imageUrl: newBlob.url,
         });
+      } else {
+        //  Tạo sản phẩm với image cũ
+        await editProduct(product.id, {
+          ...values,
+          categoryId: values.category,
+        });
       }
-
-      //  Tạo sản phẩm với image cũ
-      await editProduct(product.id, {
-        ...values,
-        categoryId: values.category,
-      });
 
       // Hiện thông báo thành công
       toast({
@@ -181,7 +181,7 @@ export function EditForm({
                             alt="preview-image"
                             width={0}
                             height={0}
-                            sizes="100vw"
+                            sizes="100%"
                             style={{ width: "100%", height: "auto" }}
                           />
                         ) : (

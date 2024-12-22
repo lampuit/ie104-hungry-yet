@@ -11,8 +11,9 @@ export async function createRatings(formData: FormData) {
     star: Number(formData.get("star")),
     review: formData.get("review"),
     imageURL: formData.get("imageURL"),
+    isAnonymous: Boolean(formData.get("isAnonymous")),
   });
-  console.log(data);
+  console.log("rating", data);
   await db.insert(ratings).values(data);
 }
 

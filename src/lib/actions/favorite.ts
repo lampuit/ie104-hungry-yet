@@ -18,6 +18,8 @@ export async function createFavorite(formData: FormData) {
 export async function deleteFavorite(userId: string, productId: string) {
   await db
     .delete(favorites)
-    .where(and(eq(favorites.productId, productId), eq(favorites.userId, userId)));
-    revalidatePath("/menu/cart");
+    .where(
+      and(eq(favorites.productId, productId), eq(favorites.userId, userId)),
+    );
+  revalidatePath("/menu/cart");
 }

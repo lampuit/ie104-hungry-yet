@@ -44,9 +44,10 @@ export async function editProduct(id: string, values: any) {
 }
 
 export async function deleteProduct(id: string) {
-  throw new Error("Lỗi cơ sở dữ liệu: Không thể xóa sản phẩm.");
   try {
     await db.delete(products).where(eq(products.id, id));
     revalidatePath("/dashboard/product");
-  } catch (error) {}
+  } catch (error) {
+    throw new Error("Lỗi cơ sở dữ liệu: Không thể xóa sản phẩm.");
+  }
 }

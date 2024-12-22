@@ -14,10 +14,143 @@ import {
   orders,
 } from "@/drizzle/schema/project";
 import { user } from "@/drizzle/schema/auth";
-import { eq, and, getTableColumns, lte, gte, isNull, or } from "drizzle-orm";
+import {
+  eq,
+  and,
+  getTableColumns,
+  lte,
+  gte,
+  isNull,
+  or,
+  notInArray,
+  desc,
+  sql,
+  like,
+  SQL,
+} from "drizzle-orm";
 import { unstable_noStore } from "next/cache";
-import { ca } from "date-fns/locale";
-import { truncate } from "fs/promises";
+
+export async function getInvoices() {
+  try {
+    return await db
+      .select({
+        date: sql`DATE(${invoices.createdAt})`,
+        invoices: sql<number>`count(${invoices.id})`.mapWith(Number),
+      })
+      .from(invoices)
+      .groupBy(sql`DATE(${invoices.createdAt})`)
+      .orderBy(desc(sql`DATE(${invoices.createdAt})`));
+  } catch (error) {
+    throw new Error("Không thể lấy dữ liệu danh sách hóa đơn.");
+  }
+}
+
+export async function getRevenues() {
+  try {
+    return await db
+      .select({
+        monthYear: sql`TO_CHAR(DATE_TRUNC('month', ${invoices.createdAt}), 'YYYY-MM')`,
+        revenues: sql<number>`SUM(${invoices.totalAmount})`,
+      })
+      .from(invoices)
+      .where(eq(invoices.status, "delivered"))
+      .groupBy(sql`DATE_TRUNC('month', ${invoices.createdAt})`)
+      .orderBy(desc(sql`DATE_TRUNC('month', ${invoices.createdAt})`));
+  } catch (error) {
+    throw new Error("Không thể lấy dữ liệu danh sách hóa đơn.");
+  }
+}
+
+export async function getInvoicesByStatus(status: string) {
+  try {
+    return await db
+      .select()
+      .from(invoices)
+      .where(
+        eq(
+          invoices.status,
+          status as
+            | "pending"
+            | "accepted"
+            | "cooking"
+            | "ready"
+            | "delivered"
+            | "cancelled",
+        ),
+      );
+  } catch (error) {
+    throw new Error("Không thể lấy dữ liệu danh sách hóa đơn.");
+  }
+}
+export async function getCategories() {
+  try {
+    return await db.query.categories.findMany();
+  } catch (error) {
+    throw new Error("Không thể lấy dữ liệu danh sách thể loại.");
+  }
+}
+
+export async function getPuslishProducts() {
+  try {
+    return await db.query.products.findMany({
+      columns: {
+        id: true,
+        name: true,
+        price: true,
+      },
+    });
+  } catch (error) {
+    throw new Error("Không thể lấy dữ liệu danh sách sản phẩm.");
+  }
+}
+
+export async function getRatings() {
+  try {
+    return await db.query.ratings.findMany();
+  } catch (error) {
+    throw new Error("Không thể lấy dữ liệu danh sách đánh giá.");
+  }
+}
+
+export async function getInvoicesIdByUserId(userId: string) {
+  try {
+    return await db.query.invoices.findMany({
+      with: {
+        orders: true,
+        payment: true,
+      },
+      where: and(
+        eq(invoices.customerId, userId),
+        notInArray(invoices.status, ["cancelled"]),
+      ),
+    });
+  } catch (error) {
+    throw new Error("Không thể lấy dữ liệu danh sách hóa đơn xác nhận.");
+  }
+}
+
+export async function getProductsByCategory(category_id: string) {
+  try {
+    return await db.query.categories.findFirst({
+      columns: {
+        name: true,
+      },
+      where: eq(categories.id, category_id),
+      with: {
+        products: {
+          columns: {
+            id: true,
+            name: true,
+            imageUrl: true,
+            price: true,
+          },
+        },
+      },
+    });
+  } catch (error) {
+    throw new Error("Không thể lấy dữ liệu danh sách sản phẩm theo thể loại.");
+  }
+}
 
 export async function fetchProducts() {
   try {
@@ -41,17 +174,36 @@ export async function fetchDiscounts() {
   }
 }
 
+export async function getValidDiscounts() {
+  try {
+    const now = new Date();
+    const discount = await db.query.discounts.findMany({
+      columns: {
+        id: true,
+        code: true,
+        discount: true,
+      },
+      where: and(
+        or(isNull(discounts.fromDate), lte(discounts.fromDate, now)),
+        or(isNull(discounts.toDate), gte(discounts.toDate, now)),
+      ),
+    });
+    return discount;
+  } catch (error) {
+    throw new Error("Không thể lấy dữ liệu mã ưu đãi.");
+  }
+}
+
 export async function fetchValidDiscount(code: string) {
   try {
     const now = new Date();
-    const discount = await db.query.discounts.findFirst({
+    return await db.query.discounts.findFirst({
       where: and(
         eq(discounts.code, code),
         or(isNull(discounts.fromDate), lte(discounts.fromDate, now)),
         or(isNull(discounts.toDate), gte(discounts.toDate, now)),
       ),
     });
-    return discount;
   } catch (error) {
     throw new Error("Không thể lấy dữ liệu mã ưu đãi.");
   }
@@ -138,33 +290,23 @@ export async function getProductByCategoryId(
   // Count total records for the specified category ID
   const totalRecords = await db.$count(products, eq(products.categoryId, id));
 
-  // Retrieve the paginated records
+  // Retrieve the paginated records with average star rating
   const records = await db
     .select({
       ...getTableColumns(products),
+      averageRating: sql<number>`COALESCE(AVG(${ratings.star}), 0)`.as(
+        "averageRating",
+      ),
     })
     .from(products)
+    .leftJoin(ratings, eq(products.id, ratings.productId))
     .where(eq(products.categoryId, id))
+    .groupBy(products.id)
     .limit(pageSize)
     .offset((page - 1) * pageSize);
   // Return both totalRecords and the records for the current page
   return { totalRecords, records };
 }
-
-// export async function getFavoriteByUserId(userId: string) {
-//   const response = await db
-//     .select({
-//       userId: favorites.userId,
-//       productId: favorites.productId,
-//       productName: products.name,
-//       productPrice: products.price,
-//       productImageUrl: products.imageUrl,
-//     })
-//     .from(favorites)
-//     .innerJoin(products, eq(favorites.productId, products.id))
-//     .where(eq(favorites.userId, userId));
-//   return response;
-// }
 
 export async function getFavoriteByUserId(userId: string) {
   return await db.query.favorites.findMany({
@@ -179,37 +321,6 @@ export async function getFavoriteByUserId(userId: string) {
   });
 }
 
-// export async function getShoppingCartByUserId(userId: string) {
-//   const response = await db
-//     .select({
-//       userId: carts.userId,
-//       productId: carts.productId,
-//       quantity: carts.quantity,
-//       name: products.name,
-//       image: products.imageUrl,
-//       price: products.price,
-//       favoriteProductId: favorites.productId, // Temporarily select favorite product ID to check later
-//     })
-//     .from(carts)
-//     .innerJoin(products, eq(carts.productId, products.id))
-//     .leftJoin(
-//       favorites,
-//       and(
-//         eq(carts.productId, favorites.productId),
-//         eq(carts.userId, favorites.userId),
-//       ),
-//     )
-//     .where(eq(carts.userId, userId));
-
-//   // Map the result to add `isFavorite` based on the presence of `favoriteProductId`
-//   const updatedResponse = response.map((item) => ({
-//     ...item,
-//     isFavorite: item.favoriteProductId != null,
-//   }));
-
-//   return updatedResponse;
-// }
-
 export async function getCartsByUserId(userId: string) {
   return await db.query.carts.findMany({
     where: eq(carts.userId, userId),
@@ -217,9 +328,6 @@ export async function getCartsByUserId(userId: string) {
       product: {
         with: {
           category: true,
-          favorites: {
-            where: eq(favorites.userId, userId),
-          },
         },
       },
     },
@@ -237,19 +345,6 @@ export async function getAllRatings() {
     },
   });
 }
-
-// export async function getRatingsByProductId(id: string) {
-//   return await db
-//     .select({
-//       ...getTableColumns(ratings),
-//       productName: products.name,
-//       productPrice: products.price,
-//       productImageUrl: products.imageUrl,
-//     })
-//     .from(ratings)
-//     .leftJoin(products, eq(ratings.productId, products.id))
-//     .where(eq(ratings.productId, id));
-// }
 
 export async function getRatingsByProductId(id: string) {
   return await db.query.ratings.findMany({
@@ -305,6 +400,87 @@ export async function getInvoiceDetail(id: string) {
         },
       },
       discount: true,
+    },
+  });
+}
+
+export async function filterAndSearch(formData: FormData) {
+  const { categoryId, minPrice, maxPrice, rating, search, page, pageSize } =
+    Object.fromEntries(formData);
+
+  const pageNumber = Number(page) || 1;
+  const itemsPerPage = Number(pageSize) || 10;
+
+  let whereClause: SQL[] = [];
+
+  if (categoryId) {
+    whereClause.push(eq(products.categoryId, categoryId as string));
+  }
+
+  if (minPrice) {
+    whereClause.push(gte(products.price, Number(minPrice)));
+  }
+
+  if (maxPrice) {
+    whereClause.push(lte(products.price, Number(maxPrice)));
+  }
+
+  if (search) {
+    whereClause.push(
+      sql`LOWER(${products.name}) LIKE LOWER(${`%${search as string}%`})`,
+    );
+  }
+
+  const averageRatingExpr = sql<number>`COALESCE(AVG(${ratings.star}), 0)`;
+
+  const baseQuery = db
+    .select({
+      ...getTableColumns(products),
+      averageRating: averageRatingExpr.as("averageRating"),
+    })
+    .from(products)
+    .leftJoin(ratings, eq(products.id, ratings.productId))
+    .where(and(...whereClause))
+    .groupBy(products.id);
+
+  // Apply rating filter after aggregation
+  let query = baseQuery as any;
+  if (rating) {
+    query = query.having(sql`${averageRatingExpr} >= ${Number(rating)}`);
+  }
+
+  // Count total records
+  const totalRecordsResult = await db
+    .select({ count: sql<number>`COUNT(DISTINCT ${products.id})` })
+    .from(query.as("filtered_products"));
+
+  const totalRecords = totalRecordsResult[0]?.count || 0;
+
+  // Retrieve the paginated records and sort by averageRating descending
+  const records = await query
+    .orderBy(sql`${averageRatingExpr} DESC`)
+    .limit(itemsPerPage)
+    .offset((pageNumber - 1) * itemsPerPage);
+
+  // Return pagination information along with the records
+  return {
+    totalRecords,
+    records,
+  };
+}
+
+export async function getAllInvoices() {
+  return await db.query.invoices.findMany({
+    with: {
+      orders: {
+        with: {
+          products: {
+            with: {
+              category: true,
+            },
+          },
+        },
+      },
     },
   });
 }

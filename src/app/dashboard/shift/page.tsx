@@ -1,5 +1,6 @@
 "use client";
-import React, { use, useEffect, useState, useCallback, Suspense } from "react";
+
+import React, { useState } from "react";
 import { addDays, format } from "date-fns";
 import { vi } from "date-fns/locale";
 import {
@@ -37,7 +38,7 @@ export default function ShiftManagement() {
 
   const employees = data || [];
 
-  console.log("employees", employees)
+  console.log("employees", employees);
 
   return (
     <div className="container p-4">
@@ -66,7 +67,6 @@ export default function ShiftManagement() {
               selected={selectedDate}
               onSelect={(day) => day && setSelectedDate(day)}
               initialFocus
-
             />
           </PopoverContent>
         </Popover>
@@ -90,9 +90,11 @@ export default function ShiftManagement() {
         </div>
       </div>
 
-      <ShiftCalendar year={selectedYear} month={selectedMonth} employees={employees} />
-
+      <ShiftCalendar
+        year={selectedYear}
+        month={selectedMonth}
+        employees={employees}
+      />
     </div>
   );
-
 }
