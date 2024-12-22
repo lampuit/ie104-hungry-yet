@@ -30,7 +30,7 @@ const ShipperCell: React.FC<ShipperCellProps> = ({ shipperId }) => {
     fetchUser();
   }, [shipperId]);
 
-  return <span>{user}</span>;
+  return <span className="truncate">{user}</span>;
 };
 
 export default ShipperCell;
@@ -42,7 +42,7 @@ export const columns: ColumnDef<Invoice>[] = [
       <DataTableColumnHeader column={column} title="STT" />
     ),
     cell: ({ row }) => (
-      <div className="w-[40px]">{row.index + 1}</div> // Tính số thứ tự từ 1
+      <div className="w-[40px] min-w-[40px]">{row.index + 1}</div>
     ),
     enableSorting: false,
     enableHiding: false,
@@ -54,16 +54,16 @@ export const columns: ColumnDef<Invoice>[] = [
     ),
     cell: ({ row }) => {
       return (
-        <div className="flex space-x-2">
-          <span>
+        <div className="flex space-x-2 min-w-[120px]">
+          <span className="truncate">
             {row.getValue("createdAt")
               ? new Date(row.getValue("createdAt")).toLocaleString("vi-VN", {
-                  year: "numeric",
-                  month: "2-digit",
-                  day: "2-digit",
-                  hour: "2-digit",
-                  minute: "2-digit",
-                })
+                year: "numeric",
+                month: "2-digit",
+                day: "2-digit",
+                hour: "2-digit",
+                minute: "2-digit",
+              })
               : "Không có ghi chú"}
           </span>
         </div>
@@ -79,9 +79,11 @@ export const columns: ColumnDef<Invoice>[] = [
       const status = row.getValue("status") as string;
 
       return (
-        <Badge variant="outline" className="capitalize">
-          {status}
-        </Badge>
+        <div className="min-w-[100px]">
+          <Badge variant="outline" className="capitalize w-fit">
+            {status}
+          </Badge>
+        </div>
       );
     },
     filterFn: (row, id, value) => {
@@ -95,8 +97,8 @@ export const columns: ColumnDef<Invoice>[] = [
     ),
     cell: ({ row }) => {
       return (
-        <div className="flex space-x-2">
-          <span>{row.getValue("phone")}</span>
+        <div className="flex space-x-2 min-w-[100px]">
+          <span className="truncate">{row.getValue("phone")}</span>
         </div>
       );
     },
@@ -107,7 +109,7 @@ export const columns: ColumnDef<Invoice>[] = [
       <DataTableColumnHeader column={column} title="Shipper" />
     ),
     cell: ({ row }) => (
-      <div className="flex space-x-2">
+      <div className="flex space-x-2 min-w-[100px]">
         <ShipperCell shipperId={row.getValue("shipperId")} />
       </div>
     ),
@@ -115,10 +117,12 @@ export const columns: ColumnDef<Invoice>[] = [
   {
     id: "actions",
     cell: ({ row }) => (
-      <DataTableRowActions
-        invoiceId={row.getValue("id")}
-        initialStatus={row.getValue("status")}
-      />
+      <div className="flex justify-start min-w-[50px]">
+        <DataTableRowActions
+          invoiceId={row.getValue("id")}
+          initialStatus={row.getValue("status")}
+        />
+      </div>
     ),
   },
 ];
