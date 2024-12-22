@@ -45,6 +45,37 @@ export function DataTable<TData, TValue>({
   );
   const [sorting, setSorting] = React.useState<SortingState>([]);
 
+  // Set default column visibility based on screen size
+  React.useEffect(() => {
+    const updateVisibility = () => {
+      if (window.innerWidth < 640) { // Mobile
+        setColumnVisibility({
+          id: true,
+          status: true,
+          actions: true,
+          phone: false,
+          shipperId: false,
+          createdAt: false,
+        });
+      } else if (window.innerWidth < 1024) { // Tablet
+        setColumnVisibility({
+          id: true,
+          status: true,
+          phone: true,
+          actions: true,
+          shipperId: false,
+          createdAt: true,
+        });
+      } else { // Desktop
+        setColumnVisibility({});
+      }
+    };
+
+    updateVisibility();
+    window.addEventListener('resize', updateVisibility);
+    return () => window.removeEventListener('resize', updateVisibility);
+  }, []);
+
   const table = useReactTable({
     data,
     columns,
@@ -71,56 +102,73 @@ export function DataTable<TData, TValue>({
     <div className="space-y-4">
       {/* <DataTableToolbar table={table} /> */}
       <div className="rounded-md border">
-        <Table>
-          <TableHeader>
-            {table.getHeaderGroups().map((headerGroup) => (
-              <TableRow key={headerGroup.id}>
-                {headerGroup.headers.map((header) => {
-                  return (
-                    <TableHead key={header.id}>
-                      {header.isPlaceholder
-                        ? null
-                        : flexRender(
+        <div className="overflow-x-auto">
+          <Table>
+            <TableHeader>
+              {table.getHeaderGroups().map((headerGroup) => (
+                <TableRow key={headerGroup.id}>
+                  {headerGroup.headers.map((header) => {
+                    return (
+                      <TableHead
+                        key={header.id}
+                        className="whitespace-nowrap px-4 py-3"
+                      >
+                        {header.isPlaceholder
+                          ? null
+                          : flexRender(
                             header.column.columnDef.header,
                             header.getContext(),
                           )}
-                    </TableHead>
-                  );
-                })}
-              </TableRow>
-            ))}
-          </TableHeader>
-          <TableBody>
-            {table.getRowModel().rows?.length ? (
-              table.getRowModel().rows.map((row) => (
-                <TableRow
-                  key={row.id}
-                  data-state={row.getIsSelected() && "selected"}
-                >
-                  {row.getVisibleCells().map((cell) => (
-                    <TableCell key={cell.id}>
-                      {flexRender(
-                        cell.column.columnDef.cell,
-                        cell.getContext(),
-                      )}
-                    </TableCell>
-                  ))}
+                      </TableHead>
+                    );
+                  })}
                 </TableRow>
-              ))
-            ) : (
-              <TableRow>
-                <TableCell
-                  colSpan={columns.length}
-                  className="h-24 text-center"
-                >
-                  No results.
-                </TableCell>
-              </TableRow>
-            )}
-          </TableBody>
-        </Table>
+              ))}
+            </TableHeader>
+            <TableBody>
+              {table.getRowModel().rows?.length ? (
+                table.getRowModel().rows.map((row) => (
+                  <TableRow
+                    key={row.id}
+                    data-state={row.getIsSelected() && "selected"}
+                    className="hover:bg-muted/50"
+                  >
+                    {row.getVisibleCells().map((cell) => (
+                      <TableCell
+                        key={cell.id}
+                        className="px-4 py-3"
+                      >
+                        <div className="min-w-[40px]">
+                          {flexRender(
+                            cell.column.columnDef.cell,
+                            cell.getContext(),
+                          )}
+                        </div>
+                      </TableCell>
+                    ))}
+                  </TableRow>
+                ))
+              ) : (
+                <TableRow>
+                  <TableCell
+                    colSpan={columns.length}
+                    className="h-24 text-center"
+                  >
+                    <div className="flex flex-col items-center justify-center space-y-1 text-muted-foreground">
+                      <p>Không có dữ liệu</p>
+                      <p className="text-sm">Chưa có kết quả nào được tìm thấy.</p>
+                    </div>
+                  </TableCell>
+                </TableRow>
+              )}
+            </TableBody>
+          </Table>
+        </div>
       </div>
-      <DataTablePagination table={table} />
+      <div className="px-2">
+        <DataTablePagination table={table} />
+      </div>
     </div>
   );
 }
+
