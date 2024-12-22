@@ -402,7 +402,7 @@ export function CardHistory({ invoice }: { invoice: Invoice }) {
         ) : isDeliveredPage ? (
           <div className="flex justify-end gap-6">
             <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-              <DialogContent className="flex w-[1024px] flex-col gap-4">
+              <DialogContent className="flex w-[360px] md:w-[1024px] flex-col gap-4">
                 <DialogHeader>
                   <DialogTitle className="text-lg font-semibold">
                     Đánh giá sản phẩm

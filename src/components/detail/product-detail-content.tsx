@@ -209,7 +209,7 @@ export function ProductDetailContent({ id }: { id: string }) {
               </div>
               <div className="inline-flex gap-2">
                 <MessageCircleMore className="size-5 stroke-red-500" />
-                <span>50</span>
+                <span>{ratingData.length || 0}</span>
               </div>
             </div>
             <div className="flex items-center text-2xl font-bold text-red-500 md:text-3xl lg:text-4xl">
