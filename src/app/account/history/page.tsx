@@ -43,6 +43,8 @@ export default function History() {
   }
 
   useEffect(() => {
+
+    console.log("listInvoices", listInvoices);
     if (error) {
       console.error("SWR error:", error);
       mutate(); // Retry on error
