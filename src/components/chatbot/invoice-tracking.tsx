@@ -1,15 +1,8 @@
 import React from "react";
-import {
-  CheckCircle,
-  Circle,
-  Truck,
-  Package,
-  ShoppingBag,
-  CookingPot,
-  Bell,
-} from "lucide-react";
+import { CheckCircle, Truck, CookingPot, Bell } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
+import { CopyButton } from "@/components/ui/copy-button";
 
 const steps: { status: string; label: string; icon: React.ElementType }[] = [
   { status: "accepted", label: "Xác nhận", icon: Bell },
@@ -40,15 +33,8 @@ export function InvoiceTracking({
     <div className="w-full max-w-2xl overflow-hidden rounded-md border bg-white">
       <div className="p-6">
         <h2 className="mb-6 flex items-center gap-2 text-xl">
-          <span className="font-semibold">Hóa Đơn:</span>
-          <Button
-            variant="outline"
-            type="button"
-            className="z-50"
-            onClick={() => navigator.clipboard.writeText(id)}
-          >
-            #{id}
-          </Button>
+          <span className="font-semibold">Hóa Đơn:</span>#{id}
+          <CopyButton content={id} />
         </h2>
         {estimatedDelivery > 0 && (
           <p className="mb-6 text-gray-600">

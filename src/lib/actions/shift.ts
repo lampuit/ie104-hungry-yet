@@ -13,7 +13,6 @@ const CreateUserWorkShift = insertAssigmentSchema.omit({
 });
 
 export async function createUserWorkShift(formData: FormData) {
-
   const data = CreateUserWorkShift.parse({
     id: formData.get("id"),
     userId: formData.get("userId"),
@@ -26,7 +25,10 @@ export async function createUserWorkShift(formData: FormData) {
   /* This code snippet is inside the `createUserWorkShift` function and it is responsible for creating
   a new user work shift record in the database. Here's what it does: */
   try {
-    await db.insert(assigments).values(data).onConflictDoNothing({ target: assigments.id });
+    await db
+      .insert(assigments)
+      .values(data)
+      .onConflictDoNothing({ target: assigments.id });
     console.log("User work shift created successfully");
   } catch (err) {
     console.error(err);

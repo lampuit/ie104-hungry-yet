@@ -5,6 +5,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { ShoppingCart, Truck, Calendar, DollarSign } from "lucide-react";
+import { CopyButton } from "@/components/ui/copy-button";
 
 const statusColors: Record<any, string> = {
   pending: "bg-yellow-500",
@@ -61,8 +62,9 @@ const InvoiceCard = ({ invoice }: { invoice: any }) => {
       <div className={`h-2 ${statusColors[invoice.status]}`} />
       <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
         <CardTitle className="truncate text-sm font-medium">
-          Hóa đơn #{invoice.id}
+          <span className="font-semibold">Hóa Đơn:</span>#{invoice.id}
         </CardTitle>
+        <CopyButton content={invoice.id} />
         <Badge
           variant={invoice.status === "delivered" ? "default" : "secondary"}
         >
@@ -80,7 +82,11 @@ const InvoiceCard = ({ invoice }: { invoice: any }) => {
         <div className="mt-4 space-y-2">
           <div className="flex items-center space-x-2 text-sm">
             <Calendar className="h-4 w-4" />
-            <span>{new Date(invoice.createdAt).toLocaleDateString()}</span>
+            <span>
+              {new Date(invoice.createdAt).toLocaleString("vi-VN", {
+                timeZone: "UTC",
+              })}
+            </span>
           </div>
           <div className="flex items-center justify-between space-x-2 text-sm">
             <div className="flex h-9 items-center space-x-2">

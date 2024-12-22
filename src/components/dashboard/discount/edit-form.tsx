@@ -116,7 +116,11 @@ export function EditForm({
 
   return (
     <Form {...form}>
-      <form ref={formRef} className="flex flex-col gap-4" onSubmit={form.handleSubmit(formAction)}>
+      <form
+        ref={formRef}
+        className="flex flex-col gap-4"
+        onSubmit={form.handleSubmit(formAction)}
+      >
         <div className="flex items-center justify-end">
           <Button
             type="submit"
@@ -161,7 +165,7 @@ export function EditForm({
                             alt="preview-image"
                             width={0}
                             height={0}
-                            sizes="100vw"
+                            sizes="100%"
                             style={{ width: "100%", height: "auto" }}
                           />
                         ) : (

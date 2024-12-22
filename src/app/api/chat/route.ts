@@ -4,6 +4,7 @@ import { z } from "zod";
 import {
   getCartsByUserId,
   getCategories,
+  getFavoriteByUserId,
   getInvoicesIdByUserId,
   getProductsByCategory,
   getPuslishProducts,
@@ -98,7 +99,8 @@ export async function POST(req: Request) {
         }),
         execute: async function ({ product_id }) {
           const product = await getProductById(product_id);
-          return product[0];
+          const favorite = await getFavoriteByUserId(session.user.id);
+          return { ...product[0], userId: session.user.id, favorite };
         },
       },
       getDiscounts: {
