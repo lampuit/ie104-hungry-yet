@@ -23,6 +23,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { getSession, revokeSession } from "@/lib/auth-client";
 import { useRouter } from "next/navigation";
+import { user } from "@/drizzle/schema/auth";
 
 // Lấy session
 export const fetcherSessionId = async () => {
@@ -67,6 +68,18 @@ const items = [
 export function AppSidebar({ userRole }: { userRole: string }) {
   const pathname = usePathname();
   const router = useRouter();
+
+  console.log(userRole);
+  console.log(pathname);
+
+  const protect = items.slice(1).filter((item) => item.role.includes(userRole) && pathname.includes(item.url)); 
+
+  console.log(protect);
+
+  if (protect.length === 0) {
+    router.push("/dashboard");
+  }
+
 
   return (
     <Sidebar>
