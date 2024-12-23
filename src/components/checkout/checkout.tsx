@@ -92,10 +92,7 @@ export function Checkout({ carts, userId }: { carts: any[]; userId: string }) {
 
   return (
     <Form {...form}>
-      <form
-        onSubmit={form.handleSubmit(onSubmit)}
-        className="grid gap-8 lg:grid-cols-2"
-      >
+      <form onSubmit={form.handleSubmit(onSubmit)} className="grid p-4">
         <div>
           <InformationForm form={form} />
         </div>

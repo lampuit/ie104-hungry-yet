@@ -221,7 +221,6 @@ export default function MenuPage() {
           </Pagination>
         )}
       </section>
-      <Chatbot />
     </main>
   );
 }

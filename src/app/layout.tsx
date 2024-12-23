@@ -8,8 +8,6 @@ import { Toaster as Sonner } from "@/components/ui/sonner";
 import { UnauthorizedNavbar } from "@/components/navbar/unauthorized-nav";
 import { AuthorizedNavbar } from "@/components/navbar/authorized-nav";
 import { getSession } from "@/lib/auth-client";
-import { ReactNode, useEffect, useState } from "react";
-import { metadata } from "./metadata";
 import { usePathname } from "next/navigation";
 import useSWR from "swr";
 import Footer from "@/components/ui/footer";
@@ -32,10 +30,8 @@ const fetcherUserId = async () => {
 // Layout chính
 export default function RootLayout({
   children,
-  modal,
 }: Readonly<{
   children: React.ReactNode;
-  modal: React.ReactNode;
 }>) {
   const { data: userId } = useSWR("userId", fetcherUserId);
 
@@ -59,10 +55,7 @@ export default function RootLayout({
             {userId ? <AuthorizedNavbar /> : <UnauthorizedNavbar />}
           </div>
         )}
-        <div className="grow">
-          {children}
-          {modal}
-        </div>
+        <div className="grow">{children}</div>
         {!isDashboardPath && !isLoginPath && !isRegisterPath && <Footer />}
         <Toaster />
         <Sonner />
