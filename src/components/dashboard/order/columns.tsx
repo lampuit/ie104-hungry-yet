@@ -35,6 +35,18 @@ const ShipperCell: React.FC<ShipperCellProps> = ({ shipperId }) => {
 
 export default ShipperCell;
 
+const getStatusDescription = (status: string) => {
+  const descriptions = {
+    pending: "Chờ xác nhận",
+    accepted: "Đã xác nhận",
+    cooking: "Đang chuẩn bị",
+    ready: "Đang giao hàng",
+    delivered: "Đã giao",
+    cancelled: "Đã hủy",
+  };
+  return descriptions[status as keyof typeof descriptions] || status;
+};
+
 export const columns: ColumnDef<Invoice>[] = [
   {
     accessorKey: "id",
@@ -81,7 +93,7 @@ export const columns: ColumnDef<Invoice>[] = [
       return (
         <div className="min-w-[100px]">
           <Badge variant="outline" className="capitalize w-fit">
-            {status}
+            {getStatusDescription(status)}
           </Badge>
         </div>
       );
