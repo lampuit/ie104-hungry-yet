@@ -53,7 +53,11 @@ export async function POST(req: NextRequest) {
       .set({ status: paymentStatus })
       .where(eq(payments.id, paymentId));
 
-    return NextResponse.json({ message: "Xử lý đơn thành công" });
+    return NextResponse.json({
+      message: "Xử lý đơn thành công",
+      paymentStatus,
+      invoiceStatus,
+    });
   } catch (error) {
     console.error("Lỗi trong lúc thanh toán: ", error);
     return NextResponse.json(

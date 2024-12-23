@@ -83,7 +83,7 @@ export default function ProfileCard({
           >
             {new Date(birthday).toLocaleDateString("vi-VN")}
           </ProfileItem>
-          <ProfileItem icon={getGenderIcon(gender)} label="Gender">
+          <ProfileItem icon={getGenderIcon(gender)} label="Giới Thiệu">
             {gender.charAt(0).toUpperCase() + gender.slice(1)}
           </ProfileItem>
         </div>
