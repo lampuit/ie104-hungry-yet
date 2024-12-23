@@ -22,18 +22,7 @@ import {
 import { getUserById } from "@/lib/data";
 import useSWR from "swr";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import {
-  Badge,
-  Calendar,
-  CornerDownLeft,
-  CreditCard,
-  FileText,
-  Phone,
-  ShoppingBag,
-  Timer,
-  Truck,
-  User,
-} from "lucide-react";
+import { Badge, Calendar, CornerDownLeft, CreditCard, FileText, Phone, ShoppingBag, Timer, Truck, User } from 'lucide-react';
 import { toast } from "@/hooks/use-toast";
 
 const getUserInfo = async (userId: string) => {
@@ -92,7 +81,17 @@ export function InvoiceDetails({ invoice }: { invoice: any }) {
     return colors[status as keyof typeof colors] || "bg-gray-500";
   };
 
-  console.log("invoice", invoice);
+  const getStatusDescription = (status: string) => {
+    const descriptions = {
+      pending: "Đơn đang chờ xác nhận",
+      accepted: "Xác nhận đơn",
+      cooking: "Chuẩn bị món",
+      ready: "Giao hàng",
+      delivered: "Giao thành công",
+      cancelled: "Hủy đơn",
+    };
+    return descriptions[status as keyof typeof descriptions] || status;
+  };
 
   return (
     <div className="container mx-auto space-y-6 p-4">
@@ -106,7 +105,7 @@ export function InvoiceDetails({ invoice }: { invoice: any }) {
             <Badge
               className={`${getStatusColor(status)} rounded-full px-3 py-1 text-sm text-white`}
             >
-              {status.charAt(0).toUpperCase() + status.slice(1)}
+              {getStatusDescription(status)}
             </Badge>
           </CardTitle>
         </CardHeader>
@@ -174,12 +173,12 @@ export function InvoiceDetails({ invoice }: { invoice: any }) {
                 disabled={isPending}
               >
                 <SelectTrigger className="w-[180px]">
-                  <SelectValue placeholder="Select status" />
+                  <SelectValue placeholder="Chọn trạng thái" />
                 </SelectTrigger>
                 <SelectContent>
-                  {["cooking", "ready", "delivered", "cancelled"].map((s) => (
+                  {["pending", "accepted","cooking", "ready", "delivered", "cancelled" ].map((s) => (
                     <SelectItem key={s} value={s}>
-                      {s.charAt(0).toUpperCase() + s.slice(1)}
+                      {getStatusDescription(s)}
                     </SelectItem>
                   ))}
                 </SelectContent>
