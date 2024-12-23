@@ -55,8 +55,8 @@ export function Checkout({ carts, userId }: { carts: any[]; userId: string }) {
 
       const result = await submitPayment(
         carts,
+        discountId || null,
         total,
-        discountId,
         paymentMethod,
         userId,
         values.addressDelivery,
