@@ -3,7 +3,7 @@
 import { db } from "@/drizzle/db";
 import { discounts, insertDiscountSchema } from "@/drizzle/schema/project";
 import { eq } from "drizzle-orm";
-import { revalidatePath, revalidateTag } from "next/cache";
+import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 
 const CreateDiscount = insertDiscountSchema.omit({

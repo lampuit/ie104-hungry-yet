@@ -2,7 +2,7 @@
 
 import { db } from "@/drizzle/db";
 import { insertOrderSchema, orders } from "@/drizzle/schema/project";
-import { eq, sql, and } from "drizzle-orm";
+import { eq, and } from "drizzle-orm";
 
 const CreateOrderProduct = insertOrderSchema.omit({
   createdAt: true,
