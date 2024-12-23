@@ -11,7 +11,14 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from "@/components/ui/sidebar";
-import { Home, Package2, Ticket, Clock, LucideListOrdered, LogOut } from 'lucide-react';
+import {
+  Home,
+  Package2,
+  Ticket,
+  Clock,
+  LucideListOrdered,
+  LogOut,
+} from "lucide-react";
 import Link from "next/link";
 import { usePathname, useRouter, redirect } from "next/navigation";
 import { getSession, revokeSession } from "@/lib/auth-client";
@@ -68,8 +75,7 @@ export function AppSidebar({ userRole }: { userRole: string }) {
       console.error("Logout failed:", error);
     }
   }, [router]);
-  
-  
+
   return (
     <Sidebar>
       <SidebarContent>
@@ -79,12 +85,9 @@ export function AppSidebar({ userRole }: { userRole: string }) {
           </SidebarGroupLabel>
           <SidebarGroupContent>
             <SidebarMenu>
-              {filteredItems.map((item) => (
+              {items.map((item) => (
                 <SidebarMenuItem key={item.title}>
-                  <SidebarMenuButton
-                    isActive={pathname === item.url}
-                    asChild
-                  >
+                  <SidebarMenuButton isActive={pathname === item.url} asChild>
                     <Link href={item.url}>
                       <item.icon />
                       <span>{item.title}</span>
@@ -93,10 +96,7 @@ export function AppSidebar({ userRole }: { userRole: string }) {
                 </SidebarMenuItem>
               ))}
               <SidebarMenuItem>
-                <SidebarMenuButton
-                  asChild
-                  onClick={handleLogout}
-                >
+                <SidebarMenuButton asChild onClick={handleLogout}>
                   <div>
                     <LogOut />
                     <span>Logout</span>
@@ -110,4 +110,3 @@ export function AppSidebar({ userRole }: { userRole: string }) {
     </Sidebar>
   );
 }
-
