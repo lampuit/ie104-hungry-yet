@@ -79,8 +79,6 @@ export default function CartPage() {
     }
   }, [listDish, favoriteList]);
 
-  console.log("Dish", dishes);
-
   const handleQuantityChange = (id: string, newQuantity: number) => {
     const updatedDishes = dishes.map((dish) =>
       dish.id === id ? { ...dish, amount: newQuantity } : dish,

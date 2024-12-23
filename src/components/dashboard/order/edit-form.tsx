@@ -93,7 +93,6 @@ export function EditForm({
         if (!file) throw new Error("Vui lòng chọn ảnh");
 
         // Xóa image cũ
-        console.log(product.imageUrl);
         await fetch(`/api/image/delete?${product.imageUrl}`, {
           method: "DELETE",
         });
@@ -207,8 +206,7 @@ export function EditForm({
                               const file = e.target.files[0];
 
                               const newImageUrl = URL.createObjectURL(file);
-                              field.onChange(newImageUrl);
-                              console.log(file);
+                              field.onChange(newImageUrl);                     
                               setFile(file);
                             }
                           }}

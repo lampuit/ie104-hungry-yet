@@ -14,7 +14,6 @@ export default async function Edit({ params }: { params: { id: string } }) {
   if (session.user.role !== "admin") redirect("/dashboard");
 
   const [categories, product] = await fetchProductId(params.id);
-  console.log(product);
 
   return (
     <div className="flex-1 p-4">

@@ -20,8 +20,6 @@ export async function createUserWorkShift(formData: FormData) {
     workDate: new Date(formData.get("workDate") as string),
   });
 
-  console.log(formData);
-
   /* This code snippet is inside the `createUserWorkShift` function and it is responsible for creating
   a new user work shift record in the database. Here's what it does: */
   try {
@@ -29,7 +27,6 @@ export async function createUserWorkShift(formData: FormData) {
       .insert(assigments)
       .values(data)
       .onConflictDoNothing({ target: assigments.id });
-    console.log("User work shift created successfully");
   } catch (err) {
     console.error(err);
   }
@@ -55,10 +52,8 @@ export async function updateUserWorkShift(formData: FormData) {
 }
 
 export async function deleteUserWorkShift(id: string) {
-  console.log(id);
   try {
     await db.delete(assigments).where(eq(assigments.id, id));
-    console.log("Delete user work shift successfully");
   } catch (err) {
     console.error(err);
   }

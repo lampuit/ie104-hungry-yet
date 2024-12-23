@@ -49,8 +49,6 @@ export default function ProductDetailCard({
 
   const handleFavoriteOnClick = async () => {
     if (!isFavorite) {
-      console.log(userId);
-      console.log(favorite);
       const formData = new FormData();
       formData.append("userId", userId || "");
       formData.append("productId", id);
