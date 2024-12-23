@@ -394,10 +394,10 @@ export function CardHistory({ invoice }: { invoice: Invoice }) {
           </span>
         </p>
         {isCookingPage ||
-        isAcceptedPage ||
-        isCancelPage ||
-        isAcceptedPage ||
-        isReadyPage ? (
+          isAcceptedPage ||
+          isCancelPage ||
+          isAcceptedPage ||
+          isReadyPage ? (
           <></>
         ) : isDeliveredPage ? (
           <div className="flex justify-end gap-6">
@@ -484,14 +484,17 @@ export function CardHistory({ invoice }: { invoice: Invoice }) {
                     type="submit"
                     className="bg-amber-500"
                     onClick={handleSubmitRatings}
+                    disabled={Object.keys(ratings).length < (invoiceData?.orders?.length || 0)}
                   >
                     Lưu đánh giá
                   </Button>
                 </DialogFooter>
               </DialogContent>
-              <DialogTrigger className="flex items-center justify-center gap-2 rounded-md border border-black p-3 text-xs font-semibold hover:bg-gray-100">
+
+              {!invoiceData?.isRating ? (<DialogTrigger className="flex items-center justify-center gap-2 rounded-md border border-black p-3 text-xs font-semibold hover:bg-gray-100">
                 <Star className="h-4 w-4" /> Đánh giá
-              </DialogTrigger>
+              </DialogTrigger>) : ('')}
+
             </Dialog>
             <Button
               onClick={() => {

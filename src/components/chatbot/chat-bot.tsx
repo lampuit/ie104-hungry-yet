@@ -18,7 +18,7 @@ import {
 import { useSession } from "@/lib/auth-client";
 
 import { useChat } from "ai/react";
-import { MessageCircleMore } from "lucide-react";
+import { BotMessageSquare } from "lucide-react";
 import Link from "next/link";
 
 export default function Chatbot() {
@@ -40,9 +40,9 @@ export default function Chatbot() {
     lastMessage?.role === "user" || (!lastMessage?.content && !isEmpty);
 
   return (
-    <Sheet modal={false}>
-      <SheetTrigger className="fixed bottom-12 right-12 z-40 rounded-full bg-amber-500 p-2 ring-2 ring-background">
-        <MessageCircleMore className="stroke-white" size={32} />
+    <Sheet>
+      <SheetTrigger className="fixed bottom-12 right-12 z-40 rounded-full bg-amber-500 p-2">
+        <BotMessageSquare className="stroke-white" size={32} />
       </SheetTrigger>
       <SheetContent className="flex h-full w-full flex-col sm:max-w-5xl">
         <SheetHeader className="flex-none">

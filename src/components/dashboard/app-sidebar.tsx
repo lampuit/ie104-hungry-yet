@@ -1,5 +1,6 @@
 "use client";
 
+import React, { useCallback, useMemo, useEffect } from "react";
 import {
   Sidebar,
   SidebarContent,
@@ -10,25 +11,10 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from "@/components/ui/sidebar";
-import {
-  Home,
-  Package2,
-  Ticket,
-  Clock,
-  LucideListOrdered,
-  LogOut,
-  Router,
-} from "lucide-react";
+import { Home, Package2, Ticket, Clock, LucideListOrdered, LogOut } from 'lucide-react';
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter, redirect } from "next/navigation";
 import { getSession, revokeSession } from "@/lib/auth-client";
-import { useRouter } from "next/navigation";
-
-// Lấy session
-export const fetcherSessionId = async () => {
-  const response = await getSession();
-  return response?.data?.session?.id;
-};
 
 const items = [
   {
@@ -49,7 +35,6 @@ const items = [
     icon: Clock,
     role: ["admin"],
   },
-
   {
     title: "Quản lý khuyến mãi",
     url: "/dashboard/discount",
@@ -68,6 +53,38 @@ export function AppSidebar({ userRole }: { userRole: string }) {
   const pathname = usePathname();
   const router = useRouter();
 
+  const filteredItems = useMemo(() =>
+    items.filter((item) => item.role.includes(userRole)),
+    [userRole]
+  );
+
+  const isProtectedRoute = useCallback(() => {
+    const protectedItems = filteredItems.slice(1);
+    return protectedItems.some((item) => pathname.includes(item.url));
+  }, [filteredItems, pathname]);
+
+  useEffect(() => {
+    if (!isProtectedRoute() && pathname !== "/dashboard") {
+      redirect("/dashboard");
+    }
+  }, [isProtectedRoute, pathname]);
+
+  const handleLogout = useCallback(async () => {
+    try {
+      const session = await getSession();
+      const sessionId = session?.data?.session?.id;
+      if (sessionId) {
+        await revokeSession({ id: sessionId });
+        router.push("/");
+        router.refresh();
+      } else {
+        console.error("Session ID is undefined");
+      }
+    } catch (error) {
+      console.error("Logout failed:", error);
+    }
+  }, [router]);
+
   return (
     <Sidebar>
       <SidebarContent>
@@ -77,36 +94,23 @@ export function AppSidebar({ userRole }: { userRole: string }) {
           </SidebarGroupLabel>
           <SidebarGroupContent>
             <SidebarMenu>
-              {items.map(
-                (item) =>
-                  item.role.includes(userRole) && (
-                    <SidebarMenuItem key={item.title}>
-                      <SidebarMenuButton
-                        isActive={pathname === item.url}
-                        asChild
-                      >
-                        <Link href={item.url}>
-                          <item.icon />
-                          <span>{item.title}</span>
-                        </Link>
-                      </SidebarMenuButton>
-                    </SidebarMenuItem>
-                  ),
-              )}
-
+              {filteredItems.map((item) => (
+                <SidebarMenuItem key={item.title}>
+                  <SidebarMenuButton
+                    isActive={pathname === item.url}
+                    asChild
+                  >
+                    <Link href={item.url}>
+                      <item.icon />
+                      <span>{item.title}</span>
+                    </Link>
+                  </SidebarMenuButton>
+                </SidebarMenuItem>
+              ))}
               <SidebarMenuItem>
                 <SidebarMenuButton
                   asChild
-                  onClick={async () => {
-                    const sessionId = await fetcherSessionId();
-                    if (sessionId) {
-                      await revokeSession({ id: sessionId });
-                      router.push("/");
-                      router.refresh();
-                    } else {
-                      console.error("Session ID is undefined");
-                    }
-                  }}
+                  onClick={handleLogout}
                 >
                   <div>
                     <LogOut />
@@ -121,3 +125,4 @@ export function AppSidebar({ userRole }: { userRole: string }) {
     </Sidebar>
   );
 }
+
