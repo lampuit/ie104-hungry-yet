@@ -124,7 +124,7 @@ export default function Homepage() {
         </div>
         <Button
           asChild
-          className="rounded-3xl bg-black hover:bg-red-500 sm:hidden"
+          className="w-3/4 rounded-3xl bg-black hover:bg-red-500 sm:hidden"
         >
           <Link href={"/exhibition"}>Xem blog</Link>
         </Button>
@@ -142,7 +142,7 @@ export default function Homepage() {
         <Testimonials />
       </section>
 
-      <section className="mx-10 mb-16 flex flex-col items-center justify-center gap-10 px-10 lg:flex-row lg:items-start lg:gap-40">
+      <section className="sm:mx-10 mb-16 flex flex-col items-center justify-center gap-10 px-5 sm:px-10 lg:flex-row lg:items-start lg:gap-40">
         <div className="flex flex-col justify-center gap-4">
           <h2
             className={`${charm.className} text-center text-4xl font-semibold italic sm:text-5xl lg:text-start`}

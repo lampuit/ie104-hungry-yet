@@ -153,8 +153,8 @@ export default function MenuPage() {
   return dishLoading ? (
     <LoadingSpinner />
   ) : (
-    <main className="w-screen">
-      <header className="mt-8">
+    <main>
+      <header className="mt-6 w-full flex justify-center ">
         <SearchingArea
           totalAmount={totalAmount}
           filter={filter}

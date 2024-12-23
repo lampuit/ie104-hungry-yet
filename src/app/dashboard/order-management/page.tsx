@@ -52,7 +52,7 @@ export default async function OrderManagement() {
   const invoices: Invoice[] = await getAllInvoices();
 
   return (
-    <div className="container mx-auto py-10">
+    <div className="container mx-auto py-4">
       <DataTable columns={columns} data={invoices} />
     </div>
   );

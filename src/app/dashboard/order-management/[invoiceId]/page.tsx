@@ -4,29 +4,6 @@ import { InvoiceDetails } from "./invoice-detail";
 import { headers } from "next/headers";
 import { auth } from "@/lib/auth";
 
-// export interface Product {
-//     id: string
-//     name: string
-//     quantity: number
-//     price: number
-// }
-
-// export interface Invoice {
-//     id: string
-//     phone: string | null
-//     createdAt: Date
-//     status: "pending" | "accepted" | "cooking" | "ready" | "delivered" | "cancelled"
-//     customerId: string
-//     shipperId: string | null
-//     totalAmount: number
-//     orders: {
-//         invoiceId: string
-//         productId: string
-//         products: Product[]
-//     }
-//     discount: { amount: number; description: string } | null
-// }
-
 export default async function InvoiceDetailsPage({
   params,
 }: {
