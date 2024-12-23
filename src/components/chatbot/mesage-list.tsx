@@ -4,6 +4,7 @@ import InvoiceListCard from "@/components/chatbot/invoice-list";
 import { InvoiceTracking } from "@/components/chatbot/invoice-tracking";
 import ProductDetailCard from "@/components/chatbot/product-detail-card";
 import { ProductList } from "@/components/chatbot/product-list";
+import ProfileCard from "@/components/chatbot/profile";
 import { ChatMessage } from "@/components/ui/chat-message";
 import { Skeleton } from "@/components/ui/skeleton";
 import { TypingIndicator } from "@/components/ui/typing-indicator";
@@ -59,6 +60,9 @@ export function MessageList({
                       ) : null}
                       {toolName === "checkingInformation" ? (
                         <Checkout {...result} append={append} />
+                      ) : null}
+                      {toolName === "displayProfile" ? (
+                        <ProfileCard {...result} />
                       ) : null}
                     </div>
                   );

@@ -53,22 +53,6 @@ export function AppSidebar({ userRole }: { userRole: string }) {
   const pathname = usePathname();
   const router = useRouter();
 
-  const filteredItems = useMemo(() =>
-    items.filter((item) => item.role.includes(userRole)),
-    [userRole]
-  );
-
-  const isProtectedRoute = useCallback(() => {
-    const protectedItems = filteredItems.slice(1);
-    return protectedItems.some((item) => pathname.includes(item.url));
-  }, [filteredItems, pathname]);
-
-  useEffect(() => {
-    if (!isProtectedRoute() && pathname !== "/dashboard") {
-      redirect("/dashboard");
-    }
-  }, [isProtectedRoute, pathname]);
-
   const handleLogout = useCallback(async () => {
     try {
       const session = await getSession();
@@ -84,7 +68,8 @@ export function AppSidebar({ userRole }: { userRole: string }) {
       console.error("Logout failed:", error);
     }
   }, [router]);
-
+  
+  
   return (
     <Sidebar>
       <SidebarContent>

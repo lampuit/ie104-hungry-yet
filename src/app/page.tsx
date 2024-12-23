@@ -18,7 +18,7 @@ import { motion } from "framer-motion";
 import { MobileHero } from "@/components/home/mobile-hero";
 import { MobileBenefit } from "@/components/home/mobile-benefit";
 import { Charm } from "next/font/google";
-import Chatbot from "@/components/chatbot/chat-bot";
+import { Chatbot } from "@/components/chatbot/chat-bot";
 
 const charm = Charm({
   weight: ["400", "700"],
