@@ -25,6 +25,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
   Badge,
   Calendar,
+  CornerDownLeft,
   CreditCard,
   FileText,
   Phone,
@@ -258,7 +259,7 @@ export function InvoiceDetails({ invoice }: { invoice: any }) {
           variant="outline"
           className="flex items-center"
         >
-          <User className="mr-2 h-4 w-4" />
+          <CornerDownLeft className="mr-1 h-4 w-4" />
           Trở về
         </Button>
       </div>
