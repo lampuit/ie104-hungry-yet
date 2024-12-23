@@ -3,7 +3,6 @@ import { NextRequest, NextResponse } from "next/server";
 import { invoices, payments } from "@/drizzle/schema/project";
 import { eq } from "drizzle-orm";
 import { db } from "@/drizzle/db";
-import { clearCart } from "@/lib/actions/cart";
 
 export async function POST(req: NextRequest) {
   try {

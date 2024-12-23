@@ -1,6 +1,9 @@
 import { DataTable } from "@/components/dashboard/order/data-table";
 import { columns } from "@/components/dashboard/order/columns";
 import { getAllInvoices } from "@/lib/data";
+import { auth } from "@/lib/auth";
+import { headers } from "next/headers";
+import { redirect } from "next/navigation";
 
 export interface Invoice {
   id: string;
@@ -39,6 +42,13 @@ export interface Invoice {
 }
 
 export default async function OrderManagement() {
+  const session = await auth.api.getSession({
+    headers: headers(),
+  });
+
+  if (!session || !session.user) redirect("/login");
+  if (session.user.role === "customer") redirect("/");
+
   const invoices: Invoice[] = await getAllInvoices();
 
   return (

@@ -1,6 +1,8 @@
-import { notFound } from "next/navigation";
+import { notFound, redirect } from "next/navigation";
 import { getInvoiceDetail } from "@/lib/data";
 import { InvoiceDetails } from "./invoice-detail";
+import { headers } from "next/headers";
+import { auth } from "@/lib/auth";
 
 // export interface Product {
 //     id: string
@@ -30,6 +32,14 @@ export default async function InvoiceDetailsPage({
 }: {
   params: { invoiceId: string };
 }) {
+  const session = await auth.api.getSession({
+    headers: headers(),
+  });
+
+  if (!session || !session.user) redirect("/login");
+  if (session.user.role === "customer") redirect("/");
+  if (session.user.role !== "admin") redirect("/dashboard");
+
   const invoice = await getInvoiceDetail(params.invoiceId);
 
   console.log("invoice", invoice);

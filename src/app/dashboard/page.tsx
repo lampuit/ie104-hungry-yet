@@ -7,7 +7,10 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import { auth } from "@/lib/auth";
 import { getInvoices, getInvoicesByStatus, getRevenues } from "@/lib/data";
+import { headers } from "next/headers";
+import { redirect } from "next/navigation";
 
 function DongFormat(number: number) {
   return new Intl.NumberFormat("vi-VN", {
@@ -17,6 +20,13 @@ function DongFormat(number: number) {
 }
 
 export default async function Page() {
+  const session = await auth.api.getSession({
+    headers: headers(),
+  });
+
+  if (!session || !session.user) redirect("/login");
+  if (session.user.role === "customer") redirect("/");
+
   const invoices = await getInvoices();
   const revenues = await getRevenues();
 

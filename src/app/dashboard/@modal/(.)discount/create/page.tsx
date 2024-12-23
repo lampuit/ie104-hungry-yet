@@ -5,8 +5,18 @@ import {
   DialogTitle,
   DialogContent,
 } from "@/components/ui/dialog";
+import { auth } from "@/lib/auth";
+import { headers } from "next/headers";
+import { redirect } from "next/navigation";
 
-export default function Create() {
+export default async function Create() {
+  const session = await auth.api.getSession({
+    headers: headers(),
+  });
+
+  if (!session || !session.user) redirect("/login");
+  if (session.user.role === "customer") redirect("/");
+
   return (
     <DialogModal>
       <DialogContent>
