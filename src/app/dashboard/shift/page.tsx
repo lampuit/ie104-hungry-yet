@@ -38,8 +38,6 @@ export default function ShiftManagement() {
 
   const employees = data || [];
 
-  console.log("employees", employees);
-
   return (
     <div className="container p-4">
       <h1 className="mb-6 text-3xl font-bold">Quản lý ca làm việc</h1>

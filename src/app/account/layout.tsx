@@ -23,7 +23,6 @@ const userFetcher = async (id: string) => {
 // Lấy userId từ session
 const fetcherUserId = async () => {
   const response = await getSession();
-  console.log("session", response);
   const userId = response?.data?.user?.id as string;
   return userId;
 };
@@ -31,7 +30,6 @@ const fetcherUserId = async () => {
 //get session
 const fetcherSession = async () => {
   const response = await getSession();
-  console.log("session", response);
   return response?.data?.session?.id;
 };
 

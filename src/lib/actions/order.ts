@@ -16,8 +16,6 @@ export async function createOrderProduct(formData: FormData) {
     quantity: Number(formData.get("quantity")),
   });
 
-  console.log(data);
-
   await db.insert(orders).values(data);
 }
 

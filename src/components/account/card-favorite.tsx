@@ -98,7 +98,6 @@ export function AccountFavorite({
               size="sm"
               className="w-full"
               onClick={() => {
-                console.log("Xem chi tiết");
                 router.push(`/detail?id=${item?.productId}`);
               }}
             >

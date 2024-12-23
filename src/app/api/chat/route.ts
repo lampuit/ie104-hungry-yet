@@ -118,7 +118,6 @@ export async function POST(req: Request) {
         }),
         execute: async function ({ category_id }) {
           const products = await getProductsByCategory(category_id);
-          console.log(products);
           return products;
         },
       },
@@ -155,8 +154,6 @@ export async function POST(req: Request) {
           quantity: z.number().describe("Số lượng cần thêm"),
         }),
         execute: async function ({ product_id, quantity }) {
-          console.log(product_id);
-          console.log(quantity);
           const formData = new FormData();
           formData.append("userId", session.user.id);
           formData.append("productId", product_id);

@@ -9,8 +9,6 @@ export default async function InvoiceDetailsPage({
 }) {
   const invoice = await getInvoiceDetail(params.invoiceId);
 
-  console.log("invoice", invoice);
-
   if (!invoice) {
     notFound();
   }
