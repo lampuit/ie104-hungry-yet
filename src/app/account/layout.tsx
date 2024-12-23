@@ -163,7 +163,7 @@ export default function Layout({ children }: LayoutProps) {
             )}
           </Button>
         </div>
-        <div className="grow py-5 md:py-10">{children}</div>
+        <div className="grow py-5 md:py-10 pr-2">{children}</div>
       </div>
     </main>
   );
