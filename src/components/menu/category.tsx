@@ -31,14 +31,14 @@ export function Category({ clickedIndex, setClickedIndex }: CategoryProps) {
 
   return (
     <ScrollArea>
-      <div className="flex flex-row items-center justify-center gap-4 px-4 py-5">
+      <div className="flex flex-row items-center justify-center gap-4 px-4 py-4">
         {listCate.map((cate) => (
           <div
             key={cate.id}
             className="flex w-32 flex-col items-center justify-end gap-2"
           >
             <p
-              className={`cursor-pointer text-center text-sm font-semibold md:text-base ${clickedIndex === cate.id ? "text-amber-500" : "text-black"} hover:text-amber-500`}
+              className={`cursor-pointer text-center text-base font-semibold ${clickedIndex === cate.id ? "text-amber-500" : "text-black"} hover:text-amber-500`}
               onClick={() => setClickedIndex(cate.id)}
             >
               {cate.name}

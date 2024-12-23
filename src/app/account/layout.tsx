@@ -23,7 +23,6 @@ const userFetcher = async (id: string) => {
 // Lấy userId từ session
 const fetcherUserId = async () => {
   const response = await getSession();
-  console.log("session", response);
   const userId = response?.data?.user?.id as string;
   return userId;
 };
@@ -31,7 +30,6 @@ const fetcherUserId = async () => {
 //get session
 const fetcherSession = async () => {
   const response = await getSession();
-  console.log("session", response);
   return response?.data?.session?.id;
 };
 
@@ -163,7 +161,7 @@ export default function Layout({ children }: LayoutProps) {
             )}
           </Button>
         </div>
-        <div className="grow py-5 md:py-10">{children}</div>
+        <div className="grow py-5 pr-2 md:py-10">{children}</div>
       </div>
     </main>
   );

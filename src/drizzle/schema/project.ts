@@ -81,21 +81,22 @@ export const productRelations = relations(products, ({ one, many }) => ({
 }));
 
 // Bảng Ratings (Đánh giá)
-export const ratings = pgTable("ratings", {
-  productId: uuid("productId")
-    .notNull()
-    .references(() => products.id, { onDelete: "cascade" }), // Khóa ngoại
-  userId: text("userId")
-    .notNull()
-    .references(() => user.id, { onDelete: "cascade" }), // Khóa ngoại
-  star: integer("star").notNull(),
-  review: text("review"),
-  imageURL: text("imageURL"),
-  isAnonymous: boolean("isAnonymous").notNull(),
-  createdAt: timestamp("createdAt").notNull().defaultNow(),
-  updatedAt: timestamp("updatedAt").$onUpdate(() => new Date()),
-
-},
+export const ratings = pgTable(
+  "ratings",
+  {
+    productId: uuid("productId")
+      .notNull()
+      .references(() => products.id, { onDelete: "cascade" }), // Khóa ngoại
+    userId: text("userId")
+      .notNull()
+      .references(() => user.id, { onDelete: "cascade" }), // Khóa ngoại
+    star: integer("star").notNull(),
+    review: text("review"),
+    imageURL: text("imageURL"),
+    isAnonymous: boolean("isAnonymous").notNull(),
+    createdAt: timestamp("createdAt").notNull().defaultNow(),
+    updatedAt: timestamp("updatedAt").$onUpdate(() => new Date()),
+  },
   (table) => {
     return [primaryKey({ columns: [table.userId, table.productId] })];
   },

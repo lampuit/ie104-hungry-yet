@@ -16,6 +16,14 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { filterAndSearch } from "@/lib/data";
 import { useDebouncedCallback } from "use-debounce";
+import { Charm } from "next/font/google";
+
+const charm = Charm({
+  weight: ["400", "700"],
+  subsets: ["latin", "vietnamese"],
+  display: "swap",
+  adjustFontFallback: false,
+});
 
 interface SearchingAreaProps {
   totalAmount: number;
@@ -119,9 +127,11 @@ export function SearchingArea({
   };
 
   return (
-    <div className="flex flex-col items-center justify-between space-y-4 px-4 py-6 sm:flex-row sm:space-x-4 sm:space-y-0">
-      <div className="flex flex-col items-center space-y-2">
-        <h2 className="text-3xl font-semibold italic text-gray-800 sm:text-4xl">
+    <div className="flex w-full max-w-7xl items-center justify-between px-6 py-2 sm:space-x-3">
+      <div className="flex flex-col items-center">
+        <h2
+          className={`${charm.className} text-3xl font-semibold italic text-gray-800 sm:text-4xl`}
+        >
           Thực đơn
         </h2>
         <div className="hidden sm:block">
@@ -140,9 +150,9 @@ export function SearchingArea({
         </div>
       </div>
 
-      <div className="flex w-full items-center justify-end space-x-2 px-6 sm:w-auto sm:space-x-4">
+      <div className="flex items-center justify-end space-x-2 sm:space-x-4 sm:px-6">
         <div
-          className={`fixed inset-x-0 top-0 z-50 flex items-center justify-between bg-white p-4 shadow-md transition-all duration-300 ease-in-out sm:relative sm:inset-auto sm:flex-1 sm:p-0 sm:shadow-none ${isSearchVisible ? "translate-y-0" : "-translate-y-full sm:translate-y-0"}`}
+          className={`fixed inset-x-0 top-0 z-50 flex items-center justify-center bg-white p-4 shadow-md transition-all duration-300 ease-in-out sm:relative sm:inset-auto sm:flex-1 sm:p-0 sm:shadow-none ${isSearchVisible ? "translate-y-0" : "-translate-y-full sm:translate-y-0"}`}
         >
           <input
             type="text"

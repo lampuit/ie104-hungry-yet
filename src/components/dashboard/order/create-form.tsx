@@ -186,7 +186,6 @@ export function CreateForm({ categories }: { categories: any }) {
 
                               const newImageUrl = URL.createObjectURL(file);
                               field.onChange(newImageUrl);
-                              console.log(file);
                               setFile(file);
                             }
                           }}

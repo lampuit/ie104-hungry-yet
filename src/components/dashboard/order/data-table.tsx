@@ -48,7 +48,8 @@ export function DataTable<TData, TValue>({
   // Set default column visibility based on screen size
   React.useEffect(() => {
     const updateVisibility = () => {
-      if (window.innerWidth < 640) { // Mobile
+      if (window.innerWidth < 640) {
+        // Mobile
         setColumnVisibility({
           id: true,
           status: true,
@@ -57,7 +58,8 @@ export function DataTable<TData, TValue>({
           shipperId: false,
           createdAt: false,
         });
-      } else if (window.innerWidth < 1024) { // Tablet
+      } else if (window.innerWidth < 1024) {
+        // Tablet
         setColumnVisibility({
           id: true,
           status: true,
@@ -66,14 +68,15 @@ export function DataTable<TData, TValue>({
           shipperId: false,
           createdAt: true,
         });
-      } else { // Desktop
+      } else {
+        // Desktop
         setColumnVisibility({});
       }
     };
 
     updateVisibility();
-    window.addEventListener('resize', updateVisibility);
-    return () => window.removeEventListener('resize', updateVisibility);
+    window.addEventListener("resize", updateVisibility);
+    return () => window.removeEventListener("resize", updateVisibility);
   }, []);
 
   const table = useReactTable({
@@ -116,9 +119,9 @@ export function DataTable<TData, TValue>({
                         {header.isPlaceholder
                           ? null
                           : flexRender(
-                            header.column.columnDef.header,
-                            header.getContext(),
-                          )}
+                              header.column.columnDef.header,
+                              header.getContext(),
+                            )}
                       </TableHead>
                     );
                   })}
@@ -134,10 +137,7 @@ export function DataTable<TData, TValue>({
                     className="hover:bg-muted/50"
                   >
                     {row.getVisibleCells().map((cell) => (
-                      <TableCell
-                        key={cell.id}
-                        className="px-4 py-3"
-                      >
+                      <TableCell key={cell.id} className="px-4 py-3">
                         <div className="min-w-[40px]">
                           {flexRender(
                             cell.column.columnDef.cell,
@@ -156,7 +156,9 @@ export function DataTable<TData, TValue>({
                   >
                     <div className="flex flex-col items-center justify-center space-y-1 text-muted-foreground">
                       <p>Không có dữ liệu</p>
-                      <p className="text-sm">Chưa có kết quả nào được tìm thấy.</p>
+                      <p className="text-sm">
+                        Chưa có kết quả nào được tìm thấy.
+                      </p>
                     </div>
                   </TableCell>
                 </TableRow>
@@ -171,4 +173,3 @@ export function DataTable<TData, TValue>({
     </div>
   );
 }
-

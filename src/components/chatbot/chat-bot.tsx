@@ -18,10 +18,10 @@ import {
 import { useSession } from "@/lib/auth-client";
 
 import { useChat } from "ai/react";
-import { BotMessageSquare } from "lucide-react";
+import { BotMessageSquare, MessageCircleMore } from "lucide-react";
 import Link from "next/link";
 
-export default function Chatbot() {
+export function Chatbot() {
   const { data: session } = useSession();
 
   const {

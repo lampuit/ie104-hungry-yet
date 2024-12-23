@@ -294,8 +294,6 @@ const TimePicker = () => {
         PM_AM === "AM" ? hours : hours === 12 ? hours : hours + 12;
       const formattedHours = formatIndex;
 
-      console.log(formatIndex);
-
       for (let j = 0; j <= 3; j++) {
         const diff = Math.abs(j * timestamp - minutes);
         const selected =

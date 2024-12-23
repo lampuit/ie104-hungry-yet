@@ -10,7 +10,6 @@ export async function createFavorite(formData: FormData) {
     userId: formData.get("userId"),
     productId: formData.get("productId"),
   });
-  console.log(data);
   await db.insert(favorites).values(data);
   revalidatePath("/menu/cart");
 }

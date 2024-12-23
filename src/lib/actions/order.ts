@@ -2,7 +2,7 @@
 
 import { db } from "@/drizzle/db";
 import { insertOrderSchema, orders } from "@/drizzle/schema/project";
-import { eq, sql, and } from "drizzle-orm";
+import { eq, and } from "drizzle-orm";
 
 const CreateOrderProduct = insertOrderSchema.omit({
   createdAt: true,
@@ -15,8 +15,6 @@ export async function createOrderProduct(formData: FormData) {
     productId: formData.get("productId"),
     quantity: Number(formData.get("quantity")),
   });
-
-  console.log(data);
 
   await db.insert(orders).values(data);
 }

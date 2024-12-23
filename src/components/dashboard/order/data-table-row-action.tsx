@@ -41,8 +41,6 @@ export function DataTableRowActions({
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end" className="w-[160px]">
-        <DropdownMenuItem>Xóa</DropdownMenuItem>
-
         <DropdownMenuItem
           onClick={() => {
             router.push(`/dashboard/order-management/${invoiceId}`);

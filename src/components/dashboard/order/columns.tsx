@@ -35,6 +35,18 @@ const ShipperCell: React.FC<ShipperCellProps> = ({ shipperId }) => {
 
 export default ShipperCell;
 
+const getStatusDescription = (status: string) => {
+  const descriptions = {
+    pending: "Chờ xác nhận",
+    accepted: "Đã xác nhận",
+    cooking: "Đang chuẩn bị",
+    ready: "Đang giao hàng",
+    delivered: "Đã giao",
+    cancelled: "Đã hủy",
+  };
+  return descriptions[status as keyof typeof descriptions] || status;
+};
+
 export const columns: ColumnDef<Invoice>[] = [
   {
     accessorKey: "id",
@@ -54,16 +66,16 @@ export const columns: ColumnDef<Invoice>[] = [
     ),
     cell: ({ row }) => {
       return (
-        <div className="flex space-x-2 min-w-[120px]">
+        <div className="flex min-w-[120px] space-x-2">
           <span className="truncate">
             {row.getValue("createdAt")
               ? new Date(row.getValue("createdAt")).toLocaleString("vi-VN", {
-                year: "numeric",
-                month: "2-digit",
-                day: "2-digit",
-                hour: "2-digit",
-                minute: "2-digit",
-              })
+                  year: "numeric",
+                  month: "2-digit",
+                  day: "2-digit",
+                  hour: "2-digit",
+                  minute: "2-digit",
+                })
               : "Không có ghi chú"}
           </span>
         </div>
@@ -80,8 +92,8 @@ export const columns: ColumnDef<Invoice>[] = [
 
       return (
         <div className="min-w-[100px]">
-          <Badge variant="outline" className="capitalize w-fit">
-            {status}
+          <Badge variant="outline" className="w-fit capitalize">
+            {getStatusDescription(status)}
           </Badge>
         </div>
       );
@@ -97,7 +109,7 @@ export const columns: ColumnDef<Invoice>[] = [
     ),
     cell: ({ row }) => {
       return (
-        <div className="flex space-x-2 min-w-[100px]">
+        <div className="flex min-w-[100px] space-x-2">
           <span className="truncate">{row.getValue("phone")}</span>
         </div>
       );
@@ -109,7 +121,7 @@ export const columns: ColumnDef<Invoice>[] = [
       <DataTableColumnHeader column={column} title="Shipper" />
     ),
     cell: ({ row }) => (
-      <div className="flex space-x-2 min-w-[100px]">
+      <div className="flex min-w-[100px] space-x-2">
         <ShipperCell shipperId={row.getValue("shipperId")} />
       </div>
     ),
@@ -117,7 +129,7 @@ export const columns: ColumnDef<Invoice>[] = [
   {
     id: "actions",
     cell: ({ row }) => (
-      <div className="flex justify-start min-w-[50px]">
+      <div className="flex min-w-[50px] justify-start">
         <DataTableRowActions
           invoiceId={row.getValue("id")}
           initialStatus={row.getValue("status")}

@@ -17,7 +17,7 @@ import {
   TooltipContent,
   TooltipProvider,
   TooltipTrigger,
-} from "@/components/ui/tooltip"
+} from "@/components/ui/tooltip";
 
 //get userId from session
 const fetcherUserId = async () => {
@@ -85,8 +85,7 @@ export function AccountFavorite({
                 <TooltipTrigger asChild>
                   <Button
                     variant="secondary"
-
-                    className="absolute right-0 top-0 bg-white/80 text-xs hover:bg-red-500 hover:text-white w-8 h-8 opacity-80"
+                    className="absolute right-0 top-0 h-8 w-8 bg-white/80 text-xs opacity-80 hover:bg-red-500 hover:text-white"
                     onClick={() =>
                       handleDeleteFavorite(item?.userId, item?.productId)
                     }
@@ -113,7 +112,6 @@ export function AccountFavorite({
               size="sm"
               className="w-full"
               onClick={() => {
-                console.log("Xem chi tiết");
                 router.push(`/detail?id=${item?.productId}`);
               }}
             >

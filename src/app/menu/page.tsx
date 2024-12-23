@@ -17,7 +17,7 @@ import { CategoryFetcher } from "@/components/menu/category";
 import useSWR from "swr";
 import LoadingSpinner from "@/components/ui/loading-spinner";
 import { getSession } from "@/lib/auth-client";
-import Chatbot from "@/components/chatbot/chat-bot";
+import { Chatbot } from "@/components/chatbot/chat-bot";
 
 interface Dish {
   id: string;
@@ -153,8 +153,8 @@ export default function MenuPage() {
   return dishLoading ? (
     <LoadingSpinner />
   ) : (
-    <main className="w-screen">
-      <header className="mt-8">
+    <main>
+      <header className="mt-6 flex w-full justify-center">
         <SearchingArea
           totalAmount={totalAmount}
           filter={filter}
@@ -221,7 +221,6 @@ export default function MenuPage() {
           </Pagination>
         )}
       </section>
-      <Chatbot />
     </main>
   );
 }

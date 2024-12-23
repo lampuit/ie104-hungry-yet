@@ -1,5 +1,6 @@
 "use client";
 
+import React, { useCallback, useMemo, useEffect } from "react";
 import {
   Sidebar,
   SidebarContent,
@@ -17,19 +18,10 @@ import {
   Clock,
   LucideListOrdered,
   LogOut,
-  Router,
 } from "lucide-react";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter, redirect } from "next/navigation";
 import { getSession, revokeSession } from "@/lib/auth-client";
-import { useRouter } from "next/navigation";
-import { user } from "@/drizzle/schema/auth";
-
-// Lấy session
-export const fetcherSessionId = async () => {
-  const response = await getSession();
-  return response?.data?.session?.id;
-};
 
 const items = [
   {
@@ -50,7 +42,6 @@ const items = [
     icon: Clock,
     role: ["admin"],
   },
-
   {
     title: "Quản lý khuyến mãi",
     url: "/dashboard/discount",
@@ -69,17 +60,21 @@ export function AppSidebar({ userRole }: { userRole: string }) {
   const pathname = usePathname();
   const router = useRouter();
 
-  console.log(userRole);
-  console.log(pathname);
-
-  const protect = items.slice(1).filter((item) => item.role.includes(userRole) && pathname.includes(item.url)); 
-
-  console.log(protect);
-
-  if (protect.length === 0) {
-    router.push("/dashboard");
-  }
-
+  const handleLogout = useCallback(async () => {
+    try {
+      const session = await getSession();
+      const sessionId = session?.data?.session?.id;
+      if (sessionId) {
+        await revokeSession({ id: sessionId });
+        router.push("/");
+        router.refresh();
+      } else {
+        console.error("Session ID is undefined");
+      }
+    } catch (error) {
+      console.error("Logout failed:", error);
+    }
+  }, [router]);
 
   return (
     <Sidebar>
@@ -106,21 +101,8 @@ export function AppSidebar({ userRole }: { userRole: string }) {
                     </SidebarMenuItem>
                   ),
               )}
-
               <SidebarMenuItem>
-                <SidebarMenuButton
-                  asChild
-                  onClick={async () => {
-                    const sessionId = await fetcherSessionId();
-                    if (sessionId) {
-                      await revokeSession({ id: sessionId });
-                      router.push("/");
-                      router.refresh();
-                    } else {
-                      console.error("Session ID is undefined");
-                    }
-                  }}
-                >
+                <SidebarMenuButton asChild onClick={handleLogout}>
                   <div>
                     <LogOut />
                     <span>Logout</span>

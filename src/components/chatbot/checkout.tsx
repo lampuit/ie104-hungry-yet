@@ -43,7 +43,7 @@ export function Checkout({
   const [paymentMethod, setPaymentMethod] = useState("momo");
   const [discount, setDiscount] = useState(0);
   const [discountId, setDiscountId] = useState<string | undefined>(
-    discount_code,
+    discount_code || "",
   );
 
   const subtotal = carts.reduce(

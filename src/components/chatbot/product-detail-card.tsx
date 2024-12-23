@@ -39,13 +39,16 @@ export default function ProductDetailCard({
   favorite: any[];
 }) {
   const { toast } = useToast();
-  const [isFavorite, setIsFavorite] = useState<boolean>(!!favorite.length);
+
+  const filterFavorite = favorite.filter((item) => id === item.productId);
+
+  const [isFavorite, setIsFavorite] = useState<boolean>(
+    !!filterFavorite.length,
+  );
   const [isPending, setIsPending] = useState(false);
 
   const handleFavoriteOnClick = async () => {
     if (!isFavorite) {
-      console.log(userId);
-      console.log(favorite);
       const formData = new FormData();
       formData.append("userId", userId || "");
       formData.append("productId", id);
