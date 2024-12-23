@@ -86,6 +86,7 @@ export function AppSidebar({ userRole }: { userRole: string }) {
           <SidebarGroupContent>
             <SidebarMenu>
               {items.map((item) => (
+                item.role.includes(userRole) &&
                 <SidebarMenuItem key={item.title}>
                   <SidebarMenuButton isActive={pathname === item.url} asChild>
                     <Link href={item.url}>
