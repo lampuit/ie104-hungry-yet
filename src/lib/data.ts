@@ -29,7 +29,6 @@ import {
 } from "drizzle-orm";
 import { unstable_noStore } from "next/cache";
 
-
 // Hóa đơn (invoices)
 
 export async function getAllInvoices() {
@@ -58,12 +57,12 @@ export async function getInvoiceByUserId(userId: string, status: string) {
         eq(
           invoices.status,
           status as
-          | "pending"
-          | "accepted"
-          | "cooking"
-          | "ready"
-          | "delivered"
-          | "cancelled",
+            | "pending"
+            | "accepted"
+            | "cooking"
+            | "ready"
+            | "delivered"
+            | "cancelled",
         ),
       ),
     );
@@ -87,7 +86,6 @@ export async function getInvoiceDetail(id: string) {
     },
   });
 }
-
 
 export async function getInvoicesIdByUserId(userId: string) {
   try {
@@ -146,19 +144,18 @@ export async function getInvoicesByStatus(status: string) {
         eq(
           invoices.status,
           status as
-          | "pending"
-          | "accepted"
-          | "cooking"
-          | "ready"
-          | "delivered"
-          | "cancelled",
+            | "pending"
+            | "accepted"
+            | "cooking"
+            | "ready"
+            | "delivered"
+            | "cancelled",
         ),
       );
   } catch (error) {
     throw new Error("Không thể lấy dữ liệu danh sách hóa đơn.");
   }
 }
-
 
 // Phân loại (Categories)
 
@@ -202,7 +199,6 @@ export async function getAllProducts() {
     },
   });
 }
-
 
 export async function getProductByCategoryId(
   id: string,
@@ -267,7 +263,6 @@ export async function fetchProducts() {
   }
 }
 
-
 export async function fetchProductId(id: string) {
   try {
     unstable_noStore();
@@ -292,7 +287,6 @@ export async function getProductById({ id }: { id: string }) {
     .leftJoin(categories, eq(products.categoryId, categories.id))
     .where(eq(products.id, id));
 }
-
 
 // Đánh giá (Ratings)
 
@@ -329,7 +323,6 @@ export async function getRatingsByProductId(id: string) {
     },
   });
 }
-
 
 // Ưu đãi (Discounts)
 
@@ -376,7 +369,6 @@ export async function fetchValidDiscount(code: string) {
   }
 }
 
-
 // Giỏ hàng (Carts)
 
 export async function fetchCarts() {
@@ -392,7 +384,6 @@ export async function fetchCarts() {
     throw new Error("Không thể lấy dữ liệu mã ưu đãi.");
   }
 }
-
 
 export async function getCartsByUserId(userId: string) {
   return await db.query.carts.findMany({
@@ -422,13 +413,11 @@ export async function getAllEmployee() {
   return await db.select().from(user).where(eq(user.role, "staff"));
 }
 
-
 // Ca làm việc (Shifts)
 
 export async function getAllShift() {
   return await db.select().from(shifts);
 }
-
 
 // Yêu thích (Favorites)
 
@@ -450,7 +439,6 @@ export async function getFavoriteByUserId(userId: string) {
 export async function getUserWorkShift() {
   return await db.select().from(assigments);
 }
-
 
 // Lọc và tìm kiếm sản phẩm
 
@@ -518,5 +506,3 @@ export async function filterAndSearch(formData: FormData) {
     records,
   };
 }
-
-

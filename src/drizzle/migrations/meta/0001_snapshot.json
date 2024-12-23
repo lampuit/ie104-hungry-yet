@@ -69,12 +69,8 @@
           "name": "account_userId_user_id_fk",
           "tableFrom": "account",
           "tableTo": "user",
-          "columnsFrom": [
-            "userId"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["userId"],
+          "columnsTo": ["id"],
           "onDelete": "no action",
           "onUpdate": "no action"
         }
@@ -126,12 +122,8 @@
           "name": "session_userId_user_id_fk",
           "tableFrom": "session",
           "tableTo": "user",
-          "columnsFrom": [
-            "userId"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["userId"],
+          "columnsTo": ["id"],
           "onDelete": "no action",
           "onUpdate": "no action"
         }
@@ -265,12 +257,8 @@
           "name": "assigments_userId_user_id_fk",
           "tableFrom": "assigments",
           "tableTo": "user",
-          "columnsFrom": [
-            "userId"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["userId"],
+          "columnsTo": ["id"],
           "onDelete": "no action",
           "onUpdate": "no action"
         },
@@ -278,12 +266,8 @@
           "name": "assigments_shiftId_shifts_id_fk",
           "tableFrom": "assigments",
           "tableTo": "shifts",
-          "columnsFrom": [
-            "shiftId"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["shiftId"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         }
@@ -336,12 +320,8 @@
           "name": "carts_userId_user_id_fk",
           "tableFrom": "carts",
           "tableTo": "user",
-          "columnsFrom": [
-            "userId"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["userId"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         },
@@ -349,12 +329,8 @@
           "name": "carts_productId_products_id_fk",
           "tableFrom": "carts",
           "tableTo": "products",
-          "columnsFrom": [
-            "productId"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["productId"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         }
@@ -362,10 +338,7 @@
       "compositePrimaryKeys": {
         "carts_userId_productId_pk": {
           "name": "carts_userId_productId_pk",
-          "columns": [
-            "userId",
-            "productId"
-          ]
+          "columns": ["userId", "productId"]
         }
       },
       "uniqueConstraints": {},
@@ -498,12 +471,8 @@
           "name": "favorites_userId_user_id_fk",
           "tableFrom": "favorites",
           "tableTo": "user",
-          "columnsFrom": [
-            "userId"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["userId"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         },
@@ -511,12 +480,8 @@
           "name": "favorites_productId_products_id_fk",
           "tableFrom": "favorites",
           "tableTo": "products",
-          "columnsFrom": [
-            "productId"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["productId"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         }
@@ -632,12 +597,8 @@
           "name": "invoices_customerId_user_id_fk",
           "tableFrom": "invoices",
           "tableTo": "user",
-          "columnsFrom": [
-            "customerId"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["customerId"],
+          "columnsTo": ["id"],
           "onDelete": "no action",
           "onUpdate": "cascade"
         },
@@ -645,12 +606,8 @@
           "name": "invoices_shipperId_user_id_fk",
           "tableFrom": "invoices",
           "tableTo": "user",
-          "columnsFrom": [
-            "shipperId"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["shipperId"],
+          "columnsTo": ["id"],
           "onDelete": "no action",
           "onUpdate": "cascade"
         },
@@ -658,12 +615,8 @@
           "name": "invoices_paymentId_payments_id_fk",
           "tableFrom": "invoices",
           "tableTo": "payments",
-          "columnsFrom": [
-            "paymentId"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["paymentId"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         },
@@ -671,12 +624,8 @@
           "name": "invoices_discountId_discounts_id_fk",
           "tableFrom": "invoices",
           "tableTo": "discounts",
-          "columnsFrom": [
-            "discountId"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["discountId"],
+          "columnsTo": ["id"],
           "onDelete": "no action",
           "onUpdate": "no action"
         }
@@ -729,12 +678,8 @@
           "name": "orders_invoiceId_invoices_id_fk",
           "tableFrom": "orders",
           "tableTo": "invoices",
-          "columnsFrom": [
-            "invoiceId"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["invoiceId"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         },
@@ -742,12 +687,8 @@
           "name": "orders_productId_products_id_fk",
           "tableFrom": "orders",
           "tableTo": "products",
-          "columnsFrom": [
-            "productId"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["productId"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         }
@@ -878,12 +819,8 @@
           "name": "products_categoryId_categories_id_fk",
           "tableFrom": "products",
           "tableTo": "categories",
-          "columnsFrom": [
-            "categoryId"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["categoryId"],
+          "columnsTo": ["id"],
           "onDelete": "no action",
           "onUpdate": "no action"
         }
@@ -954,12 +891,8 @@
           "name": "ratings_productId_products_id_fk",
           "tableFrom": "ratings",
           "tableTo": "products",
-          "columnsFrom": [
-            "productId"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["productId"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         },
@@ -967,12 +900,8 @@
           "name": "ratings_userId_user_id_fk",
           "tableFrom": "ratings",
           "tableTo": "user",
-          "columnsFrom": [
-            "userId"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["userId"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         }
@@ -1026,20 +955,12 @@
     "public.gender": {
       "name": "gender",
       "schema": "public",
-      "values": [
-        "Nam",
-        "Nữ",
-        "Khác"
-      ]
+      "values": ["Nam", "Nữ", "Khác"]
     },
     "public.role": {
       "name": "role",
       "schema": "public",
-      "values": [
-        "admin",
-        "staff",
-        "customer"
-      ]
+      "values": ["admin", "staff", "customer"]
     },
     "public.invoiceStatus": {
       "name": "invoiceStatus",
@@ -1056,20 +977,12 @@
     "public.method": {
       "name": "method",
       "schema": "public",
-      "values": [
-        "momo",
-        "paylater"
-      ]
+      "values": ["momo", "paylater"]
     },
     "public.paymentStatus": {
       "name": "paymentStatus",
       "schema": "public",
-      "values": [
-        "pending",
-        "failed",
-        "success",
-        "cancelled"
-      ]
+      "values": ["pending", "failed", "success", "cancelled"]
     }
   },
   "schemas": {},

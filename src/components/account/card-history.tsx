@@ -394,15 +394,15 @@ export function CardHistory({ invoice }: { invoice: Invoice }) {
           </span>
         </p>
         {isCookingPage ||
-          isAcceptedPage ||
-          isCancelPage ||
-          isAcceptedPage ||
-          isReadyPage ? (
+        isAcceptedPage ||
+        isCancelPage ||
+        isAcceptedPage ||
+        isReadyPage ? (
           <></>
         ) : isDeliveredPage ? (
           <div className="flex justify-end gap-6">
             <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-              <DialogContent className="flex w-[360px] md:w-[1024px] flex-col gap-4">
+              <DialogContent className="flex w-[360px] flex-col gap-4 md:w-[1024px]">
                 <DialogHeader>
                   <DialogTitle className="text-lg font-semibold">
                     Đánh giá sản phẩm
@@ -484,17 +484,23 @@ export function CardHistory({ invoice }: { invoice: Invoice }) {
                     type="submit"
                     className="bg-amber-500"
                     onClick={handleSubmitRatings}
-                    disabled={Object.keys(ratings).length < (invoiceData?.orders?.length || 0)}
+                    disabled={
+                      Object.keys(ratings).length <
+                      (invoiceData?.orders?.length || 0)
+                    }
                   >
                     Lưu đánh giá
                   </Button>
                 </DialogFooter>
               </DialogContent>
 
-              {!invoiceData?.isRating ? (<DialogTrigger className="flex items-center justify-center gap-2 rounded-md border border-black p-3 text-xs font-semibold hover:bg-gray-100">
-                <Star className="h-4 w-4" /> Đánh giá
-              </DialogTrigger>) : ('')}
-
+              {!invoiceData?.isRating ? (
+                <DialogTrigger className="flex items-center justify-center gap-2 rounded-md border border-black p-3 text-xs font-semibold hover:bg-gray-100">
+                  <Star className="h-4 w-4" /> Đánh giá
+                </DialogTrigger>
+              ) : (
+                ""
+              )}
             </Dialog>
             <Button
               onClick={() => {

@@ -22,7 +22,18 @@ import {
 import { getUserById } from "@/lib/data";
 import useSWR from "swr";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Badge, Calendar, CornerDownLeft, CreditCard, FileText, Phone, ShoppingBag, Timer, Truck, User } from 'lucide-react';
+import {
+  Badge,
+  Calendar,
+  CornerDownLeft,
+  CreditCard,
+  FileText,
+  Phone,
+  ShoppingBag,
+  Timer,
+  Truck,
+  User,
+} from "lucide-react";
 import { toast } from "@/hooks/use-toast";
 
 const getUserInfo = async (userId: string) => {
@@ -137,12 +148,12 @@ export function InvoiceDetails({ invoice }: { invoice: any }) {
               <span className="ml-2 font-normal">
                 {invoice.createdAt
                   ? new Date(invoice.createdAt).toLocaleString("vi-VN", {
-                    year: "numeric",
-                    month: "2-digit",
-                    day: "2-digit",
-                    hour: "2-digit",
-                    minute: "2-digit",
-                  })
+                      year: "numeric",
+                      month: "2-digit",
+                      day: "2-digit",
+                      hour: "2-digit",
+                      minute: "2-digit",
+                    })
                   : "Không có thời gian"}
               </span>
             </p>
@@ -176,7 +187,14 @@ export function InvoiceDetails({ invoice }: { invoice: any }) {
                   <SelectValue placeholder="Chọn trạng thái" />
                 </SelectTrigger>
                 <SelectContent>
-                  {["pending", "accepted","cooking", "ready", "delivered", "cancelled" ].map((s) => (
+                  {[
+                    "pending",
+                    "accepted",
+                    "cooking",
+                    "ready",
+                    "delivered",
+                    "cancelled",
+                  ].map((s) => (
                     <SelectItem key={s} value={s}>
                       {getStatusDescription(s)}
                     </SelectItem>
@@ -191,21 +209,21 @@ export function InvoiceDetails({ invoice }: { invoice: any }) {
               <span className="ml-2 font-normal text-red-500">
                 {invoice.createdAt
                   ? (() => {
-                    const createdAt = new Date(invoice.createdAt);
-                    const deliveryTimeInMs =
-                      (invoice.deliveryTime || 0) * 60 * 1000; // Chuyển đổi phút sang milliseconds
-                    const expectedDeliveryTime = new Date(
-                      createdAt.getTime() + deliveryTimeInMs,
-                    );
+                      const createdAt = new Date(invoice.createdAt);
+                      const deliveryTimeInMs =
+                        (invoice.deliveryTime || 0) * 60 * 1000; // Chuyển đổi phút sang milliseconds
+                      const expectedDeliveryTime = new Date(
+                        createdAt.getTime() + deliveryTimeInMs,
+                      );
 
-                    return expectedDeliveryTime.toLocaleString("vi-VN", {
-                      year: "numeric",
-                      month: "2-digit",
-                      day: "2-digit",
-                      hour: "2-digit",
-                      minute: "2-digit",
-                    });
-                  })()
+                      return expectedDeliveryTime.toLocaleString("vi-VN", {
+                        year: "numeric",
+                        month: "2-digit",
+                        day: "2-digit",
+                        hour: "2-digit",
+                        minute: "2-digit",
+                      });
+                    })()
                   : "Không có thời gian"}
               </span>
             </p>

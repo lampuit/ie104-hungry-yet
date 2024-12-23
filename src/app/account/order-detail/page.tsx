@@ -167,15 +167,24 @@ function OrderDetailContent({ invoiceId }: { invoiceId: string }) {
           <Card className="shadow-md">
             <CardHeader>
               <CardTitle>Tiến trình</CardTitle>
-              {invoiceStatus === "cancelled" ?
-                <CardDescription className="text-red-500 font-semibold space-y-1">
-                  <p className="flex gap-2"><X className="rounded-full bg-red-500 stroke-white p-1" size={20} /> Đơn hàng đã bị hủy</p>
-                  <p className="text-black font-normal">Lý do huỷ: {cancelReason}</p>
+              {invoiceStatus === "cancelled" ? (
+                <CardDescription className="space-y-1 font-semibold text-red-500">
+                  <p className="flex gap-2">
+                    <X
+                      className="rounded-full bg-red-500 stroke-white p-1"
+                      size={20}
+                    />{" "}
+                    Đơn hàng đã bị hủy
+                  </p>
+                  <p className="font-normal text-black">
+                    Lý do huỷ: {cancelReason}
+                  </p>
                 </CardDescription>
-                :
-                <CardDescription>Trạng thái giao hàng</CardDescription>}
+              ) : (
+                <CardDescription>Trạng thái giao hàng</CardDescription>
+              )}
             </CardHeader>
-            {invoiceStatus === "cancelled" ? null :
+            {invoiceStatus === "cancelled" ? null : (
               <CardContent>
                 <div className="grid grid-cols-1 gap-4 text-xs md:grid-cols-5">
                   {[
@@ -203,8 +212,9 @@ function OrderDetailContent({ invoiceId }: { invoiceId: string }) {
                   ].map((step) => (
                     <div
                       key={step.status}
-                      className={`flex flex-col items-center rounded border-2 px-1 py-2 ${invoiceStatus === step.status ? "bg-yellow-100" : ""
-                        }`}
+                      className={`flex flex-col items-center rounded border-2 px-1 py-2 ${
+                        invoiceStatus === step.status ? "bg-yellow-100" : ""
+                      }`}
                     >
                       <step.icon />
                       <p className="pt-2">{step.label}</p>
@@ -216,7 +226,7 @@ function OrderDetailContent({ invoiceId }: { invoiceId: string }) {
                 </div>
                 <Progress className="mt-4 h-2" value={progressValue} />
               </CardContent>
-            }
+            )}
           </Card>
 
           {/* Order Details */}
@@ -283,7 +293,7 @@ function OrderDetailContent({ invoiceId }: { invoiceId: string }) {
                 <div className="flex justify-end font-semibold">
                   {convertToVND(
                     (invoice.discount?.discount ?? 0) *
-                    ((invoice.totalAmount ?? 0) / 100),
+                      ((invoice.totalAmount ?? 0) / 100),
                   )}
                 </div>
                 <div className="mt-4 h-8 border-t-2 font-semibold">

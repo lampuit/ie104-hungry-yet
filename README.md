@@ -21,7 +21,9 @@
 - **Tích hợp thanh toán MoMo**: Thanh toán trực tuyến thông qua ví điện tử MoMo.
 - **Hỗ trợ AI Chatbot**: Trợ lý AI thông minh hỗ trợ người dùng tìm kiếm món ăn, gợi ý món ăn, đặt hàng, thanh toán và kiểm tra hóa đơn.
 - **Giao diện người dùng hiện đại**: Giao diện trực quan, thân thiện với người dùng, đáp ứng đầy đủ chức năng của một website bán hàng trực tuyến.
+
 ## 🛠️ Công Nghệ Sử Dụng
+
 - **Next.js**: Framework React tối ưu SEO và hiệu năng.
 - **Tailwind CSS**: Framework CSS hiện đại giúp xây dựng giao diện nhanh chóng và đẹp mắt.
 - **Drizzle ORM**: Quản lý cơ sở dữ liệu đơn giản và mạnh mẽ.
@@ -33,7 +35,9 @@
 - **Vercel AI SDK**: Tích hợp AI chatbot thông minh vào ứng dụng.
 - **Shadcn**: Tạo giao diện UI hiện đại và tinh tế.
 - **Motion**: Thư viện tạo hiệu ứng animation mượt mà.
+
 ## 📂 Cấu Trúc Thư Mục
+
 ```plaintext
 .
 ├── public/              # Thư mục chứa hình ảnh và các tài nguyên tĩnh
@@ -56,6 +60,7 @@
 ├── tsconfig.json        # Cấu hình TypeScript
 └── README.md            # Tài liệu hướng dẫn (file hiện tại)
 ```
+
 ## ⚙️ Cài Đặt và Chạy Dự Án
 
 1. **Clone Repository**

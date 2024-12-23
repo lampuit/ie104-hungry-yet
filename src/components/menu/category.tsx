@@ -38,7 +38,7 @@ export function Category({ clickedIndex, setClickedIndex }: CategoryProps) {
             className="flex w-32 flex-col items-center justify-end gap-2"
           >
             <p
-              className={`cursor-pointer text-center font-semibold text-base ${clickedIndex === cate.id ? "text-amber-500" : "text-black"} hover:text-amber-500`}
+              className={`cursor-pointer text-center text-base font-semibold ${clickedIndex === cate.id ? "text-amber-500" : "text-black"} hover:text-amber-500`}
               onClick={() => setClickedIndex(cate.id)}
             >
               {cate.name}

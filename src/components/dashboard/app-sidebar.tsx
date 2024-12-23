@@ -85,17 +85,22 @@ export function AppSidebar({ userRole }: { userRole: string }) {
           </SidebarGroupLabel>
           <SidebarGroupContent>
             <SidebarMenu>
-              {items.map((item) => (
-                item.role.includes(userRole) &&
-                <SidebarMenuItem key={item.title}>
-                  <SidebarMenuButton isActive={pathname === item.url} asChild>
-                    <Link href={item.url}>
-                      <item.icon />
-                      <span>{item.title}</span>
-                    </Link>
-                  </SidebarMenuButton>
-                </SidebarMenuItem>
-              ))}
+              {items.map(
+                (item) =>
+                  item.role.includes(userRole) && (
+                    <SidebarMenuItem key={item.title}>
+                      <SidebarMenuButton
+                        isActive={pathname === item.url}
+                        asChild
+                      >
+                        <Link href={item.url}>
+                          <item.icon />
+                          <span>{item.title}</span>
+                        </Link>
+                      </SidebarMenuButton>
+                    </SidebarMenuItem>
+                  ),
+              )}
               <SidebarMenuItem>
                 <SidebarMenuButton asChild onClick={handleLogout}>
                   <div>

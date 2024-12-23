@@ -71,7 +71,6 @@ export async function updateStatus(formData: FormData) {
   }
 }
 
-
 export async function updateInvoiceStatus(id: string, status: string) {
   try {
     const now = new Date();

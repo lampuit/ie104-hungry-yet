@@ -206,7 +206,7 @@ export function EditForm({
                               const file = e.target.files[0];
 
                               const newImageUrl = URL.createObjectURL(file);
-                              field.onChange(newImageUrl);                     
+                              field.onChange(newImageUrl);
                               setFile(file);
                             }
                           }}

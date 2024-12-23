@@ -56,7 +56,7 @@ export function FAQ() {
     <Accordion
       type="single"
       collapsible
-      className="flex flex-col justify-center mx-auto w-[320px] sm:w-[360px] gap-4 md:w-[540px] lg:w-[480px] xl:w-[600px]"
+      className="mx-auto flex w-[320px] flex-col justify-center gap-4 sm:w-[360px] md:w-[540px] lg:w-[480px] xl:w-[600px]"
     >
       {faqItems.map((item, index) => (
         <AccordionItem
