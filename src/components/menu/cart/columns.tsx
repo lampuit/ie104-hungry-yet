@@ -22,6 +22,8 @@ import {
 import useSWR, { mutate } from "swr";
 import { getSession } from "@/lib/auth-client";
 import { useToast } from "@/hooks/use-toast";
+import { ToastAction } from "@/components/ui/toast";
+import { useRouter } from "next/router";
 
 // Lấy userId từ session
 const fetcherUserId = async () => {
@@ -125,17 +127,27 @@ const FavoriteCell = ({
   const { toast } = useToast();
 
   const handleDeleteFavorite = async () => {
+    const router = useRouter();
     const id = row.original.id;
     await deleteFavorite(userId || "", id);
     toast({
       title: "Đã bỏ yêu thích!",
       description: `${row.original.name} đã được xoá khỏi danh mục yêu thích của bạn.`,
+      action: (
+        <ToastAction
+          altText="Xem danh mục yêu thích"
+          onClick={() => router.push("/account/favorite")}
+        >
+          Xem
+        </ToastAction>
+      ),
     });
     setIsFavorite(false);
     updateTableData(id, false); // Update the table data immediately
   };
 
   const handleUpdateFavorite = async () => {
+    const router = useRouter();
     const data = new FormData();
     data.append("productId", row.original.id);
     data.append("userId", userId || "");
@@ -143,6 +155,14 @@ const FavoriteCell = ({
     toast({
       title: "Đã thêm vào danh mục yêu thích!",
       description: `${row.original.name} đã được thêm vào danh mục yêu thích của bạn.`,
+      action: (
+        <ToastAction
+          altText="Xem danh mục yêu thích"
+          onClick={() => router.push("/account/favorite")}
+        >
+          Xem
+        </ToastAction>
+      ),
     });
     setIsFavorite(true);
     updateTableData(row.original.id, true); // Update the table data immediately
