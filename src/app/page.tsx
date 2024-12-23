@@ -143,7 +143,7 @@ export default function Homepage() {
       </section>
 
       <section className="mb-16 flex flex-col items-center justify-center gap-10 px-5 sm:mx-10 sm:px-10 lg:flex-row lg:items-start lg:gap-40">
-        <div className="flex flex-col justify-center gap-4">
+        <div className="flex flex-col justify-center gap-4 max-w-screen-2xl">
           <h2
             className={`${charm.className} text-center text-4xl font-semibold italic sm:text-5xl lg:text-start`}
           >

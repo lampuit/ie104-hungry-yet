@@ -17,6 +17,7 @@ import { Button } from "../ui/button";
 import { getSession } from "@/lib/auth-client";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
+import { ToastAction } from "../ui/toast";
 
 interface Dish {
   categoryId: string;
@@ -104,6 +105,14 @@ export function ProductDetailContent({ id }: { id: string }) {
         await createFavorite(formData);
         toast({
           description: `Đã thêm ${productName.toLowerCase()} vào mục yêu thích`,
+          action: (
+            <ToastAction
+              altText="Xem danh mục yêu thích"
+              onClick={() => router.push("/account/favorite")}
+            >
+              Xem
+            </ToastAction>
+          ),
         });
         setFavorite(true);
       } catch (error) {
@@ -118,6 +127,14 @@ export function ProductDetailContent({ id }: { id: string }) {
         await deleteFavorite(userId || "", productId);
         toast({
           description: `Đã xóa ${productName.toLowerCase()} khỏi mục yêu thích`,
+          action: (
+            <ToastAction
+              altText="Xem danh mục yêu thích"
+              onClick={() => router.push("/account/favorite")}
+            >
+              Xem
+            </ToastAction>
+          ),
         });
         setFavorite(false);
       } catch (error) {
@@ -150,6 +167,14 @@ export function ProductDetailContent({ id }: { id: string }) {
         await createCart(data);
         toast({
           description: `Đã thêm ${dish.name.toLowerCase()} vào giỏ hàng`,
+          action: (
+            <ToastAction
+              altText="Xem giỏ hàng"
+              onClick={() => router.push("/menu/cart")}
+            >
+              Xem
+            </ToastAction>
+          ),
         });
       } catch (error) {
         toast({
