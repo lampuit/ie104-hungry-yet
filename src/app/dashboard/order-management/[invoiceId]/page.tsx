@@ -15,7 +15,6 @@ export default async function InvoiceDetailsPage({
 
   if (!session || !session.user) redirect("/login");
   if (session.user.role === "customer") redirect("/");
-  if (session.user.role !== "admin") redirect("/dashboard");
 
   const invoice = await getInvoiceDetail(params.invoiceId);
 

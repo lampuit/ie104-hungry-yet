@@ -12,6 +12,7 @@ export default async function Discount() {
 
   if (!session || !session.user) redirect("/login");
   if (session.user.role === "customer") redirect("/");
+  if (session.user.role !== "admin") redirect("/dashboard");
 
   const discounts = await fetchDiscounts();
 
