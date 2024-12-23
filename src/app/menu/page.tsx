@@ -17,7 +17,7 @@ import { CategoryFetcher } from "@/components/menu/category";
 import useSWR from "swr";
 import LoadingSpinner from "@/components/ui/loading-spinner";
 import { getSession } from "@/lib/auth-client";
-import Chatbot from "@/components/chatbot/chat-bot";
+import { Chatbot } from "@/components/chatbot/chat-bot";
 
 interface Dish {
   id: string;
@@ -154,7 +154,7 @@ export default function MenuPage() {
     <LoadingSpinner />
   ) : (
     <main>
-      <header className="mt-6 w-full flex justify-center ">
+      <header className="mt-6 flex w-full justify-center">
         <SearchingArea
           totalAmount={totalAmount}
           filter={filter}

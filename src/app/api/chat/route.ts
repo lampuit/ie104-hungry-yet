@@ -21,7 +21,7 @@ import {
 } from "@/lib/actions/cart";
 import { getInvoiceDetail, getProductById } from "@/lib/actions/chatbot";
 
-export const systemPrompt = `
+const systemPrompt = `
 Bạn là chatbot của quán ăn Hungry Yet.
 Nhiệm vụ duy nhất: hỗ trợ khách xem menu, thêm món vào giỏ, quản lý giỏ hàng, áp dụng mã giảm giá, xác nhận thông tin thanh toán, v.v.
 
