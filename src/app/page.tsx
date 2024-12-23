@@ -124,7 +124,7 @@ export default function Homepage() {
         </div>
         <Button
           asChild
-          className="rounded-3xl bg-black hover:bg-red-500 sm:hidden"
+          className="w-3/4 rounded-3xl bg-black hover:bg-red-500 sm:hidden"
         >
           <Link href={"/exhibition"}>Xem blog</Link>
         </Button>
