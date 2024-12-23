@@ -19,7 +19,7 @@ export async function createMomoPayment(
     const accessKey = process.env.MOMO_ACCESS_KEY!;
     const secretKey = process.env.MOMO_SECRET_KEY!;
     const partnerCode = process.env.MOMO_PARTNER_CODE!;
-    const redirectUrl = process.env.NEXT_PUBLIC_APP_URL + "/checkout/success";
+    const redirectUrl = process.env.NEXT_PUBLIC_APP_URL + "/checkout/invoice";
     const ipnUrl = process.env.NEXT_PUBLIC_APP_URL + "/api/momo-webhook";
     const requestType = "payWithMethod";
     const orderId = partnerCode + new Date().getTime();
@@ -98,8 +98,8 @@ export async function createMomoPayment(
 
 export async function submitPayment(
   carts: any[],
+  discountId: string | null,
   totalAmount: number,
-  discountId: string | undefined,
   paymentMethod: any,
   userId: string,
   deliveryAddress: string,
