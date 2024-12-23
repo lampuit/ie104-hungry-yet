@@ -12,6 +12,12 @@ import useSWR from "swr";
 import { useToast } from "@/hooks/use-toast";
 import { ToastAction } from "../ui/toast";
 import { Card, CardContent } from "@/components/ui/card";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip"
 
 //get userId from session
 const fetcherUserId = async () => {
@@ -74,16 +80,25 @@ export function AccountFavorite({
               fill
               className="rounded-md object-cover"
             />
-            <Button
-              variant="secondary"
-              size="sm"
-              className="absolute right-2 top-2 bg-white/80 text-xs hover:bg-white"
-              onClick={() =>
-                handleDeleteFavorite(item?.userId, item?.productId)
-              }
-            >
-              <X className="h-4 w-4" />
-            </Button>
+            <TooltipProvider>
+              <Tooltip delayDuration={300}>
+                <TooltipTrigger asChild>
+                  <Button
+                    variant="secondary"
+
+                    className="absolute right-0 top-0 bg-white/80 text-xs hover:bg-red-500 hover:text-white w-8 h-8 opacity-80"
+                    onClick={() =>
+                      handleDeleteFavorite(item?.userId, item?.productId)
+                    }
+                  >
+                    <X className="" />
+                  </Button>
+                </TooltipTrigger>
+                <TooltipContent>
+                  <p>Xoá yêu thích</p>
+                </TooltipContent>
+              </Tooltip>
+            </TooltipProvider>
           </div>
           <h2 className="truncate font-semibold">{item.products.name}</h2>
           <p className="text-sm text-orange-500">

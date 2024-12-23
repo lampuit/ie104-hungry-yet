@@ -39,24 +39,35 @@ import { createDiscount } from "@/lib/actions/discount";
 import { useRouter } from "next/navigation";
 import { SmartDatetimeInput } from "@/components/ui/smart-date-time-input";
 
-// Tạo schema form với các trường dữ liệu tương ứng với cơ sở dữ liệu
-const formSchema = z.object({
-  code: z.string().min(2, {
-    message: "Tên mã phải chứa ít nhất 2 ký tự.",
-  }),
-  description: z.string().min(5, {
-    message: "Mô tả sản phẩm phải chứa ít nhất 5 ký tự.",
-  }),
-  discount: z.coerce
-    .number({
-      required_error: "Số ưu đãi phải là một số dương và không được để trống.",
-    })
-    .positive({
-      message: "Giá sản phẩm phải là một số dương.",
+const today = new Date(); // Lấy ngày hôm nay
+
+const formSchema = z
+  .object({
+    code: z.string().min(2, {
+      message: "Tên mã phải chứa ít nhất 2 ký tự.",
     }),
-  fromDate: z.coerce.date(),
-  toDate: z.coerce.date(),
-});
+    description: z.string().min(5, {
+      message: "Mô tả sản phẩm phải chứa ít nhất 5 ký tự.",
+    }),
+    discount: z.coerce
+      .number({
+        required_error:
+          "Số ưu đãi phải là một số dương và không được để trống.",
+      })
+      .positive({
+        message: "Giá sản phẩm phải là một số dương.",
+      }),
+    fromDate: z.coerce.date().refine((date) => date >= today, {
+      message: "Ngày bắt đầu không được trước ngày hôm nay.",
+    }),
+    toDate: z.coerce.date().refine((date) => date >= today, {
+      message: "Ngày kết thúc không được trước ngày hôm nay.",
+    }),
+  })
+  .refine((data) => data.fromDate <= data.toDate, {
+    message: "Ngày bắt đầu phải trước hoặc bằng ngày kết thúc.",
+    path: ["fromDate"], // Hiển thị lỗi ở trường fromDate
+  });
 
 export function CreateForm() {
   const router = useRouter();

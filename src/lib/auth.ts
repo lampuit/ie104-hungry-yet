@@ -10,11 +10,21 @@ export const auth = betterAuth({
     additionalFields: {
       role: {
         type: "string",
-        defaultValue: "customer",
       },
       phone: {
         type: "string",
-        defaultValue: "",
+      },
+      address: {
+        type: "string",
+      },
+      birthday: {
+        type: "date",
+      },
+      gender: {
+        type: "string",
+      },
+      imageUrl: {
+        type: "string",
       },
     },
   },

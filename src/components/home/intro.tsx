@@ -56,7 +56,7 @@ export function Intro() {
           </div>
           <Button
             asChild
-            className="w-full max-w-80 rounded-3xl bg-black hover:bg-red-500 sm:w-40"
+            className="w-2/3 max-w-80 rounded-3xl bg-black hover:bg-red-500 sm:w-40"
           >
             <Link href={"/about"}>Về chúng tôi</Link>
           </Button>
@@ -118,7 +118,7 @@ export function Intro() {
           </div>
           <Button
             asChild
-            className="w-full max-w-80 rounded-3xl bg-amber-500 hover:bg-red-500 sm:w-40"
+            className="w-2/3 max-w-80 rounded-3xl bg-amber-500 hover:bg-red-500 sm:w-40"
           >
             <Link href={userId ? "/menu/cart" : "/login"}>Đặt hàng ngay</Link>
           </Button>

@@ -20,12 +20,29 @@ import {
   updateCarts,
 } from "@/lib/actions/cart";
 import { getInvoiceDetail, getProductById } from "@/lib/actions/chatbot";
-import { invoices } from "@/drizzle/schema/project";
-import {
-  formatPhoneNumberIntl,
-  parsePhoneNumber,
-  Value,
-} from "react-phone-number-input";
+
+const systemPrompt = `
+Bạn là chatbot của quán ăn Hungry Yet.
+Nhiệm vụ duy nhất: hỗ trợ khách xem menu, thêm món vào giỏ, quản lý giỏ hàng, áp dụng mã giảm giá, xác nhận thông tin thanh toán, v.v.
+
+Quy tắc bắt buộc:
+1. Mọi nội dung đối thoại chỉ xoay quanh dịch vụ quán ăn: xem thực đơn, chọn món, quản lý giỏ hàng, thanh toán.
+2. Khi bắt đầu trò chuyện, tự động gọi \`getCategories\` và \`getProducts\` để nắm thông tin món ăn.
+3. Khi người dùng yêu cầu tìm món hoặc thể loại, cố gắng chuyển từ khoá thành ID/UUID tương ứng.
+4. Trả lời ngắn gọn, xúc tích, chính xác. Không dùng gạch đầu dòng, danh sách, bảng, hay hình ảnh.
+5. Không tiết lộ hay trả lời về doanh thu, thuế, số liệu thống kê, thông tin bảo mật, công nghệ, chính trị, v.v.
+6. Khi xem thực đơn, chỉ hiển thị tên các thể loại món ăn.
+7. Khi tìm kiếm món, hiển thị tất cả món phù hợp, kèm mô tả ngắn gọn (nếu cần).
+8. Không cho phép thanh toán nếu giỏ hàng trống.
+9. Khi thanh toán, bắt buộc người dùng cung cấp địa chỉ, số điện thoại và ghi chú.
+10. Nếu người dùng nói “áp dụng mã [XYZ]”, áp dụng mã giảm giá đó cho mọi thao tác giỏ hàng và thanh toán về sau.
+11. Chỉ hiển thị giỏ hàng hoặc thao tác thanh toán khi người dùng yêu cầu.
+12. Nếu người dùng nói “hủy mã giảm giá”, bỏ mã đã áp dụng. Nếu không chỉ định rõ ràng, mặc định không áp dụng mã.
+13. Từ chối khéo hoặc xin lỗi nếu nội dung yêu cầu không liên quan đến quán ăn (ví dụ: toán học, công nghệ, chính trị…).
+14. Nếu người dùng muốn xem món ăn yêu thích, cần gọi tool \`getUserFavorites\`.
+
+Hãy tuân thủ và áp dụng các quy tắc này trong mọi lượt trả lời.
+`;
 
 export const maxDuration = 30;
 
@@ -40,24 +57,7 @@ export async function POST(req: Request) {
 
   const result = streamText({
     model: openai("gpt-4o-mini-2024-07-18"),
-    system: `
-    Bạn là chatbot của quán ăn Hungry Yet.
-
-    Khi bắt đầu trò chuyện, hãy tự động lấy danh sách các thể loại món ăn bằng cách gọi tool \`getCategories\` \`getProducts\`.
-    Luôn chuyển từ khoá thành UUID.
-    Hãy trả lời ngắn gọn, xúc tích, dễ hiểu, chính xác.
-    Không dùng danh sách, bảng, gạch đầu dòng, hình ảnh.
-    Không trả lời về doanh thu, thuế, số liệu thống kê, thông tin bảo mật.
-
-    Khi xem thực đơn, chỉ liệt kê tên thể loại món ăn.
-    Khi tìm kiếm món, hiển thị tất cả món phù hợp.
-    Không thanh toán nếu giỏ hàng trống.
-    Khi thanh toán, phải có địa chỉ, số điện thoại, ghi chú.
-    Nếu người dùng nói “áp dụng mã XYZ”, dùng mã đó cho mọi yêu cầu giỏ hàng, thanh toán.
-    Chỉ hiện giỏ hàng, thanh toán sau khi được yêu cầu.
-    Nếu “hủy mã giảm giá”, không dùng mã sau đó.
-    Nếu không chỉ định mã, mặc định không dùng.
-    `,
+    system: systemPrompt,
 
     temperature: 0.6,
     maxTokens: 100,
@@ -90,6 +90,15 @@ export async function POST(req: Request) {
         execute: async function () {
           const ratings = await getRatings();
           return ratings;
+        },
+      },
+      getUserFavorites: {
+        description: "Trả về danh sách tất cả món ăn yêu thích của người dùng",
+        parameters: z.object({}),
+        execute: async function () {
+          const favorites = await getFavoriteByUserId(session.user.id);
+          console.log(favorites);
+          return favorites;
         },
       },
       displayProductDetail: {
@@ -236,6 +245,14 @@ export async function POST(req: Request) {
         execute: async function ({ invoice_id }) {
           const invoice = await getInvoiceDetail(invoice_id, session.user.id);
           return invoice;
+        },
+      },
+      displayProfile: {
+        description: "Hiện thông tin của người dùng",
+        parameters: z.object({}),
+        execute: async function () {
+          console.log(session.user);
+          return session.user;
         },
       },
     },
