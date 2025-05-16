@@ -56,7 +56,7 @@ export async function POST(req: Request) {
   if (!session) throw new Error("Không tồn tại session");
 
   const result = streamText({
-    model: openai("gpt-4.1-nano-2025-04-1"),
+    model: openai("gpt-4o-mini-2024-07-18"),
     system: systemPrompt,
 
     temperature: 0.4,
