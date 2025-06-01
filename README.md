@@ -1,17 +1,6 @@
-## 🌟 Đồ án môn học "Hungry Yet?" : Website đặt đồ ăn trực tuyến
+## 🌟 "Hungry Yet?" : Website đặt đồ ăn trực tuyến
 
-Đồ án "Hungry Yet?" là một ứng dụng web hiện đại cho phép người dùng đặt đồ ăn trực tuyến với các tính năng tối ưu, giao diện đẹp mắt và trải nghiệm mượt mà. Đồ án sử dụng các công nghệ tiên tiến trong ngành phát triển web nhằm mang lại hiệu năng và khả năng mở rộng tốt. Cùng với sự hỗ trợ của thầy Khoa chúng em xin chân thành cảm ơn thầy! 🤟
-
-## Lớp: IE104.P11
-
-**GVHD**: ThS. Võ Tấn Khoa  
-**Nhóm sinh viên thực hiện**:
-
-1. **Phạm Thành Lam** - MSSV: 22520743
-2. **Trần Ngô Thanh Bình** - MSSV: 22520138
-3. **Đỗ Thanh Liêm** - MSSV: 22520751
-4. **Trần Minh Tùng** - MSSV: 22521622
-5. **Ngô Tuấn Kiệt** - MSSV: 22520719
+"Hungry Yet?" là một ứng dụng web hiện đại cho phép người dùng đặt đồ ăn trực tuyến với các tính năng tối ưu, giao diện đẹp mắt và trải nghiệm mượt mà. Đồ án sử dụng các công nghệ tiên tiến trong ngành phát triển web nhằm mang lại hiệu năng và khả năng mở rộng tốt.🤟
 
 ## 🚀 Tính Năng Chính
 
@@ -141,6 +130,6 @@
 
 ## 💡 Góp Ý và Phát Triển
 
-Chúng tôi luôn chào đón các đóng góp từ lớp học và cộng đồng. Nếu bạn phát hiện lỗi hoặc có ý tưởng cải thiện, hãy mở Issues hoặc gửi Pull Request (PR) để cùng phát triển đồ án. Mọi ý kiến đóng góp đều được hoan nghênh!
+Chúng tôi luôn chào đón các đóng góp từ cộng đồng. Nếu bạn phát hiện lỗi hoặc có ý tưởng cải thiện, hãy mở Issues hoặc gửi Pull Request (PR) để cùng phát triển đồ án. Mọi ý kiến đóng góp đều được hoan nghênh!
 
 ## 🎉 Chúc bạn trải nghiệm tốt với dự án này! 🚀
